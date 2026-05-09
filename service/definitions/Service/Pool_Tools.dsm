@@ -1,0 +1,21 @@
+namespace Demo {2eed02f5-5047-4d6f-9a4a-0888c21b31b0} {
+
+struct Vector3 {
+    float x;
+    float y;
+    float z;
+};
+
+}; // ns
+
+"""This pool provides access to the various utility functions."""
+function_pool Tools {7aa5aea2-c9de-4f91-8371-7995aca8c947} {
+
+"""Return a + b."""
+int64 add(int64 a, int64 b);
+
+Vector3 addVector(Vector3 a, Vector3 b);
+
+string randomString(uint32 size);
+
+};

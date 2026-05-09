@@ -1,0 +1,26 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Check DSM Syntax",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "../../dsviper-tools/dsm_util.py",
+                "check",
+                "${file}"
+            ],
+            "presentation": {
+                "reveal": "never",
+                "revealProblems":"onProblem"
+            },
+            "problemMatcher": "$dsm",
+            "group": {
+                "kind": "build",
+                "isDefault": true,
+            }
+        }
+    ]
+}

@@ -1,0 +1,141 @@
+namespace Test {7fdd9ba9-b85e-4b33-a749-9b9615e43452}  {
+
+"""This is the documentation for the concept A"""
+concept ConceptA;
+concept ConceptB;
+concept ConceptC is a ConceptB;
+concept ConceptD;
+
+"""This is the documentation for the concept D"""
+club Klub;
+membership Klub ConceptC;
+membership Klub ConceptD;
+
+"""This is the documentation for enumeration E"""
+enum EnumerationE {
+  """This is the documentation for the enumeration case .a"""
+  a ,
+  b ,
+  c 
+};
+
+"""This is the documentation for the struct S"""
+struct StructureS {
+  """This is the documentation for the field f_float"""
+  float f_float;
+  string f_string;
+};
+
+struct StructureT {
+  string field_string;
+  StructureS field_structure_s;
+};
+
+struct StructureU {
+  // Numbers
+  bool f_bool;
+
+  uint8 f_uint8;
+  uint16 f_uint16;
+  uint32 f_uint32;
+  uint64 f_uint64;
+
+  int8 f_int8;
+  int16 f_int16;
+  int32 f_int32;
+  int64 f_int64;
+
+  float f_float;
+  double f_double;
+
+  // Ids
+  blob_id f_blob_id;
+  commit_id f_commit_id;
+  uuid f_uuid;
+
+  // String & Blob
+  string f_string;
+  blob f_blob;
+
+  // Vec & Mat
+  vec<uint8,2> f_vec;
+  mat<uint8,2,2> f_mat;
+
+  // Collections
+  tuple<uint8, string> f_tuple;
+  optional<uint8> f_optional;
+  vector<uint8> f_vector;
+  set<uint8> f_set;
+  set<StructureS> f_set_s;
+  map<StructureS, string> f_map_s1;
+  map<string, StructureS> f_map_s2;
+  xarray<uint8> f_xarray;
+  map<vector<StructureS>,string> f_map_vs;
+  variant<string, uint8, StructureS> f_variant;
+  
+  // Any
+  any f_any;
+
+  EnumerationE f_E;
+  StructureS f_S;
+  StructureT f_T;
+
+  key<ConceptA> f_A;
+  key<ConceptB> f_B;
+  key<ConceptC> f_C;
+  key<ConceptD> f_D;
+  key<Klub> f_Klub;
+  
+  // AnyConcept
+  key<any_concept> f_any_concept;
+};
+
+struct StructureV {
+  bool f_bool = true;
+
+  uint8 f_uint8 = 8;
+  uint16 f_uint16 = 16;
+  uint32 f_uint32 = 32;
+  uint64 f_uint64 = 64;
+
+  int8 f_int8 = -8;
+  int16 f_int16 = -16;
+  int32 f_int32 = -32;
+  int64 f_int64 = -64;
+
+  float f_float = 42.419998;
+  double f_double = 84.840000;
+
+  uuid f_uuid = {388bbc06-60de-4d97-b3ee-18916e7043d3};
+  string f_string = "Forty Two";
+
+  vec<uint8,2> f_vec = {2,3};
+  mat<uint8,2,3> f_mat = {{1, 2, 3}, {4, 5, 6}};
+
+  tuple<uint8, string> f_tuple = {0, "1"};
+  optional<uint8> f_optional = 8;
+  vector<uint8> f_vector = {1, 2, 3};
+  set<uint8> f_set = {1, 2, 3};
+  map<uint8, string> f_map = {{0, "Zero"}, {1, "One"}};
+
+  EnumerationE f_E = .a;
+  StructureS f_S = {1.000000, ""};
+  StructureT f_T = {"R", {0.000000, "essa"}};
+};
+
+attachment<ConceptA, StructureV> properties;
+attachment<ConceptA, int8> propertiesInt8;
+attachment<ConceptA, set<int8>> propertiesSeInt8;
+attachment<ConceptA, map<int8, string>> propertiesMapInt8String;
+attachment<ConceptA, xarray<int8>> propertiesXArray;
+
+attachment<ConceptB, StructureT> propertiesB;
+attachment<ConceptC, StructureU> propertiesC;
+
+// We can't a key for this types in CDBE
+attachment<Klub, StructureV> propertiesD;
+attachment<any_concept, any> propertiesAnyConceptAny;
+
+}; // ns
+
+
