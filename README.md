@@ -17,7 +17,7 @@ This repo expects three sibling checkouts under a common parent directory:
 
 ```
 <common parent>/
-├── com.digitalsubstrate.viper/         # runtime + third_parties (C++)
+├── com.digitalsubstrate.viper/         # runtime + third_parties (C++ ; private)
 ├── kibo/                               # Kibo jar (built via `mvn package`)
 ├── kibo-template-viper/                # Kibo templates (cpp/, python/)
 └── devkit-codegen-test/                # this repo
@@ -25,7 +25,13 @@ This repo expects three sibling checkouts under a common parent directory:
 
 The siblings live in their own repositories:
 
-- [digital-substrate/viper](https://github.com/digital-substrate/viper) — Viper runtime.
+- **viper** — the Viper C++ runtime. Sources are not publicly distributed
+  (Digital Substrate Commercial License 1.2); the public artefact is the
+  [`dsviper` wheel on PyPI](https://pypi.org/project/dsviper/). The full
+  C++ build below therefore requires access to the runtime sources
+  (Digital Substrate organisation members or licensed evaluation). The
+  Python-only flow (`features/python`) is exercisable against an
+  installed `dsviper` wheel without source access.
 - [digital-substrate/kibo](https://github.com/digital-substrate/kibo) — code generator.
 - [digital-substrate/kibo-template-viper](https://github.com/digital-substrate/kibo-template-viper) — first-party Kibo templates for the Viper ecosystem.
 
