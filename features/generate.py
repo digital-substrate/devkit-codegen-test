@@ -60,7 +60,6 @@ def render_templates(namespace: str, dsm_path: str, output: str):
         'Database',
         'Attachments', 'AttachmentFunctionPool_Attachments',
         'ValueType', 'ValueCodec', 'ValueHasher',
-        'Fuzz', 
         'Test'
     ]
 
