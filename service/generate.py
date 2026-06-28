@@ -11,6 +11,7 @@ from dsviper import DSMDefinitions, DefinitionsConst, DSMBuilder
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--cpp", help="Generate C++", action="store_true")
 parser.add_argument("-p", "--package", help="Generate Python package", action="store_true")
+parser.add_argument("-ts", "--typescript", help="Generate the TypeScript package", action="store_true")
 arguments = parser.parse_args()
 
 SIBLING_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -88,6 +89,26 @@ def generate_package(name: str, dsm_path: str, definitions: DefinitionsConst, ou
     with open(f'{output}/resources.py', 'w') as file:
         file.write(f"B64_DEFINITIONS = {string}")
 
+def generate_typescript(name: str, dsm_path: str, definitions: DefinitionsConst, package_root: str):
+    # Reuse the `python` converter (engine-agnostic) on the typescript templates;
+    # no kibo engine change is required.
+    output = f'{package_root}/src'
+    subprocess.run(KIBO + [
+        '-c', 'python', '-n', name, '-d', dsm_path,
+        '-t', f'{TEMPLATES}/typescript', '-o', output,
+    ])
+    subprocess.run(KIBO + [
+        '-c', 'python', '-n', name, '-d', dsm_path,
+        '-t', f'{TEMPLATES}/typescript/project', '-o', package_root,
+    ])
+    # The Node binding's Definitions.decode reads STREAM_BINARY (Python's default
+    # encode codec is STREAM_TOKEN_BINARY, which it cannot decode).
+    import dsviper
+    blob = definitions.encode(stream_codec_instancing=dsviper.Codec.STREAM_BINARY)
+    string = base64.b64encode(blob).decode("ascii")
+    with open(f'{output}/resources.ts', 'w') as file:
+        file.write(f'export const B64_DEFINITIONS = "{string}";\n')
+
 PROJECT = 'Service'
 DSM_SOURCE = f'definitions/Service'
 DSM_PATH = f'{PROJECT}.dsm.json'
@@ -104,7 +125,7 @@ REPORT, DSM_DEFINITIONS, DEFINITIONS = BUILDER.parse()
 check_report(report=REPORT)
 save_dsm_definitions(dsm_definitions=DSM_DEFINITIONS, dsm_path=DSM_PATH)
 
-if not (arguments.cpp | arguments.package):
+if not (arguments.cpp | arguments.package | arguments.typescript):
     parser.print_help()
     exit(0)
 
@@ -116,3 +137,7 @@ if arguments.cpp:
 if arguments.package:
     print('** Render Python Package')
     generate_package(name='service', dsm_path=DSM_PATH, definitions=DEFINITIONS, output=f'python/service')
+
+if arguments.typescript:
+    print('** Render TypeScript Package')
+    generate_typescript(name='service', dsm_path=DSM_PATH, definitions=DEFINITIONS, package_root=f'typescript/service')

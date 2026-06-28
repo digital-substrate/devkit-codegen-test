@@ -21,5 +21,5 @@ attachment<Player, PlayerProperty> property;
 """This pool provides access to the Player utility functions."""
 attachment_function_pool PlayerModel {d75a8a57-f0ad-4a44-84f7-1ea409d4bd36} {
     mutable key<Player> create(string nickname, Level level);
-    optional<key<Player>> has_player(string nickname);
+    optional<key<Player>> hasPlayer(string nickname);
 };

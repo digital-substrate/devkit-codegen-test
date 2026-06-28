@@ -1,0 +1,16 @@
+{
+    "name": "features-typescript-tests",
+    "private": true,
+    "type": "module",
+    "description": "Test harness for the kibo-generated TypeScript `features` package",
+    "scripts": {
+        "build": "cd features && tsc -p tsconfig.json",
+        "test": "node --test test/*.test.mjs"
+    },
+    "dependencies": {
+        "@digitalsubstrate/dsviper": ">=1.2.0 <1.3.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0"
+    }
+}

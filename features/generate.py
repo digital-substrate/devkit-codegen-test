@@ -12,6 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("definitions", help="Definitions to use")
 parser.add_argument("-c", "--cpp", help="Generate C++", action="store_true")
 parser.add_argument("-p", "--package", help="Generate the Python package", action="store_true")
+parser.add_argument("-ts", "--typescript", help="Generate the TypeScript package", action="store_true")
 arguments = parser.parse_args()
 
 SIBLING_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -97,6 +98,42 @@ def generate_package(name: str, dsm_path: str, definitions: DefinitionsConst, ou
         file.write(f"B64_DEFINITIONS = {string}")
 
 
+def generate_typescript(name: str, dsm_path: str, definitions: DefinitionsConst, package_root: str):
+    # The TypeScript output is pure templates: it reuses the `python` converter
+    # (same Converter, same empty file-prefix policy) pointed at the typescript
+    # template directory. No kibo engine change is required.
+    output = f'{package_root}/src'
+
+    # TypeScript sources -> package src/
+    cmd = KIBO + [
+        '-c', 'python',
+        '-n', name,
+        '-d', dsm_path,
+        '-t', f'{TEMPLATES}/typescript',
+        '-o', output,
+    ]
+    subprocess.run(cmd)
+
+    # Package descriptor + tsconfig -> package root
+    cmd = KIBO + [
+        '-c', 'python',
+        '-n', name,
+        '-d', dsm_path,
+        '-t', f'{TEMPLATES}/typescript/project',
+        '-o', package_root,
+    ]
+    subprocess.run(cmd)
+
+    # The Node binding's Definitions.decode reads STREAM_BINARY; Python's default
+    # encode codec is STREAM_TOKEN_BINARY, which the Node binding cannot decode.
+    # Encode the embedded definitions blob explicitly as STREAM_BINARY.
+    import dsviper
+    blob = definitions.encode(stream_codec_instancing=dsviper.Codec.STREAM_BINARY)
+    string = base64.b64encode(blob).decode("ascii")
+    with open(f'{output}/resources.ts', 'w') as file:
+        file.write(f'export const B64_DEFINITIONS = "{string}";\n')
+
+
 PROJECT = 'Features'
 DSM_SOURCE = arguments.definitions
 DSM_PATH = f'{PROJECT}.dsm.json'
@@ -116,7 +153,7 @@ REPORT, DSM_DEFINITIONS, DEFINITIONS = BUILDER.parse()
 check_report(report=REPORT)
 save_dsm_definitions(dsm_definitions=DSM_DEFINITIONS, dsm_path=DSM_PATH)
 
-if not (arguments.cpp | arguments.package):
+if not (arguments.cpp | arguments.package | arguments.typescript):
     parser.print_help()
     exit(0)
 
@@ -129,3 +166,7 @@ if arguments.cpp:
 if arguments.package:
     print('** Render Python Package')
     generate_package(name='features', dsm_path=DSM_PATH, definitions=DEFINITIONS, output=f'python/features')
+
+if arguments.typescript:
+    print('** Render TypeScript Package')
+    generate_typescript(name='features', dsm_path=DSM_PATH, definitions=DEFINITIONS, package_root=f'typescript/features')
