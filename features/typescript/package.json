@@ -8,7 +8,7 @@
         "test": "node --test test/*.test.mjs"
     },
     "dependencies": {
-        "@digitalsubstrate/dsviper": ">=1.2.0 <1.3.0"
+        "@digitalsubstrate/dsviper": ">=1.2.1 <1.3.0"
     },
     "devDependencies": {
         "typescript": "^5.0.0"

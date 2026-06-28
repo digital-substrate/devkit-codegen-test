@@ -101,10 +101,11 @@ def generate_typescript(name: str, dsm_path: str, definitions: DefinitionsConst,
         '-c', 'python', '-n', name, '-d', dsm_path,
         '-t', f'{TEMPLATES}/typescript/project', '-o', package_root,
     ])
-    # The Node binding's Definitions.decode reads STREAM_BINARY (Python's default
-    # encode codec is STREAM_TOKEN_BINARY, which it cannot decode).
-    import dsviper
-    blob = definitions.encode(stream_codec_instancing=dsviper.Codec.STREAM_BINARY)
+    # Embed the definitions blob with the default codec (StreamTokenBinary), the
+    # same codec definitions.ts decodes with — kept symmetric with the Python
+    # package. No zlib: definitions.ts base64-decodes the string straight into
+    # Definitions.decode.
+    blob = definitions.encode()
     string = base64.b64encode(blob).decode("ascii")
     with open(f'{output}/resources.ts', 'w') as file:
         file.write(f'export const B64_DEFINITIONS = "{string}";\n')
