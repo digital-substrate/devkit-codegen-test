@@ -104,13 +104,20 @@ set(CLI11_FOLDER ${REPO_VIPER_TPS}/cli11)
 add_library(cli11 INTERFACE)
 target_include_directories(cli11 INTERFACE ${CLI11_FOLDER})
 
+# pugixml
+set(PUGIXML_FOLDER ${REPO_VIPER_TPS}/xml/pugixml)
+file(GLOB PUGIXML_HEADERS ${PUGIXML_FOLDER}/*.hpp)
+file(GLOB PUGIXML_SOURCES ${PUGIXML_FOLDER}/*.cpp)
+add_library(pugixml STATIC ${PUGIXML_HEADERS} ${PUGIXML_SOURCES})
+target_include_directories(pugixml PUBLIC ${PUGIXML_FOLDER})
+
 # viper
 set(VIPER_FOLDER ${REPO_VIPER_SRC}/Viper)
 file(GLOB VIPER_HEADERS ${VIPER_FOLDER}/*.h ${VIPER_FOLDER}/*.hpp)
 file(GLOB VIPER_SOURCES ${VIPER_FOLDER}/*.cpp)
 add_library(viper STATIC ${VIPER_HEADERS} ${VIPER_SOURCES})
 target_include_directories(viper PUBLIC ${VIPER_FOLDER})
-target_link_libraries(viper PUBLIC antlr4 hash json sqlite)
+target_link_libraries(viper PUBLIC antlr4 hash json pugixml sqlite)
 
 if (LINUX)
     target_link_libraries(viper PUBLIC stdc++fs uuid pthread dl)
