@@ -206,8 +206,11 @@ test("intersection_update", () => {
   const s1 = new Set_uint8([1, 2, 3]);
   const s2 = new Set_uint8([2, 3, 4]);
   s1.intersectionUpdate(s2);
+  assert.equal(s1.size, 2);
   assert.ok(s1.contains(2));
   assert.ok(s1.contains(3));
+  assert.ok(!s1.contains(1));
+  assert.ok(!s1.contains(4));
 });
 
 test("symmetric_difference_update", () => {
@@ -281,8 +284,11 @@ test("iand_operator", () => {
   const s1 = new Set_uint8([1, 2, 3]);
   const s2 = new Set_uint8([2, 3, 4]);
   s1.intersectionUpdate(s2);
+  assert.equal(s1.size, 2);
   assert.ok(s1.contains(2));
   assert.ok(s1.contains(3));
+  assert.ok(!s1.contains(1));
+  assert.ok(!s1.contains(4));
 });
 
 test("isub_operator", () => {

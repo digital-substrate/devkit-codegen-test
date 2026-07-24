@@ -70,6 +70,7 @@ struct StructureU {
   map<StructureS, string> f_map_s1;
   map<string, StructureS> f_map_s2;
   xarray<uint8> f_xarray;
+  xarray<StructureS> f_xarray_s;
   map<vector<StructureS>,string> f_map_vs;
   variant<string, uint8, StructureS> f_variant;
   

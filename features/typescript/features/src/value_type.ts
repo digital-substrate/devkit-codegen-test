@@ -373,6 +373,12 @@ export function type_map_vector_Test_StructureS_to_string(): dsviper.TypeMap {
 
 
 // XArrays
+let _type_xarray_Test_StructureS: dsviper.TypeXArray | null = null;
+export function type_xarray_Test_StructureS(): dsviper.TypeXArray {
+    if (_type_xarray_Test_StructureS === null) { _type_xarray_Test_StructureS = new dsviper.TypeXArray(type_Test_StructureS()); }
+    return _type_xarray_Test_StructureS;
+}
+
 let _type_xarray_int8: dsviper.TypeXArray | null = null;
 export function type_xarray_int8(): dsviper.TypeXArray {
     if (_type_xarray_int8 === null) { _type_xarray_int8 = new dsviper.TypeXArray(type_int8()); }

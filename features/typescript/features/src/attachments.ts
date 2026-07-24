@@ -695,6 +695,22 @@ export const conceptC_PropertiesC = {
         const attachment = mt.attachment_Test_ConceptC_PropertiesC();
         attachmentMutating.removeInXarray(attachment, key.vprValue, mp.Test_Path_StructureU.f_xarray, position);
     },
+    setF_xarray_s(attachmentMutating: dsviper.AttachmentMutating, key: d.Test_ConceptCKey, value: d.XArray_Test_StructureS): void {
+        const attachment = mt.attachment_Test_ConceptC_PropertiesC();
+        attachmentMutating.update(attachment, key.vprValue, mp.Test_Path_StructureU.f_xarray_s, value.vprValue);
+    },
+    insertF_xarray_s(attachmentMutating: dsviper.AttachmentMutating, key: d.Test_ConceptCKey, beforePosition: dsviper.ValueUUId, newPosition: dsviper.ValueUUId, value: d.Test_StructureS): void {
+        const attachment = mt.attachment_Test_ConceptC_PropertiesC();
+        attachmentMutating.insertInXarray(attachment, key.vprValue, mp.Test_Path_StructureU.f_xarray_s, beforePosition, newPosition, value.vprValue);
+    },
+    updateF_xarray_s(attachmentMutating: dsviper.AttachmentMutating, key: d.Test_ConceptCKey, position: dsviper.ValueUUId, value: d.Test_StructureS): void {
+        const attachment = mt.attachment_Test_ConceptC_PropertiesC();
+        attachmentMutating.updateInXarray(attachment, key.vprValue, mp.Test_Path_StructureU.f_xarray_s, position, value.vprValue);
+    },
+    removeF_xarray_s(attachmentMutating: dsviper.AttachmentMutating, key: d.Test_ConceptCKey, position: dsviper.ValueUUId): void {
+        const attachment = mt.attachment_Test_ConceptC_PropertiesC();
+        attachmentMutating.removeInXarray(attachment, key.vprValue, mp.Test_Path_StructureU.f_xarray_s, position);
+    },
     setF_map_vs(attachmentMutating: dsviper.AttachmentMutating, key: d.Test_ConceptCKey, value: d.Map_Vector_Test_StructureS_to_string): void {
         const attachment = mt.attachment_Test_ConceptC_PropertiesC();
         attachmentMutating.update(attachment, key.vprValue, mp.Test_Path_StructureU.f_map_vs, value.vprValue);

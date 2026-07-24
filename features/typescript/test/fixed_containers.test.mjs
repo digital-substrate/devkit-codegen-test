@@ -70,14 +70,14 @@ test("vec_len_default", () => {
 
 test("vec_to_tuple", () => {
   const v = new Vec_uint8_2([10, 20]);
-  const t = v.toTuple();
+  const t = v.toArray();
   assert.ok(Array.isArray(t));
   assert.deepEqual(t, [10, 20]);
 });
 
 test("vec_to_tuple_default_values", () => {
   const v = new Vec_uint8_2();
-  const t = v.toTuple();
+  const t = v.toArray();
   assert.ok(Array.isArray(t));
   assert.equal(t.length, 2);
 });
@@ -97,7 +97,7 @@ test("vec_copy_creates_independent_vec", () => {
 test("vec_copy_preserves_values", () => {
   const v1 = new Vec_uint8_2([100, 200]);
   const v2 = v1.copy();
-  assert.deepEqual(v2.toTuple(), [100, 200]);
+  assert.deepEqual(v2.toArray(), [100, 200]);
 });
 
 // --- TestVecSerialization ---
@@ -114,7 +114,7 @@ test("vec_encode_decode_preserves_all", () => {
   const v1 = new Vec_uint8_2([255, 128]);
   const blob = v1.encode();
   const v2 = Vec_uint8_2.decode(blob);
-  assert.deepEqual(v2.toTuple(), [255, 128]);
+  assert.deepEqual(v2.toArray(), [255, 128]);
 });
 
 // =============================================================================
@@ -227,14 +227,14 @@ test("mat_len_2x3", () => {
 
 test("mat_to_tuple_2x2", () => {
   const m = new Mat_uint8_2_2([[1, 2], [3, 4]]);
-  const t = m.toTuple();
+  const t = m.toArray();
   assert.ok(Array.isArray(t));
   assert.deepEqual(t, [[1, 2], [3, 4]]);
 });
 
 test("mat_to_tuple_2x3", () => {
   const m = new Mat_uint8_2_3([[1, 2, 3], [4, 5, 6]]);
-  const t = m.toTuple();
+  const t = m.toArray();
   assert.deepEqual(t, [[1, 2, 3], [4, 5, 6]]);
 });
 
@@ -251,7 +251,7 @@ test("mat_copy_creates_independent_mat_2x2", () => {
 test("mat_copy_preserves_values_2x3", () => {
   const m1 = new Mat_uint8_2_3([[1, 2, 3], [4, 5, 6]]);
   const m2 = m1.copy();
-  assert.deepEqual(m2.toTuple(), [[1, 2, 3], [4, 5, 6]]);
+  assert.deepEqual(m2.toArray(), [[1, 2, 3], [4, 5, 6]]);
 });
 
 // --- TestMatSerialization ---
@@ -260,14 +260,14 @@ test("mat_encode_decode_roundtrip_2x2", () => {
   const m1 = new Mat_uint8_2_2([[1, 2], [3, 4]]);
   const blob = m1.encode();
   const m2 = Mat_uint8_2_2.decode(blob);
-  assert.deepEqual(m2.toTuple(), [[1, 2], [3, 4]]);
+  assert.deepEqual(m2.toArray(), [[1, 2], [3, 4]]);
 });
 
 test("mat_encode_decode_roundtrip_2x3", () => {
   const m1 = new Mat_uint8_2_3([[10, 20, 30], [40, 50, 60]]);
   const blob = m1.encode();
   const m2 = Mat_uint8_2_3.decode(blob);
-  assert.deepEqual(m2.toTuple(), [[10, 20, 30], [40, 50, 60]]);
+  assert.deepEqual(m2.toArray(), [[10, 20, 30], [40, 50, 60]]);
 });
 
 // =============================================================================

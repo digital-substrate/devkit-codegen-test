@@ -34,7 +34,7 @@ export const RuntimeIds = {
     Test_EnumerationE: dsviper.ValueUUId.create("57233334-ee71-b77f-d6a6-b4ff25bb2350"),
     Test_StructureS: dsviper.ValueUUId.create("c4f62cf6-2d27-05b0-018c-67d1b99df4a6"),
     Test_StructureT: dsviper.ValueUUId.create("773ad0a2-1c7b-302e-e1b5-314ab0edb74a"),
-    Test_StructureU: dsviper.ValueUUId.create("fc7a32c3-3600-dd9a-110c-44830b3b859e"),
+    Test_StructureU: dsviper.ValueUUId.create("019d066d-bd5a-19b7-4565-9c5a6f95c808"),
     Test_StructureV: dsviper.ValueUUId.create("8b5d06ab-5a9f-d427-23b8-7ec3611aabde"),
 };
 
@@ -48,6 +48,6 @@ export const AttachmentRuntimeIds = {
     Test_ConceptA_PropertiesSeInt8: dsviper.ValueUUId.create("ad45f798-b25a-0421-c523-713ff624383e"),
     Test_ConceptA_PropertiesXArray: dsviper.ValueUUId.create("ff9d7eda-5ad0-d217-d910-7d2adfad208f"),
     Test_ConceptB_PropertiesB: dsviper.ValueUUId.create("c117fd64-7b82-f4ab-164c-efb528a408bc"),
-    Test_ConceptC_PropertiesC: dsviper.ValueUUId.create("89744936-fa08-e52d-3b39-8fffdee0a93a"),
+    Test_ConceptC_PropertiesC: dsviper.ValueUUId.create("7f6d8d89-d32a-3214-ed11-3f23b7faaf1e"),
     Test_Klub_PropertiesD: dsviper.ValueUUId.create("f7a9f794-cedc-a3ff-9530-63f86e932850"),
 };

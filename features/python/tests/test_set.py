@@ -192,8 +192,21 @@ class TestSetUpdateOperations(unittest.TestCase):
         s1 = Set_uint8([1, 2, 3])
         s2 = Set_uint8([2, 3, 4])
         s1.intersection_update(s2)
+        self.assertEqual(len(s1), 2)
         self.assertTrue(2 in s1)
         self.assertTrue(3 in s1)
+        self.assertFalse(1 in s1)
+        self.assertFalse(4 in s1)
+
+    def test_intersection_update_operator(self):
+        s1 = Set_uint8([1, 2, 3])
+        s2 = Set_uint8([2, 3, 4])
+        s1 &= s2
+        self.assertEqual(len(s1), 2)
+        self.assertTrue(2 in s1)
+        self.assertTrue(3 in s1)
+        self.assertFalse(1 in s1)
+        self.assertFalse(4 in s1)
 
     def test_symmetric_difference_update(self):
         s1 = Set_uint8([1, 2, 3])

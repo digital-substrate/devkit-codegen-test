@@ -50,6 +50,9 @@ export class Proxy<V extends dsviper.Value = dsviper.Value> {
 export class AnyConceptKey extends Proxy<dsviper.ValueKey> {
 
     constructor(value: dsviper.ValueKey) {
+        if (!value.typeKey().isAnyConcept()) {
+            throw new TypeError("value is not a Key for any_concept");
+        }
         super(value);
     }
 
@@ -100,6 +103,9 @@ export class Test_ConceptAKey extends Proxy<dsviper.ValueKey> {
 
     constructor(identifier: dsviper.ValueKey | dsviper.ValueUUId | string) {
         if (identifier instanceof dsviper.ValueKey) {
+            if (!identifier.type().equals(mt.type_Test_ConceptAKey())) {
+                throw new TypeError("identifier is not a Test::ConceptAKey");
+            }
             super(identifier);
         } else if (identifier instanceof dsviper.ValueUUId || typeof identifier === "string") {
             super(dsviper.ValueKey.create(mt.type_check_Test_ConceptAKey(), identifier));
@@ -167,6 +173,9 @@ export class Test_ConceptBKey extends Proxy<dsviper.ValueKey> {
 
     constructor(identifier: dsviper.ValueKey | dsviper.ValueUUId | string) {
         if (identifier instanceof dsviper.ValueKey) {
+            if (!identifier.type().equals(mt.type_Test_ConceptBKey())) {
+                throw new TypeError("identifier is not a Test::ConceptBKey");
+            }
             super(identifier);
         } else if (identifier instanceof dsviper.ValueUUId || typeof identifier === "string") {
             super(dsviper.ValueKey.create(mt.type_check_Test_ConceptBKey(), identifier));
@@ -244,6 +253,9 @@ export class Test_ConceptCKey extends Proxy<dsviper.ValueKey> {
 
     constructor(identifier: dsviper.ValueKey | dsviper.ValueUUId | string) {
         if (identifier instanceof dsviper.ValueKey) {
+            if (!identifier.type().equals(mt.type_Test_ConceptCKey())) {
+                throw new TypeError("identifier is not a Test::ConceptCKey");
+            }
             super(identifier);
         } else if (identifier instanceof dsviper.ValueUUId || typeof identifier === "string") {
             super(dsviper.ValueKey.create(mt.type_check_Test_ConceptCKey(), identifier));
@@ -315,6 +327,9 @@ export class Test_ConceptDKey extends Proxy<dsviper.ValueKey> {
 
     constructor(identifier: dsviper.ValueKey | dsviper.ValueUUId | string) {
         if (identifier instanceof dsviper.ValueKey) {
+            if (!identifier.type().equals(mt.type_Test_ConceptDKey())) {
+                throw new TypeError("identifier is not a Test::ConceptDKey");
+            }
             super(identifier);
         } else if (identifier instanceof dsviper.ValueUUId || typeof identifier === "string") {
             super(dsviper.ValueKey.create(mt.type_check_Test_ConceptDKey(), identifier));
@@ -381,6 +396,9 @@ export class Test_ConceptDKey extends Proxy<dsviper.ValueKey> {
 export class Test_KlubKey extends Proxy<dsviper.ValueKey> {
 
     constructor(value: dsviper.ValueKey) {
+        if (!value.type().equals(mt.type_Test_KlubKey())) {
+            throw new TypeError("value is not a Test::KlubKey");
+        }
         super(value);
     }
 
@@ -450,6 +468,9 @@ export class Test_KlubKey extends Proxy<dsviper.ValueKey> {
 export class Test_EnumerationE extends Proxy<dsviper.ValueEnumeration> {
 
     constructor(value: dsviper.ValueEnumeration) {
+        if (!value.type().equals(mt.type_Test_EnumerationE())) {
+            throw new TypeError("value is not a Test::EnumerationE");
+        }
         super(value);
     }
 
@@ -507,6 +528,9 @@ export class Test_StructureS extends Proxy<dsviper.ValueStructure> {
 
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>) {
         if (value instanceof dsviper.ValueStructure) {
+            if (!value.type().equals(mt.type_Test_StructureS())) {
+                throw new TypeError("value is not a Test::StructureS");
+            }
             super(value);
         } else {
             super(new dsviper.ValueStructure(mt.type_Test_StructureS(), value));
@@ -547,6 +571,9 @@ export class Test_StructureT extends Proxy<dsviper.ValueStructure> {
 
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>) {
         if (value instanceof dsviper.ValueStructure) {
+            if (!value.type().equals(mt.type_Test_StructureT())) {
+                throw new TypeError("value is not a Test::StructureT");
+            }
             super(value);
         } else {
             super(new dsviper.ValueStructure(mt.type_Test_StructureT(), value));
@@ -587,6 +614,9 @@ export class Test_StructureU extends Proxy<dsviper.ValueStructure> {
 
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>) {
         if (value instanceof dsviper.ValueStructure) {
+            if (!value.type().equals(mt.type_Test_StructureU())) {
+                throw new TypeError("value is not a Test::StructureU");
+            }
             super(value);
         } else {
             super(new dsviper.ValueStructure(mt.type_Test_StructureU(), value));
@@ -779,6 +809,13 @@ export class Test_StructureU extends Proxy<dsviper.ValueStructure> {
     set f_xarray(value: XArray_uint8) {
         this.vprValue.set("f_xarray", value.vprValue);
     }
+    get f_xarray_s(): XArray_Test_StructureS {
+        return XArray_Test_StructureS.wrap(this.vprValue.at("f_xarray_s"));
+    }
+
+    set f_xarray_s(value: XArray_Test_StructureS) {
+        this.vprValue.set("f_xarray_s", value.vprValue);
+    }
     get f_map_vs(): Map_Vector_Test_StructureS_to_string {
         return Map_Vector_Test_StructureS_to_string.wrap(this.vprValue.at("f_map_vs"));
     }
@@ -879,6 +916,9 @@ export class Test_StructureV extends Proxy<dsviper.ValueStructure> {
 
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>) {
         if (value instanceof dsviper.ValueStructure) {
+            if (!value.type().equals(mt.type_Test_StructureV())) {
+                throw new TypeError("value is not a Test::StructureV");
+            }
             super(value);
         } else {
             super(new dsviper.ValueStructure(mt.type_Test_StructureV(), value));
@@ -1066,6 +1106,9 @@ export class Vec_uint8_2 extends Proxy<dsviper.ValueVec> {
 
     constructor(value?: dsviper.ValueVec | number[]) {
         if (value instanceof dsviper.ValueVec) {
+            if (!value.type().equals(mt.type_vec2_uint8())) {
+                throw new TypeError("value is not a vec<uint8, 2>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueVec(mt.type_vec2_uint8(), value));
@@ -1094,8 +1137,8 @@ export class Vec_uint8_2 extends Proxy<dsviper.ValueVec> {
         }
     }
 
-    toTuple(): number[] {
-        return this.vprValue.toTuple();
+    toArray(): number[] {
+        return this.vprValue.toArray() as number[];
     }
 
     copy(): Vec_uint8_2 {
@@ -1113,6 +1156,9 @@ export class Mat_uint8_2_2 extends Proxy<dsviper.ValueMat> {
 
     constructor(value?: dsviper.ValueMat | number[][]) {
         if (value instanceof dsviper.ValueMat) {
+            if (!value.type().equals(mt.type_mat2x2_uint8())) {
+                throw new TypeError("value is not a mat<uint8, 2, 2>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueMat(mt.type_mat2x2_uint8(), value));
@@ -1144,15 +1190,15 @@ export class Mat_uint8_2_2 extends Proxy<dsviper.ValueMat> {
     }
 
     row(row: number): number[] {
-        return this.vprValue.toTuple()[row];
+        return (this.vprValue.toArray() as number[][])[row];
     }
 
     setRow(row: number, values: number[]): void {
         values.forEach((value, column) => this.vprValue.set(row, column, value));
     }
 
-    toTuple(): number[][] {
-        return this.vprValue.toTuple();
+    toArray(): number[][] {
+        return this.vprValue.toArray() as number[][];
     }
 
     copy(): Mat_uint8_2_2 {
@@ -1170,6 +1216,9 @@ export class Mat_uint8_2_3 extends Proxy<dsviper.ValueMat> {
 
     constructor(value?: dsviper.ValueMat | number[][]) {
         if (value instanceof dsviper.ValueMat) {
+            if (!value.type().equals(mt.type_mat2x3_uint8())) {
+                throw new TypeError("value is not a mat<uint8, 2, 3>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueMat(mt.type_mat2x3_uint8(), value));
@@ -1201,15 +1250,15 @@ export class Mat_uint8_2_3 extends Proxy<dsviper.ValueMat> {
     }
 
     row(row: number): number[] {
-        return this.vprValue.toTuple()[row];
+        return (this.vprValue.toArray() as number[][])[row];
     }
 
     setRow(row: number, values: number[]): void {
         values.forEach((value, column) => this.vprValue.set(row, column, value));
     }
 
-    toTuple(): number[][] {
-        return this.vprValue.toTuple();
+    toArray(): number[][] {
+        return this.vprValue.toArray() as number[][];
     }
 
     copy(): Mat_uint8_2_3 {
@@ -1227,6 +1276,9 @@ export class Tuple_uint8_string extends Proxy<dsviper.ValueTuple> {
 
     constructor(value?: dsviper.ValueTuple | dsviper.InputValue[]) {
         if (value instanceof dsviper.ValueTuple) {
+            if (!value.type().equals(mt.type_tuple_uint8_string())) {
+                throw new TypeError("value is not a tuple<uint8, string>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueTuple(mt.type_tuple_uint8_string(), value));
@@ -1266,6 +1318,9 @@ export class Optional_AnyConceptKey extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | AnyConceptKey | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_AnyConceptKey())) {
+                throw new TypeError("value is not a optional<any_concept>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_AnyConceptKey()));
@@ -1309,6 +1364,9 @@ export class Optional_Test_ConceptAKey extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Test_ConceptAKey | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_ConceptAKey())) {
+                throw new TypeError("value is not a optional<Test::ConceptA>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptAKey()));
@@ -1352,6 +1410,9 @@ export class Optional_Test_ConceptBKey extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Test_ConceptBKey | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_ConceptBKey())) {
+                throw new TypeError("value is not a optional<Test::ConceptB>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptBKey()));
@@ -1395,6 +1456,9 @@ export class Optional_Test_ConceptCKey extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Test_ConceptCKey | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_ConceptCKey())) {
+                throw new TypeError("value is not a optional<Test::ConceptC>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptCKey()));
@@ -1438,6 +1502,9 @@ export class Optional_Test_ConceptDKey extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Test_ConceptDKey | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_ConceptDKey())) {
+                throw new TypeError("value is not a optional<Test::ConceptD>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptDKey()));
@@ -1481,6 +1548,9 @@ export class Optional_Test_KlubKey extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Test_KlubKey | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_KlubKey())) {
+                throw new TypeError("value is not a optional<Test::Klub>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Test_KlubKey()));
@@ -1524,6 +1594,9 @@ export class Optional_Test_StructureT extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Test_StructureT | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_StructureT())) {
+                throw new TypeError("value is not a optional<Test::StructureT>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Test_StructureT()));
@@ -1567,6 +1640,9 @@ export class Optional_Test_StructureU extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Test_StructureU | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_StructureU())) {
+                throw new TypeError("value is not a optional<Test::StructureU>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Test_StructureU()));
@@ -1610,6 +1686,9 @@ export class Optional_Test_StructureV extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Test_StructureV | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_StructureV())) {
+                throw new TypeError("value is not a optional<Test::StructureV>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Test_StructureV()));
@@ -1653,6 +1732,9 @@ export class Optional_Any extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | dsviper.ValueAny | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_any())) {
+                throw new TypeError("value is not a optional<any>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_any()));
@@ -1696,6 +1778,9 @@ export class Optional_XArray_int8 extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | XArray_int8 | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_xarray_int8())) {
+                throw new TypeError("value is not a optional<xarray<int8>>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_xarray_int8()));
@@ -1739,6 +1824,9 @@ export class Optional_int8 extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | number | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_int8())) {
+                throw new TypeError("value is not a optional<int8>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_int8()));
@@ -1782,6 +1870,9 @@ export class Optional_Map_int8_to_string extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Map_int8_to_string | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_map_int8_to_string())) {
+                throw new TypeError("value is not a optional<map<int8, string>>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_map_int8_to_string()));
@@ -1825,6 +1916,9 @@ export class Optional_Set_int8 extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Set_int8 | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_set_int8())) {
+                throw new TypeError("value is not a optional<set<int8>>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_set_int8()));
@@ -1868,6 +1962,9 @@ export class Optional_uint8 extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | number | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_uint8())) {
+                throw new TypeError("value is not a optional<uint8>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_uint8()));
@@ -1911,6 +2008,9 @@ export class Vector_Test_StructureS extends Proxy<dsviper.ValueVector> {
 
     constructor(value?: dsviper.ValueVector | dsviper.InputValue) {
         if (value instanceof dsviper.ValueVector) {
+            if (!value.type().equals(mt.type_vector_Test_StructureS())) {
+                throw new TypeError("value is not a vector<Test::StructureS>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueVector(mt.type_vector_Test_StructureS(), value));
@@ -1996,6 +2096,9 @@ export class Vector_int8 extends Proxy<dsviper.ValueVector> {
 
     constructor(value?: dsviper.ValueVector | dsviper.InputValue) {
         if (value instanceof dsviper.ValueVector) {
+            if (!value.type().equals(mt.type_vector_int8())) {
+                throw new TypeError("value is not a vector<int8>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueVector(mt.type_vector_int8(), value));
@@ -2081,6 +2184,9 @@ export class Vector_uint8 extends Proxy<dsviper.ValueVector> {
 
     constructor(value?: dsviper.ValueVector | dsviper.InputValue) {
         if (value instanceof dsviper.ValueVector) {
+            if (!value.type().equals(mt.type_vector_uint8())) {
+                throw new TypeError("value is not a vector<uint8>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueVector(mt.type_vector_uint8(), value));
@@ -2166,6 +2272,9 @@ export class Set_AnyConceptKey extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_AnyConceptKey())) {
+                throw new TypeError("value is not a set<any_concept>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_AnyConceptKey(), value));
@@ -2281,6 +2390,9 @@ export class Set_Test_ConceptAKey extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_ConceptAKey())) {
+                throw new TypeError("value is not a set<Test::ConceptA>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_Test_ConceptAKey(), value));
@@ -2396,6 +2508,9 @@ export class Set_Test_ConceptBKey extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_ConceptBKey())) {
+                throw new TypeError("value is not a set<Test::ConceptB>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_Test_ConceptBKey(), value));
@@ -2511,6 +2626,9 @@ export class Set_Test_ConceptCKey extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_ConceptCKey())) {
+                throw new TypeError("value is not a set<Test::ConceptC>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_Test_ConceptCKey(), value));
@@ -2626,6 +2744,9 @@ export class Set_Test_KlubKey extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_KlubKey())) {
+                throw new TypeError("value is not a set<Test::Klub>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_Test_KlubKey(), value));
@@ -2741,6 +2862,9 @@ export class Set_Test_StructureS extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_StructureS())) {
+                throw new TypeError("value is not a set<Test::StructureS>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_Test_StructureS(), value));
@@ -2856,6 +2980,9 @@ export class Set_int8 extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_int8())) {
+                throw new TypeError("value is not a set<int8>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_int8(), value));
@@ -2971,6 +3098,9 @@ export class Set_string extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_string())) {
+                throw new TypeError("value is not a set<string>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_string(), value));
@@ -3086,6 +3216,9 @@ export class Set_uint8 extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_uint8())) {
+                throw new TypeError("value is not a set<uint8>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_uint8(), value));
@@ -3201,6 +3334,9 @@ export class Set_Vector_Test_StructureS extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_vector_Test_StructureS())) {
+                throw new TypeError("value is not a set<vector<Test::StructureS>>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_vector_Test_StructureS(), value));
@@ -3316,6 +3452,9 @@ export class Map_Test_StructureS_to_string extends Proxy<dsviper.ValueMap> {
 
     constructor(value?: dsviper.ValueMap | dsviper.InputValue) {
         if (value instanceof dsviper.ValueMap) {
+            if (!value.type().equals(mt.type_map_Test_StructureS_to_string())) {
+                throw new TypeError("value is not a map<Test::StructureS, string>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueMap(mt.type_map_Test_StructureS_to_string(), value));
@@ -3414,6 +3553,9 @@ export class Map_int8_to_string extends Proxy<dsviper.ValueMap> {
 
     constructor(value?: dsviper.ValueMap | dsviper.InputValue) {
         if (value instanceof dsviper.ValueMap) {
+            if (!value.type().equals(mt.type_map_int8_to_string())) {
+                throw new TypeError("value is not a map<int8, string>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueMap(mt.type_map_int8_to_string(), value));
@@ -3512,6 +3654,9 @@ export class Map_string_to_Test_StructureS extends Proxy<dsviper.ValueMap> {
 
     constructor(value?: dsviper.ValueMap | dsviper.InputValue) {
         if (value instanceof dsviper.ValueMap) {
+            if (!value.type().equals(mt.type_map_string_to_Test_StructureS())) {
+                throw new TypeError("value is not a map<string, Test::StructureS>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueMap(mt.type_map_string_to_Test_StructureS(), value));
@@ -3610,6 +3755,9 @@ export class Map_uint8_to_string extends Proxy<dsviper.ValueMap> {
 
     constructor(value?: dsviper.ValueMap | dsviper.InputValue) {
         if (value instanceof dsviper.ValueMap) {
+            if (!value.type().equals(mt.type_map_uint8_to_string())) {
+                throw new TypeError("value is not a map<uint8, string>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueMap(mt.type_map_uint8_to_string(), value));
@@ -3708,6 +3856,9 @@ export class Map_Vector_Test_StructureS_to_string extends Proxy<dsviper.ValueMap
 
     constructor(value?: dsviper.ValueMap | dsviper.InputValue) {
         if (value instanceof dsviper.ValueMap) {
+            if (!value.type().equals(mt.type_map_vector_Test_StructureS_to_string())) {
+                throw new TypeError("value is not a map<vector<Test::StructureS>, string>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueMap(mt.type_map_vector_Test_StructureS_to_string(), value));
@@ -3801,11 +3952,126 @@ export class Map_Vector_Test_StructureS_to_string extends Proxy<dsviper.ValueMap
     }
 }
 
+// xarray<Test::StructureS>
+export class XArray_Test_StructureS extends Proxy<dsviper.ValueXArray> {
+
+    constructor(value?: dsviper.ValueXArray | dsviper.InputValue) {
+        if (value instanceof dsviper.ValueXArray) {
+            if (!value.type().equals(mt.type_xarray_Test_StructureS())) {
+                throw new TypeError("value is not a xarray<Test::StructureS>");
+            }
+            super(value);
+        } else {
+            super(new dsviper.ValueXArray(mt.type_xarray_Test_StructureS(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): XArray_Test_StructureS {
+        return new XArray_Test_StructureS(dsviper.ValueXArray.cast(value as dsviper.Value));
+    }
+
+    static end(): dsviper.ValueUUId {
+        return dsviper.ValueXArray.END;
+    }
+
+    static createPosition(): dsviper.ValueUUId {
+        return dsviper.ValueXArray.createPosition();
+    }
+
+    get size(): number {
+        return this.vprValue.items().length;
+    }
+
+    at(position: dsviper.ValueUUId): Test_StructureS | undefined {
+        const v = this.vprValue.at(position);
+        return v === undefined ? undefined : Test_StructureS.wrap(v);
+    }
+
+    get(key: number | dsviper.ValueUUId): Test_StructureS | undefined {
+        const position = typeof key === "number" ? this.vprValue.position(key) : key;
+        if (position === undefined) { return undefined; }
+        return this.at(position);
+    }
+
+    set(key: number | dsviper.ValueUUId, value: Test_StructureS): void {
+        const position = typeof key === "number" ? this.vprValue.position(key) : key;
+        if (position === undefined) { return; }
+        this.vprValue.set(position, value.vprValue);
+    }
+
+    contains(value: Test_StructureS): boolean {
+        return this.vprValue.positionOf(value.vprValue) !== undefined;
+    }
+
+    append(value: Test_StructureS): dsviper.ValueUUId {
+        return this.vprValue.append(value.vprValue);
+    }
+
+    insert(beforePosition: dsviper.ValueUUId, value: Test_StructureS, newPosition?: dsviper.ValueUUId): dsviper.ValueUUId {
+        if (newPosition === undefined) {
+            return this.vprValue.insert(beforePosition, value.vprValue);
+        }
+        return this.vprValue.insert(beforePosition, value.vprValue, newPosition);
+    }
+
+    remove(position: dsviper.ValueUUId): void {
+        this.vprValue.remove(position);
+    }
+
+    positions(): dsviper.ValueUUId[] {
+        return this.vprValue.positions();
+    }
+
+    index(position: dsviper.ValueUUId): number | undefined {
+        return this.vprValue.index(position);
+    }
+
+    position(index: number): dsviper.ValueUUId | undefined {
+        return this.vprValue.position(index);
+    }
+
+    hasPosition(position: dsviper.ValueUUId): boolean {
+        return this.vprValue.hasPosition(position);
+    }
+
+    insertPosition(beforePosition: dsviper.ValueUUId, newPosition: dsviper.ValueUUId): void {
+        this.vprValue.insertPosition(beforePosition, newPosition);
+    }
+
+    disablePosition(position: dsviper.ValueUUId): void {
+        this.vprValue.disablePosition(position);
+    }
+
+    positionOf(value: Test_StructureS): dsviper.ValueUUId | undefined {
+        return this.vprValue.positionOf(value.vprValue);
+    }
+
+    items(): [dsviper.ValueUUId, Test_StructureS][] {
+        return this.vprValue.items().map(([position, value]) => [position, Test_StructureS.wrap(value as dsviper.OutputValue)]);
+    }
+
+    toVector(): Vector_Test_StructureS {
+        return new Vector_Test_StructureS(this.vprValue.toVector());
+    }
+
+    copy(): XArray_Test_StructureS {
+        return new XArray_Test_StructureS(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): XArray_Test_StructureS {
+        const value = dsviper.ValueXArray.cast(dsviper.Value.decode(blob, mt.type_xarray_Test_StructureS(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new XArray_Test_StructureS(value);
+    }
+}
+
 // xarray<int8>
 export class XArray_int8 extends Proxy<dsviper.ValueXArray> {
 
     constructor(value?: dsviper.ValueXArray | dsviper.InputValue) {
         if (value instanceof dsviper.ValueXArray) {
+            if (!value.type().equals(mt.type_xarray_int8())) {
+                throw new TypeError("value is not a xarray<int8>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueXArray(mt.type_xarray_int8(), value));
@@ -3915,6 +4181,9 @@ export class XArray_uint8 extends Proxy<dsviper.ValueXArray> {
 
     constructor(value?: dsviper.ValueXArray | dsviper.InputValue) {
         if (value instanceof dsviper.ValueXArray) {
+            if (!value.type().equals(mt.type_xarray_uint8())) {
+                throw new TypeError("value is not a xarray<uint8>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueXArray(mt.type_xarray_uint8(), value));
@@ -4026,6 +4295,9 @@ export class Variant_string_uint8_Test_StructureS extends Proxy<dsviper.ValueVar
         if (value === undefined || value === null) {
             super(new dsviper.ValueVariant(mt.type_variant_string_uint8_Test_StructureS()));
         } else if (value instanceof dsviper.ValueVariant) {
+            if (!value.type().equals(mt.type_variant_string_uint8_Test_StructureS())) {
+                throw new TypeError("value is not a variant<string, uint8, Test::StructureS>");
+            }
             super(value);
         } else if (value instanceof Proxy) {
             super(new dsviper.ValueVariant(mt.type_variant_string_uint8_Test_StructureS(), value.vprValue));
@@ -4043,6 +4315,9 @@ export class Variant_string_uint8_Test_StructureS extends Proxy<dsviper.ValueVar
     }
 
     getString(): string {
+        if (!this.isString()) {
+            throw new Error("variant does not hold a string");
+        }
         return this.vprValue.unwrap() as string;
     }
 
@@ -4054,6 +4329,9 @@ export class Variant_string_uint8_Test_StructureS extends Proxy<dsviper.ValueVar
     }
 
     getUint8(): number {
+        if (!this.isUint8()) {
+            throw new Error("variant does not hold a number");
+        }
         return this.vprValue.unwrap() as number;
     }
 
@@ -4065,6 +4343,9 @@ export class Variant_string_uint8_Test_StructureS extends Proxy<dsviper.ValueVar
     }
 
     getTest_StructureS(): Test_StructureS {
+        if (!this.isTest_StructureS()) {
+            throw new Error("variant does not hold a Test_StructureS");
+        }
         return Test_StructureS.wrap(this.vprValue.unwrap());
     }
 

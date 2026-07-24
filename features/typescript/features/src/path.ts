@@ -47,6 +47,7 @@ export class Test_Path_StructureU {
     static readonly f_map_s1: dsviper.PathConst = dsviper.Path.fromField("f_map_s1").const();
     static readonly f_map_s2: dsviper.PathConst = dsviper.Path.fromField("f_map_s2").const();
     static readonly f_xarray: dsviper.PathConst = dsviper.Path.fromField("f_xarray").const();
+    static readonly f_xarray_s: dsviper.PathConst = dsviper.Path.fromField("f_xarray_s").const();
     static readonly f_map_vs: dsviper.PathConst = dsviper.Path.fromField("f_map_vs").const();
     static readonly f_variant: dsviper.PathConst = dsviper.Path.fromField("f_variant").const();
     static readonly f_any: dsviper.PathConst = dsviper.Path.fromField("f_any").const();
