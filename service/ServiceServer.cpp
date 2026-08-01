@@ -2,13 +2,21 @@
 #include "Service_AttachmentFunctionPools.hpp"
 #include "Service_Definitions.hpp"
 #include "Service_FunctionPools.hpp"
+#include "Viper_Cancelation.hpp"
 #include "Viper_LoggerConsole.hpp"
 #include "Viper_Service.hpp"
 #include "Viper_ServiceServer.hpp"
 #include "Viper_Socket.hpp"
 #include "Viper_StringHelper.hpp"
 
+#include <csignal>
 #include <iostream>
+
+static std::shared_ptr<Viper::Cancelation> const cancelation{Viper::Cancelation::make()};
+
+static void cancelation_handler(int /*signal*/) {
+    cancelation->cancel();
+}
 
 int main(int argc, char * argv[]) {
     CLI::App app{"a server for a service."};
@@ -64,9 +72,16 @@ int main(int argc, char * argv[]) {
             serverSocket = Viper::Socket::makePassiveInet(inetAddress, inetPort);
         }
 
-        Viper::ServiceServer::run(serverSocket, service, logging);
+        signal(SIGINT, cancelation_handler);
+
+        std::cout << "Waiting at " << serverSocket->sockname() << '\n';
+        Viper::ServiceServer::run(serverSocket, service, logging, cancelation);
+        std::cout << "The server finished gracefully." << '\n';
 
     } catch (const std::exception & e) {
         std::cout << "Server Startup Error: " << e.what() << '\n';
+        return 1;
     }
+
+    return 0;
 }
