@@ -50,6 +50,9 @@ export class Proxy<V extends dsviper.Value = dsviper.Value> {
 export class AnyConceptKey extends Proxy<dsviper.ValueKey> {
 
     constructor(value: dsviper.ValueKey) {
+        if (!value.typeKey().isAnyConcept()) {
+            throw new TypeError("value is not a Key for any_concept");
+        }
         super(value);
     }
 
@@ -97,6 +100,9 @@ export class Demo_PlayerKey extends Proxy<dsviper.ValueKey> {
 
     constructor(identifier: dsviper.ValueKey | dsviper.ValueUUId | string) {
         if (identifier instanceof dsviper.ValueKey) {
+            if (!identifier.type().equals(mt.type_Demo_PlayerKey())) {
+                throw new TypeError("identifier is not a Demo::PlayerKey");
+            }
             super(identifier);
         } else if (identifier instanceof dsviper.ValueUUId || typeof identifier === "string") {
             super(dsviper.ValueKey.create(mt.type_check_Demo_PlayerKey(), identifier));
@@ -163,6 +169,9 @@ export class Demo_PlayerKey extends Proxy<dsviper.ValueKey> {
 export class Demo_Level extends Proxy<dsviper.ValueEnumeration> {
 
     constructor(value: dsviper.ValueEnumeration) {
+        if (!value.type().equals(mt.type_Demo_Level())) {
+            throw new TypeError("value is not a Demo::Level");
+        }
         super(value);
     }
 
@@ -220,6 +229,9 @@ export class Demo_PlayerProperty extends Proxy<dsviper.ValueStructure> {
 
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>) {
         if (value instanceof dsviper.ValueStructure) {
+            if (!value.type().equals(mt.type_Demo_PlayerProperty())) {
+                throw new TypeError("value is not a Demo::PlayerProperty");
+            }
             super(value);
         } else {
             super(new dsviper.ValueStructure(mt.type_Demo_PlayerProperty(), value));
@@ -260,6 +272,9 @@ export class Demo_Vector3 extends Proxy<dsviper.ValueStructure> {
 
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>) {
         if (value instanceof dsviper.ValueStructure) {
+            if (!value.type().equals(mt.type_Demo_Vector3())) {
+                throw new TypeError("value is not a Demo::Vector3");
+            }
             super(value);
         } else {
             super(new dsviper.ValueStructure(mt.type_Demo_Vector3(), value));
@@ -307,6 +322,9 @@ export class Optional_AnyConceptKey extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | AnyConceptKey | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_AnyConceptKey())) {
+                throw new TypeError("value is not a optional<any_concept>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_AnyConceptKey()));
@@ -350,6 +368,9 @@ export class Optional_Demo_PlayerKey extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Demo_PlayerKey | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Demo_PlayerKey())) {
+                throw new TypeError("value is not a optional<key<Demo::Player>>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Demo_PlayerKey()));
@@ -393,6 +414,9 @@ export class Optional_Demo_PlayerProperty extends Proxy<dsviper.ValueOptional> {
 
     constructor(value?: dsviper.ValueOptional | Demo_PlayerProperty | null) {
         if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Demo_PlayerProperty())) {
+                throw new TypeError("value is not a optional<Demo::PlayerProperty>");
+            }
             super(value);
         } else if (value === null || value === undefined) {
             super(new dsviper.ValueOptional(mt.type_optional_Demo_PlayerProperty()));
@@ -436,6 +460,9 @@ export class Set_Demo_PlayerKey extends Proxy<dsviper.ValueSet> {
 
     constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
         if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Demo_PlayerKey())) {
+                throw new TypeError("value is not a set<Demo::Player>");
+            }
             super(value);
         } else {
             super(new dsviper.ValueSet(mt.type_set_Demo_PlayerKey(), value));
