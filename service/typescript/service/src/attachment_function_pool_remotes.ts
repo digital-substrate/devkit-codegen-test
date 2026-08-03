@@ -29,7 +29,7 @@ export class PlayerModel {
         const result = this.serviceRemote.attachmentFunctionPoolFunc("PlayerModel", "create").call(attachmentMutating, new dsviper.ValueString(nickname), level.vprValue) as unknown as dsviper.OutputValue;
         return d.Demo_PlayerKey.wrap(result);
     }
-    hasPlayer(attachmentMutating: dsviper.AttachmentMutating, nickname: string): d.Optional_Demo_PlayerKey {
+    has_player(attachmentMutating: dsviper.AttachmentMutating, nickname: string): d.Optional_Demo_PlayerKey {
         const result = this.serviceRemote.attachmentFunctionPoolFunc("PlayerModel", "has_player").call(attachmentMutating, new dsviper.ValueString(nickname)) as unknown as dsviper.OutputValue;
         return d.Optional_Demo_PlayerKey.wrap(result);
     }

@@ -56,8 +56,8 @@ int main(int argc, char * argv[]) {
 
             Demo::Vector3 const v1{1, 2, 3};
             Demo::Vector3 const v2{10, 20, 30};
-            auto const rv{tools.addVector(v1, v2)};
-            std::cout << "addVector(v1,v2) -> (" << rv.x << "," << rv.y << "," << rv.z << ")" << '\n';
+            auto const rv{tools.add_vector(v1, v2)};
+            std::cout << "add_vector(v1,v2) -> (" << rv.x << "," << rv.y << "," << rv.z << ")" << '\n';
         }
 
         auto const playerModel{PlayerModel{service}};

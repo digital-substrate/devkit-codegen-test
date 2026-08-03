@@ -29,11 +29,11 @@ export class Tools {
         const result = this.serviceRemote.functionPoolFunc("Tools", "add").call(new dsviper.ValueInt64(a), new dsviper.ValueInt64(b)) as unknown as dsviper.OutputValue;
         return result as bigint;
     }
-    addVector(a: d.Demo_Vector3, b: d.Demo_Vector3): d.Demo_Vector3 {
+    add_vector(a: d.Demo_Vector3, b: d.Demo_Vector3): d.Demo_Vector3 {
         const result = this.serviceRemote.functionPoolFunc("Tools", "add_vector").call(a.vprValue, b.vprValue) as unknown as dsviper.OutputValue;
         return d.Demo_Vector3.wrap(result);
     }
-    randomString(size: number): string {
+    random_string(size: number): string {
         const result = this.serviceRemote.functionPoolFunc("Tools", "random_string").call(new dsviper.ValueUInt32(size)) as unknown as dsviper.OutputValue;
         return result as string;
     }
