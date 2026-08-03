@@ -10,8 +10,8 @@ from dsviper import DSMDefinitions, DefinitionsConst, DSMBuilder
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--cpp", help="Generate C++", action="store_true")
-parser.add_argument("-p", "--package", help="Generate Python package", action="store_true")
-parser.add_argument("-ts", "--typescript", help="Generate the TypeScript package", action="store_true")
+parser.add_argument("-p", "--python", help="Generate Python package", action="store_true")
+parser.add_argument("-t", "--typescript", help="Generate the TypeScript package", action="store_true")
 arguments = parser.parse_args()
 
 SIBLING_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -126,7 +126,7 @@ REPORT, DSM_DEFINITIONS, DEFINITIONS = BUILDER.parse()
 check_report(report=REPORT)
 save_dsm_definitions(dsm_definitions=DSM_DEFINITIONS, dsm_path=DSM_PATH)
 
-if not (arguments.cpp | arguments.package | arguments.typescript):
+if not (arguments.cpp | arguments.python | arguments.typescript):
     parser.print_help()
     exit(0)
 
@@ -135,7 +135,7 @@ if arguments.cpp:
     render_templates(namespace=NAMESPACE, dsm_path=DSM_PATH, output=f'{NAMESPACE}')
     generate_resource(definitions=DEFINITIONS, output=f'{NAMESPACE}/{NAMESPACE}_Resources.hpp')
 
-if arguments.package:
+if arguments.python:
     print('** Render Python Package')
     generate_package(name='service', dsm_path=DSM_PATH, definitions=DEFINITIONS, output=f'python/service')
 

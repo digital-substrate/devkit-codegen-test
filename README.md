@@ -7,6 +7,9 @@ Two projects exercise the DSM → Kibo → templates → runtime pipeline:
 - `features/` — value-system features: data, stream, json, database, attachments, codecs, hashers, fuzz.
 - `service/` — RPC / function-pool features: function pools, attachments pools, remote variants, bridges.
 
+Each is generated for three targets — C++, Python and TypeScript — so a change to the
+templates can be checked against all of them.
+
 These projects are not built or run by the `dsviper` runtime CI. They serve as a manual
 sanity check of the codegen pipeline and as a reference of how a downstream application
 wires DSM definitions, Kibo, templates, and the runtime together.
@@ -47,11 +50,12 @@ json, hash, antlr4, cli11) and the `viper` static target.
 ## Usage
 
 ```bash
-# 1. Generate C++ and Python code from the DSM definitions.
+# 1. Generate C++, Python and TypeScript code from the DSM definitions.
+#    -c C++, -p Python package, -t TypeScript package; pick what you need.
 cd features
-python3 generate.py all.dsm -c -p
+python3 generate.py all.dsm -c -p -t
 cd ../service
-python3 generate.py -c -p
+python3 generate.py -c -p -t
 
 # 2. Build the C++ executables (links viper from the sibling checkout).
 cd ..
@@ -62,6 +66,12 @@ cmake --build . -j
 # 3. Run the Python tests against the generated `features` package.
 cd ../features/python
 ./run_test.sh
+
+# 4. Build and run a TypeScript client (needs the dsviper npm package).
+cd ../../service/typescript
+npm install
+npm run build
+npm run client        # against a running service_server
 ```
 
 `CMakeLists.txt` skips `features/` or `service/` cleanly when their generated
