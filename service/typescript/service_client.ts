@@ -21,7 +21,7 @@ if (tools.isAvailable()) {
     const v1 = new Demo_Vector3({ x: 1, y: 2, z: 3 });
     const v2 = new Demo_Vector3({ x: 10, y: 20, z: 30 });
 
-    const vr = tools.addVector(v1, v2);
+    const vr = tools.add_vector(v1, v2);
     console.log(vr.toString());
 
     const pm = new afpr.PlayerModel(serviceRemote);
@@ -32,7 +32,7 @@ if (tools.isAvailable()) {
         const nickname = "the shadow man";
         const key = pm.create(mutating, nickname, Demo_Level.BEGINNER);
         console.log(`key is ${key}`);
-        const pk = pm.hasPlayer(mutating, nickname);
+        const pk = pm.has_player(mutating, nickname);
         if (!pk.isNil()) {
             const property = sea.player_Property.get(mutating, pk.unwrap());
             if (!property.isNil()) {
