@@ -137,6 +137,71 @@ attachment<ConceptC, StructureU> propertiesC;
 attachment<Klub, StructureV> propertiesD;
 attachment<any_concept, any> propertiesAnyConceptAny;
 
+// Generation coverage.
+//
+// Every shape of the language must appear both as a structure field and as an
+// attachment document type. The two are not the same code path: a field is
+// written through its own accessor, while a document is fuzzed, decoded and
+// brace-initialised, and the templates branch on the document type
+// (isStructure, isNotBox, isSet, isMap, isXArray). StructureU and StructureV
+// above cover the field side exhaustively; the attachments below cover the
+// document side.
+
+concept ConceptCoverage;
+
+// A club with no member, and a structure with a single field: both are shapes
+// whose zero/one case the generator handles separately.
+club EmptyKlub;
+
+struct StructureW {
+  uint8 f_single;
+};
+
+// Numbers
+attachment<ConceptCoverage, bool> docBool;
+attachment<ConceptCoverage, uint8> docUInt8;
+attachment<ConceptCoverage, uint16> docUInt16;
+attachment<ConceptCoverage, uint32> docUInt32;
+attachment<ConceptCoverage, uint64> docUInt64;
+attachment<ConceptCoverage, int8> docInt8;
+attachment<ConceptCoverage, int16> docInt16;
+attachment<ConceptCoverage, int32> docInt32;
+attachment<ConceptCoverage, int64> docInt64;
+attachment<ConceptCoverage, float> docFloat;
+attachment<ConceptCoverage, double> docDouble;
+
+// Ids
+attachment<ConceptCoverage, blob_id> docBlobId;
+attachment<ConceptCoverage, commit_id> docCommitId;
+attachment<ConceptCoverage, uuid> docUUId;
+
+// String & Blob
+attachment<ConceptCoverage, string> docString;
+attachment<ConceptCoverage, blob> docBlob;
+
+// Any
+attachment<ConceptCoverage, any> docAny;
+
+// Vec & Mat
+attachment<ConceptCoverage, vec<uint8,2>> docVec;
+attachment<ConceptCoverage, mat<uint8,2,2>> docMat;
+
+// Containers
+attachment<ConceptCoverage, tuple<uint8, string>> docTuple;
+attachment<ConceptCoverage, optional<uint8>> docOptional;
+attachment<ConceptCoverage, vector<uint8>> docVector;
+attachment<ConceptCoverage, set<uint8>> docSet;
+attachment<ConceptCoverage, map<uint8, string>> docMap;
+attachment<ConceptCoverage, xarray<uint8>> docXArray;
+attachment<ConceptCoverage, variant<string, uint8>> docVariant;
+
+// Entities
+attachment<ConceptCoverage, EnumerationE> docEnumeration;
+attachment<ConceptCoverage, key<ConceptA>> docConceptKey;
+attachment<ConceptCoverage, key<Klub>> docClubKey;
+attachment<ConceptCoverage, key<any_concept>> docAnyConceptKey;
+attachment<ConceptCoverage, StructureW> docStructureSingleField;
+
 }; // ns
 
 
