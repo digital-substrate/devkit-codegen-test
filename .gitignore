@@ -4,11 +4,13 @@ features/Features_Test_*.cpp
 features/Features.dsmb
 features/Features.dsm.json
 features/python/features/
+features/typescript/features/
 
 service/Service/
 service/Service.dsmb
 service/Service.dsm.json
 service/python/service/
+service/typescript/service/
 
 # Python
 __pycache__/
