@@ -198,6 +198,7 @@ attachment<ConceptCoverage, variant<string, uint8>> docVariant;
 // Entities
 attachment<ConceptCoverage, EnumerationE> docEnumeration;
 attachment<ConceptCoverage, key<ConceptA>> docConceptKey;
+attachment<ConceptCoverage, key<ConceptB>> docConceptKeyB;
 attachment<ConceptCoverage, key<Klub>> docClubKey;
 attachment<ConceptCoverage, key<any_concept>> docAnyConceptKey;
 attachment<ConceptCoverage, StructureW> docStructureSingleField;

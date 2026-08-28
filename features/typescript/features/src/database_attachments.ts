@@ -575,6 +575,41 @@ export const conceptCoverage_DocConceptKey = {
     },
 };
 
+// attachment<ConceptCoverage, key<ConceptB>> Test::docConceptKeyB
+export const conceptCoverage_DocConceptKeyB = {
+    keys(database: dsviper.Database): d.Set_Test_ConceptCoverageKey {
+        const attachment = database.definitions().checkAttachment(md.AttachmentRuntimeIds.Test_ConceptCoverage_DocConceptKeyB);
+        return new d.Set_Test_ConceptCoverageKey(database.keys(attachment));
+    },
+
+    has(database: dsviper.Database, key: d.Test_ConceptCoverageKey): boolean {
+        const attachment = database.definitions().checkAttachment(md.AttachmentRuntimeIds.Test_ConceptCoverage_DocConceptKeyB);
+        return database.has(attachment, key.vprValue);
+    },
+
+    get(database: dsviper.Database, key: d.Test_ConceptCoverageKey): d.Optional_Test_ConceptBKey {
+        const attachment = database.definitions().checkAttachment(md.AttachmentRuntimeIds.Test_ConceptCoverage_DocConceptKeyB);
+        return new d.Optional_Test_ConceptBKey(database.get(attachment, key.vprValue));
+    },
+
+    set(database: dsviper.Database, key: d.Test_ConceptCoverageKey, value: d.Test_ConceptBKey): void {
+        const attachment = database.definitions().checkAttachment(md.AttachmentRuntimeIds.Test_ConceptCoverage_DocConceptKeyB);
+        database.set(attachment, key.vprValue, value.vprValue);
+    },
+
+    del(database: dsviper.Database, key: d.Test_ConceptCoverageKey): void {
+        const attachment = database.definitions().checkAttachment(md.AttachmentRuntimeIds.Test_ConceptCoverage_DocConceptKeyB);
+        database.delete(attachment, key.vprValue);
+    },
+
+    *enumerate(database: dsviper.Database): Generator<[d.Test_ConceptCoverageKey, d.Test_ConceptBKey]> {
+        for (const key of this.keys(database)) {
+            const document = this.get(database, key).unwrap();
+            yield [key, document];
+        }
+    },
+};
+
 // attachment<ConceptCoverage, double> Test::docDouble
 export const conceptCoverage_DocDouble = {
     keys(database: dsviper.Database): d.Set_Test_ConceptCoverageKey {

@@ -1472,6 +1472,1800 @@ export class Tuple_uint8_string extends Proxy<dsviper.ValueTuple> {
     }
 }
 
+// optional<any_concept>
+export class Optional_AnyConceptKey extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | AnyConceptKey | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_AnyConceptKey())) {
+                throw new TypeError("value is not a optional<any_concept>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_AnyConceptKey()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_AnyConceptKey(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_AnyConceptKey {
+        return new Optional_AnyConceptKey(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): AnyConceptKey {
+        return AnyConceptKey.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: AnyConceptKey): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: AnyConceptKey): AnyConceptKey {
+        return AnyConceptKey.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_AnyConceptKey {
+        return new Optional_AnyConceptKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_AnyConceptKey {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_AnyConceptKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_AnyConceptKey(value);
+    }
+}
+
+// optional<Test::ConceptA>
+export class Optional_Test_ConceptAKey extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_ConceptAKey | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_ConceptAKey())) {
+                throw new TypeError("value is not a optional<Test::ConceptA>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptAKey()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptAKey(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_ConceptAKey {
+        return new Optional_Test_ConceptAKey(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_ConceptAKey {
+        return Test_ConceptAKey.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_ConceptAKey): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_ConceptAKey): Test_ConceptAKey {
+        return Test_ConceptAKey.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_ConceptAKey {
+        return new Optional_Test_ConceptAKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_ConceptAKey {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_ConceptAKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_ConceptAKey(value);
+    }
+}
+
+// optional<Test::ConceptB>
+export class Optional_Test_ConceptBKey extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_ConceptBKey | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_ConceptBKey())) {
+                throw new TypeError("value is not a optional<Test::ConceptB>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptBKey()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptBKey(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_ConceptBKey {
+        return new Optional_Test_ConceptBKey(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_ConceptBKey {
+        return Test_ConceptBKey.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_ConceptBKey): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_ConceptBKey): Test_ConceptBKey {
+        return Test_ConceptBKey.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_ConceptBKey {
+        return new Optional_Test_ConceptBKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_ConceptBKey {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_ConceptBKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_ConceptBKey(value);
+    }
+}
+
+// optional<Test::ConceptC>
+export class Optional_Test_ConceptCKey extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_ConceptCKey | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_ConceptCKey())) {
+                throw new TypeError("value is not a optional<Test::ConceptC>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptCKey()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptCKey(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_ConceptCKey {
+        return new Optional_Test_ConceptCKey(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_ConceptCKey {
+        return Test_ConceptCKey.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_ConceptCKey): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_ConceptCKey): Test_ConceptCKey {
+        return Test_ConceptCKey.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_ConceptCKey {
+        return new Optional_Test_ConceptCKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_ConceptCKey {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_ConceptCKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_ConceptCKey(value);
+    }
+}
+
+// optional<Test::ConceptCoverage>
+export class Optional_Test_ConceptCoverageKey extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_ConceptCoverageKey | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_ConceptCoverageKey())) {
+                throw new TypeError("value is not a optional<Test::ConceptCoverage>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptCoverageKey()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptCoverageKey(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_ConceptCoverageKey {
+        return new Optional_Test_ConceptCoverageKey(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_ConceptCoverageKey {
+        return Test_ConceptCoverageKey.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_ConceptCoverageKey): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_ConceptCoverageKey): Test_ConceptCoverageKey {
+        return Test_ConceptCoverageKey.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_ConceptCoverageKey {
+        return new Optional_Test_ConceptCoverageKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_ConceptCoverageKey {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_ConceptCoverageKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_ConceptCoverageKey(value);
+    }
+}
+
+// optional<Test::ConceptD>
+export class Optional_Test_ConceptDKey extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_ConceptDKey | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_ConceptDKey())) {
+                throw new TypeError("value is not a optional<Test::ConceptD>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptDKey()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_ConceptDKey(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_ConceptDKey {
+        return new Optional_Test_ConceptDKey(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_ConceptDKey {
+        return Test_ConceptDKey.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_ConceptDKey): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_ConceptDKey): Test_ConceptDKey {
+        return Test_ConceptDKey.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_ConceptDKey {
+        return new Optional_Test_ConceptDKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_ConceptDKey {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_ConceptDKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_ConceptDKey(value);
+    }
+}
+
+// optional<Test::EmptyKlub>
+export class Optional_Test_EmptyKlubKey extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_EmptyKlubKey | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_EmptyKlubKey())) {
+                throw new TypeError("value is not a optional<Test::EmptyKlub>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_EmptyKlubKey()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_EmptyKlubKey(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_EmptyKlubKey {
+        return new Optional_Test_EmptyKlubKey(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_EmptyKlubKey {
+        return Test_EmptyKlubKey.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_EmptyKlubKey): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_EmptyKlubKey): Test_EmptyKlubKey {
+        return Test_EmptyKlubKey.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_EmptyKlubKey {
+        return new Optional_Test_EmptyKlubKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_EmptyKlubKey {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_EmptyKlubKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_EmptyKlubKey(value);
+    }
+}
+
+// optional<Test::EnumerationE>
+export class Optional_Test_EnumerationE extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_EnumerationE | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_EnumerationE())) {
+                throw new TypeError("value is not a optional<Test::EnumerationE>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_EnumerationE()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_EnumerationE(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_EnumerationE {
+        return new Optional_Test_EnumerationE(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_EnumerationE {
+        return Test_EnumerationE.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_EnumerationE): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_EnumerationE): Test_EnumerationE {
+        return Test_EnumerationE.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_EnumerationE {
+        return new Optional_Test_EnumerationE(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_EnumerationE {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_EnumerationE(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_EnumerationE(value);
+    }
+}
+
+// optional<Test::Klub>
+export class Optional_Test_KlubKey extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_KlubKey | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_KlubKey())) {
+                throw new TypeError("value is not a optional<Test::Klub>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_KlubKey()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_KlubKey(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_KlubKey {
+        return new Optional_Test_KlubKey(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_KlubKey {
+        return Test_KlubKey.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_KlubKey): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_KlubKey): Test_KlubKey {
+        return Test_KlubKey.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_KlubKey {
+        return new Optional_Test_KlubKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_KlubKey {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_KlubKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_KlubKey(value);
+    }
+}
+
+// optional<Test::StructureT>
+export class Optional_Test_StructureT extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_StructureT | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_StructureT())) {
+                throw new TypeError("value is not a optional<Test::StructureT>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_StructureT()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_StructureT(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_StructureT {
+        return new Optional_Test_StructureT(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_StructureT {
+        return Test_StructureT.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_StructureT): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_StructureT): Test_StructureT {
+        return Test_StructureT.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_StructureT {
+        return new Optional_Test_StructureT(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_StructureT {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_StructureT(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_StructureT(value);
+    }
+}
+
+// optional<Test::StructureU>
+export class Optional_Test_StructureU extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_StructureU | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_StructureU())) {
+                throw new TypeError("value is not a optional<Test::StructureU>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_StructureU()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_StructureU(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_StructureU {
+        return new Optional_Test_StructureU(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_StructureU {
+        return Test_StructureU.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_StructureU): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_StructureU): Test_StructureU {
+        return Test_StructureU.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_StructureU {
+        return new Optional_Test_StructureU(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_StructureU {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_StructureU(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_StructureU(value);
+    }
+}
+
+// optional<Test::StructureV>
+export class Optional_Test_StructureV extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_StructureV | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_StructureV())) {
+                throw new TypeError("value is not a optional<Test::StructureV>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_StructureV()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_StructureV(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_StructureV {
+        return new Optional_Test_StructureV(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_StructureV {
+        return Test_StructureV.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_StructureV): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_StructureV): Test_StructureV {
+        return Test_StructureV.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_StructureV {
+        return new Optional_Test_StructureV(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_StructureV {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_StructureV(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_StructureV(value);
+    }
+}
+
+// optional<Test::StructureW>
+export class Optional_Test_StructureW extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Test_StructureW | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_Test_StructureW())) {
+                throw new TypeError("value is not a optional<Test::StructureW>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_StructureW()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_Test_StructureW(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Test_StructureW {
+        return new Optional_Test_StructureW(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Test_StructureW {
+        return Test_StructureW.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Test_StructureW): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Test_StructureW): Test_StructureW {
+        return Test_StructureW.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Test_StructureW {
+        return new Optional_Test_StructureW(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Test_StructureW {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_Test_StructureW(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Test_StructureW(value);
+    }
+}
+
+// optional<any>
+export class Optional_Any extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | dsviper.ValueAny | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_any())) {
+                throw new TypeError("value is not a optional<any>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_any()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_any(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Any {
+        return new Optional_Any(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): dsviper.ValueAny {
+        return this.vprValue.unwrap() as dsviper.ValueAny;
+    }
+
+    wrap(value: dsviper.ValueAny): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: dsviper.ValueAny): dsviper.ValueAny {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as dsviper.ValueAny;
+    }
+
+    copy(): Optional_Any {
+        return new Optional_Any(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Any {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_any(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Any(value);
+    }
+}
+
+// optional<blob>
+export class Optional_blob extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | dsviper.ValueBlob | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_blob())) {
+                throw new TypeError("value is not a optional<blob>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_blob()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_blob(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_blob {
+        return new Optional_blob(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): dsviper.ValueBlob {
+        return this.vprValue.unwrap() as dsviper.ValueBlob;
+    }
+
+    wrap(value: dsviper.ValueBlob): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: dsviper.ValueBlob): dsviper.ValueBlob {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as dsviper.ValueBlob;
+    }
+
+    copy(): Optional_blob {
+        return new Optional_blob(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_blob {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_blob(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_blob(value);
+    }
+}
+
+// optional<blob_id>
+export class Optional_blob_id extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | dsviper.ValueBlobId | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_blob_id())) {
+                throw new TypeError("value is not a optional<blob_id>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_blob_id()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_blob_id(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_blob_id {
+        return new Optional_blob_id(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): dsviper.ValueBlobId {
+        return this.vprValue.unwrap() as dsviper.ValueBlobId;
+    }
+
+    wrap(value: dsviper.ValueBlobId): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: dsviper.ValueBlobId): dsviper.ValueBlobId {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as dsviper.ValueBlobId;
+    }
+
+    copy(): Optional_blob_id {
+        return new Optional_blob_id(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_blob_id {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_blob_id(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_blob_id(value);
+    }
+}
+
+// optional<commit_id>
+export class Optional_commit_id extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | dsviper.ValueCommitId | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_commit_id())) {
+                throw new TypeError("value is not a optional<commit_id>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_commit_id()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_commit_id(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_commit_id {
+        return new Optional_commit_id(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): dsviper.ValueCommitId {
+        return this.vprValue.unwrap() as dsviper.ValueCommitId;
+    }
+
+    wrap(value: dsviper.ValueCommitId): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: dsviper.ValueCommitId): dsviper.ValueCommitId {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as dsviper.ValueCommitId;
+    }
+
+    copy(): Optional_commit_id {
+        return new Optional_commit_id(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_commit_id {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_commit_id(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_commit_id(value);
+    }
+}
+
+// optional<uuid>
+export class Optional_uuid extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | dsviper.ValueUUId | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_uuid())) {
+                throw new TypeError("value is not a optional<uuid>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_uuid()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_uuid(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_uuid {
+        return new Optional_uuid(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): dsviper.ValueUUId {
+        return this.vprValue.unwrap() as dsviper.ValueUUId;
+    }
+
+    wrap(value: dsviper.ValueUUId): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: dsviper.ValueUUId): dsviper.ValueUUId {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as dsviper.ValueUUId;
+    }
+
+    copy(): Optional_uuid {
+        return new Optional_uuid(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_uuid {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_uuid(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_uuid(value);
+    }
+}
+
+// optional<xarray<int8>>
+export class Optional_XArray_int8 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | XArray_int8 | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_xarray_int8())) {
+                throw new TypeError("value is not a optional<xarray<int8>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_xarray_int8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_xarray_int8(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_XArray_int8 {
+        return new Optional_XArray_int8(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): XArray_int8 {
+        return XArray_int8.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: XArray_int8): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: XArray_int8): XArray_int8 {
+        return XArray_int8.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_XArray_int8 {
+        return new Optional_XArray_int8(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_XArray_int8 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_xarray_int8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_XArray_int8(value);
+    }
+}
+
+// optional<xarray<uint8>>
+export class Optional_XArray_uint8 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | XArray_uint8 | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_xarray_uint8())) {
+                throw new TypeError("value is not a optional<xarray<uint8>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_xarray_uint8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_xarray_uint8(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_XArray_uint8 {
+        return new Optional_XArray_uint8(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): XArray_uint8 {
+        return XArray_uint8.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: XArray_uint8): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: XArray_uint8): XArray_uint8 {
+        return XArray_uint8.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_XArray_uint8 {
+        return new Optional_XArray_uint8(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_XArray_uint8 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_xarray_uint8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_XArray_uint8(value);
+    }
+}
+
+// optional<bool>
+export class Optional_bool extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | boolean | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_bool())) {
+                throw new TypeError("value is not a optional<bool>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_bool()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_bool(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_bool {
+        return new Optional_bool(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): boolean {
+        return this.vprValue.unwrap() as boolean;
+    }
+
+    wrap(value: boolean): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: boolean): boolean {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as boolean;
+    }
+
+    copy(): Optional_bool {
+        return new Optional_bool(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_bool {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_bool(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_bool(value);
+    }
+}
+
+// optional<double>
+export class Optional_double extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | number | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_double())) {
+                throw new TypeError("value is not a optional<double>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_double()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_double(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_double {
+        return new Optional_double(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): number {
+        return this.vprValue.unwrap() as number;
+    }
+
+    wrap(value: number): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: number): number {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as number;
+    }
+
+    copy(): Optional_double {
+        return new Optional_double(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_double {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_double(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_double(value);
+    }
+}
+
+// optional<float>
+export class Optional_float extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | number | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_float())) {
+                throw new TypeError("value is not a optional<float>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_float()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_float(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_float {
+        return new Optional_float(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): number {
+        return this.vprValue.unwrap() as number;
+    }
+
+    wrap(value: number): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: number): number {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as number;
+    }
+
+    copy(): Optional_float {
+        return new Optional_float(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_float {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_float(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_float(value);
+    }
+}
+
+// optional<mat<uint8, 2, 2>>
+export class Optional_Mat_uint8_2_2 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Mat_uint8_2_2 | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_mat2x2_uint8())) {
+                throw new TypeError("value is not a optional<mat<uint8, 2, 2>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_mat2x2_uint8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_mat2x2_uint8(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Mat_uint8_2_2 {
+        return new Optional_Mat_uint8_2_2(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Mat_uint8_2_2 {
+        return Mat_uint8_2_2.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Mat_uint8_2_2): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Mat_uint8_2_2): Mat_uint8_2_2 {
+        return Mat_uint8_2_2.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Mat_uint8_2_2 {
+        return new Optional_Mat_uint8_2_2(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Mat_uint8_2_2 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_mat2x2_uint8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Mat_uint8_2_2(value);
+    }
+}
+
+// optional<vec<uint8, 2>>
+export class Optional_Vec_uint8_2 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Vec_uint8_2 | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_vec2_uint8())) {
+                throw new TypeError("value is not a optional<vec<uint8, 2>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_vec2_uint8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_vec2_uint8(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Vec_uint8_2 {
+        return new Optional_Vec_uint8_2(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Vec_uint8_2 {
+        return Vec_uint8_2.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Vec_uint8_2): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Vec_uint8_2): Vec_uint8_2 {
+        return Vec_uint8_2.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Vec_uint8_2 {
+        return new Optional_Vec_uint8_2(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Vec_uint8_2 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_vec2_uint8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Vec_uint8_2(value);
+    }
+}
+
+// optional<int16>
+export class Optional_int16 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | number | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_int16())) {
+                throw new TypeError("value is not a optional<int16>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_int16()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_int16(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_int16 {
+        return new Optional_int16(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): number {
+        return this.vprValue.unwrap() as number;
+    }
+
+    wrap(value: number): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: number): number {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as number;
+    }
+
+    copy(): Optional_int16 {
+        return new Optional_int16(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_int16 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_int16(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_int16(value);
+    }
+}
+
+// optional<int32>
+export class Optional_int32 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | number | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_int32())) {
+                throw new TypeError("value is not a optional<int32>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_int32()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_int32(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_int32 {
+        return new Optional_int32(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): number {
+        return this.vprValue.unwrap() as number;
+    }
+
+    wrap(value: number): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: number): number {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as number;
+    }
+
+    copy(): Optional_int32 {
+        return new Optional_int32(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_int32 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_int32(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_int32(value);
+    }
+}
+
+// optional<int64>
+export class Optional_int64 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | bigint | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_int64())) {
+                throw new TypeError("value is not a optional<int64>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_int64()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_int64(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_int64 {
+        return new Optional_int64(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): bigint {
+        return this.vprValue.unwrap() as bigint;
+    }
+
+    wrap(value: bigint): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: bigint): bigint {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as bigint;
+    }
+
+    copy(): Optional_int64 {
+        return new Optional_int64(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_int64 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_int64(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_int64(value);
+    }
+}
+
+// optional<int8>
+export class Optional_int8 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | number | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_int8())) {
+                throw new TypeError("value is not a optional<int8>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_int8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_int8(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_int8 {
+        return new Optional_int8(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): number {
+        return this.vprValue.unwrap() as number;
+    }
+
+    wrap(value: number): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: number): number {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as number;
+    }
+
+    copy(): Optional_int8 {
+        return new Optional_int8(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_int8 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_int8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_int8(value);
+    }
+}
+
+// optional<map<int8, string>>
+export class Optional_Map_int8_to_string extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Map_int8_to_string | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_map_int8_to_string())) {
+                throw new TypeError("value is not a optional<map<int8, string>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_map_int8_to_string()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_map_int8_to_string(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Map_int8_to_string {
+        return new Optional_Map_int8_to_string(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Map_int8_to_string {
+        return Map_int8_to_string.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Map_int8_to_string): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Map_int8_to_string): Map_int8_to_string {
+        return Map_int8_to_string.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Map_int8_to_string {
+        return new Optional_Map_int8_to_string(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Map_int8_to_string {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_map_int8_to_string(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Map_int8_to_string(value);
+    }
+}
+
+// optional<map<uint8, string>>
+export class Optional_Map_uint8_to_string extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Map_uint8_to_string | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_map_uint8_to_string())) {
+                throw new TypeError("value is not a optional<map<uint8, string>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_map_uint8_to_string()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_map_uint8_to_string(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Map_uint8_to_string {
+        return new Optional_Map_uint8_to_string(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Map_uint8_to_string {
+        return Map_uint8_to_string.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Map_uint8_to_string): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Map_uint8_to_string): Map_uint8_to_string {
+        return Map_uint8_to_string.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Map_uint8_to_string {
+        return new Optional_Map_uint8_to_string(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Map_uint8_to_string {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_map_uint8_to_string(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Map_uint8_to_string(value);
+    }
+}
+
+// optional<optional<uint8>>
+export class Optional_Optional_uint8 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Optional_uint8 | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_optional_uint8())) {
+                throw new TypeError("value is not a optional<optional<uint8>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_optional_uint8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_optional_uint8(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Optional_uint8 {
+        return new Optional_Optional_uint8(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Optional_uint8 {
+        return Optional_uint8.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Optional_uint8): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Optional_uint8): Optional_uint8 {
+        return Optional_uint8.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Optional_uint8 {
+        return new Optional_Optional_uint8(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Optional_uint8 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_optional_uint8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Optional_uint8(value);
+    }
+}
+
+// optional<set<int8>>
+export class Optional_Set_int8 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Set_int8 | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_set_int8())) {
+                throw new TypeError("value is not a optional<set<int8>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_set_int8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_set_int8(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Set_int8 {
+        return new Optional_Set_int8(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Set_int8 {
+        return Set_int8.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Set_int8): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Set_int8): Set_int8 {
+        return Set_int8.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Set_int8 {
+        return new Optional_Set_int8(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Set_int8 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_set_int8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Set_int8(value);
+    }
+}
+
+// optional<set<uint8>>
+export class Optional_Set_uint8 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Set_uint8 | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_set_uint8())) {
+                throw new TypeError("value is not a optional<set<uint8>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_set_uint8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_set_uint8(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Set_uint8 {
+        return new Optional_Set_uint8(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Set_uint8 {
+        return Set_uint8.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Set_uint8): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Set_uint8): Set_uint8 {
+        return Set_uint8.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Set_uint8 {
+        return new Optional_Set_uint8(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Set_uint8 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_set_uint8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Set_uint8(value);
+    }
+}
+
+// optional<string>
+export class Optional_string extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | string | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_string())) {
+                throw new TypeError("value is not a optional<string>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_string()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_string(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_string {
+        return new Optional_string(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): string {
+        return this.vprValue.unwrap() as string;
+    }
+
+    wrap(value: string): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: string): string {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as string;
+    }
+
+    copy(): Optional_string {
+        return new Optional_string(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_string {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_string(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_string(value);
+    }
+}
+
+// optional<tuple<uint8, string>>
+export class Optional_Tuple_uint8_string extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Tuple_uint8_string | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_tuple_uint8_string())) {
+                throw new TypeError("value is not a optional<tuple<uint8, string>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_tuple_uint8_string()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_tuple_uint8_string(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Tuple_uint8_string {
+        return new Optional_Tuple_uint8_string(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Tuple_uint8_string {
+        return Tuple_uint8_string.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Tuple_uint8_string): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Tuple_uint8_string): Tuple_uint8_string {
+        return Tuple_uint8_string.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Tuple_uint8_string {
+        return new Optional_Tuple_uint8_string(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Tuple_uint8_string {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_tuple_uint8_string(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Tuple_uint8_string(value);
+    }
+}
+
+// optional<uint16>
+export class Optional_uint16 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | number | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_uint16())) {
+                throw new TypeError("value is not a optional<uint16>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_uint16()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_uint16(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_uint16 {
+        return new Optional_uint16(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): number {
+        return this.vprValue.unwrap() as number;
+    }
+
+    wrap(value: number): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: number): number {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as number;
+    }
+
+    copy(): Optional_uint16 {
+        return new Optional_uint16(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_uint16 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_uint16(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_uint16(value);
+    }
+}
+
+// optional<uint32>
+export class Optional_uint32 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | number | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_uint32())) {
+                throw new TypeError("value is not a optional<uint32>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_uint32()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_uint32(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_uint32 {
+        return new Optional_uint32(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): number {
+        return this.vprValue.unwrap() as number;
+    }
+
+    wrap(value: number): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: number): number {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as number;
+    }
+
+    copy(): Optional_uint32 {
+        return new Optional_uint32(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_uint32 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_uint32(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_uint32(value);
+    }
+}
+
+// optional<uint64>
+export class Optional_uint64 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | bigint | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_uint64())) {
+                throw new TypeError("value is not a optional<uint64>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_uint64()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_uint64(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_uint64 {
+        return new Optional_uint64(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): bigint {
+        return this.vprValue.unwrap() as bigint;
+    }
+
+    wrap(value: bigint): void {
+        this.vprValue.wrap(value);
+    }
+
+    get(defaultValue?: bigint): bigint {
+        return this.vprValue.get(defaultValue === undefined ? undefined : defaultValue) as bigint;
+    }
+
+    copy(): Optional_uint64 {
+        return new Optional_uint64(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_uint64 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_uint64(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_uint64(value);
+    }
+}
+
 // optional<uint8>
 export class Optional_uint8 extends Proxy<dsviper.ValueOptional> {
 
@@ -1515,6 +3309,98 @@ export class Optional_uint8 extends Proxy<dsviper.ValueOptional> {
     static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_uint8 {
         const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_uint8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
         return new Optional_uint8(value);
+    }
+}
+
+// optional<variant<string, uint8>>
+export class Optional_Variant_string_uint8 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Variant_string_uint8 | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_variant_string_uint8())) {
+                throw new TypeError("value is not a optional<variant<string, uint8>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_variant_string_uint8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_variant_string_uint8(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Variant_string_uint8 {
+        return new Optional_Variant_string_uint8(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Variant_string_uint8 {
+        return Variant_string_uint8.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Variant_string_uint8): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Variant_string_uint8): Variant_string_uint8 {
+        return Variant_string_uint8.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Variant_string_uint8 {
+        return new Optional_Variant_string_uint8(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Variant_string_uint8 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_variant_string_uint8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Variant_string_uint8(value);
+    }
+}
+
+// optional<vector<uint8>>
+export class Optional_Vector_uint8 extends Proxy<dsviper.ValueOptional> {
+
+    constructor(value?: dsviper.ValueOptional | Vector_uint8 | null) {
+        if (value instanceof dsviper.ValueOptional) {
+            if (!value.type().equals(mt.type_optional_vector_uint8())) {
+                throw new TypeError("value is not a optional<vector<uint8>>");
+            }
+            super(value);
+        } else if (value === null || value === undefined) {
+            super(new dsviper.ValueOptional(mt.type_optional_vector_uint8()));
+        } else {
+            super(new dsviper.ValueOptional(mt.type_optional_vector_uint8(), value.vprValue));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Optional_Vector_uint8 {
+        return new Optional_Vector_uint8(dsviper.ValueOptional.cast(value as dsviper.Value));
+    }
+
+    isNil(): boolean {
+        return this.vprValue.isNil();
+    }
+
+    unwrap(): Vector_uint8 {
+        return Vector_uint8.wrap(this.vprValue.unwrap());
+    }
+
+    wrap(value: Vector_uint8): void {
+        this.vprValue.wrap(value.vprValue);
+    }
+
+    get(defaultValue?: Vector_uint8): Vector_uint8 {
+        return Vector_uint8.wrap(this.vprValue.get(defaultValue === undefined ? undefined : defaultValue.vprValue));
+    }
+
+    copy(): Optional_Vector_uint8 {
+        return new Optional_Vector_uint8(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Optional_Vector_uint8 {
+        const value = dsviper.ValueOptional.cast(dsviper.Value.decode(blob, mt.type_optional_vector_uint8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Optional_Vector_uint8(value);
     }
 }
 
@@ -1606,6 +3492,94 @@ export class Vector_Test_StructureS extends Proxy<dsviper.ValueVector> {
     }
 }
 
+// vector<int8>
+export class Vector_int8 extends Proxy<dsviper.ValueVector> {
+
+    constructor(value?: dsviper.ValueVector | dsviper.InputValue) {
+        if (value instanceof dsviper.ValueVector) {
+            if (!value.type().equals(mt.type_vector_int8())) {
+                throw new TypeError("value is not a vector<int8>");
+            }
+            super(value);
+        } else {
+            super(new dsviper.ValueVector(mt.type_vector_int8(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Vector_int8 {
+        return new Vector_int8(dsviper.ValueVector.cast(value as dsviper.Value));
+    }
+
+    get size(): number {
+        return this.vprValue.size();
+    }
+
+    at(index: number): number {
+        return this.vprValue.at(index) as number;
+    }
+
+    set(index: number, value: number): void {
+        this.vprValue.set(index, value);
+    }
+
+    append(value: number): void {
+        this.vprValue.append(value);
+    }
+
+    insert(index: number, value: number): void {
+        this.vprValue.insert(index, value);
+    }
+
+    pop(index?: number): number {
+        return this.vprValue.pop(index) as number;
+    }
+
+    remove(value: number): void {
+        this.vprValue.remove(value);
+    }
+
+    contains(value: number): boolean {
+        return this.vprValue.contains(value);
+    }
+
+    count(value: number): number {
+        return this.vprValue.count(value);
+    }
+
+    index(value: number): number {
+        return this.vprValue.index(value);
+    }
+
+    extend(other: Vector_int8): void {
+        this.vprValue.extend(other.vprValue);
+    }
+
+    concat(other: Vector_int8): Vector_int8 {
+        const result = new Vector_int8(this.vprValue.copy());
+        result.extend(other);
+        return result;
+    }
+
+    clear(): void {
+        this.vprValue.clear();
+    }
+
+    *[Symbol.iterator]() {
+        for (const v of this.vprValue) {
+            yield v as number;
+        }
+    }
+
+    copy(): Vector_int8 {
+        return new Vector_int8(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Vector_int8 {
+        const value = dsviper.ValueVector.cast(dsviper.Value.decode(blob, mt.type_vector_int8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Vector_int8(value);
+    }
+}
+
 // vector<uint8>
 export class Vector_uint8 extends Proxy<dsviper.ValueVector> {
 
@@ -1691,6 +3665,714 @@ export class Vector_uint8 extends Proxy<dsviper.ValueVector> {
     static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Vector_uint8 {
         const value = dsviper.ValueVector.cast(dsviper.Value.decode(blob, mt.type_vector_uint8(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
         return new Vector_uint8(value);
+    }
+}
+
+// set<any_concept>
+export class Set_AnyConceptKey extends Proxy<dsviper.ValueSet> {
+
+    constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
+        if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_AnyConceptKey())) {
+                throw new TypeError("value is not a set<any_concept>");
+            }
+            super(value);
+        } else {
+            super(new dsviper.ValueSet(mt.type_set_AnyConceptKey(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Set_AnyConceptKey {
+        return new Set_AnyConceptKey(dsviper.ValueSet.cast(value as dsviper.Value));
+    }
+
+    get size(): number {
+        return this.vprValue.size();
+    }
+
+    at(index: number): AnyConceptKey {
+        return AnyConceptKey.wrap(this.vprValue.at(index));
+    }
+
+    add(value: AnyConceptKey): void {
+        this.vprValue.add(value.vprValue);
+    }
+
+    discard(value: AnyConceptKey): void {
+        this.vprValue.discard(value.vprValue);
+    }
+
+    remove(value: AnyConceptKey): void {
+        this.vprValue.remove(value.vprValue);
+    }
+
+    pop(): AnyConceptKey {
+        return AnyConceptKey.wrap(this.vprValue.pop());
+    }
+
+    contains(value: AnyConceptKey): boolean {
+        return this.vprValue.index(value.vprValue) !== undefined;
+    }
+
+    clear(): void {
+        this.vprValue.clear();
+    }
+
+    min(): AnyConceptKey {
+        return AnyConceptKey.wrap(this.vprValue.min());
+    }
+
+    max(): AnyConceptKey {
+        return AnyConceptKey.wrap(this.vprValue.max());
+    }
+
+    union(other: Set_AnyConceptKey): Set_AnyConceptKey {
+        return new Set_AnyConceptKey(this.vprValue.union(other.vprValue));
+    }
+
+    intersection(other: Set_AnyConceptKey): Set_AnyConceptKey {
+        return new Set_AnyConceptKey(this.vprValue.intersection(other.vprValue));
+    }
+
+    difference(other: Set_AnyConceptKey): Set_AnyConceptKey {
+        return new Set_AnyConceptKey(this.vprValue.difference(other.vprValue));
+    }
+
+    symmetricDifference(other: Set_AnyConceptKey): Set_AnyConceptKey {
+        return new Set_AnyConceptKey(this.vprValue.symmetricDifference(other.vprValue));
+    }
+
+    update(other: Set_AnyConceptKey): void {
+        this.vprValue.update(other.vprValue);
+    }
+
+    intersectionUpdate(other: Set_AnyConceptKey): void {
+        this.vprValue.intersectionUpdate(other.vprValue);
+    }
+
+    differenceUpdate(other: Set_AnyConceptKey): void {
+        this.vprValue.differenceUpdate(other.vprValue);
+    }
+
+    symmetricDifferenceUpdate(other: Set_AnyConceptKey): void {
+        this.vprValue.symmetricDifferenceUpdate(other.vprValue);
+    }
+
+    isdisjoint(other: Set_AnyConceptKey): boolean {
+        return this.vprValue.isdisjoint(other.vprValue);
+    }
+
+    issubset(other: Set_AnyConceptKey): boolean {
+        return this.vprValue.issubset(other.vprValue);
+    }
+
+    issuperset(other: Set_AnyConceptKey): boolean {
+        return this.vprValue.issuperset(other.vprValue);
+    }
+
+    *[Symbol.iterator]() {
+        for (const v of this.vprValue) {
+            yield AnyConceptKey.wrap(v);
+        }
+    }
+
+    copy(): Set_AnyConceptKey {
+        return new Set_AnyConceptKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Set_AnyConceptKey {
+        const value = dsviper.ValueSet.cast(dsviper.Value.decode(blob, mt.type_set_AnyConceptKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Set_AnyConceptKey(value);
+    }
+}
+
+// set<Test::ConceptA>
+export class Set_Test_ConceptAKey extends Proxy<dsviper.ValueSet> {
+
+    constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
+        if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_ConceptAKey())) {
+                throw new TypeError("value is not a set<Test::ConceptA>");
+            }
+            super(value);
+        } else {
+            super(new dsviper.ValueSet(mt.type_set_Test_ConceptAKey(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Set_Test_ConceptAKey {
+        return new Set_Test_ConceptAKey(dsviper.ValueSet.cast(value as dsviper.Value));
+    }
+
+    get size(): number {
+        return this.vprValue.size();
+    }
+
+    at(index: number): Test_ConceptAKey {
+        return Test_ConceptAKey.wrap(this.vprValue.at(index));
+    }
+
+    add(value: Test_ConceptAKey): void {
+        this.vprValue.add(value.vprValue);
+    }
+
+    discard(value: Test_ConceptAKey): void {
+        this.vprValue.discard(value.vprValue);
+    }
+
+    remove(value: Test_ConceptAKey): void {
+        this.vprValue.remove(value.vprValue);
+    }
+
+    pop(): Test_ConceptAKey {
+        return Test_ConceptAKey.wrap(this.vprValue.pop());
+    }
+
+    contains(value: Test_ConceptAKey): boolean {
+        return this.vprValue.index(value.vprValue) !== undefined;
+    }
+
+    clear(): void {
+        this.vprValue.clear();
+    }
+
+    min(): Test_ConceptAKey {
+        return Test_ConceptAKey.wrap(this.vprValue.min());
+    }
+
+    max(): Test_ConceptAKey {
+        return Test_ConceptAKey.wrap(this.vprValue.max());
+    }
+
+    union(other: Set_Test_ConceptAKey): Set_Test_ConceptAKey {
+        return new Set_Test_ConceptAKey(this.vprValue.union(other.vprValue));
+    }
+
+    intersection(other: Set_Test_ConceptAKey): Set_Test_ConceptAKey {
+        return new Set_Test_ConceptAKey(this.vprValue.intersection(other.vprValue));
+    }
+
+    difference(other: Set_Test_ConceptAKey): Set_Test_ConceptAKey {
+        return new Set_Test_ConceptAKey(this.vprValue.difference(other.vprValue));
+    }
+
+    symmetricDifference(other: Set_Test_ConceptAKey): Set_Test_ConceptAKey {
+        return new Set_Test_ConceptAKey(this.vprValue.symmetricDifference(other.vprValue));
+    }
+
+    update(other: Set_Test_ConceptAKey): void {
+        this.vprValue.update(other.vprValue);
+    }
+
+    intersectionUpdate(other: Set_Test_ConceptAKey): void {
+        this.vprValue.intersectionUpdate(other.vprValue);
+    }
+
+    differenceUpdate(other: Set_Test_ConceptAKey): void {
+        this.vprValue.differenceUpdate(other.vprValue);
+    }
+
+    symmetricDifferenceUpdate(other: Set_Test_ConceptAKey): void {
+        this.vprValue.symmetricDifferenceUpdate(other.vprValue);
+    }
+
+    isdisjoint(other: Set_Test_ConceptAKey): boolean {
+        return this.vprValue.isdisjoint(other.vprValue);
+    }
+
+    issubset(other: Set_Test_ConceptAKey): boolean {
+        return this.vprValue.issubset(other.vprValue);
+    }
+
+    issuperset(other: Set_Test_ConceptAKey): boolean {
+        return this.vprValue.issuperset(other.vprValue);
+    }
+
+    *[Symbol.iterator]() {
+        for (const v of this.vprValue) {
+            yield Test_ConceptAKey.wrap(v);
+        }
+    }
+
+    copy(): Set_Test_ConceptAKey {
+        return new Set_Test_ConceptAKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Set_Test_ConceptAKey {
+        const value = dsviper.ValueSet.cast(dsviper.Value.decode(blob, mt.type_set_Test_ConceptAKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Set_Test_ConceptAKey(value);
+    }
+}
+
+// set<Test::ConceptB>
+export class Set_Test_ConceptBKey extends Proxy<dsviper.ValueSet> {
+
+    constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
+        if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_ConceptBKey())) {
+                throw new TypeError("value is not a set<Test::ConceptB>");
+            }
+            super(value);
+        } else {
+            super(new dsviper.ValueSet(mt.type_set_Test_ConceptBKey(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Set_Test_ConceptBKey {
+        return new Set_Test_ConceptBKey(dsviper.ValueSet.cast(value as dsviper.Value));
+    }
+
+    get size(): number {
+        return this.vprValue.size();
+    }
+
+    at(index: number): Test_ConceptBKey {
+        return Test_ConceptBKey.wrap(this.vprValue.at(index));
+    }
+
+    add(value: Test_ConceptBKey): void {
+        this.vprValue.add(value.vprValue);
+    }
+
+    discard(value: Test_ConceptBKey): void {
+        this.vprValue.discard(value.vprValue);
+    }
+
+    remove(value: Test_ConceptBKey): void {
+        this.vprValue.remove(value.vprValue);
+    }
+
+    pop(): Test_ConceptBKey {
+        return Test_ConceptBKey.wrap(this.vprValue.pop());
+    }
+
+    contains(value: Test_ConceptBKey): boolean {
+        return this.vprValue.index(value.vprValue) !== undefined;
+    }
+
+    clear(): void {
+        this.vprValue.clear();
+    }
+
+    min(): Test_ConceptBKey {
+        return Test_ConceptBKey.wrap(this.vprValue.min());
+    }
+
+    max(): Test_ConceptBKey {
+        return Test_ConceptBKey.wrap(this.vprValue.max());
+    }
+
+    union(other: Set_Test_ConceptBKey): Set_Test_ConceptBKey {
+        return new Set_Test_ConceptBKey(this.vprValue.union(other.vprValue));
+    }
+
+    intersection(other: Set_Test_ConceptBKey): Set_Test_ConceptBKey {
+        return new Set_Test_ConceptBKey(this.vprValue.intersection(other.vprValue));
+    }
+
+    difference(other: Set_Test_ConceptBKey): Set_Test_ConceptBKey {
+        return new Set_Test_ConceptBKey(this.vprValue.difference(other.vprValue));
+    }
+
+    symmetricDifference(other: Set_Test_ConceptBKey): Set_Test_ConceptBKey {
+        return new Set_Test_ConceptBKey(this.vprValue.symmetricDifference(other.vprValue));
+    }
+
+    update(other: Set_Test_ConceptBKey): void {
+        this.vprValue.update(other.vprValue);
+    }
+
+    intersectionUpdate(other: Set_Test_ConceptBKey): void {
+        this.vprValue.intersectionUpdate(other.vprValue);
+    }
+
+    differenceUpdate(other: Set_Test_ConceptBKey): void {
+        this.vprValue.differenceUpdate(other.vprValue);
+    }
+
+    symmetricDifferenceUpdate(other: Set_Test_ConceptBKey): void {
+        this.vprValue.symmetricDifferenceUpdate(other.vprValue);
+    }
+
+    isdisjoint(other: Set_Test_ConceptBKey): boolean {
+        return this.vprValue.isdisjoint(other.vprValue);
+    }
+
+    issubset(other: Set_Test_ConceptBKey): boolean {
+        return this.vprValue.issubset(other.vprValue);
+    }
+
+    issuperset(other: Set_Test_ConceptBKey): boolean {
+        return this.vprValue.issuperset(other.vprValue);
+    }
+
+    *[Symbol.iterator]() {
+        for (const v of this.vprValue) {
+            yield Test_ConceptBKey.wrap(v);
+        }
+    }
+
+    copy(): Set_Test_ConceptBKey {
+        return new Set_Test_ConceptBKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Set_Test_ConceptBKey {
+        const value = dsviper.ValueSet.cast(dsviper.Value.decode(blob, mt.type_set_Test_ConceptBKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Set_Test_ConceptBKey(value);
+    }
+}
+
+// set<Test::ConceptC>
+export class Set_Test_ConceptCKey extends Proxy<dsviper.ValueSet> {
+
+    constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
+        if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_ConceptCKey())) {
+                throw new TypeError("value is not a set<Test::ConceptC>");
+            }
+            super(value);
+        } else {
+            super(new dsviper.ValueSet(mt.type_set_Test_ConceptCKey(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Set_Test_ConceptCKey {
+        return new Set_Test_ConceptCKey(dsviper.ValueSet.cast(value as dsviper.Value));
+    }
+
+    get size(): number {
+        return this.vprValue.size();
+    }
+
+    at(index: number): Test_ConceptCKey {
+        return Test_ConceptCKey.wrap(this.vprValue.at(index));
+    }
+
+    add(value: Test_ConceptCKey): void {
+        this.vprValue.add(value.vprValue);
+    }
+
+    discard(value: Test_ConceptCKey): void {
+        this.vprValue.discard(value.vprValue);
+    }
+
+    remove(value: Test_ConceptCKey): void {
+        this.vprValue.remove(value.vprValue);
+    }
+
+    pop(): Test_ConceptCKey {
+        return Test_ConceptCKey.wrap(this.vprValue.pop());
+    }
+
+    contains(value: Test_ConceptCKey): boolean {
+        return this.vprValue.index(value.vprValue) !== undefined;
+    }
+
+    clear(): void {
+        this.vprValue.clear();
+    }
+
+    min(): Test_ConceptCKey {
+        return Test_ConceptCKey.wrap(this.vprValue.min());
+    }
+
+    max(): Test_ConceptCKey {
+        return Test_ConceptCKey.wrap(this.vprValue.max());
+    }
+
+    union(other: Set_Test_ConceptCKey): Set_Test_ConceptCKey {
+        return new Set_Test_ConceptCKey(this.vprValue.union(other.vprValue));
+    }
+
+    intersection(other: Set_Test_ConceptCKey): Set_Test_ConceptCKey {
+        return new Set_Test_ConceptCKey(this.vprValue.intersection(other.vprValue));
+    }
+
+    difference(other: Set_Test_ConceptCKey): Set_Test_ConceptCKey {
+        return new Set_Test_ConceptCKey(this.vprValue.difference(other.vprValue));
+    }
+
+    symmetricDifference(other: Set_Test_ConceptCKey): Set_Test_ConceptCKey {
+        return new Set_Test_ConceptCKey(this.vprValue.symmetricDifference(other.vprValue));
+    }
+
+    update(other: Set_Test_ConceptCKey): void {
+        this.vprValue.update(other.vprValue);
+    }
+
+    intersectionUpdate(other: Set_Test_ConceptCKey): void {
+        this.vprValue.intersectionUpdate(other.vprValue);
+    }
+
+    differenceUpdate(other: Set_Test_ConceptCKey): void {
+        this.vprValue.differenceUpdate(other.vprValue);
+    }
+
+    symmetricDifferenceUpdate(other: Set_Test_ConceptCKey): void {
+        this.vprValue.symmetricDifferenceUpdate(other.vprValue);
+    }
+
+    isdisjoint(other: Set_Test_ConceptCKey): boolean {
+        return this.vprValue.isdisjoint(other.vprValue);
+    }
+
+    issubset(other: Set_Test_ConceptCKey): boolean {
+        return this.vprValue.issubset(other.vprValue);
+    }
+
+    issuperset(other: Set_Test_ConceptCKey): boolean {
+        return this.vprValue.issuperset(other.vprValue);
+    }
+
+    *[Symbol.iterator]() {
+        for (const v of this.vprValue) {
+            yield Test_ConceptCKey.wrap(v);
+        }
+    }
+
+    copy(): Set_Test_ConceptCKey {
+        return new Set_Test_ConceptCKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Set_Test_ConceptCKey {
+        const value = dsviper.ValueSet.cast(dsviper.Value.decode(blob, mt.type_set_Test_ConceptCKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Set_Test_ConceptCKey(value);
+    }
+}
+
+// set<Test::ConceptCoverage>
+export class Set_Test_ConceptCoverageKey extends Proxy<dsviper.ValueSet> {
+
+    constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
+        if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_ConceptCoverageKey())) {
+                throw new TypeError("value is not a set<Test::ConceptCoverage>");
+            }
+            super(value);
+        } else {
+            super(new dsviper.ValueSet(mt.type_set_Test_ConceptCoverageKey(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Set_Test_ConceptCoverageKey {
+        return new Set_Test_ConceptCoverageKey(dsviper.ValueSet.cast(value as dsviper.Value));
+    }
+
+    get size(): number {
+        return this.vprValue.size();
+    }
+
+    at(index: number): Test_ConceptCoverageKey {
+        return Test_ConceptCoverageKey.wrap(this.vprValue.at(index));
+    }
+
+    add(value: Test_ConceptCoverageKey): void {
+        this.vprValue.add(value.vprValue);
+    }
+
+    discard(value: Test_ConceptCoverageKey): void {
+        this.vprValue.discard(value.vprValue);
+    }
+
+    remove(value: Test_ConceptCoverageKey): void {
+        this.vprValue.remove(value.vprValue);
+    }
+
+    pop(): Test_ConceptCoverageKey {
+        return Test_ConceptCoverageKey.wrap(this.vprValue.pop());
+    }
+
+    contains(value: Test_ConceptCoverageKey): boolean {
+        return this.vprValue.index(value.vprValue) !== undefined;
+    }
+
+    clear(): void {
+        this.vprValue.clear();
+    }
+
+    min(): Test_ConceptCoverageKey {
+        return Test_ConceptCoverageKey.wrap(this.vprValue.min());
+    }
+
+    max(): Test_ConceptCoverageKey {
+        return Test_ConceptCoverageKey.wrap(this.vprValue.max());
+    }
+
+    union(other: Set_Test_ConceptCoverageKey): Set_Test_ConceptCoverageKey {
+        return new Set_Test_ConceptCoverageKey(this.vprValue.union(other.vprValue));
+    }
+
+    intersection(other: Set_Test_ConceptCoverageKey): Set_Test_ConceptCoverageKey {
+        return new Set_Test_ConceptCoverageKey(this.vprValue.intersection(other.vprValue));
+    }
+
+    difference(other: Set_Test_ConceptCoverageKey): Set_Test_ConceptCoverageKey {
+        return new Set_Test_ConceptCoverageKey(this.vprValue.difference(other.vprValue));
+    }
+
+    symmetricDifference(other: Set_Test_ConceptCoverageKey): Set_Test_ConceptCoverageKey {
+        return new Set_Test_ConceptCoverageKey(this.vprValue.symmetricDifference(other.vprValue));
+    }
+
+    update(other: Set_Test_ConceptCoverageKey): void {
+        this.vprValue.update(other.vprValue);
+    }
+
+    intersectionUpdate(other: Set_Test_ConceptCoverageKey): void {
+        this.vprValue.intersectionUpdate(other.vprValue);
+    }
+
+    differenceUpdate(other: Set_Test_ConceptCoverageKey): void {
+        this.vprValue.differenceUpdate(other.vprValue);
+    }
+
+    symmetricDifferenceUpdate(other: Set_Test_ConceptCoverageKey): void {
+        this.vprValue.symmetricDifferenceUpdate(other.vprValue);
+    }
+
+    isdisjoint(other: Set_Test_ConceptCoverageKey): boolean {
+        return this.vprValue.isdisjoint(other.vprValue);
+    }
+
+    issubset(other: Set_Test_ConceptCoverageKey): boolean {
+        return this.vprValue.issubset(other.vprValue);
+    }
+
+    issuperset(other: Set_Test_ConceptCoverageKey): boolean {
+        return this.vprValue.issuperset(other.vprValue);
+    }
+
+    *[Symbol.iterator]() {
+        for (const v of this.vprValue) {
+            yield Test_ConceptCoverageKey.wrap(v);
+        }
+    }
+
+    copy(): Set_Test_ConceptCoverageKey {
+        return new Set_Test_ConceptCoverageKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Set_Test_ConceptCoverageKey {
+        const value = dsviper.ValueSet.cast(dsviper.Value.decode(blob, mt.type_set_Test_ConceptCoverageKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Set_Test_ConceptCoverageKey(value);
+    }
+}
+
+// set<Test::Klub>
+export class Set_Test_KlubKey extends Proxy<dsviper.ValueSet> {
+
+    constructor(value?: dsviper.ValueSet | dsviper.InputValue) {
+        if (value instanceof dsviper.ValueSet) {
+            if (!value.type().equals(mt.type_set_Test_KlubKey())) {
+                throw new TypeError("value is not a set<Test::Klub>");
+            }
+            super(value);
+        } else {
+            super(new dsviper.ValueSet(mt.type_set_Test_KlubKey(), value));
+        }
+    }
+
+    static wrap(value: dsviper.OutputValue): Set_Test_KlubKey {
+        return new Set_Test_KlubKey(dsviper.ValueSet.cast(value as dsviper.Value));
+    }
+
+    get size(): number {
+        return this.vprValue.size();
+    }
+
+    at(index: number): Test_KlubKey {
+        return Test_KlubKey.wrap(this.vprValue.at(index));
+    }
+
+    add(value: Test_KlubKey): void {
+        this.vprValue.add(value.vprValue);
+    }
+
+    discard(value: Test_KlubKey): void {
+        this.vprValue.discard(value.vprValue);
+    }
+
+    remove(value: Test_KlubKey): void {
+        this.vprValue.remove(value.vprValue);
+    }
+
+    pop(): Test_KlubKey {
+        return Test_KlubKey.wrap(this.vprValue.pop());
+    }
+
+    contains(value: Test_KlubKey): boolean {
+        return this.vprValue.index(value.vprValue) !== undefined;
+    }
+
+    clear(): void {
+        this.vprValue.clear();
+    }
+
+    min(): Test_KlubKey {
+        return Test_KlubKey.wrap(this.vprValue.min());
+    }
+
+    max(): Test_KlubKey {
+        return Test_KlubKey.wrap(this.vprValue.max());
+    }
+
+    union(other: Set_Test_KlubKey): Set_Test_KlubKey {
+        return new Set_Test_KlubKey(this.vprValue.union(other.vprValue));
+    }
+
+    intersection(other: Set_Test_KlubKey): Set_Test_KlubKey {
+        return new Set_Test_KlubKey(this.vprValue.intersection(other.vprValue));
+    }
+
+    difference(other: Set_Test_KlubKey): Set_Test_KlubKey {
+        return new Set_Test_KlubKey(this.vprValue.difference(other.vprValue));
+    }
+
+    symmetricDifference(other: Set_Test_KlubKey): Set_Test_KlubKey {
+        return new Set_Test_KlubKey(this.vprValue.symmetricDifference(other.vprValue));
+    }
+
+    update(other: Set_Test_KlubKey): void {
+        this.vprValue.update(other.vprValue);
+    }
+
+    intersectionUpdate(other: Set_Test_KlubKey): void {
+        this.vprValue.intersectionUpdate(other.vprValue);
+    }
+
+    differenceUpdate(other: Set_Test_KlubKey): void {
+        this.vprValue.differenceUpdate(other.vprValue);
+    }
+
+    symmetricDifferenceUpdate(other: Set_Test_KlubKey): void {
+        this.vprValue.symmetricDifferenceUpdate(other.vprValue);
+    }
+
+    isdisjoint(other: Set_Test_KlubKey): boolean {
+        return this.vprValue.isdisjoint(other.vprValue);
+    }
+
+    issubset(other: Set_Test_KlubKey): boolean {
+        return this.vprValue.issubset(other.vprValue);
+    }
+
+    issuperset(other: Set_Test_KlubKey): boolean {
+        return this.vprValue.issuperset(other.vprValue);
+    }
+
+    *[Symbol.iterator]() {
+        for (const v of this.vprValue) {
+            yield Test_KlubKey.wrap(v);
+        }
+    }
+
+    copy(): Set_Test_KlubKey {
+        return new Set_Test_KlubKey(this.vprValue.copy());
+    }
+
+    static decode(blob: dsviper.ValueBlob, streamCodecInstancing?: dsviper.StreamCodecInstancing): Set_Test_KlubKey {
+        const value = dsviper.ValueSet.cast(dsviper.Value.decode(blob, mt.type_set_Test_KlubKey(), md.definitions(), streamCodecInstancing ?? dsviper.Codec.STREAM_BINARY));
+        return new Set_Test_KlubKey(value);
     }
 }
 

@@ -1127,6 +1127,48 @@ export const conceptCoverage_DocConceptKey = {
     },
 };
 
+// attachment<ConceptCoverage, key<ConceptB>> Test::docConceptKeyB
+export const conceptCoverage_DocConceptKeyB = {
+    keys(attachmentGetting: dsviper.AttachmentGetting): d.Set_Test_ConceptCoverageKey {
+        const attachment = mt.attachment_Test_ConceptCoverage_DocConceptKeyB();
+        return new d.Set_Test_ConceptCoverageKey(attachmentGetting.keys(attachment));
+    },
+
+    diffKeys(current: dsviper.AttachmentGetting, other: dsviper.AttachmentGetting): [d.Set_Test_ConceptCoverageKey, d.Set_Test_ConceptCoverageKey, d.Set_Test_ConceptCoverageKey, d.Set_Test_ConceptCoverageKey] {
+        const attachment = mt.attachment_Test_ConceptCoverage_DocConceptKeyB();
+        const [added, removed, different, same] = dsviper.AttachmentGetting.diffKeys(current, other, attachment);
+        return [new d.Set_Test_ConceptCoverageKey(added), new d.Set_Test_ConceptCoverageKey(removed), new d.Set_Test_ConceptCoverageKey(different), new d.Set_Test_ConceptCoverageKey(same)];
+    },
+
+    has(attachmentGetting: dsviper.AttachmentGetting, key: d.Test_ConceptCoverageKey): boolean {
+        const attachment = mt.attachment_Test_ConceptCoverage_DocConceptKeyB();
+        return attachmentGetting.has(attachment, key.vprValue);
+    },
+
+    get(attachmentGetting: dsviper.AttachmentGetting, key: d.Test_ConceptCoverageKey): d.Optional_Test_ConceptBKey {
+        const attachment = mt.attachment_Test_ConceptCoverage_DocConceptKeyB();
+        return new d.Optional_Test_ConceptBKey(attachmentGetting.get(attachment, key.vprValue));
+    },
+
+    set(attachmentMutating: dsviper.AttachmentMutating, key: d.Test_ConceptCoverageKey, value: d.Test_ConceptBKey): void {
+        const attachment = mt.attachment_Test_ConceptCoverage_DocConceptKeyB();
+        attachmentMutating.set(attachment, key.vprValue, value.vprValue);
+    },
+
+    diff(attachmentMutating: dsviper.AttachmentMutating, key: d.Test_ConceptCoverageKey, value: d.Test_ConceptBKey, recursive: boolean = false): void {
+        const attachment = mt.attachment_Test_ConceptCoverage_DocConceptKeyB();
+        attachmentMutating.diff(attachment, key.vprValue, value.vprValue, recursive);
+    },
+
+
+    *enumerate(attachmentGetting: dsviper.AttachmentGetting): Generator<[d.Test_ConceptCoverageKey, d.Test_ConceptBKey]> {
+        for (const key of this.keys(attachmentGetting)) {
+            const document = this.get(attachmentGetting, key).unwrap();
+            yield [key, document];
+        }
+    },
+};
+
 // attachment<ConceptCoverage, double> Test::docDouble
 export const conceptCoverage_DocDouble = {
     keys(attachmentGetting: dsviper.AttachmentGetting): d.Set_Test_ConceptCoverageKey {

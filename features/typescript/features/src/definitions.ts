@@ -60,6 +60,7 @@ export const AttachmentRuntimeIds = {
     Test_ConceptCoverage_DocClubKey: dsviper.ValueUUId.create("6c8c6c4a-f99b-1737-f3e9-b60da806f18b"),
     Test_ConceptCoverage_DocCommitId: dsviper.ValueUUId.create("8bc4885f-0e59-2156-6534-f71674e16a62"),
     Test_ConceptCoverage_DocConceptKey: dsviper.ValueUUId.create("e46092d8-19d2-786f-8ec2-ffe4eb96a2b0"),
+    Test_ConceptCoverage_DocConceptKeyB: dsviper.ValueUUId.create("72eb0057-8f6c-7e05-f68e-36ec9bbdc0e6"),
     Test_ConceptCoverage_DocDouble: dsviper.ValueUUId.create("ddcc4ebf-809b-1186-a81d-e04887a55c28"),
     Test_ConceptCoverage_DocEnumeration: dsviper.ValueUUId.create("297e6910-d347-da0c-3dd6-563406dc742f"),
     Test_ConceptCoverage_DocFloat: dsviper.ValueUUId.create("59dc723c-e718-31bd-93e1-fce13b975469"),

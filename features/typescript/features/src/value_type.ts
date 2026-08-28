@@ -167,10 +167,256 @@ export function type_tuple_uint8_string(): dsviper.TypeTuple {
 
 
 // Optionals
+let _type_optional_AnyConceptKey: dsviper.TypeOptional | null = null;
+export function type_optional_AnyConceptKey(): dsviper.TypeOptional {
+    if (_type_optional_AnyConceptKey === null) { _type_optional_AnyConceptKey = new dsviper.TypeOptional(type_AnyConceptKey()); }
+    return _type_optional_AnyConceptKey;
+}
+
+let _type_optional_Test_ConceptAKey: dsviper.TypeOptional | null = null;
+export function type_optional_Test_ConceptAKey(): dsviper.TypeOptional {
+    if (_type_optional_Test_ConceptAKey === null) { _type_optional_Test_ConceptAKey = new dsviper.TypeOptional(type_Test_ConceptAKey()); }
+    return _type_optional_Test_ConceptAKey;
+}
+
+let _type_optional_Test_ConceptBKey: dsviper.TypeOptional | null = null;
+export function type_optional_Test_ConceptBKey(): dsviper.TypeOptional {
+    if (_type_optional_Test_ConceptBKey === null) { _type_optional_Test_ConceptBKey = new dsviper.TypeOptional(type_Test_ConceptBKey()); }
+    return _type_optional_Test_ConceptBKey;
+}
+
+let _type_optional_Test_ConceptCKey: dsviper.TypeOptional | null = null;
+export function type_optional_Test_ConceptCKey(): dsviper.TypeOptional {
+    if (_type_optional_Test_ConceptCKey === null) { _type_optional_Test_ConceptCKey = new dsviper.TypeOptional(type_Test_ConceptCKey()); }
+    return _type_optional_Test_ConceptCKey;
+}
+
+let _type_optional_Test_ConceptCoverageKey: dsviper.TypeOptional | null = null;
+export function type_optional_Test_ConceptCoverageKey(): dsviper.TypeOptional {
+    if (_type_optional_Test_ConceptCoverageKey === null) { _type_optional_Test_ConceptCoverageKey = new dsviper.TypeOptional(type_Test_ConceptCoverageKey()); }
+    return _type_optional_Test_ConceptCoverageKey;
+}
+
+let _type_optional_Test_ConceptDKey: dsviper.TypeOptional | null = null;
+export function type_optional_Test_ConceptDKey(): dsviper.TypeOptional {
+    if (_type_optional_Test_ConceptDKey === null) { _type_optional_Test_ConceptDKey = new dsviper.TypeOptional(type_Test_ConceptDKey()); }
+    return _type_optional_Test_ConceptDKey;
+}
+
+let _type_optional_Test_EmptyKlubKey: dsviper.TypeOptional | null = null;
+export function type_optional_Test_EmptyKlubKey(): dsviper.TypeOptional {
+    if (_type_optional_Test_EmptyKlubKey === null) { _type_optional_Test_EmptyKlubKey = new dsviper.TypeOptional(type_Test_EmptyKlubKey()); }
+    return _type_optional_Test_EmptyKlubKey;
+}
+
+let _type_optional_Test_EnumerationE: dsviper.TypeOptional | null = null;
+export function type_optional_Test_EnumerationE(): dsviper.TypeOptional {
+    if (_type_optional_Test_EnumerationE === null) { _type_optional_Test_EnumerationE = new dsviper.TypeOptional(type_Test_EnumerationE()); }
+    return _type_optional_Test_EnumerationE;
+}
+
+let _type_optional_Test_KlubKey: dsviper.TypeOptional | null = null;
+export function type_optional_Test_KlubKey(): dsviper.TypeOptional {
+    if (_type_optional_Test_KlubKey === null) { _type_optional_Test_KlubKey = new dsviper.TypeOptional(type_Test_KlubKey()); }
+    return _type_optional_Test_KlubKey;
+}
+
+let _type_optional_Test_StructureT: dsviper.TypeOptional | null = null;
+export function type_optional_Test_StructureT(): dsviper.TypeOptional {
+    if (_type_optional_Test_StructureT === null) { _type_optional_Test_StructureT = new dsviper.TypeOptional(type_Test_StructureT()); }
+    return _type_optional_Test_StructureT;
+}
+
+let _type_optional_Test_StructureU: dsviper.TypeOptional | null = null;
+export function type_optional_Test_StructureU(): dsviper.TypeOptional {
+    if (_type_optional_Test_StructureU === null) { _type_optional_Test_StructureU = new dsviper.TypeOptional(type_Test_StructureU()); }
+    return _type_optional_Test_StructureU;
+}
+
+let _type_optional_Test_StructureV: dsviper.TypeOptional | null = null;
+export function type_optional_Test_StructureV(): dsviper.TypeOptional {
+    if (_type_optional_Test_StructureV === null) { _type_optional_Test_StructureV = new dsviper.TypeOptional(type_Test_StructureV()); }
+    return _type_optional_Test_StructureV;
+}
+
+let _type_optional_Test_StructureW: dsviper.TypeOptional | null = null;
+export function type_optional_Test_StructureW(): dsviper.TypeOptional {
+    if (_type_optional_Test_StructureW === null) { _type_optional_Test_StructureW = new dsviper.TypeOptional(type_Test_StructureW()); }
+    return _type_optional_Test_StructureW;
+}
+
+let _type_optional_any: dsviper.TypeOptional | null = null;
+export function type_optional_any(): dsviper.TypeOptional {
+    if (_type_optional_any === null) { _type_optional_any = new dsviper.TypeOptional(type_any()); }
+    return _type_optional_any;
+}
+
+let _type_optional_blob: dsviper.TypeOptional | null = null;
+export function type_optional_blob(): dsviper.TypeOptional {
+    if (_type_optional_blob === null) { _type_optional_blob = new dsviper.TypeOptional(type_blob()); }
+    return _type_optional_blob;
+}
+
+let _type_optional_blob_id: dsviper.TypeOptional | null = null;
+export function type_optional_blob_id(): dsviper.TypeOptional {
+    if (_type_optional_blob_id === null) { _type_optional_blob_id = new dsviper.TypeOptional(type_blob_id()); }
+    return _type_optional_blob_id;
+}
+
+let _type_optional_commit_id: dsviper.TypeOptional | null = null;
+export function type_optional_commit_id(): dsviper.TypeOptional {
+    if (_type_optional_commit_id === null) { _type_optional_commit_id = new dsviper.TypeOptional(type_commit_id()); }
+    return _type_optional_commit_id;
+}
+
+let _type_optional_uuid: dsviper.TypeOptional | null = null;
+export function type_optional_uuid(): dsviper.TypeOptional {
+    if (_type_optional_uuid === null) { _type_optional_uuid = new dsviper.TypeOptional(type_uuid()); }
+    return _type_optional_uuid;
+}
+
+let _type_optional_xarray_int8: dsviper.TypeOptional | null = null;
+export function type_optional_xarray_int8(): dsviper.TypeOptional {
+    if (_type_optional_xarray_int8 === null) { _type_optional_xarray_int8 = new dsviper.TypeOptional(type_xarray_int8()); }
+    return _type_optional_xarray_int8;
+}
+
+let _type_optional_xarray_uint8: dsviper.TypeOptional | null = null;
+export function type_optional_xarray_uint8(): dsviper.TypeOptional {
+    if (_type_optional_xarray_uint8 === null) { _type_optional_xarray_uint8 = new dsviper.TypeOptional(type_xarray_uint8()); }
+    return _type_optional_xarray_uint8;
+}
+
+let _type_optional_bool: dsviper.TypeOptional | null = null;
+export function type_optional_bool(): dsviper.TypeOptional {
+    if (_type_optional_bool === null) { _type_optional_bool = new dsviper.TypeOptional(type_bool()); }
+    return _type_optional_bool;
+}
+
+let _type_optional_double: dsviper.TypeOptional | null = null;
+export function type_optional_double(): dsviper.TypeOptional {
+    if (_type_optional_double === null) { _type_optional_double = new dsviper.TypeOptional(type_double()); }
+    return _type_optional_double;
+}
+
+let _type_optional_float: dsviper.TypeOptional | null = null;
+export function type_optional_float(): dsviper.TypeOptional {
+    if (_type_optional_float === null) { _type_optional_float = new dsviper.TypeOptional(type_float()); }
+    return _type_optional_float;
+}
+
+let _type_optional_mat2x2_uint8: dsviper.TypeOptional | null = null;
+export function type_optional_mat2x2_uint8(): dsviper.TypeOptional {
+    if (_type_optional_mat2x2_uint8 === null) { _type_optional_mat2x2_uint8 = new dsviper.TypeOptional(type_mat2x2_uint8()); }
+    return _type_optional_mat2x2_uint8;
+}
+
+let _type_optional_vec2_uint8: dsviper.TypeOptional | null = null;
+export function type_optional_vec2_uint8(): dsviper.TypeOptional {
+    if (_type_optional_vec2_uint8 === null) { _type_optional_vec2_uint8 = new dsviper.TypeOptional(type_vec2_uint8()); }
+    return _type_optional_vec2_uint8;
+}
+
+let _type_optional_int16: dsviper.TypeOptional | null = null;
+export function type_optional_int16(): dsviper.TypeOptional {
+    if (_type_optional_int16 === null) { _type_optional_int16 = new dsviper.TypeOptional(type_int16()); }
+    return _type_optional_int16;
+}
+
+let _type_optional_int32: dsviper.TypeOptional | null = null;
+export function type_optional_int32(): dsviper.TypeOptional {
+    if (_type_optional_int32 === null) { _type_optional_int32 = new dsviper.TypeOptional(type_int32()); }
+    return _type_optional_int32;
+}
+
+let _type_optional_int64: dsviper.TypeOptional | null = null;
+export function type_optional_int64(): dsviper.TypeOptional {
+    if (_type_optional_int64 === null) { _type_optional_int64 = new dsviper.TypeOptional(type_int64()); }
+    return _type_optional_int64;
+}
+
+let _type_optional_int8: dsviper.TypeOptional | null = null;
+export function type_optional_int8(): dsviper.TypeOptional {
+    if (_type_optional_int8 === null) { _type_optional_int8 = new dsviper.TypeOptional(type_int8()); }
+    return _type_optional_int8;
+}
+
+let _type_optional_map_int8_to_string: dsviper.TypeOptional | null = null;
+export function type_optional_map_int8_to_string(): dsviper.TypeOptional {
+    if (_type_optional_map_int8_to_string === null) { _type_optional_map_int8_to_string = new dsviper.TypeOptional(type_map_int8_to_string()); }
+    return _type_optional_map_int8_to_string;
+}
+
+let _type_optional_map_uint8_to_string: dsviper.TypeOptional | null = null;
+export function type_optional_map_uint8_to_string(): dsviper.TypeOptional {
+    if (_type_optional_map_uint8_to_string === null) { _type_optional_map_uint8_to_string = new dsviper.TypeOptional(type_map_uint8_to_string()); }
+    return _type_optional_map_uint8_to_string;
+}
+
+let _type_optional_optional_uint8: dsviper.TypeOptional | null = null;
+export function type_optional_optional_uint8(): dsviper.TypeOptional {
+    if (_type_optional_optional_uint8 === null) { _type_optional_optional_uint8 = new dsviper.TypeOptional(type_optional_uint8()); }
+    return _type_optional_optional_uint8;
+}
+
+let _type_optional_set_int8: dsviper.TypeOptional | null = null;
+export function type_optional_set_int8(): dsviper.TypeOptional {
+    if (_type_optional_set_int8 === null) { _type_optional_set_int8 = new dsviper.TypeOptional(type_set_int8()); }
+    return _type_optional_set_int8;
+}
+
+let _type_optional_set_uint8: dsviper.TypeOptional | null = null;
+export function type_optional_set_uint8(): dsviper.TypeOptional {
+    if (_type_optional_set_uint8 === null) { _type_optional_set_uint8 = new dsviper.TypeOptional(type_set_uint8()); }
+    return _type_optional_set_uint8;
+}
+
+let _type_optional_string: dsviper.TypeOptional | null = null;
+export function type_optional_string(): dsviper.TypeOptional {
+    if (_type_optional_string === null) { _type_optional_string = new dsviper.TypeOptional(type_string()); }
+    return _type_optional_string;
+}
+
+let _type_optional_tuple_uint8_string: dsviper.TypeOptional | null = null;
+export function type_optional_tuple_uint8_string(): dsviper.TypeOptional {
+    if (_type_optional_tuple_uint8_string === null) { _type_optional_tuple_uint8_string = new dsviper.TypeOptional(type_tuple_uint8_string()); }
+    return _type_optional_tuple_uint8_string;
+}
+
+let _type_optional_uint16: dsviper.TypeOptional | null = null;
+export function type_optional_uint16(): dsviper.TypeOptional {
+    if (_type_optional_uint16 === null) { _type_optional_uint16 = new dsviper.TypeOptional(type_uint16()); }
+    return _type_optional_uint16;
+}
+
+let _type_optional_uint32: dsviper.TypeOptional | null = null;
+export function type_optional_uint32(): dsviper.TypeOptional {
+    if (_type_optional_uint32 === null) { _type_optional_uint32 = new dsviper.TypeOptional(type_uint32()); }
+    return _type_optional_uint32;
+}
+
+let _type_optional_uint64: dsviper.TypeOptional | null = null;
+export function type_optional_uint64(): dsviper.TypeOptional {
+    if (_type_optional_uint64 === null) { _type_optional_uint64 = new dsviper.TypeOptional(type_uint64()); }
+    return _type_optional_uint64;
+}
+
 let _type_optional_uint8: dsviper.TypeOptional | null = null;
 export function type_optional_uint8(): dsviper.TypeOptional {
     if (_type_optional_uint8 === null) { _type_optional_uint8 = new dsviper.TypeOptional(type_uint8()); }
     return _type_optional_uint8;
+}
+
+let _type_optional_variant_string_uint8: dsviper.TypeOptional | null = null;
+export function type_optional_variant_string_uint8(): dsviper.TypeOptional {
+    if (_type_optional_variant_string_uint8 === null) { _type_optional_variant_string_uint8 = new dsviper.TypeOptional(type_variant_string_uint8()); }
+    return _type_optional_variant_string_uint8;
+}
+
+let _type_optional_vector_uint8: dsviper.TypeOptional | null = null;
+export function type_optional_vector_uint8(): dsviper.TypeOptional {
+    if (_type_optional_vector_uint8 === null) { _type_optional_vector_uint8 = new dsviper.TypeOptional(type_vector_uint8()); }
+    return _type_optional_vector_uint8;
 }
 
 
@@ -181,6 +427,12 @@ export function type_vector_Test_StructureS(): dsviper.TypeVector {
     return _type_vector_Test_StructureS;
 }
 
+let _type_vector_int8: dsviper.TypeVector | null = null;
+export function type_vector_int8(): dsviper.TypeVector {
+    if (_type_vector_int8 === null) { _type_vector_int8 = new dsviper.TypeVector(type_int8()); }
+    return _type_vector_int8;
+}
+
 let _type_vector_uint8: dsviper.TypeVector | null = null;
 export function type_vector_uint8(): dsviper.TypeVector {
     if (_type_vector_uint8 === null) { _type_vector_uint8 = new dsviper.TypeVector(type_uint8()); }
@@ -189,6 +441,42 @@ export function type_vector_uint8(): dsviper.TypeVector {
 
 
 // Sets
+let _type_set_AnyConceptKey: dsviper.TypeSet | null = null;
+export function type_set_AnyConceptKey(): dsviper.TypeSet {
+    if (_type_set_AnyConceptKey === null) { _type_set_AnyConceptKey = new dsviper.TypeSet(type_AnyConceptKey()); }
+    return _type_set_AnyConceptKey;
+}
+
+let _type_set_Test_ConceptAKey: dsviper.TypeSet | null = null;
+export function type_set_Test_ConceptAKey(): dsviper.TypeSet {
+    if (_type_set_Test_ConceptAKey === null) { _type_set_Test_ConceptAKey = new dsviper.TypeSet(type_Test_ConceptAKey()); }
+    return _type_set_Test_ConceptAKey;
+}
+
+let _type_set_Test_ConceptBKey: dsviper.TypeSet | null = null;
+export function type_set_Test_ConceptBKey(): dsviper.TypeSet {
+    if (_type_set_Test_ConceptBKey === null) { _type_set_Test_ConceptBKey = new dsviper.TypeSet(type_Test_ConceptBKey()); }
+    return _type_set_Test_ConceptBKey;
+}
+
+let _type_set_Test_ConceptCKey: dsviper.TypeSet | null = null;
+export function type_set_Test_ConceptCKey(): dsviper.TypeSet {
+    if (_type_set_Test_ConceptCKey === null) { _type_set_Test_ConceptCKey = new dsviper.TypeSet(type_Test_ConceptCKey()); }
+    return _type_set_Test_ConceptCKey;
+}
+
+let _type_set_Test_ConceptCoverageKey: dsviper.TypeSet | null = null;
+export function type_set_Test_ConceptCoverageKey(): dsviper.TypeSet {
+    if (_type_set_Test_ConceptCoverageKey === null) { _type_set_Test_ConceptCoverageKey = new dsviper.TypeSet(type_Test_ConceptCoverageKey()); }
+    return _type_set_Test_ConceptCoverageKey;
+}
+
+let _type_set_Test_KlubKey: dsviper.TypeSet | null = null;
+export function type_set_Test_KlubKey(): dsviper.TypeSet {
+    if (_type_set_Test_KlubKey === null) { _type_set_Test_KlubKey = new dsviper.TypeSet(type_Test_KlubKey()); }
+    return _type_set_Test_KlubKey;
+}
+
 let _type_set_Test_StructureS: dsviper.TypeSet | null = null;
 export function type_set_Test_StructureS(): dsviper.TypeSet {
     if (_type_set_Test_StructureS === null) { _type_set_Test_StructureS = new dsviper.TypeSet(type_Test_StructureS()); }
@@ -507,6 +795,12 @@ let _attachment_Test_ConceptCoverage_DocConceptKey: dsviper.Attachment | null = 
 export function attachment_Test_ConceptCoverage_DocConceptKey(): dsviper.Attachment {
     if (_attachment_Test_ConceptCoverage_DocConceptKey === null) { _attachment_Test_ConceptCoverage_DocConceptKey = md.definitions().checkAttachment(md.AttachmentRuntimeIds.Test_ConceptCoverage_DocConceptKey); }
     return _attachment_Test_ConceptCoverage_DocConceptKey;
+}
+
+let _attachment_Test_ConceptCoverage_DocConceptKeyB: dsviper.Attachment | null = null;
+export function attachment_Test_ConceptCoverage_DocConceptKeyB(): dsviper.Attachment {
+    if (_attachment_Test_ConceptCoverage_DocConceptKeyB === null) { _attachment_Test_ConceptCoverage_DocConceptKeyB = md.definitions().checkAttachment(md.AttachmentRuntimeIds.Test_ConceptCoverage_DocConceptKeyB); }
+    return _attachment_Test_ConceptCoverage_DocConceptKeyB;
 }
 
 let _attachment_Test_ConceptCoverage_DocDouble: dsviper.Attachment | null = null;
