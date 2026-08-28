@@ -3,26 +3,23 @@
 # link against viper without depending on an installed wheel.
 
 set(REPO_VIPER_NAME com.digitalsubstrate.viper)
-if(WIN32)
-  file(TO_CMAKE_PATH "$ENV{USERPROFILE}" USER_HOME)
-else()
-  set(USER_HOME $ENV{HOME})
-endif()
 
 message(CHECK_START "Looking for ${REPO_VIPER_NAME}")
 
-list(APPEND SEARCH_FOLDERS ${USER_HOME} X: Y: Z: /Volumes/DigitalSubstrate)
-foreach(FOLDER IN LISTS SEARCH_FOLDERS)
-    set(CHECKED_FOLDER ${FOLDER}/${REPO_VIPER_NAME})
-    if (EXISTS ${CHECKED_FOLDER} AND IS_DIRECTORY ${CHECKED_FOLDER})
-        set(REPO_VIPER ${CHECKED_FOLDER})
-        break()
-    endif()
-endforeach()
+if (NOT REPO_VIPER AND DEFINED ENV{REPO_VIPER})
+    file(TO_CMAKE_PATH "$ENV{REPO_VIPER}" REPO_VIPER)
+endif()
 
 if (NOT REPO_VIPER)
+    get_filename_component(SIBLING_ROOT ${CMAKE_CURRENT_LIST_DIR} DIRECTORY)
+    set(REPO_VIPER ${SIBLING_ROOT}/${REPO_VIPER_NAME})
+endif()
+
+if (NOT EXISTS ${REPO_VIPER}/src/Viper)
     message(CHECK_FAIL "not found")
-    message(FATAL_ERROR "${REPO_VIPER_NAME} sibling checkout is required")
+    message(FATAL_ERROR
+        "${REPO_VIPER_NAME} checkout is required next to this repository. "
+        "Set the REPO_VIPER environment variable, or pass -DREPO_VIPER=<path>.")
 else()
     message(CHECK_PASS "found at ${REPO_VIPER}")
 endif()

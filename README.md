@@ -43,9 +43,12 @@ The siblings live in their own repositories:
 1. `KIBO_JAR` and `KIBO_TEMPLATES` environment variables, if set.
 2. Otherwise, `../kibo/target/kibo-*.jar` and `../kibo-template-viper/`.
 
-`CMakeLists.txt` (via `lib.cmake`) locates the sibling
+`CMakeLists.txt` (via `lib.cmake`) locates the
 `com.digitalsubstrate.viper/` checkout to build the third_parties (sqlite,
-json, hash, antlr4, cli11) and the `viper` static target.
+json, hash, antlr4, cli11) and the `viper` static target. It resolves it via:
+
+1. `-DREPO_VIPER=<path>` or the `REPO_VIPER` environment variable, if set.
+2. Otherwise, the sibling `../com.digitalsubstrate.viper/`.
 
 ## Usage
 
