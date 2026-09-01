@@ -2,6 +2,7 @@
 import subprocess
 import argparse
 import os
+import re
 import zlib
 import base64
 from pathlib import Path
@@ -22,11 +23,18 @@ def _resolve_jar():
     env = os.environ.get("KIBO_JAR")
     if env:
         return env
-    matches = sorted(SIBLING_KIBO.glob("target/kibo-*.jar"))
+    # Ordered on the parsed (major, minor, patch) tuple: an alphabetical sort
+    # puts kibo-1.2.9.jar after kibo-1.2.11.jar and would pick the older jar
+    # whenever target/ holds more than one build.
+    matches = []
+    for jar in SIBLING_KIBO.glob("target/kibo-*.jar"):
+        m = re.match(r"^kibo-(\d+)\.(\d+)\.(\d+)\.jar$", jar.name)
+        if m:
+            matches.append((tuple(int(g) for g in m.groups()), jar))
     if not matches:
         raise SystemExit(f"No kibo jar at {SIBLING_KIBO}/target/. "
                          f"Run `mvn package` in {SIBLING_KIBO} or set KIBO_JAR.")
-    return str(matches[-1])
+    return str(max(matches)[1])
 
 JAR = _resolve_jar()
 TEMPLATES = os.environ.get("KIBO_TEMPLATES") or str(SIBLING_TEMPLATES)
