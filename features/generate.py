@@ -20,6 +20,35 @@ SIBLING_ROOT = Path(__file__).resolve().parent.parent.parent
 SIBLING_KIBO = SIBLING_ROOT / "kibo"
 SIBLING_TEMPLATES = SIBLING_ROOT / "kibo-template-viper"
 
+# The kibo-template-viper line this repository generates against. A sibling
+# checkout's branch decides which templates you get, and a pack from another line
+# renders this model differently — a mismatched pair produces plausible output and
+# says nothing. KIBO_TEMPLATES still overrides the location, not the check.
+TEMPLATES_MAJOR = 1
+
+
+def _check_templates(root):
+    """Fail if the template pack on disk is not the line this repository targets."""
+    stamp = re.compile(r"Templates: kibo-template-viper (\d+)\.(\d+)\.(\d+)")
+    for stg in sorted(Path(root).rglob("*.stg")):
+        found = stamp.search(stg.read_text())
+        if not found:
+            continue
+        version = ".".join(found.groups())
+        if int(found.group(1)) != TEMPLATES_MAJOR:
+            raise SystemExit(f"Templates at {root} are {version}; this repository "
+                             f"generates against kibo-template-viper {TEMPLATES_MAJOR}.x. "
+                             f"Check out that line, or set KIBO_TEMPLATES.")
+        return version
+    raise SystemExit(f"No versioned template under {root} — is that a "
+                     f"kibo-template-viper checkout?")
+
+# The kibo line this repository generates against. The newest jar in a sibling
+# checkout is not the right answer: a generator from another line renders the same
+# model into different output, and nothing here would say so. Declare the line.
+# KIBO_JAR still overrides it, for a deliberate experiment.
+KIBO_MAJOR = 1
+
 def _resolve_jar():
     env = os.environ.get("KIBO_JAR")
     if env:
@@ -35,10 +64,20 @@ def _resolve_jar():
     if not matches:
         raise SystemExit(f"No kibo jar at {SIBLING_KIBO}/target/. "
                          f"Run `mvn package` in {SIBLING_KIBO} or set KIBO_JAR.")
-    return str(max(matches)[1])
+
+    line = [m for m in matches if m[0][0] == KIBO_MAJOR]
+    if not line:
+        found = ", ".join(".".join(map(str, v)) for v, _ in sorted(matches))
+        raise SystemExit(f"No kibo {KIBO_MAJOR}.x jar at {SIBLING_KIBO}/target/ "
+                         f"(found {found}). This repository generates against kibo "
+                         f"{KIBO_MAJOR}.x; a generator from another line renders this "
+                         f"model differently. Build kibo {KIBO_MAJOR}.x, or set KIBO_JAR "
+                         f"to choose deliberately.")
+    return str(max(line)[1])
 
 JAR = _resolve_jar()
 TEMPLATES = os.environ.get("KIBO_TEMPLATES") or str(SIBLING_TEMPLATES)
+_check_templates(TEMPLATES)
 KIBO = ['java', '-jar', JAR]
 
 
