@@ -24,7 +24,7 @@ SIBLING_TEMPLATES = SIBLING_ROOT / "kibo-template-viper"
 # checkout's branch decides which templates you get, and a pack from another line
 # renders this model differently — a mismatched pair produces plausible output and
 # says nothing. KIBO_TEMPLATES still overrides the location, not the check.
-TEMPLATES_MAJOR = 1
+TEMPLATES_MAJOR = 2
 
 
 def _check_templates(root):
@@ -47,7 +47,7 @@ def _check_templates(root):
 # checkout is not the right answer: a generator from another line renders the same
 # model into different output, and nothing here would say so. Declare the line.
 # KIBO_JAR still overrides it, for a deliberate experiment.
-KIBO_MAJOR = 1
+KIBO_MAJOR = 2
 
 def _resolve_jar():
     env = os.environ.get("KIBO_JAR")
@@ -146,14 +146,14 @@ def generate_package(name: str, dsm_path: str, definitions: DefinitionsConst, ou
 
 
 def generate_typescript(name: str, dsm_path: str, definitions: DefinitionsConst, package_root: str):
-    # The TypeScript output is pure templates: it reuses the `python` converter
-    # (same Converter, same empty file-prefix policy) pointed at the typescript
-    # template directory. No kibo engine change is required.
+    # kibo 2.0 has a `typescript` target of its own. Until then TypeScript
+    # borrowed the `python` one, which is why it kept its type spellings in its
+    # templates: it had nowhere else to put them.
     output = f'{package_root}/src'
 
     # TypeScript sources -> package src/
     cmd = KIBO + [
-        '-c', 'python',
+        '-c', 'typescript',
         '-n', name,
         '-d', dsm_path,
         '-t', f'{TEMPLATES}/typescript',
@@ -163,7 +163,7 @@ def generate_typescript(name: str, dsm_path: str, definitions: DefinitionsConst,
 
     # Package descriptor + tsconfig -> package root
     cmd = KIBO + [
-        '-c', 'python',
+        '-c', 'typescript',
         '-n', name,
         '-d', dsm_path,
         '-t', f'{TEMPLATES}/typescript/project',

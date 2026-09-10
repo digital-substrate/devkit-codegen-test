@@ -23,7 +23,7 @@ SIBLING_TEMPLATES = SIBLING_ROOT / "kibo-template-viper"
 # checkout's branch decides which templates you get, and a pack from another line
 # renders this model differently — a mismatched pair produces plausible output and
 # says nothing. KIBO_TEMPLATES still overrides the location, not the check.
-TEMPLATES_MAJOR = 1
+TEMPLATES_MAJOR = 2
 
 
 def _check_templates(root):
@@ -46,7 +46,7 @@ def _check_templates(root):
 # checkout is not the right answer: a generator from another line renders the same
 # model into different output, and nothing here would say so. Declare the line.
 # KIBO_JAR still overrides it, for a deliberate experiment.
-KIBO_MAJOR = 1
+KIBO_MAJOR = 2
 
 def _resolve_jar():
     env = os.environ.get("KIBO_JAR")
@@ -137,15 +137,15 @@ def generate_package(name: str, dsm_path: str, definitions: DefinitionsConst, ou
         file.write(f"B64_DEFINITIONS = {string}")
 
 def generate_typescript(name: str, dsm_path: str, definitions: DefinitionsConst, package_root: str):
-    # Reuse the `python` converter (engine-agnostic) on the typescript templates;
-    # no kibo engine change is required.
+    # kibo 2.0 has a `typescript` target of its own; TypeScript no longer
+    # borrows the `python` one.
     output = f'{package_root}/src'
     subprocess.run(KIBO + [
-        '-c', 'python', '-n', name, '-d', dsm_path,
+        '-c', 'typescript', '-n', name, '-d', dsm_path,
         '-t', f'{TEMPLATES}/typescript', '-o', output,
     ])
     subprocess.run(KIBO + [
-        '-c', 'python', '-n', name, '-d', dsm_path,
+        '-c', 'typescript', '-n', name, '-d', dsm_path,
         '-t', f'{TEMPLATES}/typescript/project', '-o', package_root,
     ])
     # Embed the definitions blob with the default codec (StreamTokenBinary), the
