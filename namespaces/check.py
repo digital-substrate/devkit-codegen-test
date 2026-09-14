@@ -80,6 +80,19 @@ check("a pool referencing no namespaced type", bare_pool, ", ".join(bare_pool))
 check("a pool spanning two namespaces", spanning_pool, ", ".join(spanning_pool))
 check("a void return in a pool", voids, ", ".join(voids))
 
+# Two attachments in one namespace, same name, on same-named concepts of two others.
+# The generator must qualify both scopes; it qualifies none while only one exists, so
+# adding the second renames the first.
+seen, clashing = {}, []
+for a in d["attachments"]:
+    concept = refs(a.get("key_type"), [])
+    if not concept: continue
+    cns, cname = concept[0]
+    k = (ns(a), a["name"], cname)
+    if k in seen and seen[k] != cns: clashing.append(f'{ns(a)}.{a["name"]} on {seen[k]}::{cname} and {cns}::{cname}')
+    seen[k] = cns
+check("two attachments needing their key namespace to tell them apart", clashing, "; ".join(clashing))
+
 for line in ok:  print(f"  ok    {line}")
 for line in bad: print(f"  MANQUE {line}")
 sys.exit(1 if bad else 0)

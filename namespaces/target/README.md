@@ -107,13 +107,22 @@ a property of files, not of units**: a namespace reopens across files, a file's 
 do not. `namespace Topology` therefore spans a root file and a sink file, and the layering
 is a layering of artefacts. A unit may contribute at several layers.
 
-## One thing this raised and did not settle
+## One rule this raised, and the measurement behind it
 
-`Annotations::Attachments::Material_Note` names the concept **unqualified**. Two
-attachments declared in one namespace, on same-named concepts of two others —
-`attachment<ModelA::Material, string> note` and `attachment<ModelB::Material, string>
-note` — would both want that scope. The model does not currently contain the case, and
-nothing here says the generator would reject it.
+An attachment's scope named its concept **unqualified**, so two attachments declared in
+one namespace on same-named concepts of two others looked like a collision waiting to
+happen. The model now contains the case, and the generator handles it: it counts
+attachments in the namespace sharing a name and a key-concept name, and prefixes the
+key's namespace only when more than one exists. It never collides.
+
+What it does instead is make the name a function of the whole namespace's attachment
+set. With only the `ModelA` one present the scope is `Material_Note`; adding the
+`ModelB` one renames it to `ModelA_Material_Note`. A source-compatible model change
+moves a generated symbol.
+
+**Proposed: qualify whenever the concept is not this unit's own, always.** A longer name
+in the common case, for a name that does not move — and one that reads like the
+signature beside it, which already says `ModelA::MaterialKey`.
 
 ## Not yet written
 

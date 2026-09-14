@@ -6,4 +6,9 @@ namespace Annotations {e5c2d91e-9d09-451d-b0ec-d38d145c256c} {
 """A note carried by a material this namespace does not own."""
 attachment<ModelA::Material, string> note;
 
+"""The same attachment name, on the same-named concept of another namespace. The
+generator qualifies both scopes rather than colliding -- but only once this second
+one exists, so adding it renames the first."""
+attachment<ModelB::Material, string> note;
+
 }; // ns

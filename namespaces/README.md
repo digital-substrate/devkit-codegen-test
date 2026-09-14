@@ -31,6 +31,7 @@ model cannot quietly stop covering what it claims:
 | a pool spanning two namespaces | `Projector` |
 | a pool naming no namespaced type at all | `Tools` |
 | a `void` return | `Tools.reset` |
+| two attachments told apart only by their key's namespace | `Annotations.note`, twice |
 
 The first two matter because a namespace reachable only through an attachment carried
 no dependency edge before `9328acd`, and a namespace holding nothing but attachments
