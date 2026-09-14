@@ -1,0 +1,18 @@
+// WHAT IS GENERATED TODAY, for the `service` model: -n Service, one DSM namespace Demo.
+// One file, and the namespace stated twice -- once by -n, once by the DSM.
+
+#ifndef Service_Data_hpp
+#define Service_Data_hpp
+
+namespace Service {
+    class AnyConceptKey final { ... };
+
+    namespace Demo {                       // ← nested inside the artifact scope
+        class PlayerKey final { ... };
+        class Vector3 final { ... };
+    }
+}
+
+template<> struct std::hash<Service::Demo::PlayerKey> { ... };
+
+#endif
