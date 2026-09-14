@@ -6,7 +6,7 @@ invokes the jar directly, so it can be run before and after a change without a c
 in between.
 
     render.py <dir>                 render every model into <dir>
-    render.py --diff <before> <after>
+    render.py --diff <before> <after> [--renames <map>]
 
 A mono-namespace model guards against regression: its diff must be empty. A
 multi-namespace model shows the effect a change is meant to have, so its diff is read,
@@ -84,10 +84,46 @@ def tree(d):
             for p in d.rglob("*") if p.is_file()}
 
 
-def diff(before, after):
+def renames(path):
+    """Read a rename map: one `model: old -> new` per line, # for a comment.
+
+    A step that moves output declares what it moved, and the diff is then taken after
+    applying the map: anything the map does not explain is a real change wearing a
+    rename's clothes. Without this the instrument says `everything moved` and stops
+    being able to distinguish, which is exactly when it is needed most.
+
+    Entries are per model because a rename is: the same artefact is
+    Features_ValueHexdigest.hpp in one model and Service_ValueHexdigest.hpp in another.
+
+    A map cannot express a split -- one file becoming several, each holding a part of
+    the old content. That is what a multi-namespace model does under this work, which
+    is why its gate is to be read rather than asserted.
+    """
+    out = {}
+    for line in Path(path).read_text().splitlines():
+        line = line.split("#", 1)[0].strip()
+        if not line:
+            continue
+        model, _, rest = line.partition(":")
+        old, _, new = rest.partition("->")
+        out.setdefault(model.strip(), {})[old.strip()] = new.strip()
+    return out
+
+
+def diff(before, after, rename=None):
     worst = 0
+    mapping = renames(rename) if rename else {}
     for model, spec in MODELS.items():
         a, b = tree(before / model), tree(after / model)
+        renamed = mapping.get(model, {})
+        if renamed:
+            unknown = [k for k in renamed if k not in a]
+            if unknown:
+                worst = 1
+                print(f"  {model:12} {spec['shape']:6} {len(unknown)} rename(s) name a file that was not there")
+                for k in unknown[:3]:
+                    print(f"      ? {k}")
+            a = {renamed.get(k, k): v for k, v in a.items()}
         added, removed = sorted(set(b) - set(a)), sorted(set(a) - set(b))
         changed = sorted(f for f in set(a) & set(b) if a[f] != b[f])
         gate = "must be empty" if spec["shape"] == "mono" else "read it"
@@ -105,8 +141,9 @@ def diff(before, after):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 4 and sys.argv[1] == "--diff":
-        sys.exit(diff(Path(sys.argv[2]), Path(sys.argv[3])))
+    if len(sys.argv) in (4, 6) and sys.argv[1] == "--diff":
+        rename = sys.argv[5] if len(sys.argv) == 6 and sys.argv[4] == "--renames" else None
+        sys.exit(diff(Path(sys.argv[2]), Path(sys.argv[3]), rename))
     if len(sys.argv) == 2:
         render(Path(sys.argv[1]))
     else:
