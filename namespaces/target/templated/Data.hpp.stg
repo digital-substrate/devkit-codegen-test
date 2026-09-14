@@ -1,0 +1,83 @@
+unit(u) ::= <<
+// <u.name> — the types this namespace declares.
+//
+// <u.model.generated>
+
+#ifndef <u.name>_Data_hpp
+#define <u.name>_Data_hpp
+
+<u.dependencies:{d|#include "<d.include.Data>"};separator="\n">
+
+#include "Viper_AnyConceptKey.hpp"
+#include "Viper_UUId.hpp"
+
+#include \<cstdint>
+#include \<functional>
+#include \<optional>
+
+namespace <u.name> {
+
+<u.concepts:concept();separator="\n\n">
+
+<u.structures:structure();separator="\n\n">
+
+} // namespace <u.name>
+
+<u.concepts:hash_specialisation();separator="\n">
+<u.structures:hash_specialisation();separator="\n">
+
+#endif
+>>
+
+concept(c) ::= <<
+<if(c.documentation)>/// <c.documentation>
+<endif>class <c.name>Key final {
+public:
+    <c.name>Key() = default;
+    <c.name>Key(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
+
+    static <c.name>Key create();
+
+    Viper::UUId const & instanceId() const noexcept;
+    Viper::UUId const & runtimeId() const noexcept;
+
+    bool isValid() const noexcept;
+<if(c.dsmConcept.parent)>
+    /// Widen to the parent concept. Implicit, because `is a` is not a request.
+    operator <c.parentNameInNamespace>Key() const noexcept;
+<endif>
+    Viper::AnyConceptKey toAny() const noexcept;
+    static std::optional\<<c.name>Key> from(Viper::AnyConceptKey const & key) noexcept;
+
+    std::size_t hash() const noexcept;
+
+private:
+    Viper::UUId _instanceId{};
+    Viper::UUId _runtimeId{};
+};
+
+bool operator==(<c.name>Key const &, <c.name>Key const &) noexcept;
+bool operator!=(<c.name>Key const &, <c.name>Key const &) noexcept;
+bool operator\<(<c.name>Key const &, <c.name>Key const &) noexcept;
+>>
+
+structure(s) ::= <<
+<if(s.documentation)>/// <s.documentation>
+<endif>struct <s.name> final {
+<s.fields:field();separator="\n">
+};
+
+bool operator==(<s.name> const &, <s.name> const &) noexcept;
+bool operator!=(<s.name> const &, <s.name> const &) noexcept;
+bool operator\<(<s.name> const &, <s.name> const &) noexcept;
+
+std::size_t hash(<s.name> const & value) noexcept;
+>>
+
+field(f) ::= <<    <f.typeInNamespace> <f.name>{};>>
+
+hash_specialisation(e) ::= <<
+template\<> struct std::hash\<<e.name> > {
+    std::size_t operator()(<e.name> const & v) const noexcept { return v.hash(); }
+};
+>>
