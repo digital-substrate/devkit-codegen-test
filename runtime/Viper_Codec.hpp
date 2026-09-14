@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <optional>
 #include <tuple>
+#include <utility>
 #include <variant>
 #include <map>
 #include <memory>
@@ -22,7 +23,9 @@
 #include <string>
 #include <vector>
 namespace Viper {
+class AnyConceptKey;
 class Definitions;
+class Type;
 namespace Codec {
 
 template<class T> struct tag {};
@@ -77,26 +80,113 @@ CommitId      read(Reader &, tag<CommitId>);
 Blob          read(Reader &, tag<Blob>);
 Any           read(Reader &, tag<Any>);
 
-// Les conteneurs : std::set n'appartient à aucun namespace du modèle, donc à aucune unité.
-template<class T> void write(Writer & w, std::vector<T> const & v) { for (auto const & e : v) write(w, e); }
-template<class T> void write(Writer & w, std::set<T> const & v)    { for (auto const & e : v) write(w, e); }
+// ── les descripteurs de ce qui n'est à aucune unité ──
+//
+// DÉCLARÉS ICI, DÉFINIS PAR LE MODULE INJECTÉ. Un Type est un objet enregistré dans les
+// Definitions du modèle, donc seul le module injecté peut le fournir -- mais il ne peut pas
+// le *déclarer* chez lui : `type(tag<std::int64_t>{})` appelé depuis un pool ne trouverait
+// rien, un type fondamental n'ayant aucun namespace associé.
+//
+// `tag<T>`, lui, en a un : celui-ci. Déclarer les descripteurs dans Viper::Codec les rend
+// donc trouvables par ADL depuis n'importe quelle portée, et la règle devient unique --
+// `type(tag<T>{})` marche pour tout T, que T soit d'une unité, une primitive ou un
+// conteneur de std.
+std::shared_ptr<Type> const & type(tag<bool>);
+std::shared_ptr<Type> const & type(tag<std::uint8_t>);
+std::shared_ptr<Type> const & type(tag<std::uint16_t>);
+std::shared_ptr<Type> const & type(tag<std::uint32_t>);
+std::shared_ptr<Type> const & type(tag<std::uint64_t>);
+std::shared_ptr<Type> const & type(tag<std::int8_t>);
+std::shared_ptr<Type> const & type(tag<std::int16_t>);
+std::shared_ptr<Type> const & type(tag<std::int32_t>);
+std::shared_ptr<Type> const & type(tag<std::int64_t>);
+std::shared_ptr<Type> const & type(tag<float>);
+std::shared_ptr<Type> const & type(tag<double>);
+std::shared_ptr<Type> const & type(tag<std::string>);
+std::shared_ptr<Type> const & type(tag<UUId>);
+std::shared_ptr<Type> const & type(tag<BlobId>);
+std::shared_ptr<Type> const & type(tag<CommitId>);
+std::shared_ptr<Type> const & type(tag<Blob>);
+std::shared_ptr<Type> const & type(tag<Any>);
+std::shared_ptr<Type> const & type(tag<AnyConceptKey>);
+
+template<class T> std::shared_ptr<Type> const & type(tag<std::vector<T>>);
+template<class T> std::shared_ptr<Type> const & type(tag<std::set<T>>);
+template<class K, class V> std::shared_ptr<Type> const & type(tag<std::map<K,V>>);
+template<class T> std::shared_ptr<Type> const & type(tag<std::optional<T>>);
+template<class T> std::shared_ptr<Type> const & type(tag<XArray<T>>);
+template<class... T> std::shared_ptr<Type> const & type(tag<std::tuple<T...>>);
+template<class... T> std::shared_ptr<Type> const & type(tag<std::variant<T...>>);
+template<class T, std::size_t N> std::shared_ptr<Type> const & type(tag<std::array<T,N>>);
+
+// LES CONTENEURS, ET LE CONTRAT QUI REND LE PONT STATIQUE/DYNAMIQUE POSSIBLE.
+//
+// Ce que ces fonctions posent sur le flux doit être exactement ce que
+// `Viper::ValueWriter` pose pour la Value correspondante, et réciproquement pour
+// `Viper::ValueReader`. C'est ce qui permet à `encode<T>` de fabriquer une Value en
+// écrivant la valeur C++ sur un flux et en la relisant côté dynamique -- et au pont d'un
+// pool de traduire dans les deux sens sans jamais convertir type à type.
+//
+// Le format vient donc de Viper_ValueWriter.cpp, et non d'un choix fait ici :
+//
+//   optional          writeBool(présent) puis la valeur
+//   vector/set/map    writeUInt64(taille) puis les éléments, clé avant valeur
+//   variant           writeUInt8(index dans le variant) puis la valeur
+//   vec/mat           les éléments, sans taille : elle est dans le type
+//   xarray            trois sections, chacune préfixée de sa taille
+//   structure         ses champs dans l'ordre du type
+//   clé               writeUUId(instance) puis writeUUId(concept réel)
+//   énumération       writeUInt8(rang de la case)
+//
+// UN CONTRAT D'AUTANT PLUS SÛR QU'IL EST ÉCRIT UNE FOIS. Le pack ré-émet ces corps par
+// forme et par modèle ; ici ce sont des templates du runtime, au même endroit que le
+// ValueWriter qu'ils doivent suivre.
+template<class T> void write(Writer & w, std::vector<T> const & v) {
+    w.streamWriting->writeUInt64(v.size());
+    for (auto const & e : v) write(w, e);
+}
+template<class T> void write(Writer & w, std::set<T> const & v) {
+    w.streamWriting->writeUInt64(v.size());
+    for (auto const & e : v) write(w, e);
+}
 template<class K, class V> void write(Writer & w, std::map<K,V> const & v) {
+    w.streamWriting->writeUInt64(v.size());
     for (auto const & [k, e] : v) { write(w, k); write(w, e); }
 }
-template<class T> void write(Writer & w, std::optional<T> const & v) { if (v) write(w, *v); }
-template<class T> void write(Writer & w, XArray<T> const &) {}
-template<class T, std::size_t N> void write(Writer & w, std::array<T,N> const & v) { for (auto const & e : v) write(w, e); }
+template<class T> void write(Writer & w, std::optional<T> const & v) {
+    w.streamWriting->writeBool(v.has_value());
+    if (v) write(w, *v);
+}
+template<class T> void write(Writer & w, XArray<T> const & v) { v.write(w.streamWriting); }
+template<class T, std::size_t N> void write(Writer & w, std::array<T,N> const & v) {
+    for (auto const & e : v) write(w, e);       // la taille est dans le type
+}
 template<class... T> void write(Writer & w, std::tuple<T...> const & v) {
     std::apply([&](auto const &... e) { (write(w, e), ...); }, v);
 }
 template<class... T> void write(Writer & w, std::variant<T...> const & v) {
+    w.streamWriting->writeUInt8(static_cast<std::uint8_t>(v.index()));
     std::visit([&](auto const & e) { write(w, e); }, v);
 }
 
-template<class T> std::vector<T> read(Reader & r, tag<std::vector<T>>) { return {read(r, tag<T>{})}; }
-template<class T> std::set<T>    read(Reader & r, tag<std::set<T>>)    { return {read(r, tag<T>{})}; }
-template<class T> std::optional<T> read(Reader & r, tag<std::optional<T>>) { return read(r, tag<T>{}); }
-template<class T> XArray<T> read(Reader &, tag<XArray<T>>) { return {}; }
+template<class T> std::vector<T> read(Reader & r, tag<std::vector<T>>) {
+    std::vector<T> result;
+    auto const size{r.streamReading->readUInt64()};
+    result.reserve(size);
+    for (std::uint64_t i{}; i < size; ++i) result.push_back(read(r, tag<T>{}));
+    return result;
+}
+template<class T> std::set<T> read(Reader & r, tag<std::set<T>>) {
+    std::set<T> result;
+    auto const size{r.streamReading->readUInt64()};
+    for (std::uint64_t i{}; i < size; ++i) result.insert(read(r, tag<T>{}));
+    return result;
+}
+template<class T> std::optional<T> read(Reader & r, tag<std::optional<T>>) {
+    if (!r.streamReading->readBool()) return std::nullopt;
+    return read(r, tag<T>{});
+}
+template<class T> XArray<T> read(Reader & r, tag<XArray<T>>) { return XArray<T>::read(r.streamReading); }
 template<class T, std::size_t N> std::array<T,N> read(Reader & r, tag<std::array<T,N>>) {
     std::array<T,N> result{};
     for (auto & e : result) e = read(r, tag<T>{});
@@ -109,7 +199,13 @@ template<class First, class... Rest> std::variant<First, Rest...> read(Reader & 
     return read(r, tag<First>{});
 }
 template<class K, class V> std::map<K,V> read(Reader & r, tag<std::map<K,V>>) {
-    return {{read(r, tag<K>{}), read(r, tag<V>{})}};
+    std::map<K,V> result;
+    auto const size{r.streamReading->readUInt64()};
+    for (std::uint64_t i{}; i < size; ++i) {
+        auto key{read(r, tag<K>{})};                       // la clé avant la valeur,
+        result.emplace(std::move(key), read(r, tag<V>{})); // et pas dans un argument
+    }
+    return result;
 }
 
 }} // ns

@@ -253,3 +253,66 @@ life of the program: built once, returned by reference.
 The runtime takes a `std::string const &`, so the `string_view` constant is converted at the
 one call. A `string_view` overload on `makeField` would remove even that, which is a note
 for the runtime rather than a change here.
+
+## Layer 4, the pools implemented — and the format contract comes due
+
+`Tools_Pool.cpp` and `Projector_Pool.cpp`. A pool is two things that resemble each other:
+static C++ functions the developer writes, and `Viper::Function` objects that take and
+return `Viper::Value`, because that is how a call arrives from a script, an RPC or a tool.
+
+**The bridge converts nothing type by type.** It decodes each argument from its Value, calls
+the static function, encodes the return. `Projector::link` spans two units and the bridge
+does not know it: `decode<T>` finds T's `read` by argument-dependent lookup. The pack writes
+`ValueDecoder::decode_ModelA_MaterialKey` and `..._ModelB_MaterialKey` there — two flat names
+that existed because nothing else told the two calls apart.
+
+**And the serialisation has to match `Viper::ValueWriter` byte for byte.** `decode<T>` sends
+the Value through a stream and reads it back with `read`, so what `ValueWriter` puts down for
+that Value must be exactly what `read` expects. The format is therefore taken from
+`Viper_ValueWriter.cpp` and not chosen here:
+
+```
+optional        writeBool(present) then the value
+vector/set/map  writeUInt64(size) then the elements, key before value
+variant         writeUInt8(index) then the value
+vec/mat         the elements, no size — it is in the type
+key             writeUUId(instance) then writeUUId(the real concept)
+enumeration     writeUInt8(the case's rank)
+structure       its fields in the type's order
+```
+
+**A contract that is safer for being written once.** The pack re-emits these bodies per
+shape per model; here they are runtime templates, next to the ValueWriter they must follow.
+
+**Each unit a pool reaches costs three artefacts, not one** — its types for the signatures,
+its codec for `write`/`read`, its model identity for the descriptor the dynamic prototype
+needs. The pool's *header* needed only the first.
+
+**And every type descriptor is now reachable by lookup.** `type(tag<std::int64_t>{})` from
+inside a pool found nothing: a fundamental type has no associated namespace. `tag<T>` has
+one — the runtime's — so the descriptors that belong to no unit are declared in
+`Viper::Codec` and defined by the injected module. One rule for every T.
+
+## isKnown, and who holds the set of known concepts
+
+Someone must supply it, and someone already does: the model registers every one of its
+concepts in its `Definitions` at load, which has to happen anyway or nothing in the runtime
+works. Asking that registration generates nothing further.
+
+```cpp
+bool isKnown(Viper::AnyConceptKey const & key) {
+    return definitions()->queryConcept(key.runtimeId()) != nullptr;
+}
+```
+
+**And it is the right answer, not merely the shortest.** The pack freezes the list at
+generation: `isKnown()` compares against a set closed on the day the code was written. But
+`Viper::Definitions::extendConcepts` exists — a model learns concepts at run time, from a
+peer or from a newer document. A frozen list then answers "unknown" for a concept the runtime
+knows, which the pack acknowledges in its own comment on `description`.
+
+Asking the model gives today's answer. Enumerating gives the generation day's.
+
+`isMember` is the same call with one difference carried by the descriptor rather than by the
+code: a concept descriptor asks whether the instance derives from it, a club descriptor asks
+whether it belongs. Deriving is not joining, and one function covers both.

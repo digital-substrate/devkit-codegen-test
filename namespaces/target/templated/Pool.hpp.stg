@@ -23,7 +23,7 @@ attachment_pool(p) ::= <<
 
 namespace <p.name;format="uf"> {
 
-<p.functions:bridge();separator="\n">
+<p.functions:attachment_bridge();separator="\n">
 
 std::shared_ptr\<Viper::AttachmentFunctionPool> pool();
 
@@ -50,6 +50,12 @@ preamble(p, kind) ::= <<
 >>
 
 bridge(f) ::= <%<ret(f)> <f.name;format="lsc">(<f.parameters:param();separator=", ">);%>
+
+// UNE FONCTION DE POOL D'ATTACHMENTS PREND L'INTERFACE SUR LAQUELLE AGIR. Elle opère sur
+// des documents et non sur des valeurs seules, donc le contexte est un paramètre -- et il
+// est le premier, comme le Writer l'est pour `write`, pour la même raison : c'est lui qui
+// dit à quoi l'appel s'applique.
+attachment_bridge(f) ::= <%<ret(f)> <f.name;format="lsc">(std::shared_ptr\<Viper::Attachment<f.interfaceType>> const & attachment<f.interfaceType><if(f.parameters)>, <f.parameters:param();separator=", "><endif>);%>
 
 remote(f) ::= <<
 /// The same pool, seen from a client.

@@ -16,7 +16,9 @@ class Definitions;
 class StreamWriting {
 public:
     virtual ~StreamWriting() = default;
+    virtual void writeBool(bool value) = 0;
     virtual void writeUInt8(std::uint8_t value) = 0;
+    virtual void writeUInt64(std::uint64_t value) = 0;
     virtual void writeFloat(float value) = 0;
     virtual void writeString(std::string const & value) = 0;
     virtual void writeUUId(UUId const & value) = 0;
@@ -25,7 +27,9 @@ public:
 class StreamReading {
 public:
     virtual ~StreamReading() = default;
+    virtual bool readBool() = 0;
     virtual std::uint8_t readUInt8() = 0;
+    virtual std::uint64_t readUInt64() = 0;
     virtual float readFloat() = 0;
     virtual std::string readString() = 0;
     virtual UUId readUUId() = 0;

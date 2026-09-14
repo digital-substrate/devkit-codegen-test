@@ -46,6 +46,11 @@ std::shared_ptr<Viper::StreamCodecInstancing> const & stream();
 
 // ── les descripteurs que personne d'autre ne peut fournir ──
 //
+// DÉCLARÉS DANS Viper::Codec, DÉFINIS ICI. Ils ont besoin de definitions(), donc seul ce
+// module peut les écrire -- mais les déclarer ici les rendrait introuvables depuis un pool
+// ou une unité : un type fondamental n'a aucun namespace associé. `tag<T>` en a un, celui
+// du runtime, et c'est là qu'ils se déclarent pour que `type(tag<T>{})` marche partout.
+//
 // TROUVÉ EN ÉCRIVANT LE .CPP : `setR` encode un std::uint8_t, donc encode<std::uint8_t>
 // appelle type(tag<std::uint8_t>{}) -- et aucune unité ne le déclare, puisqu'un uint8 n'est
 // à personne. La recherche par ADL sur tag<unsigned char> ne mène nulle part non plus.
@@ -56,43 +61,7 @@ std::shared_ptr<Viper::StreamCodecInstancing> const & stream();
 // n'appartient à aucun namespace du modèle. C'est exactement la frontière cherchée, et elle
 // s'est dessinée toute seule à la première compilation.
 
-std::shared_ptr<Viper::Type> const & type(tag<bool>);
-std::shared_ptr<Viper::Type> const & type(tag<std::uint8_t>);
-std::shared_ptr<Viper::Type> const & type(tag<std::uint16_t>);
-std::shared_ptr<Viper::Type> const & type(tag<std::uint32_t>);
-std::shared_ptr<Viper::Type> const & type(tag<std::uint64_t>);
-std::shared_ptr<Viper::Type> const & type(tag<std::int8_t>);
-std::shared_ptr<Viper::Type> const & type(tag<std::int16_t>);
-std::shared_ptr<Viper::Type> const & type(tag<std::int32_t>);
-std::shared_ptr<Viper::Type> const & type(tag<std::int64_t>);
-std::shared_ptr<Viper::Type> const & type(tag<float>);
-std::shared_ptr<Viper::Type> const & type(tag<double>);
-std::shared_ptr<Viper::Type> const & type(tag<std::string>);
-std::shared_ptr<Viper::Type> const & type(tag<Viper::UUId>);
-std::shared_ptr<Viper::Type> const & type(tag<Viper::BlobId>);
-std::shared_ptr<Viper::Type> const & type(tag<Viper::CommitId>);
-std::shared_ptr<Viper::Type> const & type(tag<Viper::Blob>);
-std::shared_ptr<Viper::Type> const & type(tag<Viper::Any>);
 
-// ── et les conteneurs, pour la même raison, une fois de plus ──
-//
-// TROUVÉ EN COMPILANT Projection_Attachments.cpp. Projection déclare
-// `attachment<Link, map<key<ModelA::Material>, key<ModelB::Material>>> mapping` : une forme
-// qui enjambe deux namespaces et n'appartient à aucun des deux. `encode` de ce document
-// demande son descripteur de type, et il n'y a personne à qui le demander -- ModelA ne peut
-// pas revendiquer une map dont la valeur est à ModelB, et réciproquement.
-//
-// C'est la forme qui a forcé un socle à exister, et elle atterrit ici sans qu'on ait rien
-// à décider : vector, set et map sont dans std, donc ce sont des conteneurs de std, donc
-// aucune unité du modèle n'en est propriétaire. Une famille de templates, écrite une fois.
-template<class T> std::shared_ptr<Viper::Type> const & type(tag<std::vector<T>>);
-template<class T> std::shared_ptr<Viper::Type> const & type(tag<std::set<T>>);
-template<class K, class V> std::shared_ptr<Viper::Type> const & type(tag<std::map<K,V>>);
-template<class T> std::shared_ptr<Viper::Type> const & type(tag<std::optional<T>>);
-template<class T> std::shared_ptr<Viper::Type> const & type(tag<Viper::XArray<T>>);
-template<class... T> std::shared_ptr<Viper::Type> const & type(tag<std::tuple<T...>>);
-template<class... T> std::shared_ptr<Viper::Type> const & type(tag<std::variant<T...>>);
-template<class T, std::size_t N> std::shared_ptr<Viper::Type> const & type(tag<std::array<T,N>>);
 
 // ── ce que la clé non typée ne peut pas porter elle-même ──
 //

@@ -2,6 +2,7 @@
 #define Viper_Definitions_hpp
 #include "Viper_UUId.hpp"
 #include <memory>
+#include <set>
 namespace Viper {
 class Attachment;
 class TypeConcept;
@@ -19,6 +20,12 @@ public:
     std::shared_ptr<TypeStructure> checkStructure(UUId const & runtimeId) const;
     std::shared_ptr<TypeEnumeration> checkEnumeration(UUId const & runtimeId) const;
     std::shared_ptr<TypeClub> checkClub(UUId const & runtimeId) const;
+    std::shared_ptr<TypeClub> queryClub(UUId const & runtimeId) const;
+
+    /// Le modèle peut apprendre des concepts qu'il ne connaissait pas au chargement --
+    /// et c'est la raison pour laquelle l'ensemble des concepts connus ne peut pas être
+    /// figé à la génération.
+    std::set<UUId> extendConcepts(std::shared_ptr<Definitions const> const & other);
 };
 }
 #endif
