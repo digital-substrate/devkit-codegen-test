@@ -6,7 +6,7 @@ unit(u) ::= <<
 #ifndef <u.name>_Data_hpp
 #define <u.name>_Data_hpp
 
-<u.dependencies:{d|#include "<d.include.Data>"};separator="\n">
+<u.dependencies.types:{d|#include "<d.include.Data>"};separator="\n">
 
 #include "Viper_AnyConceptKey.hpp"
 #include "Viper_UUId.hpp"
