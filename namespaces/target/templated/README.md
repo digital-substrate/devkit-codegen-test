@@ -144,8 +144,23 @@ Fixed, and `use.cpp` and `bridge.cpp` now compile against the generated tree —
 `bridge.cpp` for the first time anywhere, since `../hand/` never had a `ModelB_Codec.hpp`
 to satisfy it.
 
-**And the layer-4 pool gap is not an over-include, it is a dangling one.** `l4.cpp` fails on
-`Tools_Pool.hpp:8: 'Topology_Data.hpp' file not found`. `p.model.include.Data` names a
-model-wide artefact that no namespace-based template produces and nothing ever will. A pool
-needs the dependency set its own signatures imply — for `Tools`, none at all — and until
-the model exposes one, no generated pool header can be included.
+**And the layer-4 pool gap was not an over-include, it was a dangling one.** `l4.cpp` failed
+on `Tools_Pool.hpp:8: 'Topology_Data.hpp' file not found` — `p.model.include.Data` named a
+model-wide artefact no namespace-based template produces, so no generated pool header could
+be included at all.
+
+Fixed: a pool now carries `dependencies.functions`, the namespaces its own signatures reach.
+`Projector` includes `ModelA_Data.hpp` and `ModelB_Data.hpp`, `LinkModel` includes
+`Projection_Data.hpp`, and `Tools` — whose signatures name no namespaced type — includes
+nothing. A third kind of declaration beside `types` and `attachments`, so both kinds of unit
+are asked the same question and the wrong kind answers with an empty list.
+
+**One more invention removed from the reference.** `../hand/ModelA_Attachments.hpp` declared
+`set(mutating, key, path, value)`, to motivate layer 2. Nothing in the pack has it, and it
+could not be generated anyway: it would take one overload per field type of every document.
+Writing one field is real, but it is the runtime's operation — a path and an encoded value go
+to the mutating interface, one signature covering every field of every document. Layer 2
+exists for that caller, not for a declaration in a unit.
+
+**The whole generated tree now compiles**: `use.cpp`, `bridge.cpp`, `l4.cpp`, `l5.cpp`,
+`f.cpp`, against generated headers and hand-written `Viper_*` stubs.

@@ -36,9 +36,11 @@ std::optional<Colour> get(Viper::AttachmentGetting const & getting, MaterialKey 
 
 void set(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour const & value);
 
-/// Write one field rather than the whole document -- this is what layer 2's paths are for.
-void set(Viper::AttachmentMutating & mutating, MaterialKey const & key,
-         Viper::Path const & path, std::uint8_t channel);
+// NO PATH-TAKING OVERLOAD, and the first draft had one. Writing one field rather than the
+// whole document is a real operation, but it is the runtime's: a path and an encoded value
+// go to the mutating interface directly, which is why one signature covers every field of
+// every document instead of one overload per field type. Layer 2 exists for that caller,
+// not for a declaration here.
 
 void remove(Viper::AttachmentMutating & mutating, MaterialKey const & key);
 

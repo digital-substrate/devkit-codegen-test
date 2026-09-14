@@ -40,11 +40,12 @@ preamble(p, kind) ::= <<
 #ifndef <p.name>_Pool_hpp
 #define <p.name>_Pool_hpp
 
-#include "<p.model.include.Data>"
+<p.dependencies.functions:{d|#include "<d.include.Data>"};separator="\n">
 
 #include "Viper_<kind>.hpp"
 #include "Viper_ServiceRemote.hpp"
 
+#include \<cstdint>
 #include \<memory>
 >>
 
