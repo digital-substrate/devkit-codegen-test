@@ -24,3 +24,17 @@ void use() {
     std::unordered_map<Projection::Pair, int> hashed;
     (void)ca; (void)cb; (void)p; (void)widened; (void)ordered; (void)hashed;
 }
+
+#include "ModelA_Fields.hpp"
+#include "Projection_Fields.hpp"
+
+void use_fields() {
+    // le nom, utilisable en expression constante
+    static_assert(ModelA::Fields::Colour::r == "r");
+    constexpr auto n = ModelA::Fields::Colour::g;
+
+    // l'adresse, pour une opération partielle
+    auto const & p = ModelA::Fields::Colour::rPath();
+    auto const & q = Projection::Fields::Pair::aPath();
+    (void)n; (void)p; (void)q;
+}

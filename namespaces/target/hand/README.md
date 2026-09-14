@@ -38,6 +38,28 @@ every widening.
 The correction is noted in `ModelA_Data.hpp` where the field is declared, rather than
 here, so that whoever reads the type sees why it costs what it costs.
 
+## Layer 2 — naming and addressing a field
+
+`ModelA_Fields.hpp`, `Projection_Fields.hpp`. Two findings, both from writing rather than
+from reasoning.
+
+**One artefact where the pack has two.** `Field` gives a field's name and `Path` gives
+its address, in two files whose contents are in bijection. Wanting the name without the
+address, or the reverse, is rare — `attachment.diff(key, Colour::rPath(), 4)` uses the
+path and an error message beside it uses the name. Two files is an implementation
+decomposition; the §7 inventory already counts them as one capability.
+
+**A field name is a compile-time constant and should cost nothing.** The pack emits
+`extern std::string const r`, which allocates at static initialisation for something that
+never changes and cannot be used in a constant expression. `inline constexpr
+std::string_view` costs nothing and `static_assert(Fields::Colour::r == "r")` compiles —
+checked in `use.cpp`.
+
+**And `Projection_Fields.hpp` includes neither driver unit**, though `Pair` holds a key
+from each. A path names a position, not a type. Same structure, two artefacts, two
+dependency sets — which is why an include list is computed per artefact and never per
+unit.
+
 ## Open, and deliberately not settled here
 
 - **The file name.** `Data` is a template's name, inherited from the pack, not a domain.
