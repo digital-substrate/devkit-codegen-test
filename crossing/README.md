@@ -35,5 +35,7 @@ Against this model, on the first render:
 | layer 1 emits no club at all | no other multi-namespace model declares one |
 | `key<any_concept>` comes out as a bare `AnyConceptKey` | it belongs to no namespace, so nothing qualified it |
 
-The first two are fixed. The last two are open, and the second of them is the question
-this whole line of work started from: a type that no namespace can claim.
+All four are answered, the first two in the generator and the last two by hand in
+`target/hand/`, which is where the reference for a club and for the untyped key now lives.
+The fourth turned out not to be a type no namespace can claim: it is a runtime type, with
+two operations on it that should never have been members.

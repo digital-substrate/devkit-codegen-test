@@ -12,6 +12,13 @@ concept Derived is a Core::Thing;
 """Ce sur quoi les attachments de ce namespace sont accrochés."""
 concept Knot;
 
+"""Un club dont les membres viennent de deux fournisseurs ET PORTENT LE MÊME NOM : le nom
+du getter ne peut pas être `asThingKey` des deux côtés, et un nom de fonction ne peut pas
+contenir `::`. C'est le cas que Core::Klub ne montre pas, ses membres étant chez lui."""
+club Weave;
+membership Weave Core::Thing;
+membership Weave Parts::Thing;
+
 // ── les formes composites, côté champ ──
 
 """Chaque conteneur, avec des éléments des deux fournisseurs."""
