@@ -1,0 +1,73 @@
+// LE POINT DE CE MODÈLE. Chaque forme composite du langage, avec ses éléments pris dans
+// deux autres namespaces -- et chacune deux fois, comme champ de structure et comme type
+// de document d'attachment, parce que ce sont deux chemins de code différents.
+//
+// C'est ce que `features/all.dsm` couvre dans un seul namespace, et ce que `namespaces`
+// couvre avec trois formes de types. Ici les deux se croisent.
+namespace Woven {f7a3c518-2e64-4b90-8d17-9c05b6e2f483} {
+
+"""Un concept dont le parent vit ailleurs."""
+concept Derived is a Core::Thing;
+
+"""Ce sur quoi les attachments de ce namespace sont accrochés."""
+concept Knot;
+
+// ── les formes composites, côté champ ──
+
+"""Chaque conteneur, avec des éléments des deux fournisseurs."""
+struct Composites {
+  tuple<Core::Colour, Parts::Colour> f_tuple;
+  optional<key<Core::Thing>> f_optional;
+  vector<Parts::Colour> f_vector;
+  set<key<Core::Thing>> f_set;
+  map<key<Core::Thing>, key<Parts::Thing>> f_map_keys;
+  map<Core::Grade, Parts::Colour> f_map_enum;
+  xarray<Core::Colour> f_xarray;
+  variant<Core::Colour, Parts::Colour, string> f_variant;
+};
+
+"""Les entités des deux fournisseurs, nues, comme champs."""
+struct Entities {
+  Core::Grade f_core_grade;
+  Parts::Grade f_parts_grade;
+  Core::Colour f_core_colour;
+  Parts::Colour f_parts_colour;
+  Core::Single f_single;
+  key<Core::Thing> f_thing;
+  key<Core::SubThing> f_sub_thing;
+  key<Parts::Thing> f_other_thing;
+  key<Core::Klub> f_klub;
+  key<any_concept> f_any_concept;
+};
+
+"""Une structure d'ici qui contient une structure d'ici : la profondeur reste locale."""
+struct Nested {
+  Composites f_composites;
+  Entities f_entities;
+};
+
+// ── les mêmes formes, côté document d'attachment ──
+
+attachment<Knot, tuple<Core::Colour, Parts::Colour>> docTuple;
+attachment<Knot, optional<key<Core::Thing>>> docOptional;
+attachment<Knot, vector<Parts::Colour>> docVector;
+attachment<Knot, set<key<Core::Thing>>> docSet;
+attachment<Knot, map<key<Core::Thing>, key<Parts::Thing>>> docMapKeys;
+attachment<Knot, map<Core::Grade, Parts::Colour>> docMapEnum;
+attachment<Knot, xarray<Core::Colour>> docXArray;
+attachment<Knot, variant<Core::Colour, Parts::Colour>> docVariant;
+
+attachment<Knot, Core::Grade> docGrade;
+attachment<Knot, Core::Colour> docColour;
+attachment<Knot, Parts::Colour> docOtherColour;
+attachment<Knot, key<Core::Thing>> docThingKey;
+attachment<Knot, key<Core::Klub>> docKlubKey;
+attachment<Knot, key<any_concept>> docAnyConceptKey;
+attachment<Knot, Composites> docComposites;
+
+// Un attachment sur un concept d'un autre namespace, dont le document vient d'un
+// troisième : les trois coins à la fois.
+attachment<Core::Thing, Parts::Colour> mark;
+attachment<Parts::Thing, Core::Colour> mark;
+
+}; // ns

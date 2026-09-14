@@ -32,18 +32,18 @@ namespace {
 <u.clubs:runtime_id();separator="\n">
 <u.enumerations:runtime_id();separator="\n">
 <u.structures:runtime_id();separator="\n">
-<u.concepts:concept_type();separator="\n\n">
-<u.clubs:club_type();separator="\n\n">
+<u.concepts:concept_type(u);separator="\n\n">
+<u.clubs:club_type(u);separator="\n\n">
 
 } // namespace
 
-<u.concepts:keyed();separator="\n\n">
+<u.concepts:keyed(u);separator="\n\n">
 
-<u.clubs:keyed();separator="\n\n">
+<u.clubs:keyed(u);separator="\n\n">
 
 <u.enumerations:enumeration(u);separator="\n\n">
 
-<u.structures:structure();separator="\n\n">
+<u.structures:structure(u);separator="\n\n">
 
 } // namespace <u.name>
 >>
@@ -52,20 +52,20 @@ runtime_id(e) ::= <%Viper::UUId const <e.name>Id{Viper::UUId::parse("<e.runtimeI
 
 // Le concept dont la clé est dérivée. Détail de fichier : rien au dehors n'a de raison de
 // distinguer le concept de sa clé, puisque seule la clé est un type C++.
-concept_type(c) ::= <<
+concept_type(c, u) ::= <<
 <concept_type_head(c)>
     static std::shared_ptr\<Viper::Type> const instance{
-        Topology::Codec::definitions()->checkConcept(<c.name>Id)};
+        <u.model.namespace>::Codec::definitions()->checkConcept(<c.name>Id)};
     return instance;
 }
 >>
 
 concept_type_head(c) ::= <%std::shared_ptr\<Viper::Type> const & <c.name;format="lf">Concept() {%>
 
-club_type(c) ::= <<
+club_type(c, u) ::= <<
 <concept_type_head(c)>
     static std::shared_ptr\<Viper::Type> const instance{
-        Topology::Codec::definitions()->checkClub(<c.name>Id)};
+        <u.model.namespace>::Codec::definitions()->checkClub(<c.name>Id)};
     return instance;
 }
 >>
@@ -73,7 +73,7 @@ club_type(c) ::= <<
 // Une clé, sur le fil, c'est deux uuid : l'instance, et le concept qu'elle est réellement.
 // Le second est stocké et non déduit du type, parce qu'une clé peut nommer une instance
 // d'un concept dérivé, et c'est l'identité de celui-là qui doit traverser.
-keyed(c) ::= <<
+keyed(c, u) ::= <<
 void write(Viper::Codec::Writer & w, <c.name>Key const & value) {
     write(w, value.instanceId());
     write(w, value.runtimeId());
@@ -118,7 +118,7 @@ void write(Viper::Codec::Writer & w, <e.name> value) {
 
 <plain_type_head(e)>
     static std::shared_ptr\<Viper::Type> const instance{
-        Topology::Codec::definitions()->checkEnumeration(<e.name>Id)};
+        <u.model.namespace>::Codec::definitions()->checkEnumeration(<e.name>Id)};
     return instance;
 }
 >>
@@ -136,7 +136,7 @@ enumeration_read(m, e, i) ::= <<
 // Une structure, c'est ses champs dans l'ordre, chacun confié à l'unité qui le possède --
 // `write(w, value.x)` part chez le runtime pour un entier et chez une autre unité pour une
 // clé étrangère, sans que rien ici ait à le savoir.
-structure(s) ::= <<
+structure(s, u) ::= <<
 void write(Viper::Codec::Writer & w, <s.name> const & value) {
 <s.fields:field_write();separator="\n">
 }
@@ -147,7 +147,7 @@ void write(Viper::Codec::Writer & w, <s.name> const & value) {
 
 <plain_type_head(s)>
     static std::shared_ptr\<Viper::Type> const instance{
-        Topology::Codec::definitions()->checkStructure(<s.name>Id)};
+        <u.model.namespace>::Codec::definitions()->checkStructure(<s.name>Id)};
     return instance;
 }
 >>

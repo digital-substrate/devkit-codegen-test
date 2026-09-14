@@ -1,0 +1,23 @@
+// Le second fournisseur : les mêmes noms que Core, des types différents, et aucune
+// dépendance non plus. Il existe pour que Woven ait deux côtés à faire se rencontrer.
+namespace Parts {c4e91b73-8a52-4d1f-b6c8-5e3f0a92d716} {
+
+"""Le même nom que Core::Thing, et rien de commun."""
+concept Thing;
+
+"""Le même nom que Core::Colour, en virgule flottante."""
+struct Colour {
+  float r;
+  float g;
+  float b;
+};
+
+"""Le même nom que Core::Grade, des cases différentes."""
+enum Grade {
+  soft ,
+  hard
+};
+
+attachment<Thing, Colour> colour;
+
+}; // ns

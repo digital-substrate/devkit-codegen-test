@@ -24,7 +24,11 @@
 
 #include <cstdint>
 #include <memory>
+#include <array>
 #include <map>
+#include <optional>
+#include <tuple>
+#include <variant>
 #include <set>
 #include <string>
 #include <vector>
@@ -51,10 +55,23 @@ std::shared_ptr<Viper::StreamCodecInstancing> const & stream();
 // n'appartient à aucun namespace du modèle. C'est exactement la frontière cherchée, et elle
 // s'est dessinée toute seule à la première compilation.
 
+std::shared_ptr<Viper::Type> const & type(tag<bool>);
 std::shared_ptr<Viper::Type> const & type(tag<std::uint8_t>);
+std::shared_ptr<Viper::Type> const & type(tag<std::uint16_t>);
+std::shared_ptr<Viper::Type> const & type(tag<std::uint32_t>);
+std::shared_ptr<Viper::Type> const & type(tag<std::uint64_t>);
+std::shared_ptr<Viper::Type> const & type(tag<std::int8_t>);
+std::shared_ptr<Viper::Type> const & type(tag<std::int16_t>);
+std::shared_ptr<Viper::Type> const & type(tag<std::int32_t>);
+std::shared_ptr<Viper::Type> const & type(tag<std::int64_t>);
 std::shared_ptr<Viper::Type> const & type(tag<float>);
+std::shared_ptr<Viper::Type> const & type(tag<double>);
 std::shared_ptr<Viper::Type> const & type(tag<std::string>);
 std::shared_ptr<Viper::Type> const & type(tag<Viper::UUId>);
+std::shared_ptr<Viper::Type> const & type(tag<Viper::BlobId>);
+std::shared_ptr<Viper::Type> const & type(tag<Viper::CommitId>);
+std::shared_ptr<Viper::Type> const & type(tag<Viper::Blob>);
+std::shared_ptr<Viper::Type> const & type(tag<Viper::Any>);
 
 // ── et les conteneurs, pour la même raison, une fois de plus ──
 //
@@ -70,6 +87,11 @@ std::shared_ptr<Viper::Type> const & type(tag<Viper::UUId>);
 template<class T> std::shared_ptr<Viper::Type> const & type(tag<std::vector<T>>);
 template<class T> std::shared_ptr<Viper::Type> const & type(tag<std::set<T>>);
 template<class K, class V> std::shared_ptr<Viper::Type> const & type(tag<std::map<K,V>>);
+template<class T> std::shared_ptr<Viper::Type> const & type(tag<std::optional<T>>);
+template<class T> std::shared_ptr<Viper::Type> const & type(tag<Viper::XArray<T>>);
+template<class... T> std::shared_ptr<Viper::Type> const & type(tag<std::tuple<T...>>);
+template<class... T> std::shared_ptr<Viper::Type> const & type(tag<std::variant<T...>>);
+template<class T, std::size_t N> std::shared_ptr<Viper::Type> const & type(tag<std::array<T,N>>);
 
 /// Une valeur C++ vers une Viper::Value.
 template<class T>

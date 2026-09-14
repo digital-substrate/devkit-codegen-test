@@ -9,6 +9,7 @@ class Type { public: virtual ~Type() = default; };
 class TypeConcept final : public Type {};
 class TypeStructure final : public Type {};
 class TypeEnumeration final : public Type {};
+class TypeClub final : public Type {};
 class TypeKey final : public Type {
 public:
     static std::shared_ptr<TypeKey> make(std::shared_ptr<Type> const & typeConcept);

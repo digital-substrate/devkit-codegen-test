@@ -7,6 +7,7 @@
 // est alors dans le runtime, où ce stub le met.
 #ifndef Viper_Codec_hpp
 #define Viper_Codec_hpp
+#include "Viper_Scalars.hpp"
 #include "Viper_Stream.hpp"
 #include "Viper_UUId.hpp"
 #include <cstdint>
@@ -33,15 +34,43 @@ public:
     Reader(std::shared_ptr<StreamReading> streamReading, std::shared_ptr<Definitions const> definitions);
 };
 
-// Les primitives : identiques dans tout modèle jamais généré.
+// Les primitives : identiques dans tout modèle jamais généré, et toutes présentes --
+// une seule qui manque rend l'appel ambigu entre ses voisines plutôt qu'introuvable.
+void write(Writer &, bool);
 void write(Writer &, std::uint8_t);
+void write(Writer &, std::uint16_t);
+void write(Writer &, std::uint32_t);
+void write(Writer &, std::uint64_t);
+void write(Writer &, std::int8_t);
+void write(Writer &, std::int16_t);
+void write(Writer &, std::int32_t);
+void write(Writer &, std::int64_t);
 void write(Writer &, float);
+void write(Writer &, double);
 void write(Writer &, std::string const &);
 void write(Writer &, UUId const &);
-std::uint8_t read(Reader &, tag<std::uint8_t>);
-float        read(Reader &, tag<float>);
-std::string  read(Reader &, tag<std::string>);
-UUId         read(Reader &, tag<UUId>);
+void write(Writer &, BlobId const &);
+void write(Writer &, CommitId const &);
+void write(Writer &, Blob const &);
+void write(Writer &, Any const &);
+
+bool          read(Reader &, tag<bool>);
+std::uint8_t  read(Reader &, tag<std::uint8_t>);
+std::uint16_t read(Reader &, tag<std::uint16_t>);
+std::uint32_t read(Reader &, tag<std::uint32_t>);
+std::uint64_t read(Reader &, tag<std::uint64_t>);
+std::int8_t   read(Reader &, tag<std::int8_t>);
+std::int16_t  read(Reader &, tag<std::int16_t>);
+std::int32_t  read(Reader &, tag<std::int32_t>);
+std::int64_t  read(Reader &, tag<std::int64_t>);
+float         read(Reader &, tag<float>);
+double        read(Reader &, tag<double>);
+std::string   read(Reader &, tag<std::string>);
+UUId          read(Reader &, tag<UUId>);
+BlobId        read(Reader &, tag<BlobId>);
+CommitId      read(Reader &, tag<CommitId>);
+Blob          read(Reader &, tag<Blob>);
+Any           read(Reader &, tag<Any>);
 
 // Les conteneurs : std::set n'appartient à aucun namespace du modèle, donc à aucune unité.
 template<class T> void write(Writer & w, std::vector<T> const & v) { for (auto const & e : v) write(w, e); }

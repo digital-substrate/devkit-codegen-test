@@ -1,0 +1,81 @@
+// Le namespace qui porte les types sans dépendance : tout ce que le système de types
+// offre et qui ne peut traverser aucune frontière -- les nombres, les identifiants, les
+// chaînes, les formes de taille fixe. Il ne référence personne.
+namespace Core {b1d0f2a4-3c17-4e6a-9f05-2a7c81d94e30} {
+
+"""Ce sur quoi on accroche des choses."""
+concept Thing;
+
+"""Un dérivé, dans le même namespace : le cas facile de l'héritage."""
+concept SubThing is a Thing;
+
+concept Other;
+
+"""Un club, dont les membres vivent ici."""
+club Klub;
+membership Klub SubThing;
+membership Klub Other;
+
+"""Une énumération, que d'autres namespaces vont référencer."""
+enum Grade {
+  low ,
+  high
+};
+
+"""Le même nom que Parts::Colour, un type différent -- la collision de re-export."""
+struct Colour {
+  uint8 r;
+  uint8 g;
+  uint8 b;
+};
+
+"""Toutes les formes scalaires du langage, dans le namespace qui n'en référence aucun
+autre. Ce qui ne peut pas traverser une frontière est couvert ici, une fois."""
+struct Scalars {
+  bool f_bool;
+
+  uint8 f_uint8;
+  uint16 f_uint16;
+  uint32 f_uint32;
+  uint64 f_uint64;
+
+  int8 f_int8;
+  int16 f_int16;
+  int32 f_int32;
+  int64 f_int64;
+
+  float f_float;
+  double f_double;
+
+  blob_id f_blob_id;
+  commit_id f_commit_id;
+  uuid f_uuid;
+
+  string f_string;
+  blob f_blob;
+  any f_any;
+
+  vec<uint8,2> f_vec;
+  mat<uint8,2,2> f_mat;
+};
+
+"""Les valeurs par défaut, qui sont un chemin de code à part."""
+struct Defaults {
+  uint8 f_uint8 = 8;
+  float f_float = 42.419998;
+  string f_string = "Forty Two";
+  uuid f_uuid = {388bbc06-60de-4d97-b3ee-18916e7043d3};
+  vec<uint8,2> f_vec = {2,3};
+  Grade f_grade = .low;
+  Colour f_colour = {1, 2, 3};
+};
+
+"""Une structure à un seul champ : le cas zéro/un que le générateur traite à part."""
+struct Single {
+  uint8 f_single;
+};
+
+attachment<Thing, Colour> colour;
+attachment<Thing, Scalars> scalars;
+
+}; // ns

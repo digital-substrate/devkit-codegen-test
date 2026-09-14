@@ -3,6 +3,7 @@
 // Viper_Codec.hpp, Viper_ValueEncoder.hpp et Viper_ValueDecoder.hpp.
 #ifndef Viper_Stream_hpp
 #define Viper_Stream_hpp
+#include "Viper_Scalars.hpp"
 #include "Viper_UUId.hpp"
 #include "Viper_Values.hpp"
 #include <cstdint>
@@ -11,7 +12,6 @@
 namespace Viper {
 
 class Definitions;
-class Blob {};
 
 class StreamWriting {
 public:

@@ -19,6 +19,12 @@ MODELS = {
         cpp="Model Data Stream ValueType ValueCodec FunctionPool FunctionPoolRemote"
             " Attachments AttachmentFunctionPool AttachmentFunctionPoolRemote".split(),
     ),
+    "crossing": dict(
+        shape="multi", definitions="crossing/definitions", namespace="Crossing", package="crossing",
+        about="the type system crossing namespaces: every composite shape with elements from two suppliers",
+        cpp="Model Data Stream ValueType ValueCodec Attachments AttachmentFunctionPool_Attachments ValueHasher Json"
+            " Test Database".split(),
+    ),
     "namespaces": dict(
         shape="multi", definitions="namespaces/definitions", namespace="Topology", package="topology",
         about="namespace topology and nothing else: five namespaces, every edge kind",
