@@ -105,6 +105,39 @@ question. A pool is not owned by the namespaces whose types it mentions: it is t
 operations an application chooses to expose, and another application over the same models
 would expose different ones.
 
+## Layer 5 — the generated tests
+
+`ModelA_Test.hpp`, checked by `l5.cpp`. It was written last on the expectation that it
+would need no new idea, and it did not — which is the check on the four layers below it.
+
+**It mirrors layer 3 exactly.** A round-trip test is generic: make a value, encode it,
+decode it, compare. The only part that is not generic is making one, and ModelA makes a
+Colour because ModelA knows it has three channels. Two `fuzz` declarations and one
+`test()`, where the pack emits seven test artefacts with a function per type per codec.
+
+**A container of ModelA's types needs no line at all.** The generic fuzz builds a
+`std::set<Colour>` by calling `fuzz(rng, tag<Colour>{})`, and ADL brings it back — the
+same mechanism as the codec, in the same place, for the same reason.
+
+**What stayed model-wide is the driver**, and only the driver: something has to enumerate
+the model's units and call each one's `test()`. That is genuinely about the assembly, and
+it is the one thing at this layer that belongs to the base.
+
+## Five layers, and one cause
+
+Each layer's hand-written form removed a flattening, and the four are the same flattening:
+
+| where | today | because |
+|---|---|---|
+| types | `ModelA_Material` | the namespace could not scope it |
+| shapes | `encode_map_ModelA_MaterialKey_to_ModelB_MaterialKey` | nothing owned a `std::map` |
+| attachments | `Material_Colour` | a scope would have shadowed the type |
+| pools | `FunctionPoolBridges::Tools` | a template's name became a scope |
+
+Four symptoms, one cause: something had to be distinguished, the namespace was not
+available to do it, so the name absorbed the distinction. None of them needed inventing
+away — each dissolves once the namespace structures the output.
+
 ## Open, and deliberately not settled here
 
 - **The file name.** `Data` is a template's name, inherited from the pack, not a domain.
