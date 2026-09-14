@@ -78,8 +78,43 @@ keeping: `ValueType` is a feature name and a feature is a file, while
 runtime id, no concept ids. Whether a unit has content depends on the feature, which is
 the argument for emitting a file per unit per feature rather than asking the model.
 
+## What `Attachments` and the pools added
+
+**The attachment-borne edge is visible in a signature.** Every accessor of
+`Annotations::Attachments::Material_Note` takes a `ModelA::MaterialKey`, so that unit
+does not compile without including `ModelA_Data.hpp`. The edge that carried no
+dependency at all before `9328acd`, and that both `backbone` projections rely on, is not
+a subtlety of the graph: it is in the function signatures.
+
+**A spanning container is written where it is declared, but its type descriptor is not.**
+`Link_Mapping` takes `std::map<ModelA::MaterialKey, ModelB::MaterialKey>` in
+`Projection_Attachments.hpp`, because `Projection` is the unit that declares it. The
+matching `type_map_ModelA_MaterialKey_to_ModelB_MaterialKey()` stays in the base. The same
+shape, split by what kind of thing it is.
+
+**A pool is a unit, and `Tools` is the degenerate one**: it names no namespaced type, so
+it includes nothing and depends on nothing. `Projector` is the opposite — its signature
+names two namespaces, which is what creates the composing layer rather than being a
+problem the composing layer has to absorb.
+
+The scope is `Tools`, not `Topology::FunctionPoolBridges::Tools`. The pool's name is the
+unit's name; `FunctionPoolBridges` was a template name that had become a namespace level.
+
+**And a worry about cycles was misplaced.** The base unit is a root — `Topology_Data.hpp`
+and `Topology_ValueType.hpp` include nothing generated — while a registry of every pool
+plainly depends on all of them. Both hold at once, because **the root/sink distinction is
+a property of files, not of units**: a namespace reopens across files, a file's includes
+do not. `namespace Topology` therefore spans a root file and a sink file, and the layering
+is a layering of artefacts. A unit may contribute at several layers.
+
+## One thing this raised and did not settle
+
+`Annotations::Attachments::Material_Note` names the concept **unqualified**. Two
+attachments declared in one namespace, on same-named concepts of two others —
+`attachment<ModelA::Material, string> note` and `attachment<ModelB::Material, string>
+note` — would both want that scope. The model does not currently contain the case, and
+nothing here says the generator would reject it.
+
 ## Not yet written
 
-Python and node, and `Attachments`, `Path` and one pool. `Attachments` is where
-`Annotations` stops being empty in the type sense and where the attachment-only edge
-becomes visible; a pool is a unit of a kind none of these files show yet.
+Python and node, and `Path`.
