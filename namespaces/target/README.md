@@ -124,6 +124,26 @@ moves a generated symbol.
 in the common case, for a name that does not move — and one that reads like the
 signature beside it, which already says `ModelA::MaterialKey`.
 
+## What `Path` added
+
+**An artefact can be per-unit and reach nothing at all.** `Path` describes where a
+field sits, not what type it has — every accessor returns a `Viper::Path` — so it is
+per-unit like `Data` and its only include is the runtime's. `Field` has the same shape.
+
+The striking case is `Projection::Path::Pair`. That structure holds a
+`key<ModelA::Material>` and a `key<ModelB::Material>`, and
+`Projection_Attachments.hpp` must include both driver units because its accessors take
+those types. `Projection_Path.hpp` includes neither. **Same structure, same unit, two
+artefacts, two different dependency sets** — which is why the include list is computed
+per artefact rather than per unit.
+
+**And a feature is not a migration unit.** `Model` bundles three artefacts of three
+kinds: `Definitions` (base plus per-unit, and the one edge pointing outside the pack),
+and `Field` and `Path` (per-unit, no edges at all). The directory groups what is emitted
+together; it says nothing about what moves together. Since the scope is declared by each
+`.stg`'s entry template, migration is already per artefact and needs no further
+mechanism.
+
 ## Not yet written
 
-Python and node, and `Path`.
+Python and node.
