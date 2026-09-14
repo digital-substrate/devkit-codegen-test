@@ -8,9 +8,9 @@
 #ifndef Projection_Fields_hpp
 #define Projection_Fields_hpp
 
-#include "Projection_Data.hpp"
 #include "Viper_Path.hpp"
 
+#include <memory>
 #include <string_view>
 
 namespace Projection::Fields::Pair {

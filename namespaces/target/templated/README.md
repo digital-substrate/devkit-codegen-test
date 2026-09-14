@@ -18,6 +18,24 @@ It is 80 lines and has no loop over namespaces, no dictionary, and no name built
 concatenation. `unit(u)` is called once per unit and the template says what a unit looks
 like, which is what a template is for.
 
+## Layer 2 — `Fields.hpp.stg`
+
+Thirty lines, and it reproduces `../hand/ModelA_Fields.hpp` — except in two places where
+**the template is right and the reference was wrong**, which is worth more than a match.
+
+The reference included `ModelA_Data.hpp`. Nothing in it references the type `Colour`: the
+declarations are `string_view` constants and functions returning a `Viper::Path`. A scope
+named after a structure does not need the structure declared. The include was written out
+of habit, and the template — written from what the content actually needs — does not
+emit it.
+
+The reference also omitted `<memory>`, and compiled only because `Viper_Path.hpp`
+happened to pull it in.
+
+**The acceptance criterion runs in both directions.** The reference is what the template
+must reproduce, and the template is what checks the reference was thought through. Both
+were corrected, and `../hand/f.cpp` compiles the result on its own.
+
 ## What writing it asked of the generator
 
 **`u.dependencies` is too coarse, and this is the one that matters.**

@@ -12,9 +12,12 @@
 #ifndef ModelA_Fields_hpp
 #define ModelA_Fields_hpp
 
-#include "ModelA_Data.hpp"
+// No include of ModelA_Data.hpp: nothing here references the type Colour. A scope named
+// after a structure does not need the structure to be declared, and a path names a
+// position rather than a type -- which is the same reason this file reaches no other unit.
 #include "Viper_Path.hpp"
 
+#include <memory>
 #include <string_view>
 
 namespace ModelA::Fields::Colour {
