@@ -40,10 +40,23 @@ fix; both are asserted now.
 ## Usage
 
 ```bash
-python3 -c "from dsviper import DSMBuilder; \
-  r, dsm, _ = DSMBuilder.assemble('definitions').parse(); \
-  open('Topology.dsm.json','w').write(dsm.json_encode())"
-python3 check.py
+python3 generate.py -c -p -t      # render into the working tree, like the other models
+python3 check.py                  # assert the cases above are still covered
 ```
 
 `check.py` exits non-zero if any case stops being covered.
+
+To measure a change rather than render one, use `../tools/render.py`: it renders every
+model into a scratch tree without touching the working tree, so it can be run before and
+after an edit.
+
+```bash
+python3 ../tools/render.py /tmp/before
+#   ... change a template or the generator ...
+python3 ../tools/render.py /tmp/after
+python3 ../tools/render.py --diff /tmp/before /tmp/after
+```
+
+The two mono-namespace models guard against regression and their diff must be empty; this
+one shows the effect a change is meant to have, so its diff is read rather than asserted.
+`--diff` exits non-zero only when a mono model moved.
