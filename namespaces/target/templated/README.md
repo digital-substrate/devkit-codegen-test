@@ -228,3 +228,61 @@ after the `|`, so `{m|    <m.name>}` indents by three; a named sub-template keep
 
 **Layer 1 was emitting no enumeration at all**, which no render had shown because no namespace
 declared one. Adding `enum Finish` to `ModelA` exercised every template for the first time.
+
+## The club, the untyped key, and a layer nobody had asked for
+
+`Data.hpp.stg` gains the club, `Data.cpp.stg` and `Model.hpp.stg`/`Model.cpp.stg` are new,
+and every generated file of both multi-namespace models compiles — with one exception,
+below.
+
+**The club renders the crossing case correctly.** `Woven::Weave` has `Core::Thing` and
+`Parts::Thing` as members:
+
+```cpp
+WeaveKey(Core::ThingKey const & key) noexcept;
+WeaveKey(Parts::ThingKey const & key) noexcept;
+std::optional<Core::ThingKey>  asCoreThingKey()  const noexcept;
+std::optional<Parts::ThingKey> asPartsThingKey() const noexcept;
+```
+
+Conversions on the club, never on the member — a member may live in a unit that knows
+nothing of the club's and that the club's depends on. And the getter names carry the
+member's unit because two members are called `Thing` and a function name cannot hold `::`.
+That flat prefix depends only on the member, so adding one never renames another's getter.
+
+**`Model.hpp` is a layer the decomposition had not foreseen.** A unit's runtime ids and type
+descriptors were sitting with the codec, because the codec asked for them. But `create()`
+needs its concept's id and `from()` needs its descriptor, and the types layer serialises
+nothing. They are not codec functions. They live in namespace `<unit>` and not
+`<unit>::Model`, because `type(tag<T>)` has to be reachable by argument-dependent lookup
+from the injected module, and lookup associates the type's namespace, not its sub-scopes.
+
+### What compiling the crossing model found
+
+**An enumeration was declared by reference and defined by value.** `Codec.hpp.stg` emitted
+`write(Writer&, Grade const &)` and `Codec.cpp.stg` emitted `write(Writer&, Grade)`. Two
+overloads, so the call site is *ambiguous* rather than unresolved — a diagnostic that never
+names what is missing. Split into its own sub-template.
+
+**An enumeration had no hash at all.** Layer 1 hashed concepts, clubs and structures, and a
+structure holding an enumeration field did not compile.
+
+**An implementation file needs the model identities of the units it reaches**, not only
+their codecs. `Parts_Attachments.cpp` encodes a `Parts::ThingKey`, which asks for its type
+descriptor, which now lives in `Parts_Model.hpp`.
+
+### The one thing still open, and it needs the runtime
+
+`key<any_concept>` comes out of the converter as a bare `AnyConceptKey`, which resolves to
+nothing inside a unit. It cannot be fixed in a template, and fixing it in the converter
+alone would break the existing whole-model templates, which declare a class of that name in
+the model's own namespace.
+
+The reference says where it belongs — `Viper::AnyConceptKey`, seven of whose nine members
+name no concept — so the change has an order and three repositories:
+
+1. the runtime gains the type;
+2. the converter qualifies it, as it already qualifies `Viper::Any`;
+3. the whole-model templates stop declaring their own.
+
+Nothing before step 1 is safe, so the crossing model carries that one failure, visible.

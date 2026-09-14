@@ -35,9 +35,6 @@ MaterialKey read(Viper::Codec::Reader & r, Viper::Codec::tag<MaterialKey>);
 
 // ── and what the runtime must be told about the shape of these types ──
 
-std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Finish>);
-std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Colour>);
-std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<MaterialKey>);
 
 } // namespace ModelA
 

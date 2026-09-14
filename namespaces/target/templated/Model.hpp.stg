@@ -1,0 +1,62 @@
+// L'identité d'une unité dans le modèle : ses identifiants d'exécution, et les
+// descripteurs de type que le runtime lui rend.
+//
+// UN ARTEFACT QUE LE DÉCOUPAGE N'AVAIT PAS PRÉVU. Ces déclarations étaient rangées avec le
+// codec, parce que c'est le codec qui les demandait. Mais `create()` a besoin de
+// l'identifiant du concept et `from()` de son descripteur, et la couche des types n'a rien
+// à voir avec la sérialisation. Ce ne sont pas des fonctions de codec : c'est ce qu'une
+// unité sait d'elle-même vis-à-vis du modèle, et plusieurs couches s'en servent.
+//
+// DANS <u.name> ET NON DANS <u.name>::Model : `type(tag\<T>)` doit être trouvable par ADL
+// depuis le module injecté, et l'ADL sur `tag\<<u.name>::X>` associe <u.name>, pas ses
+// sous-portées. La séparation est le fichier, pas le namespace.
+
+unit(u) ::= <<
+// <u.name> — son identité dans le modèle.
+//
+// <u.model.generated>
+
+#ifndef <u.name>_Model_hpp
+#define <u.name>_Model_hpp
+
+#include "<u.include.Data>"
+
+#include "Viper_Codec.hpp"
+#include "Viper_Types.hpp"
+
+#include \<memory>
+
+namespace <u.name> {
+
+/// L'identité de chaque type déclaré ici.
+namespace RuntimeIds {
+<u.concepts:runtime_id();separator="\n">
+<u.clubs:runtime_id();separator="\n">
+<u.enumerations:runtime_id();separator="\n">
+<u.structures:runtime_id();separator="\n">
+} // namespace RuntimeIds
+
+/// Le concept dont une clé relève -- ce qu'un rétrécissement compare.
+<u.concepts:concept_type();separator="\n">
+
+/// Le club dont une clé relève. Distinct du précédent : une adhésion n'est pas un
+/// héritage, et c'est le descripteur qui porte la différence, pas le code.
+<u.clubs:club_type();separator="\n">
+
+/// Le type lui-même, tel que le runtime le manipule -- ce que le codec générique demande.
+<u.concepts:keyed_type();separator="\n">
+<u.clubs:keyed_type();separator="\n">
+<u.enumerations:plain_type();separator="\n">
+<u.structures:plain_type();separator="\n">
+
+} // namespace <u.name>
+
+#endif
+>>
+
+runtime_id(e) ::= <<extern Viper::UUId const <e.name>;>>
+
+concept_type(c) ::= <%std::shared_ptr\<Viper::Type> const & conceptType(Viper::Codec::tag\<<c.name>Key>);%>
+club_type(c) ::= <%std::shared_ptr\<Viper::Type> const & clubType(Viper::Codec::tag\<<c.name>Key>);%>
+keyed_type(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>Key>);%>
+plain_type(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>>);%>

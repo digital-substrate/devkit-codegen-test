@@ -10,7 +10,12 @@
 #include "Viper_Scalars.hpp"
 #include "Viper_Stream.hpp"
 #include "Viper_UUId.hpp"
+#include <array>
+#include <cstddef>
 #include <cstdint>
+#include <optional>
+#include <tuple>
+#include <variant>
 #include <map>
 #include <memory>
 #include <set>
@@ -78,8 +83,31 @@ template<class T> void write(Writer & w, std::set<T> const & v)    { for (auto c
 template<class K, class V> void write(Writer & w, std::map<K,V> const & v) {
     for (auto const & [k, e] : v) { write(w, k); write(w, e); }
 }
+template<class T> void write(Writer & w, std::optional<T> const & v) { if (v) write(w, *v); }
+template<class T> void write(Writer & w, XArray<T> const &) {}
+template<class T, std::size_t N> void write(Writer & w, std::array<T,N> const & v) { for (auto const & e : v) write(w, e); }
+template<class... T> void write(Writer & w, std::tuple<T...> const & v) {
+    std::apply([&](auto const &... e) { (write(w, e), ...); }, v);
+}
+template<class... T> void write(Writer & w, std::variant<T...> const & v) {
+    std::visit([&](auto const & e) { write(w, e); }, v);
+}
+
 template<class T> std::vector<T> read(Reader & r, tag<std::vector<T>>) { return {read(r, tag<T>{})}; }
 template<class T> std::set<T>    read(Reader & r, tag<std::set<T>>)    { return {read(r, tag<T>{})}; }
+template<class T> std::optional<T> read(Reader & r, tag<std::optional<T>>) { return read(r, tag<T>{}); }
+template<class T> XArray<T> read(Reader &, tag<XArray<T>>) { return {}; }
+template<class T, std::size_t N> std::array<T,N> read(Reader & r, tag<std::array<T,N>>) {
+    std::array<T,N> result{};
+    for (auto & e : result) e = read(r, tag<T>{});
+    return result;
+}
+template<class... T> std::tuple<T...> read(Reader & r, tag<std::tuple<T...>>) {
+    return std::tuple<T...>{read(r, tag<T>{})...};
+}
+template<class First, class... Rest> std::variant<First, Rest...> read(Reader & r, tag<std::variant<First, Rest...>>) {
+    return read(r, tag<First>{});
+}
 template<class K, class V> std::map<K,V> read(Reader & r, tag<std::map<K,V>>) {
     return {{read(r, tag<K>{}), read(r, tag<V>{})}};
 }

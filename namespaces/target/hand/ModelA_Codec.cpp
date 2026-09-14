@@ -13,6 +13,8 @@
 
 #include "ModelA_Codec.hpp"
 
+#include "ModelA_Model.hpp"
+
 #include "Topology_Codec.hpp"      // definitions() -- le modèle, que l'unité ne porte pas
 
 #include "Viper_Definitions.hpp"
@@ -22,28 +24,6 @@
 
 namespace ModelA {
 
-namespace {
-
-// L'identité des types de ModelA dans le modèle.
-//
-// PRIVÉES AU FICHIER, ET C'EST PEUT-ÊTRE PROVISOIRE. Personne d'autre que `type()` n'en a
-// besoin ici. Mais l'artefact qui enregistre le modèle dans les Definitions aura les mêmes
-// identités à donner, et il ne les prendra pas dans un anonyme -- c'est la question que
-// posera la couche d'enregistrement, pas celle-ci. Le pack les range dans
-// `ModelA::RuntimeIds`, qui est déjà par namespace et n'a donc rien d'aplati.
-Viper::UUId const MaterialId{Viper::UUId::parse("de42abc9-3fd6-ac10-63ba-d0d6fba6cb9e")};
-Viper::UUId const ColourId{Viper::UUId::parse("887a78c8-07ff-3c8a-8172-ff5ae381dfd9")};
-Viper::UUId const FinishId{Viper::UUId::parse("cc101b86-fc5f-855a-b0f6-59844b9f5e3e")};
-
-/// Le concept, dont la clé est dérivée. Détail d'implémentation : rien hors de ce fichier
-/// n'a de raison de distinguer le concept de sa clé.
-std::shared_ptr<Viper::Type> const & materialConcept() {
-    static std::shared_ptr<Viper::Type> const instance{
-        Topology::Codec::definitions()->checkConcept(MaterialId)};
-    return instance;
-}
-
-} // namespace
 
 // ── Finish ──
 //
@@ -70,11 +50,6 @@ Finish read(Viper::Codec::Reader & r, Viper::Codec::tag<Finish>) {
     }
 }
 
-std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Finish>) {
-    static std::shared_ptr<Viper::Type> const instance{
-        Topology::Codec::definitions()->checkEnumeration(FinishId)};
-    return instance;
-}
 
 // ── Colour ──
 
@@ -95,11 +70,6 @@ Colour read(Viper::Codec::Reader & r, Viper::Codec::tag<Colour>) {
             read(r, Viper::Codec::tag<std::uint8_t>{})};
 }
 
-std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Colour>) {
-    static std::shared_ptr<Viper::Type> const instance{
-        Topology::Codec::definitions()->checkStructure(ColourId)};
-    return instance;
-}
 
 // ── MaterialKey ──
 //
@@ -120,9 +90,5 @@ MaterialKey read(Viper::Codec::Reader & r, Viper::Codec::tag<MaterialKey>) {
     return {instanceId, runtimeId};
 }
 
-std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<MaterialKey>) {
-    static std::shared_ptr<Viper::Type> const instance{Viper::TypeKey::make(materialConcept())};
-    return instance;
-}
 
 } // namespace ModelA

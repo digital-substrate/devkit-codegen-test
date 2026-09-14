@@ -9,6 +9,7 @@ unit(u) ::= <<
 <u.dependencies.types:{d|#include "<d.include.Data>"};separator="\n">
 
 #include "Viper_AnyConceptKey.hpp"
+#include "Viper_Hash.hpp"
 #include "Viper_Scalars.hpp"
 #include "Viper_UUId.hpp"
 
@@ -26,14 +27,17 @@ namespace <u.name> {
 
 <u.concepts:concept();separator="\n\n">
 
+<u.clubs:club(u);separator="\n\n">
+
 <u.enumerations:enumeration();separator="\n\n">
 
 <u.structures:structure();separator="\n\n">
 
 } // namespace <u.name>
 
-<u.concepts:key_hash(u);separator="\n">
-<u.structures:value_hash(u);separator="\n">
+<u.concepts:std_hash(u);separator="\n">
+<u.clubs:std_hash(u);separator="\n">
+<u.structures:std_hash_value(u);separator="\n">
 
 #endif
 >>
@@ -58,7 +62,6 @@ public:
     Viper::AnyConceptKey toAny() const noexcept;
     static std::optional\<<c.name>Key> from(Viper::AnyConceptKey const & key) noexcept;
 
-    std::size_t hash() const noexcept;
 
 private:
     Viper::UUId _instanceId{};
@@ -68,7 +71,60 @@ private:
 bool operator==(<c.name>Key const &, <c.name>Key const &) noexcept;
 bool operator!=(<c.name>Key const &, <c.name>Key const &) noexcept;
 bool operator\<(<c.name>Key const &, <c.name>Key const &) noexcept;
+
+void hash(Viper::Hash::Accumulator & h, <c.name>Key const & value) noexcept;
 >>
+
+// UN CLUB EST UN ENSEMBLE NOMMÉ DE CONCEPTS, et sa clé peut désigner une instance de
+// n'importe lequel. Les conversions sont du côté du club et non du membre : un club
+// connaît ses membres, un membre n'a pas à connaître ses clubs -- et souvent il ne le peut
+// pas, ses membres pouvant vivre dans des unités qui ignorent celle du club et dont elle
+// dépend. Poser la conversion chez le membre inverserait l'arête du graphe.
+club(c, u) ::= <<
+<if(c.documentation)>/** <c.documentation> */
+<endif>class <c.name>Key final {
+public:
+    <c.name>Key() = default;
+    <c.name>Key(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
+
+<c.membersInNamespace:club_constructor(c);separator="\n">
+
+<c.membersInNamespace:club_getter(c);separator="\n">
+
+    Viper::UUId const & instanceId() const noexcept;
+    Viper::UUId const & runtimeId() const noexcept;
+    bool isValid() const noexcept;
+
+    Viper::AnyConceptKey toAny() const noexcept;
+    <club_from(c)>
+
+private:
+    Viper::UUId _instanceId{};
+    Viper::UUId _runtimeId{};
+};
+
+bool operator==(<c.name>Key const &, <c.name>Key const &) noexcept;
+bool operator!=(<c.name>Key const &, <c.name>Key const &) noexcept;
+bool operator\<(<c.name>Key const &, <c.name>Key const &) noexcept;
+
+void hash(Viper::Hash::Accumulator & h, <c.name>Key const & value) noexcept;
+>>
+
+/// Depuis un membre : implicite, appartenir au club n'est pas une demande.
+club_constructor(cm, c) ::= <<    <c.name>Key(<cm.nameInNamespace>Key const & key) noexcept;>>
+
+/// Vers un membre : optionnel, l'instance pouvant relever d'un autre membre.
+///
+/// LE NOM DU GETTER PORTE L'UNITÉ DU MEMBRE QUAND CE N'EST PAS CELLE DU CLUB. Deux membres
+/// peuvent s'appeler pareil -- `Core::Thing` et `Parts::Thing` -- et un nom de fonction ne
+/// peut pas contenir `::`. C'est le préfixe plat, inévitable ici, et il ne dépend que du
+/// membre : ajouter un membre n'en renomme jamais un autre.
+club_getter(cm, c) ::= <<
+    <club_getter_body(cm)>
+>>
+club_getter_body(cm) ::= <%std::optional\<<cm.nameInNamespace>Key> as<cm.asNameInNamespace>Key() const noexcept;%>
+
+club_from(c) ::= <%static std::optional\<<c.name>Key> from(Viper::AnyConceptKey const & key) noexcept;%>
 
 structure(s) ::= <<
 <if(s.documentation)>/** <s.documentation> */
@@ -80,7 +136,7 @@ bool operator==(<s.name> const &, <s.name> const &) noexcept;
 bool operator!=(<s.name> const &, <s.name> const &) noexcept;
 bool operator\<(<s.name> const &, <s.name> const &) noexcept;
 
-std::size_t hash(<s.name> const & value) noexcept;
+void hash(Viper::Hash::Accumulator & h, <s.name> const & value) noexcept;
 >>
 
 field(f) ::= <<    <f.typeInNamespace> <f.name>{};>>
@@ -94,6 +150,8 @@ enumeration(e) ::= <<
 <endif>enum class <e.name> {
 <e.members:enumeration_case();separator=",\n">
 };
+
+void hash(Viper::Hash::Accumulator & h, <e.name> value) noexcept;
 >>
 
 // Une sous-template nommée, et non `{m|    <m.name>}` : StringTemplate mange une espace
@@ -102,26 +160,31 @@ enumeration_case(m) ::= <<
     <m.name;format="uf">
 >>
 
-// The specialisation stands outside the namespace, so the type has to be qualified --
-// `std::hash\<ModelA::MaterialKey>`, not `std::hash\<MaterialKey>`. And the two kinds do not
-// hash the same way: a key carries its own `hash()`, while a structure is hashed by a free
-// function of its namespace, reached the same way every other operation on it is.
+// UNE SEULE FORME DE SPÉCIALISATION, POUR TOUS LES TYPES. La première version en avait
+// deux -- une clé se hachait par sa méthode, une structure par une fonction libre -- et la
+// distinction n'avait aucune raison d'être. `hash(h, x)` est trouvé par ADL dans les deux
+// cas, et le runtime hache un conteneur de la même écriture.
 //
-// `<%…%>` for the opening line only: a `>>` in the emitted text closes a `<<…>>` body, and
-// `std::hash\<ModelA::MaterialKey>` ends in one. `<%…%>` also strips leading whitespace,
-// which is why the indented line below stays in a `<<…>>` body.
-key_hash(c, u) ::= <<
-<key_hash_head(c, u)>
-    std::size_t operator()(<u.name>::<c.name>Key const & v) const noexcept { return v.hash(); }
+// L'ACCUMULATEUR EN PREMIER ARGUMENT N'EST PAS UN ORNEMENT. `hash(x)` sur un std::uint8_t
+// ne peut pas marcher : un type fondamental n'a aucun namespace associé, donc l'ADL ne mène
+// nulle part et la recherche ordinaire s'arrête dans l'unité. Un argument porté par le
+// runtime la rétablit pour tous les types -- ce que `write(w, x)` obtient du Writer.
+//
+// La spécialisation est hors du namespace, donc le type doit être qualifié. `<%…%>` pour
+// la ligne d'ouverture seulement : un `>>` dans le texte émis fermerait un corps `<<…>>`,
+// et `<%…%>` mange les blancs de tête, donc la ligne indentée reste dans un `<<…>>`.
+std_hash(e, u) ::= <<
+<std_hash_head(e, u)>
+    std::size_t operator()(<u.name>::<e.name>Key const & v) const noexcept { return Viper::Hash::of(v); }
 };
 >>
 
-key_hash_head(c, u) ::= <%template\<> struct std::hash\<<u.name>::<c.name>Key> {%>
+std_hash_head(e, u) ::= <%template\<> struct std::hash\<<u.name>::<e.name>Key> {%>
 
-value_hash(s, u) ::= <<
-<value_hash_head(s, u)>
-    std::size_t operator()(<u.name>::<s.name> const & v) const noexcept { return <u.name>::hash(v); }
+std_hash_value(e, u) ::= <<
+<std_hash_value_head(e, u)>
+    std::size_t operator()(<u.name>::<e.name> const & v) const noexcept { return Viper::Hash::of(v); }
 };
 >>
 
-value_hash_head(s, u) ::= <%template\<> struct std::hash\<<u.name>::<s.name>> {%>
+std_hash_value_head(e, u) ::= <%template\<> struct std::hash\<<u.name>::<e.name>> {%>

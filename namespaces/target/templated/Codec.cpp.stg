@@ -16,6 +16,8 @@ unit(u) ::= <<
 
 #include "<u.include.Codec>"
 
+#include "<u.include.Model>"
+
 #include "<u.model.include.Codec>"
 
 #include "Viper_Definitions.hpp"
@@ -25,17 +27,6 @@ unit(u) ::= <<
 
 namespace <u.name> {
 
-namespace {
-
-// L'identité des types de cette unité dans le modèle.
-<u.concepts:runtime_id();separator="\n">
-<u.clubs:runtime_id();separator="\n">
-<u.enumerations:runtime_id();separator="\n">
-<u.structures:runtime_id();separator="\n">
-<u.concepts:concept_type(u);separator="\n\n">
-<u.clubs:club_type(u);separator="\n\n">
-
-} // namespace
 
 <u.concepts:keyed(u);separator="\n\n">
 
@@ -48,27 +39,9 @@ namespace {
 } // namespace <u.name>
 >>
 
-runtime_id(e) ::= <%Viper::UUId const <e.name>Id{Viper::UUId::parse("<e.runtimeId>")};%>
 
-// Le concept dont la clé est dérivée. Détail de fichier : rien au dehors n'a de raison de
-// distinguer le concept de sa clé, puisque seule la clé est un type C++.
-concept_type(c, u) ::= <<
-<concept_type_head(c)>
-    static std::shared_ptr\<Viper::Type> const instance{
-        <u.model.namespace>::Codec::definitions()->checkConcept(<c.name>Id)};
-    return instance;
-}
->>
 
-concept_type_head(c) ::= <%std::shared_ptr\<Viper::Type> const & <c.name;format="lf">Concept() {%>
 
-club_type(c, u) ::= <<
-<concept_type_head(c)>
-    static std::shared_ptr\<Viper::Type> const instance{
-        <u.model.namespace>::Codec::definitions()->checkClub(<c.name>Id)};
-    return instance;
-}
->>
 
 // Une clé, sur le fil, c'est deux uuid : l'instance, et le concept qu'elle est réellement.
 // Le second est stocké et non déduit du type, parce qu'une clé peut nommer une instance
@@ -86,14 +59,9 @@ void write(Viper::Codec::Writer & w, <c.name>Key const & value) {
     return {instanceId, runtimeId};
 }
 
-<keyed_type_head(c)>
-    static std::shared_ptr\<Viper::Type> const instance{Viper::TypeKey::make(<c.name;format="lf">Concept())};
-    return instance;
-}
 >>
 
 keyed_read_head(c) ::= <%<c.name>Key read(Viper::Codec::Reader & r, Viper::Codec::tag\<<c.name>Key>) {%>
-keyed_type_head(c) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<c.name>Key>) {%>
 
 // CE QUI TRAVERSE EST L'INDEX DE LA CASE, PAS SA VALEUR. Le modèle ordonne les cases et
 // c'est cet ordre qui est le contrat ; une valeur C++ explicite ferait dire au langage ce
@@ -116,11 +84,6 @@ void write(Viper::Codec::Writer & w, <e.name> value) {
     }
 }
 
-<plain_type_head(e)>
-    static std::shared_ptr\<Viper::Type> const instance{
-        <u.model.namespace>::Codec::definitions()->checkEnumeration(<e.name>Id)};
-    return instance;
-}
 >>
 
 // `i0` n'existe que dans une sous-template anonyme, d'où le passage explicite ci-dessus :
@@ -145,11 +108,6 @@ void write(Viper::Codec::Writer & w, <s.name> const & value) {
     return {<s.fields:field_read();separator=",\n            ">};
 }
 
-<plain_type_head(s)>
-    static std::shared_ptr\<Viper::Type> const instance{
-        <u.model.namespace>::Codec::definitions()->checkStructure(<s.name>Id)};
-    return instance;
-}
 >>
 
 field_write(f) ::= <<    write(w, value.<f.name>);>>
@@ -163,4 +121,3 @@ field_write(f) ::= <<    write(w, value.<f.name>);>>
 field_read(f) ::= <%read(r, Viper::Codec::tag\<<f.typeInNamespace>>{})%>
 
 plain_read_head(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>>) {%>
-plain_type_head(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>>) {%>

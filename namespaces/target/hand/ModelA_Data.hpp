@@ -7,6 +7,7 @@
 #define ModelA_Data_hpp
 
 #include "Viper_AnyConceptKey.hpp"
+#include "Viper_Hash.hpp"
 #include "Viper_UUId.hpp"
 
 #include <cstdint>
@@ -48,7 +49,6 @@ public:
     /// why this returns an optional and the widening above does not.
     static std::optional<MaterialKey> from(Viper::AnyConceptKey const & key) noexcept;
 
-    std::size_t hash() const noexcept;
 
 private:
     Viper::UUId _instanceId{};
@@ -58,6 +58,8 @@ private:
 bool operator==(MaterialKey const & lhs, MaterialKey const & rhs) noexcept;
 bool operator!=(MaterialKey const & lhs, MaterialKey const & rhs) noexcept;
 bool operator<(MaterialKey const & lhs, MaterialKey const & rhs) noexcept;
+
+void hash(Viper::Hash::Accumulator & h, MaterialKey const & value) noexcept;
 
 /// Une finition, et les deux seules qu'un Material connaisse.
 ///
@@ -85,18 +87,20 @@ bool operator==(Colour const & lhs, Colour const & rhs) noexcept;
 bool operator!=(Colour const & lhs, Colour const & rhs) noexcept;
 bool operator<(Colour const & lhs, Colour const & rhs) noexcept;
 
-std::size_t hash(Colour const & value) noexcept;
+void hash(Viper::Hash::Accumulator & h, Finish value) noexcept;
+void hash(Viper::Hash::Accumulator & h, Colour const & value) noexcept;
 
 } // namespace ModelA
 
-template<>
-struct std::hash<ModelA::MaterialKey> {
-    std::size_t operator()(ModelA::MaterialKey const & v) const noexcept { return v.hash(); }
+// UNE SEULE FORME, POUR TOUS LES TYPES. La première version en avait deux -- une clé se
+// hachait par sa méthode, une structure par une fonction libre -- et la distinction n'avait
+// pas de raison d'être.
+template<> struct std::hash<ModelA::MaterialKey> {
+    std::size_t operator()(ModelA::MaterialKey const & v) const noexcept { return Viper::Hash::of(v); }
 };
 
-template<>
-struct std::hash<ModelA::Colour> {
-    std::size_t operator()(ModelA::Colour const & v) const noexcept { return ModelA::hash(v); }
+template<> struct std::hash<ModelA::Colour> {
+    std::size_t operator()(ModelA::Colour const & v) const noexcept { return Viper::Hash::of(v); }
 };
 
 #endif

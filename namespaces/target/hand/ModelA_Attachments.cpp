@@ -18,6 +18,7 @@
 
 #include "ModelA_Codec.hpp"        // write, read, type -- ce que ModelA implémente
 #include "ModelA_Fields.hpp"       // les chemins, pour les setters de champ
+#include "ModelA_Model.hpp"       // les descripteurs de type, que le codec générique demande
 
 #include "Topology_Codec.hpp"      // encode, decode, definitions() -- le module injecté
 
