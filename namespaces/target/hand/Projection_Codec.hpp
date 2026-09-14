@@ -32,9 +32,9 @@ Pair                read(Viper::Codec::Reader & r, Viper::Codec::tag<Pair>);
 LinkKey             read(Viper::Codec::Reader & r, Viper::Codec::tag<LinkKey>);
 DerivedMaterialKey  read(Viper::Codec::Reader & r, Viper::Codec::tag<DerivedMaterialKey>);
 
-std::shared_ptr<Viper::Type const> const & type(Viper::Codec::tag<Pair>);
-std::shared_ptr<Viper::Type const> const & type(Viper::Codec::tag<LinkKey>);
-std::shared_ptr<Viper::Type const> const & type(Viper::Codec::tag<DerivedMaterialKey>);
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Pair>);
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<LinkKey>);
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<DerivedMaterialKey>);
 
 } // namespace Projection
 

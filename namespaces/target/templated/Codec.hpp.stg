@@ -35,7 +35,7 @@ namespace <u.name> {
 keyed(e) ::= <<
 void write(Viper::Codec::Writer & w, <e.name>Key const & value);
 <e.name>Key read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>Key>);
-std::shared_ptr\<Viper::Type const> const & type(Viper::Codec::tag\<<e.name>Key>);
+std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>Key>);
 >>
 
 // `<%…%>` and not `<<…>>` for the two below: a `>>` in the emitted text closes a
@@ -48,4 +48,4 @@ void write(Viper::Codec::Writer & w, <e.name> const & value);
 >>
 
 plain_read(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>>);%>
-plain_type(e) ::= <%std::shared_ptr\<Viper::Type const> const & type(Viper::Codec::tag\<<e.name>>);%>
+plain_type(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>>);%>

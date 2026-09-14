@@ -12,8 +12,11 @@ void use_l4(Viper::AttachmentGetting & g, Viper::AttachmentMutating & m,
     auto const c = ModelA::Attachments::Material::colour::get(g, k);
     ModelA::Attachments::Material::colour::set(m, k, ModelA::Colour{1, 2, 3});
 
-    // écriture partielle : la couche 2 fournit l'adresse, et c'est le runtime qui la prend
-    auto const & path = ModelA::Fields::Colour::rPath();
+    // écriture partielle : un setter par champ, et c'est là que la couche 2 sert
+    ModelA::Attachments::Material::colour::setR(m, k, 9);
+
+    // et l'écriture différentielle, que le runtime offre au même titre que set
+    ModelA::Attachments::Material::colour::diff(m, k, ModelA::Colour{1, 2, 3});
 
     // le pool local, et le même pool vu du client
     auto const n = Tools::add(2, 3);
@@ -23,5 +26,5 @@ void use_l4(Viper::AttachmentGetting & g, Viper::AttachmentMutating & m,
     // le pool qui enjambe
     Projector::Remote p{svc};
     p.link(k, ModelB::MaterialKey{});
-    (void)c; (void)n; (void)n2; (void)path;
+    (void)c; (void)n; (void)n2;
 }

@@ -1,9 +1,16 @@
-// ModelA — the data hung on its concepts.
+// ModelA — les données accrochées à ses concepts.
 //
-// Layer 4: this is where the runtime appears in the signatures. An attachment is a named
-// piece of data on instances of a concept, and the operations on it are the unit's --
-// ModelA declares `attachment<Material, Colour> colour`, so ModelA says how to read and
-// write it.
+// Couche 4 : c'est ici que le runtime apparaît dans les signatures. Un attachment est une
+// donnée nommée posée sur les instances d'un concept, et les opérations dessus sont celles
+// de l'unité -- ModelA déclare `attachment<Material, Colour> colour`, donc ModelA dit
+// comment on le lit et comment on l'écrit.
+//
+// LA SURFACE EST CELLE DU RUNTIME, PAS UNE INVENTION. Viper::AttachmentMutating offre set,
+// diff et update ; elle n'offre aucun remove, et le premier jet en déclarait un. Ce que le
+// modèle permet de plus, c'est d'écrire un champ plutôt que le document entier -- update
+// prend un chemin -- et cela donne un setter par champ du document, pas une surcharge
+// générique : `setR` lie le chemin et le type ensemble, une surcharge prenant (chemin,
+// valeur) laisserait les deux se contredire sans que rien ne le dise.
 
 #ifndef ModelA_Attachments_hpp
 #define ModelA_Attachments_hpp
@@ -12,21 +19,28 @@
 
 #include "Viper_AttachmentGetting.hpp"
 #include "Viper_AttachmentMutating.hpp"
-#include "Viper_Path.hpp"
+#include "Viper_UUId.hpp"
 
+#include <cstdint>
 #include <optional>
 #include <set>
 
 namespace ModelA::Attachments::Material {
 
-/// The colour attached to a Material.
+/// La couleur attachée à un Material.
 ///
-/// NAMED `colour`, AS THE MODEL SPELLS IT, AND NOT `Colour`. A scope named `Colour` here
-/// would shadow the type `Colour` declared a header away, so every signature below would
-/// have to qualify its own namespace's type. The pack avoids the clash by flattening the
-/// scope to `Material_Colour`, which is the flat prefix again, in a third place. Using
-/// the model's own spelling costs nothing and says what the attachment is called.
+/// NOMMÉ `colour`, COMME LE MODÈLE L'ÉCRIT, ET NON `Colour`. Un scope nommé `Colour` ici
+/// masquerait le type `Colour` déclaré un en-tête plus loin, et chaque signature ci-dessous
+/// devrait qualifier le type de son propre namespace. Le pack évite la collision en
+/// aplatissant le scope en `Material_Colour`, ce qui est le préfixe plat une fois de plus.
 namespace colour {
+
+/// L'identité de cet attachment dans le modèle.
+///
+/// Le pack la range dans `ModelA::AttachmentRuntimeIds::Material_Colour` -- un nom plat,
+/// parce qu'une seule portée devait porter les identifiants de tous les attachments. Ici la
+/// portée nomme déjà l'attachment, et il ne reste que `runtimeId`.
+extern Viper::UUId const runtimeId;
 
 std::set<MaterialKey> keys(Viper::AttachmentGetting const & getting);
 
@@ -36,13 +50,17 @@ std::optional<Colour> get(Viper::AttachmentGetting const & getting, MaterialKey 
 
 void set(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour const & value);
 
-// NO PATH-TAKING OVERLOAD, and the first draft had one. Writing one field rather than the
-// whole document is a real operation, but it is the runtime's: a path and an encoded value
-// go to the mutating interface directly, which is why one signature covers every field of
-// every document instead of one overload per field type. Layer 2 exists for that caller,
-// not for a declaration here.
+void diff(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour const & value,
+          bool recursive = false);
 
-void remove(Viper::AttachmentMutating & mutating, MaterialKey const & key);
+// ── un setter par champ du document ──
+//
+// Le document est une structure, donc chacun de ses champs est adressable seul. C'est
+// l'unique consommateur des chemins de la couche 2, et la raison pour laquelle elle existe.
+
+void setR(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
+void setG(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
+void setB(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
 
 } // namespace colour
 

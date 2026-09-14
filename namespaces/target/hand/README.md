@@ -147,3 +147,57 @@ away — each dissolves once the namespace structures the output.
   between handle types are a known way to be surprised in overload resolution. An
   explicit `toParent()` is the alternative, and the case that would decide it is a
   function overloaded on both key types.
+
+## Layer 4, implemented — and the three modules become visible
+
+`ModelA_Attachments.cpp`, the first implementation file written at all. Until it existed,
+every layer was a header: declarations, checked by a caller that never needed a body. That
+made the easy quarter of the work look like the whole of it — across the pack, headers are
+2 589 lines of template and implementations are 6 148.
+
+It is forty lines, and the object file says what it is made of. Compiling it and listing
+the symbols it leaves undefined gives exactly three groups and nothing else:
+
+```
+ModelA::write, ModelA::read, ModelA::type, ModelA::Fields::Colour::rPath   the unit
+Topology::Codec::definitions, ::stream, ::type                             the injected module
+Viper::ValueKey::cast, ::ValueDecoder::decode, ::Definitions::…            the runtime
+```
+
+No `encode_ModelA_MaterialKey`, no `ValueEncoder::encode_ModelA_Colour`, no
+`ValueType::attachment_ModelA_Material_Colour`. That is not a reading of the source, it is
+what the compiler emitted.
+
+**The generic encode holds, and the pack's own code is the evidence.** Its `encode_<suffix>`
+body is ten lines repeated once per type, and only the suffix varies — a stream encoder, a
+write, and a decode back into a `Value` through the type descriptor. Write, and the type
+descriptor, are precisely what a unit declares. One function template replaces the whole
+family, with argument-dependent lookup choosing the unit. The layer-3 claim was checked here
+and it survived.
+
+**The boundary drew itself at the first compilation.** `setR` encodes a `std::uint8_t`, so
+`encode<std::uint8_t>` asks for `type(tag<std::uint8_t>)` — and no unit declares it, because
+a `uint8` belongs to nobody; lookup from `tag<unsigned char>` reaches no namespace either. It
+has to be the injected module's, for a concrete reason: a `Type` is an object registered in
+the model's `Definitions`, so obtaining one needs the whole model. The same will hold for
+`type(tag<std::set<T>>)`, a `std::set` belonging to no namespace of the model. That is the
+frontier this whole exercise was looking for, and it appeared on its own.
+
+**Three corrections the implementation forced on the layers below.**
+
+The type descriptor returns `std::shared_ptr<Viper::Type>`, not `…<Type const>`. Layer 3 had
+it const, the runtime's `ValueDecoder::decode` takes it non-const, and no reading of the
+header would ever have shown it.
+
+There is no `remove`. `Viper::AttachmentMutating` offers `set`, `diff` and `update`, and
+nothing that removes a document. The header declared one.
+
+What writes a single field is a setter per field — `setR`, `setG`, `setB` — and not the
+path-taking overload the first draft had. `update` takes a path and an encoded value; binding
+the two in one signature is what makes the path type-safe, and a generic `(path, value)`
+overload would let them disagree silently. The path-taking overload was deleted once already
+as an invention; it was half right, and this is its real shape.
+
+**And the runtime ids lose their flat names.** The pack puts them in
+`ModelA::AttachmentRuntimeIds::Material_Colour`, one scope holding every attachment's id.
+Here the scope already names the attachment, so what is left is `runtimeId`.
