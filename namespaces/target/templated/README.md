@@ -103,3 +103,49 @@ element of the collection it belongs to is not an accessor.
 **A template-authoring hazard, recorded because it cost time.** `>>` inside a `<<…>>`
 body ends the template, so `std::hash<X>>` must be written `std::hash<X> >`. The
 diagnostics reported it as `premature EOF` at a line thirty lines further on.
+
+## Layer 5 — `Test.hpp.stg`
+
+One `fuzz` declaration per declared type, and the `test(Rng&)` a driver calls. Thirty-five
+lines, mirroring `Codec.hpp.stg` line for line, which is the check on the four layers
+below it: templatising the tests needed no idea the codec had not already needed.
+
+`Annotations_Test.hpp` comes out with no `fuzz` at all and an empty `test()`, which is
+right — a namespace that declares only attachments has no type of its own to round-trip,
+and its attachments' document types are round-tripped by whoever declares them.
+
+**The codec include is load-bearing, and unlike layer 2 that is now checked.** Nothing in
+`ModelA_Test.hpp`'s *declarations* names anything from `ModelA_Codec.hpp`, so by the layer-2
+rule — emit what the content needs — it should not be there. It must be. The header exists
+so that a consumer can instantiate `roundTrip<ModelA::Colour>`, and that instantiation
+resolves `write` and `read` by ADL at the point of instantiation, where the declarations
+have to be visible. Deleting the include and compiling `../hand/l5.cpp` gives
+`no matching function for call to 'write'`. An include is justified by what the header
+makes possible, not only by what it says.
+
+## Compiling the rendered output, for the first time
+
+The templates had been checked against the reference by reading. Layer 5 came with a
+consumer, so the whole rendered tree went through the compiler — hand-written `Viper_*`
+stubs, generated everything else, `use.cpp`, `bridge.cpp`, `l4.cpp`, `l5.cpp`, `f.cpp`.
+
+**Layer 1 was wrong in a way no diff had shown.** `std::hash` specialisations stand
+*outside* the namespace, so the type has to be qualified, and the template emitted
+`std::hash<Material>` — undeclared at that point — instead of `std::hash<ModelA::MaterialKey>`.
+Two bugs in one line: the missing qualification, and a concept spelled without its `Key`.
+A third was next to them: a key hashes through its member `hash()`, a structure through the
+free `hash()` of its namespace, and the template used the member form for both.
+
+The reference has it right on every count, and the diff against it had been read four times
+without anyone seeing it. **Reading a template against a reference finds what the reference
+says; only a compiler finds what it does not.**
+
+Fixed, and `use.cpp` and `bridge.cpp` now compile against the generated tree —
+`bridge.cpp` for the first time anywhere, since `../hand/` never had a `ModelB_Codec.hpp`
+to satisfy it.
+
+**And the layer-4 pool gap is not an over-include, it is a dangling one.** `l4.cpp` fails on
+`Tools_Pool.hpp:8: 'Topology_Data.hpp' file not found`. `p.model.include.Data` names a
+model-wide artefact that no namespace-based template produces and nothing ever will. A pool
+needs the dependency set its own signatures imply — for `Tools`, none at all — and until
+the model exposes one, no generated pool header can be included.

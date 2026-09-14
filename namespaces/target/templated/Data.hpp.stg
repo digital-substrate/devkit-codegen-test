@@ -23,8 +23,8 @@ namespace <u.name> {
 
 } // namespace <u.name>
 
-<u.concepts:hash_specialisation();separator="\n">
-<u.structures:hash_specialisation();separator="\n">
+<u.concepts:key_hash(u);separator="\n">
+<u.structures:value_hash(u);separator="\n">
 
 #endif
 >>
@@ -76,8 +76,26 @@ std::size_t hash(<s.name> const & value) noexcept;
 
 field(f) ::= <<    <f.typeInNamespace> <f.name>{};>>
 
-hash_specialisation(e) ::= <<
-template\<> struct std::hash\<<e.name> > {
-    std::size_t operator()(<e.name> const & v) const noexcept { return v.hash(); }
+// The specialisation stands outside the namespace, so the type has to be qualified --
+// `std::hash\<ModelA::MaterialKey>`, not `std::hash\<MaterialKey>`. And the two kinds do not
+// hash the same way: a key carries its own `hash()`, while a structure is hashed by a free
+// function of its namespace, reached the same way every other operation on it is.
+//
+// `<%…%>` for the opening line only: a `>>` in the emitted text closes a `<<…>>` body, and
+// `std::hash\<ModelA::MaterialKey>` ends in one. `<%…%>` also strips leading whitespace,
+// which is why the indented line below stays in a `<<…>>` body.
+key_hash(c, u) ::= <<
+<key_hash_head(c, u)>
+    std::size_t operator()(<u.name>::<c.name>Key const & v) const noexcept { return v.hash(); }
 };
 >>
+
+key_hash_head(c, u) ::= <%template\<> struct std::hash\<<u.name>::<c.name>Key> {%>
+
+value_hash(s, u) ::= <<
+<value_hash_head(s, u)>
+    std::size_t operator()(<u.name>::<s.name> const & v) const noexcept { return <u.name>::hash(v); }
+};
+>>
+
+value_hash_head(s, u) ::= <%template\<> struct std::hash\<<u.name>::<s.name>> {%>

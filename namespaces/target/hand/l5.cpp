@@ -1,6 +1,6 @@
 #include "ModelA_Test.hpp"
 
-void use_l5(Viper::Test::Rng & rng) {
+void use_l5(Viper::Test::Rng & rng, Viper::Codec::Writer & w, Viper::Codec::Reader & d) {
     // le type de l'unité, fuzzé par l'unité
     auto const c = ModelA::fuzz(rng, Viper::Codec::tag<ModelA::Colour>{});
 
@@ -8,6 +8,6 @@ void use_l5(Viper::Test::Rng & rng) {
     auto const s = Viper::Test::fuzz(rng, Viper::Codec::tag<std::set<ModelA::Colour>>{});
 
     // et l'aller-retour, générique aussi
-    Viper::Test::roundTrip<ModelA::Colour>(rng);
+    Viper::Test::roundTrip<ModelA::Colour>(rng, w, d);
     (void)c; (void)s;
 }

@@ -1,0 +1,45 @@
+unit(u) ::= <<
+// <u.name> — what it must provide for its types to be exercised.
+//
+// <u.model.generated>
+//
+// One declaration per type, and the entry a driver calls. A round trip is generic --
+// make a value, encode it, decode it, compare -- and the only part that is not generic
+// is making one, because only this namespace knows what its types are made of.
+
+#ifndef <u.name>_Test_hpp
+#define <u.name>_Test_hpp
+
+#include "<u.include.Data>"
+#include "<u.include.Codec>"
+<u.dependencies.types:{d|#include "<d.include.Test>"};separator="\n">
+
+#include "Viper_Codec.hpp"
+#include "Viper_Test.hpp"
+
+namespace <u.name> {
+
+<u.concepts:keyed();separator="\n">
+
+<u.clubs:keyed();separator="\n">
+
+<u.enumerations:plain();separator="\n">
+
+<u.structures:plain();separator="\n">
+
+/// Round-trip every type this namespace declares, through every codec.
+///
+/// Its body is a list of `roundTrip\<T>(rng)`, one per declared type. A container of
+/// this namespace's types needs no line: the generic fuzz builds one by calling this
+/// namespace's fuzz on the element, and argument-dependent lookup brings it back.
+void test(Viper::Test::Rng & rng);
+
+} // namespace <u.name>
+
+#endif
+>>
+
+// `<%…%>` and not `<<…>>`: a `>>` in the emitted text closes a `<<…>>` body, so
+// `tag\<Colour>` cannot be written there.
+keyed(e) ::= <%<e.name>Key fuzz(Viper::Test::Rng & rng, Viper::Codec::tag\<<e.name>Key>);%>
+plain(e) ::= <%<e.name> fuzz(Viper::Test::Rng & rng, Viper::Codec::tag\<<e.name>>);%>
