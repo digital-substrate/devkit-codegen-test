@@ -60,6 +60,26 @@ from each. A path names a position, not a type. Same structure, two artefacts, t
 dependency sets — which is why an include list is computed per artefact and never per
 unit.
 
+## Layer 3 — the bridge
+
+`ModelA_Codec.hpp`, `Projection_Codec.hpp`, checked by `bridge.cpp`.
+
+**A unit implements two things, and that is all.** Tracing what the pack's four bridge
+domains actually do: `encode_ModelA_Colour` writes to a stream and decodes the result
+into a `Value`; `Json` does the same through a json codec; `hexdigest_X` encodes and then
+hashes. Four domains — `Stream`, `ValueCodec`, `Json`, `ValueHasher` — one implementation
+underneath. A unit says how its own types go onto a stream, and what type they are.
+Seven declarations for ModelA.
+
+**`Projection_Codec.hpp` has nothing for the spanning map**, though Projection is the
+namespace that declares it. The runtime's generic `write(Writer&, std::map<K,V> const&)`
+walks it and ADL sends each half to ModelA and ModelB. The shape that belonged to nobody
+is not an artefact needing an owner; it is a composition, resolved where it is used.
+
+That is the whole base layer, gone. `write_map_ModelA_MaterialKey_to_ModelB_MaterialKey`
+exists today only because nothing scoped the output, and it is the reason a base file had
+to be invented in the first place.
+
 ## Open, and deliberately not settled here
 
 - **The file name.** `Data` is a template's name, inherited from the pack, not a domain.
