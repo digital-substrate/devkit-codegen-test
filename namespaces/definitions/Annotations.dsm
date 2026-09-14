@@ -1,0 +1,9 @@
+// A namespace that declares no concept, no structure, no enumeration -- only an
+// attachment, and on a concept belonging to another namespace. Before kibo
+// 9328acd such a namespace was absent from getNameSpaces() entirely.
+namespace Annotations {e5c2d91e-9d09-451d-b0ec-d38d145c256c} {
+
+"""A note carried by a material this namespace does not own."""
+attachment<ModelA::Material, string> note;
+
+}; // ns

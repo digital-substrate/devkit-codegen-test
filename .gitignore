@@ -12,6 +12,8 @@ service/Service.dsm.json
 service/python/service/
 service/typescript/service/
 
+namespaces/Topology.dsm.json
+
 # Python
 __pycache__/
 *.pyc

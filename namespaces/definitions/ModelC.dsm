@@ -1,0 +1,8 @@
+// Reached from nowhere except one attachment document type in Projection.
+// Before kibo 9328acd this namespace carried no dependency edge at all.
+namespace ModelC {3d2271a2-b0f1-4e45-9bb9-0d32ced5b9d6} {
+
+"""Something a projection can point at, and nothing else refers to."""
+concept Marker;
+
+}; // ns

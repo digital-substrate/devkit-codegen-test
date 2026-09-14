@@ -1,0 +1,26 @@
+// Pools belong to no namespace (dsm-json: identified by UUID and display name
+// only), yet their signatures reach into several. Tools reaches into none.
+
+"""Utilities whose signatures name no namespaced type at all."""
+function_pool Tools {17e63428-03e1-41d7-ad9d-60c5665bbd66} {
+
+"""A void return -- the shape that let the d.void defect ship."""
+void reset();
+
+int64 add(int64 a, int64 b);
+
+};
+
+"""A pool whose prototype spans two driver namespaces at once."""
+function_pool Projector {3f513cf9-c9b9-4c57-8ace-ac9a644be74c} {
+
+void link(key<ModelA::Material> a, key<ModelB::Material> b);
+
+};
+
+"""An attachment pool, bound to a concept of the composing namespace."""
+attachment_function_pool LinkModel {a51019a2-790e-49ac-a164-6b150e0976d6} {
+
+mutable void clear(key<Projection::Link> linkKey);
+
+};

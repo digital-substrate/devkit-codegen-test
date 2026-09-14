@@ -1,0 +1,25 @@
+// The integrator's namespace: it owns nothing the drivers own, and composes them.
+// Every cross-namespace edge kind the collectors walk is here.
+namespace Projection {ec72837d-d335-4c12-a49d-49a52695a6db} {
+
+"""What one link between two driver materials is."""
+concept Link;
+
+"""A concept whose parent lives in another namespace."""
+concept DerivedMaterial is a ModelA::Material;
+
+"""Two keys from two namespaces in one structure -- the key<NS::C> edge."""
+struct Pair {
+  key<ModelA::Material> a;
+  key<ModelB::Material> b;
+};
+
+attachment<Link, Pair> pair;
+
+"""The only reference to ModelC anywhere: an attachment document type."""
+attachment<Link, key<ModelC::Marker>> marker;
+
+"""A container shape spanning two namespaces: one typeSuffix, owned by neither."""
+attachment<Link, map<key<ModelA::Material>, key<ModelB::Material>>> mapping;
+
+}; // ns

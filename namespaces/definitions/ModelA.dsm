@@ -1,0 +1,17 @@
+// A driver model, as if owned by one vendor. Deliberately declares the same
+// names as ModelB: Material and Colour collide across the two namespaces.
+namespace ModelA {8c24c1b9-cfbf-4f3f-897d-43fd684d140d} {
+
+"""A material, as ModelA understands one."""
+concept Material;
+
+"""Colour in 8-bit channels -- the same name as ModelB::Colour, a different type."""
+struct Colour {
+  uint8 r;
+  uint8 g;
+  uint8 b;
+};
+
+attachment<Material, Colour> colour;
+
+}; // ns

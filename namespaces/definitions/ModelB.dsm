@@ -1,0 +1,17 @@
+// The second driver, as if owned by another vendor. Its Material and its Colour
+// are unrelated to ModelA's and share their names: the re-export collision case.
+namespace ModelB {a407f2b6-c51b-4842-8e0b-a4c21affc46c} {
+
+"""A material, as ModelB understands one."""
+concept Material;
+
+"""Colour in floating point -- the same name as ModelA::Colour, a different type."""
+struct Colour {
+  float r;
+  float g;
+  float b;
+};
+
+attachment<Material, Colour> colour;
+
+}; // ns
