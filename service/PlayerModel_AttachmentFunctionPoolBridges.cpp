@@ -1,10 +1,10 @@
-#include "Service_AttachmentFunctionPoolBridges.hpp"
-#include "Service_Attachments.hpp"
+#include "PlayerModel_AttachmentFunctionPoolBridges.hpp"
+#include "Demo_Attachments.hpp"
 
 using namespace Service::Demo;
 
 // MARK: - VertexModel
-namespace Service::AttachmentFunctionPoolBridges::PlayerModel {
+namespace Service::PlayerModel {
 
 PlayerKey create(std::shared_ptr<Viper::AttachmentMutating> const & mutating, std::string const & nickname, Demo::Level level) {
     auto const key{PlayerKey::create()};

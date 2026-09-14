@@ -6,17 +6,15 @@
 #include "Viper_ServiceRemote.hpp"
 #include "Viper_StringHelper.hpp"
 
-#include "Service_AttachmentFunctionPoolRemotes.hpp"
-#include "Service_FunctionPoolRemotes.hpp"
+#include "PlayerModel_AttachmentFunctionPoolRemotes.hpp"
+#include "Tools_FunctionPoolRemotes.hpp"
 
 #include "CLI11.hpp"
 
 #include <iostream>
 
-#include "Service_Attachments.hpp"
+#include "Demo_Attachments.hpp"
 
-using namespace Service::FunctionPoolRemotes;
-using namespace Service::AttachmentFunctionPoolRemotes;
 using namespace Service;
 
 int main(int argc, char * argv[]) {
@@ -49,7 +47,7 @@ int main(int argc, char * argv[]) {
             service = Viper::ServiceRemote::connect(inetAddress, inetPort, definitions);
         }
 
-        auto const tools{Tools{service}};
+        auto const tools{Service::Tools::Remote{service}};
         if (tools.isAvailable()) {
             auto const r{tools.add(32, 10)};
             std::cout << "add(32,10) -> " << r << '\n';
@@ -60,7 +58,7 @@ int main(int argc, char * argv[]) {
             std::cout << "add_vector(v1,v2) -> (" << rv.x << "," << rv.y << "," << rv.z << ")" << '\n';
         }
 
-        auto const playerModel{PlayerModel{service}};
+        auto const playerModel{Service::PlayerModel::Remote{service}};
         if (playerModel.isAvailable()) {
             auto state{Viper::CommitState::make(Viper::CommitId::Invalid(), definitions, {})};
             auto mutableState{Viper::CommitMutableState::make(state)};
