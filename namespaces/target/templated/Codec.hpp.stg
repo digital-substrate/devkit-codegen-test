@@ -1,0 +1,51 @@
+unit(u) ::= <<
+// <u.name> — everything its types need in order to cross into the runtime.
+//
+// <u.model.generated>
+//
+// Three declarations per type, and that is the whole of this namespace's part in the
+// bridge. Encoding to a Value, to JSON, and hashing are compositions of the two below,
+// and every container is the runtime's -- ModelA owns Material, not std::set.
+
+#ifndef <u.name>_Codec_hpp
+#define <u.name>_Codec_hpp
+
+#include "<u.include.Data>"
+<u.dependencies.types:{d|#include "<d.include.Codec>"};separator="\n">
+
+#include "Viper_Codec.hpp"
+
+#include \<memory>
+
+namespace <u.name> {
+
+<u.concepts:keyed();separator="\n\n">
+
+<u.clubs:keyed();separator="\n\n">
+
+<u.enumerations:plain();separator="\n\n">
+
+<u.structures:plain();separator="\n\n">
+
+} // namespace <u.name>
+
+#endif
+>>
+
+keyed(e) ::= <<
+void write(Viper::Codec::Writer & w, <e.name>Key const & value);
+<e.name>Key read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>Key>);
+std::shared_ptr\<Viper::Type const> const & type(Viper::Codec::tag\<<e.name>Key>);
+>>
+
+// `<%…%>` and not `<<…>>` for the two below: a `>>` in the emitted text closes a
+// `<<…>>` body, so `tag<Colour>` cannot be written there. Writing `tag<Colour >` works
+// and is valid C++, but it is a workaround leaking into the output.
+plain(e) ::= <<
+void write(Viper::Codec::Writer & w, <e.name> const & value);
+<plain_read(e)>
+<plain_type(e)>
+>>
+
+plain_read(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>>);%>
+plain_type(e) ::= <%std::shared_ptr\<Viper::Type const> const & type(Viper::Codec::tag\<<e.name>>);%>

@@ -36,6 +36,26 @@ happened to pull it in.
 must reproduce, and the template is what checks the reference was thought through. Both
 were corrected, and `../hand/f.cpp` compiles the result on its own.
 
+## Layer 3 — `Codec.hpp.stg`
+
+Three declarations per type, and that is a namespace's whole part in the bridge. Forty
+lines, matching `../hand/ModelA_Codec.hpp` but for ordering and alignment.
+
+**`Projection_Codec.hpp` contains no mention of `std::map`** — checked, zero occurrences —
+although Projection is the namespace that declares an attachment of
+`map<key<ModelA::Material>, key<ModelB::Material>>`. There is nothing to emit for it: the
+runtime's generic `write(Writer&, std::map<K,V>)` walks it and ADL sends each half to its
+owner. The shape that forced a base layer into existence produces no line in any template.
+
+It includes `ModelA_Codec.hpp` and `ModelB_Codec.hpp`, from `dependencies.types`, because
+`Pair` holds a key from each — the same axis as layer 1, a different artefact to reach.
+
+**A StringTemplate hazard with a visible cost.** A `>>` in emitted text closes a `<<…>>`
+body, so `tag<Colour>` cannot be written in one. The first draft wrote `tag<Colour >`,
+which is valid C++ and a workaround leaking into the output. `<%…%>` has different
+delimiters and takes the text as written. Worth knowing before a pack fills up with
+spaces nobody can explain.
+
 ## What writing it asked of the generator
 
 **`u.dependencies` is too coarse, and this is the one that matters.**
