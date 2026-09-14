@@ -30,7 +30,7 @@ namespace <u.name> {
 >>
 
 concept(c) ::= <<
-<if(c.documentation)>/// <c.documentation>
+<if(c.documentation)>/** <c.documentation> */
 <endif>class <c.name>Key final {
 public:
     <c.name>Key() = default;
@@ -62,7 +62,7 @@ bool operator\<(<c.name>Key const &, <c.name>Key const &) noexcept;
 >>
 
 structure(s) ::= <<
-<if(s.documentation)>/// <s.documentation>
+<if(s.documentation)>/** <s.documentation> */
 <endif>struct <s.name> final {
 <s.fields:field();separator="\n">
 };

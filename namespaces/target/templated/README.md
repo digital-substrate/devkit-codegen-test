@@ -164,3 +164,44 @@ exists for that caller, not for a declaration in a unit.
 
 **The whole generated tree now compiles**: `use.cpp`, `bridge.cpp`, `l4.cpp`, `l5.cpp`,
 `f.cpp`, against generated headers and hand-written `Viper_*` stubs.
+
+## Layer 4, the implementation — `Attachments.cpp.stg`
+
+The first implementation template, and the one that says whether any of the headers above
+meant anything. It reproduces `../hand/ModelA_Attachments.cpp`; what differs is the comments,
+the line wrapping, and one qualification the template cannot avoid — the reference writes
+`Fields::Colour::rPath()` from inside the unit, the template writes
+`ModelA::Fields::Colour::rPath()`, because the document structure may belong to another unit
+and only a fully qualified name is right in both cases.
+
+**Every generated implementation compiles**, on all five namespaces, and the object file of
+`Projection_Attachments.cpp` carries this symbol:
+
+```
+Topology::Codec::type<ModelA::MaterialKey, ModelB::MaterialKey>(
+    Viper::Codec::tag<std::map<ModelA::MaterialKey, ModelB::MaterialKey, …>>)
+```
+
+One template of the injected module, instantiated. Not a generated function called
+`encode_map_ModelA_MaterialKey_to_ModelB_MaterialKey`. That name is where this whole
+question started, and it is gone from the output, not renamed.
+
+### Three defects the implementation found, none of them visible in a header
+
+**A container needs a type descriptor, and no namespace can supply one.** Compiling
+`Projection_Attachments.cpp` failed on `mapping`, whose document is
+`map<key<ModelA::Material>, key<ModelB::Material>>`: encoding it asks for its type, and
+there is nobody to ask — ModelA cannot claim a map whose value is ModelB's, and ModelB
+cannot claim one whose key is ModelA's. It belongs to the injected module, for the reason
+that was stated long before it could be checked: vector, set and map are std's, so they are
+std containers, and no unit of the model owns one. The shape the fixture exists to produce
+produced it, and the compiler said so rather than a design argument.
+
+**The header template still had the first draft's surface** — a `remove` the runtime does
+not offer, and no `diff`, no per-field setters. The hand-written header had been corrected;
+the template had not, and nothing compared them until a caller needed both.
+
+**A multi-line documentation was emitted with `///` on the first line only**, so the
+remaining lines landed in the code: `unknown type name 'generator'`, from a docstring in the
+model. Every `///` taking a model string had it. Now `/** … */`, which needs nothing from the
+model. Present in `Data.hpp.stg` too, and in the pack.

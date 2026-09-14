@@ -1,0 +1,120 @@
+// L'implémentation des attachments d'une unité.
+//
+// Elle tient en quelques lignes par attachment parce que trois modules se partagent le
+// travail, et que chacun est nommé une fois : l'unité fournit write/read/type pour ses
+// types, le module injecté fournit encode/decode et definitions(), le runtime fournit
+// tout le reste. Aucun nom plat par type n'apparaît, et ce n'est pas une convention de
+// nommage -- c'est l'argument qui désigne l'unité, par ADL.
+
+unit(u) ::= <<
+// <u.name> — l'implémentation des attachments qu'il déclare.
+//
+// <u.model.generated>
+
+#include "<u.include.Attachments>"
+
+#include "<u.include.Codec>"
+#include "<u.include.Fields>"
+<u.dependencies.attachments:{d|#include "<d.include.Codec>"};separator="\n">
+
+#include "<u.model.include.Codec>"
+
+#include "Viper_Attachment.hpp"
+#include "Viper_Definitions.hpp"
+#include "Viper_Path.hpp"
+#include "Viper_Values.hpp"
+
+<u.attachments:attachment(u);separator="\n\n">
+>>
+
+attachment(a, u) ::= <<
+namespace <u.name>::Attachments::<a.conceptScope>::<a.name> {
+
+Viper::UUId const runtimeId{Viper::UUId::parse("<a.runtimeId>")};
+
+namespace {
+
+/// L'attachment tel que le runtime le connaît, résolu une fois.
+std::shared_ptr\<Viper::Attachment> const & attachment() {
+    static auto const instance = <u.model.namespace>::Codec::definitions()->checkAttachment(runtimeId);
+    return instance;
+}
+
+<encode_key(a, u)>
+
+} // namespace
+
+<keys(a, u)>
+
+bool has(Viper::AttachmentGetting const & getting, <a.keyType.typeInNamespace> const & key) {
+    return getting.has(attachment(), encodeKey(key));
+}
+
+<get(a, u)>
+
+void set(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value) {
+    mutating.set(attachment(), encodeKey(key), <u.model.namespace>::Codec::encode(value));
+}
+
+void diff(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value,
+          bool recursive) {
+    mutating.diff(attachment(), encodeKey(key), <u.model.namespace>::Codec::encode(value), recursive);
+}
+<if(a.documentType.isStructure)>
+
+<a.documentType.structure.fields:field(a, u);separator="\n\n">
+<endif>
+
+} // namespace <u.name>::Attachments::<a.conceptScope>::<a.name>
+>>
+
+// Un setter par champ du document. Le chemin vient de la couche 2, la valeur du module
+// injecté, et le type du champ de la signature -- les trois liés en un seul endroit, ce
+// qu'une surcharge générique prenant (chemin, valeur) ne ferait pas.
+field(sf, a, u) ::= <<
+void set<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.type><sf.passBy> value) {
+    mutating.update(attachment(), encodeKey(key),
+                    <a.documentType.structure.namespace>::Fields::<a.documentType.structure.name>::<sf.name>Path(),
+                    <u.model.namespace>::Codec::encode(value));
+}
+>>
+
+// UN `>>` DANS LE TEXTE ÉMIS FERME UN CORPS `<<…>>`, et chaque type générique qui traverse
+// la sortie en produit un. `<%…%>` prend le texte tel quel, mais supprime aussi les blancs
+// de tête -- donc il ne sert que pour la ligne qui contient le `>>`, jamais pour un corps
+// indenté. D'où le découpage ci-dessous, qui n'a pas d'autre raison d'être.
+encode_key(a, u) ::= <<
+/// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
+<encode_key_head(a)>
+    return Viper::ValueKey::cast(<u.model.namespace>::Codec::encode(key));
+}
+>>
+
+encode_key_head(a) ::= <%std::shared_ptr\<Viper::ValueKey> encodeKey(<a.keyType.typeInNamespace> const & key) {%>
+
+keys(a, u) ::= <<
+<keys_head(a)>
+    <keys_result(a)>
+    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+        result.insert(<decode_call(a.keyType.typeInNamespace, u)>(it.value()));
+
+    return result;
+}
+>>
+
+keys_head(a) ::= <%std::set\<<a.keyType.typeInNamespace>> keys(Viper::AttachmentGetting const & getting) {%>
+keys_result(a) ::= <%std::set\<<a.keyType.typeInNamespace>> result;%>
+
+get(a, u) ::= <<
+<get_head(a)>
+    auto const document = getting.get(attachment(), encodeKey(key));
+    if (document->isNil())
+        return std::nullopt;
+
+    return <decode_call(a.documentType.typeInNamespace, u)>(document->unwrap());
+}
+>>
+
+get_head(a) ::= <%std::optional\<<a.documentType.typeInNamespace>> get(Viper::AttachmentGetting const & getting, <a.keyType.typeInNamespace> const & key) {%>
+
+decode_call(type, u) ::= <%<u.model.namespace>::Codec::decode\<<type>>%>

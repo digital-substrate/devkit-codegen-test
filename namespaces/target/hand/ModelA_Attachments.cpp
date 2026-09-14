@@ -28,7 +28,7 @@
 
 namespace ModelA::Attachments::Material::colour {
 
-Viper::UUId const runtimeId{0x7f3c4d0e1a2b5c6d, 0x8e9f0a1b2c3d4e5f};
+Viper::UUId const runtimeId{Viper::UUId::parse("faf658ea-5586-890a-0c4a-5cd2c9209b28")};
 
 namespace {
 

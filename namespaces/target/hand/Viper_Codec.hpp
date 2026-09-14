@@ -50,6 +50,9 @@ template<class K, class V> void write(Writer & w, std::map<K,V> const & v) {
 }
 template<class T> std::vector<T> read(Reader & r, tag<std::vector<T>>) { return {read(r, tag<T>{})}; }
 template<class T> std::set<T>    read(Reader & r, tag<std::set<T>>)    { return {read(r, tag<T>{})}; }
+template<class K, class V> std::map<K,V> read(Reader & r, tag<std::map<K,V>>) {
+    return {{read(r, tag<K>{}), read(r, tag<V>{})}};
+}
 
 }} // ns
 #endif

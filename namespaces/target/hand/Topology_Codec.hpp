@@ -24,7 +24,10 @@
 
 #include <cstdint>
 #include <memory>
+#include <map>
+#include <set>
 #include <string>
+#include <vector>
 
 namespace Topology::Codec {
 
@@ -52,6 +55,21 @@ std::shared_ptr<Viper::Type> const & type(tag<std::uint8_t>);
 std::shared_ptr<Viper::Type> const & type(tag<float>);
 std::shared_ptr<Viper::Type> const & type(tag<std::string>);
 std::shared_ptr<Viper::Type> const & type(tag<Viper::UUId>);
+
+// ── et les conteneurs, pour la même raison, une fois de plus ──
+//
+// TROUVÉ EN COMPILANT Projection_Attachments.cpp. Projection déclare
+// `attachment<Link, map<key<ModelA::Material>, key<ModelB::Material>>> mapping` : une forme
+// qui enjambe deux namespaces et n'appartient à aucun des deux. `encode` de ce document
+// demande son descripteur de type, et il n'y a personne à qui le demander -- ModelA ne peut
+// pas revendiquer une map dont la valeur est à ModelB, et réciproquement.
+//
+// C'est la forme qui a forcé un socle à exister, et elle atterrit ici sans qu'on ait rien
+// à décider : vector, set et map sont dans std, donc ce sont des conteneurs de std, donc
+// aucune unité du modèle n'en est propriétaire. Une famille de templates, écrite une fois.
+template<class T> std::shared_ptr<Viper::Type> const & type(tag<std::vector<T>>);
+template<class T> std::shared_ptr<Viper::Type> const & type(tag<std::set<T>>);
+template<class K, class V> std::shared_ptr<Viper::Type> const & type(tag<std::map<K,V>>);
 
 /// Une valeur C++ vers une Viper::Value.
 template<class T>
