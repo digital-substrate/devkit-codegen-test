@@ -6,7 +6,7 @@ invokes the jar directly, so it can be run before and after a change without a c
 in between.
 
     render.py <dir>                 render every model into <dir>
-    render.py --diff <before> <after> [--renames <map>]
+    render.py --diff <before> <after> [--renames <map> | --only <artefact>]
 
 A mono-namespace model guards against regression: its diff must be empty. A
 multi-namespace model shows the effect a change is meant to have, so its diff is read,
@@ -110,7 +110,7 @@ def renames(path):
     return out
 
 
-def diff(before, after, rename=None):
+def diff(before, after, rename=None, scope=None):
     worst = 0
     mapping = renames(rename) if rename else {}
     for model, spec in MODELS.items():
@@ -126,9 +126,18 @@ def diff(before, after, rename=None):
             a = {renamed.get(k, k): v for k, v in a.items()}
         added, removed = sorted(set(b) - set(a)), sorted(set(a) - set(b))
         changed = sorted(f for f in set(a) & set(b) if a[f] != b[f])
+        # A migration moves one artefact. Everything outside it must be still, whatever
+        # the model's shape -- a step that spills is a step that was not understood.
+        expected = [f for f in added + removed + changed if scope and scope in f]
+        added   = [f for f in added   if f not in expected]
+        removed = [f for f in removed if f not in expected]
+        changed = [f for f in changed if f not in expected]
+        if expected:
+            print(f"  {model:12} {spec['shape']:6} {len(expected)} in '{scope}', as declared")
+
         gate = "must be empty" if spec["shape"] == "mono" else "read it"
         if not (added or removed or changed):
-            print(f"  {model:12} {spec['shape']:6} no change")
+            print(f"  {model:12} {spec['shape']:6} nothing else moved")
             continue
         worst = max(worst, 1 if spec["shape"] == "mono" else 0)
         print(f"  {model:12} {spec['shape']:6} +{len(added)} -{len(removed)} ~{len(changed)}   ({gate})")
@@ -143,7 +152,8 @@ def diff(before, after, rename=None):
 if __name__ == "__main__":
     if len(sys.argv) in (4, 6) and sys.argv[1] == "--diff":
         rename = sys.argv[5] if len(sys.argv) == 6 and sys.argv[4] == "--renames" else None
-        sys.exit(diff(Path(sys.argv[2]), Path(sys.argv[3]), rename))
+        scope  = sys.argv[5] if len(sys.argv) == 6 and sys.argv[4] == "--only" else None
+        sys.exit(diff(Path(sys.argv[2]), Path(sys.argv[3]), rename, scope))
     if len(sys.argv) == 2:
         render(Path(sys.argv[1]))
     else:
