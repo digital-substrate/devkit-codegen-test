@@ -13,6 +13,7 @@ unit(u) ::= <<
 #include "Viper_Path.hpp"
 
 #include \<memory>
+#include \<string>
 #include \<string_view>
 
 <u.structures:structure(u);separator="\n\n">

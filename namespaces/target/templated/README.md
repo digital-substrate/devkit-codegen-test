@@ -286,3 +286,13 @@ name no concept — so the change has an order and three repositories:
 3. the whole-model templates stop declaring their own.
 
 Nothing before step 1 is safe, so the crossing model carries that one failure, visible.
+
+## Layer 2, the implementation — `Fields.cpp.stg`
+
+Twenty lines, and the render is **identical to `../hand/ModelA_Fields.cpp`** once comments
+are stripped — the first artefact where that is true with no ordering difference either,
+because a structure's fields have one order and it is the model's.
+
+Every generated file of the topology model now compiles: five artefacts per unit, headers
+and implementations, on all five namespaces. The crossing model compiles too except the
+three files that name `AnyConceptKey`.

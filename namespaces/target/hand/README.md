@@ -230,3 +230,26 @@ variable read inside its own initialiser. `ModelA::Colour` has exactly that fiel
 reference avoided it by naming its locals by hand, which is not a property a generator has.
 Fixed by naming nothing: a braced-init-list evaluates left to right by guarantee, so the
 model's field order holds without a single local.
+
+## Layer 2, implemented — the field name appears once
+
+`ModelA_Fields.cpp`. Three lines per field, and one observation worth the detour: the path
+is built from the constant declared above it, not from a copied literal.
+
+```cpp
+std::shared_ptr<Viper::Path const> const & rPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{r})};
+    return instance;
+}
+```
+
+The pack writes `Viper::Path::makeField("r")` in one file and `std::string const r{"r"}` in
+another, and nothing holds the two together. Here the field's name appears once in the whole
+unit, which is what merging `Field` and `Path` into one artefact was for.
+
+A path is a property of the structure and not of a value, so there is one per field for the
+life of the program: built once, returned by reference.
+
+The runtime takes a `std::string const &`, so the `string_view` constant is converted at the
+one call. A `string_view` overload on `makeField` would remove even that, which is a note
+for the runtime rather than a change here.
