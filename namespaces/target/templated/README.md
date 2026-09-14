@@ -56,6 +56,32 @@ which is valid C++ and a workaround leaking into the output. `<%…%>` has diffe
 delimiters and takes the text as written. Worth knowing before a pack fills up with
 spaces nobody can explain.
 
+## Layer 4 — `Attachments.hpp.stg`, `Pool.hpp.stg`
+
+**A namespace level cannot hold a qualified name.** `Annotations` declares an attachment
+on `ModelA::Material`, and the scope wants to be
+`Annotations::Attachments::ModelA::Material::note` — which would create
+`Annotations::ModelA`. So the concept's origin has to be flattened into the level's name:
+`ModelA_Material`. The flat prefix, once, for a reason that holds.
+
+It happens **on principle, not on demand**. The pack flattens only when two attachments
+would otherwise collide, which makes a scope name a function of the whole namespace's
+attachment set — adding one attachment renames another, and a caller that named the first
+stops compiling for a change that did not touch it. Here `ModelA::Attachments::Material`
+stays bare because the concept is ModelA's own, and `Annotations::Attachments::ModelA_Material`
+carries the origin because it is not.
+
+**And a template cannot decide that.** StringTemplate has no string comparison, so "is
+this concept mine?" is a question only the model can answer —
+`TemplateAttachment.getConceptScope()`, added for this.
+
+**A pool has a dependency set, and the model does not expose it.**
+`Projector_Pool.hpp` comes out including the whole model's `Data` because
+`p.model.include.Data` is the only thing available, when `Projector::link(ModelA::MaterialKey,
+ModelB::MaterialKey)` needs exactly ModelA's and ModelB's. The signatures say which units
+a pool reaches, and nothing collects it — the same gap the namespace dependency graph had
+before `9328acd`, in the one place that graph does not look.
+
 ## What writing it asked of the generator
 
 **`u.dependencies` is too coarse, and this is the one that matters.**

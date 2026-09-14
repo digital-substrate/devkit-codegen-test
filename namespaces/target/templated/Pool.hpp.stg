@@ -1,0 +1,69 @@
+// A pool is a unit: it holds only functions, nothing depends on it, and its name is
+// already a scope. The local side and the remote side of one pool live together, because
+// they are the same operation in process and across a wire.
+
+pool(p) ::= <<
+<preamble(p, "FunctionPool")>
+
+namespace <p.name;format="uf"> {
+
+<p.functions:bridge();separator="\n">
+
+std::shared_ptr\<Viper::FunctionPool> pool();
+
+<remote(p)>
+
+} // namespace <p.name;format="uf">
+
+#endif
+>>
+
+attachment_pool(p) ::= <<
+<preamble(p, "AttachmentFunctionPool")>
+
+namespace <p.name;format="uf"> {
+
+<p.functions:bridge();separator="\n">
+
+std::shared_ptr\<Viper::AttachmentFunctionPool> pool();
+
+} // namespace <p.name;format="uf">
+
+#endif
+>>
+
+preamble(p, kind) ::= <<
+// <p.name> — a pool, and a unit in its own right.
+//
+// <p.model.generated>
+
+#ifndef <p.name>_Pool_hpp
+#define <p.name>_Pool_hpp
+
+#include "<p.model.include.Data>"
+
+#include "Viper_<kind>.hpp"
+#include "Viper_ServiceRemote.hpp"
+
+#include \<memory>
+>>
+
+bridge(f) ::= <%<ret(f)> <f.name;format="lsc">(<f.parameters:param();separator=", ">);%>
+
+remote(f) ::= <<
+/// The same pool, seen from a client.
+class Remote final {
+public:
+    explicit Remote(std::shared_ptr\<Viper::ServiceRemote> service);
+    bool isAvailable() const;
+
+<f.functions:remote_call();separator="\n">
+
+private:
+    std::shared_ptr\<Viper::ServiceRemote> _service;
+};
+>>
+
+remote_call(f) ::= <<    <ret(f)> <f.name;format="lsc">(<f.parameters:param();separator=", ">) const;>>
+ret(f) ::= <%<if(f.isVoid)>void<else><f.type><endif>%>
+param(p) ::= <%<p.type><p.passBy> <p.name>%>

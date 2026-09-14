@@ -1,0 +1,51 @@
+unit(u) ::= <<
+// <u.name> — the data hung on concepts, declared by this namespace.
+//
+// <u.model.generated>
+//
+// One scope per attachment, under the concept it is keyed on. The concept's own unit is
+// part of the scope name whenever it is not this one: a namespace level cannot hold a
+// qualified name, so `ModelA::Material` becomes `ModelA_Material` there -- and always,
+// not only when two attachments would otherwise collide, so that adding one never
+// renames another.
+
+#ifndef <u.name>_Attachments_hpp
+#define <u.name>_Attachments_hpp
+
+#include "<u.include.Data>"
+<u.dependencies.attachments:{d|#include "<d.include.Data>"};separator="\n">
+
+#include "Viper_AttachmentGetting.hpp"
+#include "Viper_AttachmentMutating.hpp"
+#include "Viper_Path.hpp"
+
+#include \<optional>
+#include \<set>
+
+<u.attachments:attachment(u);separator="\n\n">
+
+#endif
+>>
+
+attachment(a, u) ::= <<
+<if(a.hasDocumentation)>/// <a.documentation>
+<endif>namespace <u.name>::Attachments::<a.conceptScope>::<a.name> {
+
+<keys(a)>
+
+bool has(Viper::AttachmentGetting const & getting, <a.keyType.typeInNamespace> const & key);
+
+<get(a)>
+
+void set(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+
+void remove(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key);
+
+} // namespace <u.name>::Attachments::<a.conceptScope>::<a.name>
+>>
+
+
+// `<%…%>`, because a `>>` in the emitted text would close a `<<…>>` body. Every generic
+// type crossing into the output hits this.
+keys(a) ::= <%std::set\<<a.keyType.typeInNamespace>> keys(Viper::AttachmentGetting const & getting);%>
+get(a) ::= <%std::optional\<<a.documentType.typeInNamespace>> get(Viper::AttachmentGetting const & getting, <a.keyType.typeInNamespace> const & key);%>
