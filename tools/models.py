@@ -22,7 +22,7 @@ MODELS = {
     "namespaces": dict(
         shape="multi", definitions="namespaces/definitions", namespace="Topology", package="topology",
         about="namespace topology and nothing else: five namespaces, every edge kind",
-        cpp="Model Data Stream ValueType ValueCodec Attachments ValueHasher FunctionPool"
+        cpp="Model Data Stream ValueType ValueCodec Attachments AttachmentFunctionPool_Attachments ValueHasher FunctionPool"
             " FunctionPoolRemote AttachmentFunctionPool AttachmentFunctionPoolRemote".split(),
     ),
 }
