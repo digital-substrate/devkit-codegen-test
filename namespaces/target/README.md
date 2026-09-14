@@ -46,8 +46,40 @@ more than a file saved: a build lists `<unit>/<unit>_<feature>.hpp` without aski
 the model happens to contain, and the day the namespace gains a concept its consumers
 already include it.
 
+## What `Definitions` and `ValueType` added
+
+They were expected to be "the base layer" wholesale. Only one of them is.
+
+**`ValueType` does not split, and the reason is checkable.** It includes `Viper_Types.hpp`
+and nothing generated; every function returns a `Viper::Type` and composes out of the
+others. The namespace appears only inside a symbol name, never as a C++ type reference,
+so the table has no dependency on any unit and cannot acquire one. Splitting it would
+break the single-instance memoisation each function relies on, and would leave a shape
+spanning two namespaces — `type_map_ModelA_MaterialKey_to_ModelB_MaterialKey` — belonging
+to neither unit. It stays whole, in the base.
+
+That also settles `typeSuffix`. Carrying the DSM namespace in a flat symbol name is not a
+leftover of the prefix era: it is a structural, deduplicated name for a type shape, and it
+must read the same whether the model has one namespace or five. It is the one place a
+namespace legitimately appears flattened.
+
+**`Definitions` does split, and it is two things in one file.** The per-namespace
+`RuntimeIds` and `AttachmentRuntimeIds` blocks belong to each unit; `definitions()`,
+which decodes the blob the caller embeds, is base. So the base keeps the one edge that
+points outside the pack — `Topology_Resources.hpp` is written by `generate.py`, not by a
+template — and no unit inherits it.
+
+`RuntimeIds` stays a scope where `ValueType` did not, and the distinction is worth
+keeping: `ValueType` is a feature name and a feature is a file, while
+`ModelA::RuntimeIds::Material` genuinely distinguishes the UUID from the type
+`ModelA::MaterialKey`. Both belong to ModelA.
+
+**And `Annotations` is empty in `Data` but not in `Definitions`** — one attachment
+runtime id, no concept ids. Whether a unit has content depends on the feature, which is
+the argument for emitting a file per unit per feature rather than asking the model.
+
 ## Not yet written
 
-Python and node, and the other five features — `ValueType`, `Attachments`, `Path`,
-`Definitions` (the aggregate) and one pool. `Definitions` and `ValueType` are the base
-layer and do not become per-unit; they are the interesting ones for that reason.
+Python and node, and `Attachments`, `Path` and one pool. `Attachments` is where
+`Annotations` stops being empty in the type sense and where the attachment-only edge
+becomes visible; a pool is a unit of a kind none of these files show yet.
