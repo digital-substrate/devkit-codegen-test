@@ -80,6 +80,31 @@ That is the whole base layer, gone. `write_map_ModelA_MaterialKey_to_ModelB_Mate
 exists today only because nothing scoped the output, and it is the reason a base file had
 to be invented in the first place.
 
+## Layer 4 — attachments and pools
+
+`ModelA_Attachments.hpp`, `Tools_Pool.hpp`, `Projector_Pool.hpp`, checked by `l4.cpp`.
+
+**The attachment scope hides a collision the pack resolves silently.** ModelA declares
+`attachment<Material, Colour> colour`. The natural scope is
+`Attachments::Material::Colour` — and that `Colour` would shadow the *type* `Colour` one
+header away, so every signature in it would have to qualify its own namespace's type. The
+pack sidesteps this by flattening to `Material_Colour`: the flat prefix again, in a third
+place, for a reason nothing records.
+
+Using the attachment's own spelling — `Material::colour`, as the model writes it — costs
+nothing and removes the clash. It also reads as what it is.
+
+**A pool's two sides belong together.** `Tools::add` and `Tools::Remote::add` are the
+same operation in process and across a wire, and a reader looking for one wants the
+other. Today they are in `FunctionPoolBridges::Tools` and `FunctionPoolRemotes::Tools` —
+two scopes named after templates, neither named after anything in the model.
+
+**And `Projector` shows what a pool is not.** Its `link(ModelA::MaterialKey,
+ModelB::MaterialKey)` names two namespaces, so asking which owns it is the wrong
+question. A pool is not owned by the namespaces whose types it mentions: it is the
+operations an application chooses to expose, and another application over the same models
+would expose different ones.
+
 ## Open, and deliberately not settled here
 
 - **The file name.** `Data` is a template's name, inherited from the pack, not a domain.
