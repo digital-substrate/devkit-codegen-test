@@ -144,6 +144,39 @@ together; it says nothing about what moves together. Since the scope is declared
 `.stg`'s entry template, migration is already per artefact and needs no further
 mechanism.
 
-## Not yet written
+## What Python and node added
 
-Python and node.
+**The re-export file is where the collision is actually answered.** Today
+`__init__.py` is one line — `from .data import *` — and it works only because every
+class carries its namespace in its name: `ModelA_MaterialKey`. Removing that prefix puts
+the ambiguity back, and this file has to decide. The rule: re-export the names exactly
+one unit declares, and leave the rest reachable through their unit. `Marker`, `Link`,
+`Pair` are flat; `Material` and `Colour` are not, because two units declare each. In a
+mono-namespace model nothing can collide, so everything is flat and the common case sees
+what it sees today, minus the prefix.
+
+node already has half the idiom: `index.ts` re-exports `data` flat and everything else
+under a name (`export * as types`, `* as path`). The same distinction simply moves from
+features to units.
+
+**A spanning container needs a home in Python and node, where C++ needed none.** In C++
+the shape is `std::map<...>`, written inline where it is used, and only its *descriptor*
+lives in the base. Python and node have to generate a class for it. Putting it in the
+declaring unit would let two units declaring the same shape produce two distinct
+classes, and an `isinstance` check would stop meaning what it says — so it goes in a
+sink module of the base package, `topology/containers.py`, which imports the units while
+`topology/data.py` imports none of them.
+
+That is the C++ pool registry again, in another language: **the root/sink distinction is
+a property of modules, not of packages.** A package spans both, exactly as a namespace
+did.
+
+**And the attachment rule carries over verbatim.** With the prefix gone the two
+`Material` classes no longer tell themselves apart, so
+`annotations/attachments.py` aliases them by unit — the same answer the C++ target
+proposes for the scope name, reached independently.
+
+## Still to write
+
+The remaining features in Python and node, if the C++ set proves not to have covered
+the shapes. Nothing here suggests it has not.
