@@ -19,6 +19,8 @@ namespace <u.name> {
 
 <u.concepts:concept();separator="\n\n">
 
+<u.enumerations:enumeration();separator="\n\n">
+
 <u.structures:structure();separator="\n\n">
 
 } // namespace <u.name>
@@ -75,6 +77,23 @@ std::size_t hash(<s.name> const & value) noexcept;
 >>
 
 field(f) ::= <<    <f.typeInNamespace> <f.name>{};>>
+
+// `enum class` et non `enum` : le scope nomme déjà l'unité, et une énumération non scopée
+// verserait ses cases dans le namespace de l'unité, où elles heurteraient les noms des
+// autres. Aucune valeur explicite -- ce qui traverse le fil est l'index de la case, et le
+// modèle en est la source.
+enumeration(e) ::= <<
+<if(e.documentation)>/** <e.documentation> */
+<endif>enum class <e.name> {
+<e.members:enumeration_case();separator=",\n">
+};
+>>
+
+// Une sous-template nommée, et non `{m|    <m.name>}` : StringTemplate mange une espace
+// après le `|`, donc l'indentation sort à trois caractères sans que rien ne le signale.
+enumeration_case(m) ::= <<
+    <m.name;format="uf">
+>>
 
 // The specialisation stands outside the namespace, so the type has to be qualified --
 // `std::hash\<ModelA::MaterialKey>`, not `std::hash\<MaterialKey>`. And the two kinds do not

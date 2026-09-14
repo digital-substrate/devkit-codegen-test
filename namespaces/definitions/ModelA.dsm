@@ -12,6 +12,14 @@ struct Colour {
   uint8 b;
 };
 
+"""Un type énuméré, pour que les templates en rencontrent un. Aucun autre namespace
+n'en déclare, et c'est voulu : ce qui est testé ici est la topologie, pas le système de
+types -- mais une couche qui ne sait pas sérialiser une énumération est incomplète."""
+enum Finish {
+  matte ,
+  gloss
+};
+
 attachment<Material, Colour> colour;
 
 }; // ns

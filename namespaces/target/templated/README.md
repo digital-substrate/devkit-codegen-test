@@ -205,3 +205,26 @@ the template had not, and nothing compared them until a caller needed both.
 remaining lines landed in the code: `unknown type name 'generator'`, from a docstring in the
 model. Every `///` taking a model string had it. Now `/** … */`, which needs nothing from the
 model. Present in `Data.hpp.stg` too, and in the pack.
+
+## Layer 3, the implementation — `Codec.cpp.stg`
+
+Three functions per declared type, matching `../hand/ModelA_Codec.cpp` but for ordering. All
+five namespaces compile, and `Projection::Pair` reads as
+`{read(r, tag<ModelA::MaterialKey>{}), read(r, tag<ModelB::MaterialKey>{})}` — each half sent
+to its owner by the argument, with nothing in the text naming either unit.
+
+**The template found a bug the reference had hidden by hand.** Reading a structure into one
+local per field, named after the field, gives `auto const r{read(r, …)}` when the field is
+called `r` — reading a variable inside its own initialiser. The pack is safe from it because
+its reader is `this`; the free-function form is not, and `ModelA::Colour` has that very field.
+The hand-written reference had chosen `red`, `green`, `blue` without thinking about it, which
+is not a choice a generator can make. Both now emit one braced-init-list, which the language
+guarantees to evaluate left to right, and name nothing.
+
+**Two StringTemplate hazards, both silent until they are not.** `i0` exists only inside an
+anonymous sub-template, so a named one gets `implicitly-defined attribute i0 not visible` —
+pass it explicitly through `{m|<m:sub(e, i0)>}`. And an anonymous sub-template eats one space
+after the `|`, so `{m|    <m.name>}` indents by three; a named sub-template keeps all four.
+
+**Layer 1 was emitting no enumeration at all**, which no render had shown because no namespace
+declared one. Adding `enum Finish` to `ModelA` exercised every template for the first time.

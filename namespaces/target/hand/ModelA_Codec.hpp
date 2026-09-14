@@ -25,14 +25,17 @@ namespace ModelA {
 // which calls `write(w, element)` on each Colour, and argument-dependent lookup brings it
 // here. Nothing names ModelA; the argument does.
 
+void write(Viper::Codec::Writer & w, Finish value);
 void write(Viper::Codec::Writer & w, Colour const & value);
 void write(Viper::Codec::Writer & w, MaterialKey const & value);
 
+Finish      read(Viper::Codec::Reader & r, Viper::Codec::tag<Finish>);
 Colour      read(Viper::Codec::Reader & r, Viper::Codec::tag<Colour>);
 MaterialKey read(Viper::Codec::Reader & r, Viper::Codec::tag<MaterialKey>);
 
 // ── and what the runtime must be told about the shape of these types ──
 
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Finish>);
 std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Colour>);
 std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<MaterialKey>);
 

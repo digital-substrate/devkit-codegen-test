@@ -23,13 +23,14 @@ template<class T> struct tag {};
 
 class Writer final {
 public:
-    explicit Writer(std::shared_ptr<StreamEncoder> encoder);
-    std::shared_ptr<StreamEncoder> const & encoder() const;
+    std::shared_ptr<StreamWriting> const streamWriting;
+    explicit Writer(std::shared_ptr<StreamWriting> streamWriting);
 };
 
 class Reader final {
 public:
-    Reader(std::shared_ptr<StreamDecoder> decoder, std::shared_ptr<Definitions const> definitions);
+    std::shared_ptr<StreamReading> const streamReading;
+    Reader(std::shared_ptr<StreamReading> streamReading, std::shared_ptr<Definitions const> definitions);
 };
 
 // Les primitives : identiques dans tout modèle jamais généré.

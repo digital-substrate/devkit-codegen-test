@@ -59,6 +59,17 @@ bool operator==(MaterialKey const & lhs, MaterialKey const & rhs) noexcept;
 bool operator!=(MaterialKey const & lhs, MaterialKey const & rhs) noexcept;
 bool operator<(MaterialKey const & lhs, MaterialKey const & rhs) noexcept;
 
+/// Une finition, et les deux seules qu'un Material connaisse.
+///
+/// `enum class` et non `enum` : le scope nomme déjà ModelA, et une énumération non scopée
+/// verserait `matte` et `gloss` directement dans ModelA, où ils heurteraient les autres
+/// noms de l'unité. Aucune valeur explicite -- ce qui traverse le fil est l'index de la
+/// case, et le modèle en est la source.
+enum class Finish {
+    Matte,
+    Gloss
+};
+
 /// Colour in 8-bit channels.
 ///
 /// Plain data: the model says three fields, so it is an aggregate and brace-initialises.

@@ -201,3 +201,32 @@ as an invention; it was half right, and this is its real shape.
 **And the runtime ids lose their flat names.** The pack puts them in
 `ModelA::AttachmentRuntimeIds::Material_Colour`, one scope holding every attachment's id.
 Here the scope already names the attachment, so what is left is `runtimeId`.
+
+## Layer 3, implemented — three functions per type, and the unit is done
+
+`ModelA_Codec.cpp`. The pack emits seven serialisation artefacts per unit, each with a
+function per type; here there are `write`, `read` and `type`, and everything the pack emits
+besides is a generic composition of those three. Its undefined symbols are its own Data, the
+runtime's primitives, and `Topology::Codec::definitions()`. Nothing else, and no other unit.
+
+**A fixture gap, found by having nothing to write.** No namespace declared an enumeration, so
+five templates had never been asked to handle one — and layer 1 turned out to emit no
+enumeration declaration at all. `ModelA` now declares `enum Finish { matte, gloss }`. The
+mono models are byte-identical; only the multi model moved, where the new type lands.
+
+**`enum class`, and no explicit values.** The scope already names the unit, so an unscoped
+enum would pour `matte` and `gloss` straight into it. What crosses the wire is the case's
+index, and the model is the source of that order — writing a C++ value as well would let the
+language and the model disagree.
+
+**A key on the wire is two uuids**, the instance and the concept it actually is. The second is
+stored rather than derived from the type, because a `MaterialKey` may name an instance of a
+derived concept, and it is that concept's identity that has to travel.
+
+**And a real hazard the free-function form introduces.** The pack reads a structure into one
+local per field, named after the field, which is safe there because its reader is `this`. Here
+the reader is a parameter, so a field named `r` produces `auto const r{read(r, …)}` — a
+variable read inside its own initialiser. `ModelA::Colour` has exactly that field. The
+reference avoided it by naming its locals by hand, which is not a property a generator has.
+Fixed by naming nothing: a braced-init-list evaluates left to right by guarantee, so the
+model's field order holds without a single local.

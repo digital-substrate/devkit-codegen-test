@@ -3,15 +3,36 @@
 // Viper_Codec.hpp, Viper_ValueEncoder.hpp et Viper_ValueDecoder.hpp.
 #ifndef Viper_Stream_hpp
 #define Viper_Stream_hpp
+#include "Viper_UUId.hpp"
 #include "Viper_Values.hpp"
+#include <cstdint>
 #include <memory>
 #include <string>
 namespace Viper {
 
 class Definitions;
 class Blob {};
-class StreamEncoder { public: Blob endEncoding(); };
-class StreamDecoder {};
+
+class StreamWriting {
+public:
+    virtual ~StreamWriting() = default;
+    virtual void writeUInt8(std::uint8_t value) = 0;
+    virtual void writeFloat(float value) = 0;
+    virtual void writeString(std::string const & value) = 0;
+    virtual void writeUUId(UUId const & value) = 0;
+};
+
+class StreamReading {
+public:
+    virtual ~StreamReading() = default;
+    virtual std::uint8_t readUInt8() = 0;
+    virtual float readFloat() = 0;
+    virtual std::string readString() = 0;
+    virtual UUId readUUId() = 0;
+};
+
+class StreamEncoder : public StreamWriting { public: Blob endEncoding(); };
+class StreamDecoder : public StreamReading {};
 
 class StreamCodecInstancing {
 public:

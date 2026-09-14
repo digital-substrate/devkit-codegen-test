@@ -1,0 +1,166 @@
+// L'implémentation du pont d'une unité : trois fonctions par type, et rien d'autre.
+//
+// Le pack émet par unité sept artefacts de sérialisation, chacun avec une fonction par
+// type. Tout ce qu'ils font est une composition générique de `write`, `read` et `type`,
+// écrite une fois dans le module injecté ou dans le runtime -- ce qui laisse ici, par
+// unité, trois fonctions par type déclaré.
+//
+// Et aucune ne nomme son unité : c'est l'argument, ou le tag, qui décide où aller. C'est
+// ce qui remplace le suffixe de type, lequel disait dans un nom ce que la résolution de
+// surcharge sait déjà.
+
+unit(u) ::= <<
+// <u.name> — l'implémentation du pont.
+//
+// <u.model.generated>
+
+#include "<u.include.Codec>"
+
+#include "<u.model.include.Codec>"
+
+#include "Viper_Definitions.hpp"
+#include "Viper_Stream.hpp"
+#include "Viper_TypeErrors.hpp"
+#include "Viper_Types.hpp"
+
+namespace <u.name> {
+
+namespace {
+
+// L'identité des types de cette unité dans le modèle.
+<u.concepts:runtime_id();separator="\n">
+<u.clubs:runtime_id();separator="\n">
+<u.enumerations:runtime_id();separator="\n">
+<u.structures:runtime_id();separator="\n">
+<u.concepts:concept_type();separator="\n\n">
+<u.clubs:club_type();separator="\n\n">
+
+} // namespace
+
+<u.concepts:keyed();separator="\n\n">
+
+<u.clubs:keyed();separator="\n\n">
+
+<u.enumerations:enumeration(u);separator="\n\n">
+
+<u.structures:structure();separator="\n\n">
+
+} // namespace <u.name>
+>>
+
+runtime_id(e) ::= <%Viper::UUId const <e.name>Id{Viper::UUId::parse("<e.runtimeId>")};%>
+
+// Le concept dont la clé est dérivée. Détail de fichier : rien au dehors n'a de raison de
+// distinguer le concept de sa clé, puisque seule la clé est un type C++.
+concept_type(c) ::= <<
+<concept_type_head(c)>
+    static std::shared_ptr\<Viper::Type> const instance{
+        Topology::Codec::definitions()->checkConcept(<c.name>Id)};
+    return instance;
+}
+>>
+
+concept_type_head(c) ::= <%std::shared_ptr\<Viper::Type> const & <c.name;format="lf">Concept() {%>
+
+club_type(c) ::= <<
+<concept_type_head(c)>
+    static std::shared_ptr\<Viper::Type> const instance{
+        Topology::Codec::definitions()->checkClub(<c.name>Id)};
+    return instance;
+}
+>>
+
+// Une clé, sur le fil, c'est deux uuid : l'instance, et le concept qu'elle est réellement.
+// Le second est stocké et non déduit du type, parce qu'une clé peut nommer une instance
+// d'un concept dérivé, et c'est l'identité de celui-là qui doit traverser.
+keyed(c) ::= <<
+void write(Viper::Codec::Writer & w, <c.name>Key const & value) {
+    write(w, value.instanceId());
+    write(w, value.runtimeId());
+}
+
+<keyed_read_head(c)>
+    auto const instanceId{read(r, Viper::Codec::tag\<Viper::UUId>{})};
+    auto const runtimeId{read(r, Viper::Codec::tag\<Viper::UUId>{})};
+
+    return {instanceId, runtimeId};
+}
+
+<keyed_type_head(c)>
+    static std::shared_ptr\<Viper::Type> const instance{Viper::TypeKey::make(<c.name;format="lf">Concept())};
+    return instance;
+}
+>>
+
+keyed_read_head(c) ::= <%<c.name>Key read(Viper::Codec::Reader & r, Viper::Codec::tag\<<c.name>Key>) {%>
+keyed_type_head(c) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<c.name>Key>) {%>
+
+// CE QUI TRAVERSE EST L'INDEX DE LA CASE, PAS SA VALEUR. Le modèle ordonne les cases et
+// c'est cet ordre qui est le contrat ; une valeur C++ explicite ferait dire au langage ce
+// que le modèle dit déjà, et les deux pourraient diverger.
+enumeration(e, u) ::= <<
+void write(Viper::Codec::Writer & w, <e.name> value) {
+    switch (value) {
+<e.members:{m|<m:enumeration_write(e, i0)>};separator="\n">
+        default:
+            throw Viper::TypeErrors::invalidEnumerationIndex(
+                "<u.name>", "<e.name>", __FUNCTION__, static_cast\<std::uint8_t>(value));
+    }
+}
+
+<plain_read_head(e)>
+    switch (auto const index{r.streamReading->readUInt8()}) {
+<e.members:{m|<m:enumeration_read(e, i0)>};separator="\n">
+        default:
+            throw Viper::TypeErrors::invalidEnumerationIndex("<u.name>", "<e.name>", __FUNCTION__, index);
+    }
+}
+
+<plain_type_head(e)>
+    static std::shared_ptr\<Viper::Type> const instance{
+        Topology::Codec::definitions()->checkEnumeration(<e.name>Id)};
+    return instance;
+}
+>>
+
+// `i0` n'existe que dans une sous-template anonyme, d'où le passage explicite ci-dessus :
+// un template nommé ne le voit pas, et StringTemplate le dit -- tardivement.
+enumeration_write(m, e, i) ::= <<
+        case <e.name>::<m.name;format="uf">: w.streamWriting->writeUInt8(<i>); break;
+>>
+
+enumeration_read(m, e, i) ::= <<
+        case <i>: return <e.name>::<m.name;format="uf">;
+>>
+
+// Une structure, c'est ses champs dans l'ordre, chacun confié à l'unité qui le possède --
+// `write(w, value.x)` part chez le runtime pour un entier et chez une autre unité pour une
+// clé étrangère, sans que rien ici ait à le savoir.
+structure(s) ::= <<
+void write(Viper::Codec::Writer & w, <s.name> const & value) {
+<s.fields:field_write();separator="\n">
+}
+
+<plain_read_head(s)>
+    return {<s.fields:field_read();separator=",\n            ">};
+}
+
+<plain_type_head(s)>
+    static std::shared_ptr\<Viper::Type> const instance{
+        Topology::Codec::definitions()->checkStructure(<s.name>Id)};
+    return instance;
+}
+>>
+
+field_write(f) ::= <<    write(w, value.<f.name>);>>
+
+// PAS DE VARIABLE LOCALE PAR CHAMP, et ce n'est pas un raccourci. Nommer le local d'après
+// le champ -- ce que fait le pack, où le lecteur est `this` -- devient faux ici : le
+// lecteur est un paramètre, donc un champ nommé `r` produit `auto const r{read(r, …)}`,
+// qui lit sa propre variable non initialisée. Une liste d'initialisation entre accolades
+// évalue ses éléments de gauche à droite, garanti par le langage, donc l'ordre du modèle
+// est respecté sans nommer quoi que ce soit.
+field_read(f) ::= <%read(r, Viper::Codec::tag\<<f.typeInNamespace>>{})%>
+
+plain_read_head(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>>) {%>
+plain_type_head(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>>) {%>
