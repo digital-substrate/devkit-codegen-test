@@ -1,4 +1,4 @@
-// Features — le programme qui éprouve le modèle.
+// modèle Features — le programme qui éprouve le modèle.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 

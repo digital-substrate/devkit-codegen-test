@@ -1,4 +1,4 @@
-// Annotations — the data hung on concepts, declared by this namespace.
+// unité Annotations — les données accrochées aux concepts qu'elle déclare.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
 //

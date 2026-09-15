@@ -6,7 +6,7 @@
 // peut y répondre avec ce que l'unité sait.
 
 unit(u) ::= <<
-// <u.name> — l'implémentation de ses types.
+// unité <u.name> — l'implémentation de ses types.
 //
 // <u.model.generated>
 

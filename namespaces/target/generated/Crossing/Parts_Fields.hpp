@@ -1,4 +1,4 @@
-// Parts — how to name and address the fields of its structures.
+// unité Parts — comment nommer et adresser les champs de ses structures.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
 //

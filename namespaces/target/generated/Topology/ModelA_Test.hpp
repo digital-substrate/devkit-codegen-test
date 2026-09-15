@@ -1,4 +1,4 @@
-// ModelA — ce qu'il faut savoir de ModelA pour l'éprouver.
+// unité ModelA — ce qu'il faut en savoir pour l'éprouver.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
 

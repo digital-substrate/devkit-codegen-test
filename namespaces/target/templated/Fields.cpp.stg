@@ -9,7 +9,7 @@
 // durée du programme, construit une fois et rendu par référence.
 
 unit(u) ::= <<
-// <u.name> — l'implémentation de l'adressage de ses champs.
+// unité <u.name> — l'implémentation de l'adressage de ses champs.
 //
 // <u.model.generated>
 

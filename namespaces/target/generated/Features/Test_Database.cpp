@@ -1,4 +1,4 @@
-// Test — l'implémentation, qui est cinq renvois par attachment.
+// unité Test — l'implémentation, qui est cinq renvois par attachment.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 

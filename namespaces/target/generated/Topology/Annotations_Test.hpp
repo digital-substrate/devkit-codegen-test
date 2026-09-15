@@ -1,4 +1,4 @@
-// Annotations — ce qu'il faut savoir de Annotations pour l'éprouver.
+// unité Annotations — ce qu'il faut en savoir pour l'éprouver.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
 

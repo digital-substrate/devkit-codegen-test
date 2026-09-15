@@ -1,4 +1,4 @@
-// Features — les cinq opérations d'un attachment stocké, une fois pour toutes.
+// modèle Features — les cinq opérations d'un attachment stocké, une fois pour toutes.
 //
 // LA MÊME SURFACE QU'UN ATTACHMENT EN MÉMOIRE, SUR UN AUTRE SUPPORT. `keys`, `has`, `get`,
 // `set`, `del` -- et rien de ce qu'elles font ne dépend d'un attachment en particulier :

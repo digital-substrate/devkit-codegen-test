@@ -1,4 +1,4 @@
-// Crossing — le programme qui éprouve le modèle.
+// modèle Crossing — le programme qui éprouve le modèle.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
 

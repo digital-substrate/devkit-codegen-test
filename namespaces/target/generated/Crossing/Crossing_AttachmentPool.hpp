@@ -1,4 +1,4 @@
-// Crossing — les attachments du modèle, exposés au monde dynamique.
+// modèle Crossing — les attachments, exposés au monde dynamique.
 //
 // LE PLUS GROS ARTEFACT DU PACK APRÈS LA BASE DE DONNÉES, ET IL N'A RIEN À GÉNÉRER. 764
 // lignes de template qui produisent 9 125 lignes pour un modèle réel, et pas une seule ne

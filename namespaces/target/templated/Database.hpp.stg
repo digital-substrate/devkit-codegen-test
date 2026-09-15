@@ -5,7 +5,7 @@
 // n'existait pas.
 
 unit(u) ::= <<
-// <u.name> — ses attachments, vus depuis une base de données.
+// unité <u.name> — ses attachments, vus depuis une base de données.
 //
 // <u.model.generated>
 

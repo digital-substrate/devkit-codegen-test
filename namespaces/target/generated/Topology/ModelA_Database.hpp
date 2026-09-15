@@ -1,4 +1,4 @@
-// ModelA — ses attachments, vus depuis une base de données.
+// unité ModelA — ses attachments, vus depuis une base de données.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
 

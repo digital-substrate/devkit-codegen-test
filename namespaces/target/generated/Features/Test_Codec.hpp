@@ -1,4 +1,4 @@
-// Test — everything its types need in order to cross into the runtime.
+// unité Test — ce qu'il faut à ses types pour traverser vers le runtime.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 //

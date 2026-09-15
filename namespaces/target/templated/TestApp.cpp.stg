@@ -9,7 +9,7 @@
 // lancent est devenu une liste et non sept familles de fonctions.
 
 model(m) ::= <<
-// <m.namespace> — le programme qui éprouve le modèle.
+// modèle <m.namespace> — le programme qui éprouve le modèle.
 //
 // <m.generated>
 

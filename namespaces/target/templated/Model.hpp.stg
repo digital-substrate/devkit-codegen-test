@@ -12,7 +12,7 @@
 // sous-portées. La séparation est le fichier, pas le namespace.
 
 unit(u) ::= <<
-// <u.name> — son identité dans le modèle.
+// unité <u.name> — son identité dans le modèle.
 //
 // <u.model.generated>
 

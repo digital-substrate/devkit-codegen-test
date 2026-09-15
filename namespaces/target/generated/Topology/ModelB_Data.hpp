@@ -1,4 +1,4 @@
-// ModelB — the types this namespace declares.
+// unité ModelB — les types qu'elle déclare.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
 

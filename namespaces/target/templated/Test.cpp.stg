@@ -6,7 +6,7 @@
 // enjambe deux unités ne demande rien non plus.
 
 unit(u) ::= <<
-// <u.name> — l'épreuve de ses types.
+// unité <u.name> — l'épreuve de ses types.
 //
 // <u.model.generated>
 

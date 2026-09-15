@@ -1,4 +1,4 @@
-// ModelC — how to name and address the fields of its structures.
+// unité ModelC — comment nommer et adresser les champs de ses structures.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
 //

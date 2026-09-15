@@ -1,5 +1,5 @@
 unit(u) ::= <<
-// <u.name> — the types this namespace declares.
+// unité <u.name> — les types qu'elle déclare.
 //
 // <u.model.generated>
 

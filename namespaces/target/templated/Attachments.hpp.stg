@@ -1,5 +1,5 @@
 unit(u) ::= <<
-// <u.name> — the data hung on concepts, declared by this namespace.
+// unité <u.name> — les données accrochées aux concepts qu'elle déclare.
 //
 // <u.model.generated>
 //

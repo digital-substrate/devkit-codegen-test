@@ -1,4 +1,4 @@
-// Topology — le programme qui éprouve le modèle.
+// modèle Topology — le programme qui éprouve le modèle.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
 

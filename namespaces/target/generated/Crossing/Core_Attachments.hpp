@@ -1,4 +1,4 @@
-// Core — the data hung on concepts, declared by this namespace.
+// unité Core — les données accrochées aux concepts qu'elle déclare.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
 //

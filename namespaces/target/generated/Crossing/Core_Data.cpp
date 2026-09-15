@@ -1,4 +1,4 @@
-// Core — l'implémentation de ses types.
+// unité Core — l'implémentation de ses types.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
 

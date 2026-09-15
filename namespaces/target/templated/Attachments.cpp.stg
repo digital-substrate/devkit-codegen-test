@@ -7,7 +7,7 @@
 // nommage -- c'est l'argument qui désigne l'unité, par ADL.
 
 unit(u) ::= <<
-// <u.name> — l'implémentation des attachments qu'il déclare.
+// unité <u.name> — l'implémentation des attachments qu'elle déclare.
 //
 // <u.model.generated>
 

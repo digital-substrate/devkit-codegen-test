@@ -1,5 +1,5 @@
 unit(u) ::= <<
-// <u.name> — how to name and address the fields of its structures.
+// unité <u.name> — comment nommer et adresser les champs de ses structures.
 //
 // <u.model.generated>
 //

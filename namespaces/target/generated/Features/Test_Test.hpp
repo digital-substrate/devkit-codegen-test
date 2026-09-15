@@ -1,4 +1,4 @@
-// Test — ce qu'il faut savoir de Test pour l'éprouver.
+// unité Test — ce qu'il faut en savoir pour l'éprouver.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 

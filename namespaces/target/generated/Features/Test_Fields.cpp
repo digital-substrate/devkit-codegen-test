@@ -1,4 +1,4 @@
-// Test — l'implémentation de l'adressage de ses champs.
+// unité Test — l'implémentation de l'adressage de ses champs.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 

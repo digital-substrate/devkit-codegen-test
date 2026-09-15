@@ -1,5 +1,5 @@
 unit(u) ::= <<
-// <u.name> — everything its types need in order to cross into the runtime.
+// unité <u.name> — ce qu'il faut à ses types pour traverser vers le runtime.
 //
 // <u.model.generated>
 //
@@ -67,7 +67,7 @@ plain_read(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<
 // QUATRE DÉCLARATIONS, ET LE CRITÈRE EST LE MÊME POUR LES QUATRE : elles ont besoin du
 // modèle entier, donc aucun namespace ne peut en répondre. C'est tout ce que le socle est.
 model(m) ::= <<
-// <m.namespace> — les fonctions que kibo injecte, et qu'aucun namespace ne peut revendiquer.
+// modèle <m.namespace> — les fonctions injectées, qu'aucune unité ne peut revendiquer.
 //
 // LE SOCLE, ET IL TIENT EN QUATRE DÉCLARATIONS. Chacune a besoin du modèle entier, ce qui
 // est le seul critère : ce dont aucun namespace ne peut répondre.

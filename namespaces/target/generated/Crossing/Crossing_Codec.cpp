@@ -1,4 +1,4 @@
-// Crossing — ce que la clé non typée ne peut pas porter elle-même.
+// modèle Crossing — ce que la clé non typée ne peut pas porter elle-même.
 //
 // LES DEUX SEULS MEMBRES DE L'AnyConceptKey GÉNÉRÉE QUI AVAIENT BESOIN DU MODÈLE, et la
 // question qu'ils posent : quelqu'un doit bien fournir l'ensemble des concepts connus.

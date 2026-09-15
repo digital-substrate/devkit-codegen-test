@@ -1,4 +1,4 @@
-// Test — ses attachments, vus depuis une base de données.
+// unité Test — ses attachments, vus depuis une base de données.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 

@@ -1,4 +1,4 @@
-// Topology — les fonctions que kibo injecte, et qu'aucun namespace ne peut revendiquer.
+// modèle Topology — les fonctions injectées, qu'aucune unité ne peut revendiquer.
 //
 // LE SOCLE, ET IL TIENT EN QUATRE DÉCLARATIONS. Chacune a besoin du modèle entier, ce qui
 // est le seul critère : ce dont aucun namespace ne peut répondre.

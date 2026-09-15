@@ -3,7 +3,7 @@
 // ses opérations en mémoire.
 
 unit(u) ::= <<
-// <u.name> — l'implémentation, qui est cinq renvois par attachment.
+// unité <u.name> — l'implémentation, qui est cinq renvois par attachment.
 //
 // <u.model.generated>
 

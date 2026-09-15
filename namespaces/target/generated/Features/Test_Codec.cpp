@@ -1,4 +1,4 @@
-// Test — l'implémentation du pont.
+// unité Test — l'implémentation du pont.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 

@@ -1,4 +1,4 @@
-// Topology — de quoi éprouver n'importe quel type du modèle, sans rien savoir d'aucun.
+// modèle Topology — de quoi éprouver n'importe quel type, sans rien savoir d'aucun.
 //
 // SEPT ARTEFACTS DU PACK TIENNENT ICI, et ce n'est pas une compression : c'est ce que leur
 // propre source dit. `TestFuzz::fuzz_X()` vaut `decode_X(TestValueFuzz::fuzz_X())`,

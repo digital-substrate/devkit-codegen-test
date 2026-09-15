@@ -14,7 +14,7 @@
 // déjà. Il ne lui reste qu'une chose que personne d'autre ne sait : sa liste.
 
 unit(u) ::= <<
-// <u.name> — ce qu'il faut savoir de <u.name> pour l'éprouver.
+// unité <u.name> — ce qu'il faut en savoir pour l'éprouver.
 //
 // <u.model.generated>
 
@@ -43,7 +43,7 @@ void testDatabase(std::shared_ptr\<Viper::Database> const & db);
 >>
 
 model(m) ::= <<
-// <m.namespace> — de quoi éprouver n'importe quel type du modèle, sans rien savoir d'aucun.
+// modèle <m.namespace> — de quoi éprouver n'importe quel type, sans rien savoir d'aucun.
 //
 // SEPT ARTEFACTS DU PACK TIENNENT ICI, et ce n'est pas une compression : c'est ce que leur
 // propre source dit. `TestFuzz::fuzz_X()` vaut `decode_X(TestValueFuzz::fuzz_X())`,

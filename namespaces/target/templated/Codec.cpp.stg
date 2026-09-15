@@ -10,7 +10,7 @@
 // surcharge sait déjà.
 
 unit(u) ::= <<
-// <u.name> — l'implémentation du pont.
+// unité <u.name> — l'implémentation du pont.
 //
 // <u.model.generated>
 
@@ -124,7 +124,7 @@ plain_read_head(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::t
 
 // ── et le socle ──
 model(m) ::= <<
-// <m.namespace> — ce que la clé non typée ne peut pas porter elle-même.
+// modèle <m.namespace> — ce que la clé non typée ne peut pas porter elle-même.
 //
 // LES DEUX SEULS MEMBRES DE L'AnyConceptKey GÉNÉRÉE QUI AVAIENT BESOIN DU MODÈLE, et la
 // question qu'ils posent : quelqu'un doit bien fournir l'ensemble des concepts connus.

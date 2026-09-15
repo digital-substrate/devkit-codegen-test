@@ -1,4 +1,4 @@
-// Woven — l'implémentation des attachments qu'il déclare.
+// unité Woven — l'implémentation des attachments qu'elle déclare.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
 
