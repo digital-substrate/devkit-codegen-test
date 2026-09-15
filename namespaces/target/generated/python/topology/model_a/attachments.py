@@ -7,7 +7,7 @@ from __future__ import annotations
 import dsviper
 
 from .. import definitions
-from .._attachment import Attachment
+from .._attachment import AttachmentProxy
 from .._proxy import AnyConceptKey
 from .data import *
 
@@ -15,7 +15,7 @@ from .data import *
 class Material:
     """Les attachments portés par ModelA::MaterialKey."""
 
-    colour = Attachment(
+    colour = AttachmentProxy(
         dsviper.ValueUUId.create("faf658ea-5586-890a-0c4a-5cd2c9209b28"),
         definitions, MaterialKey, Colour)
 

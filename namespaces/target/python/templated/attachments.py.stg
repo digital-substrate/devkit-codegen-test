@@ -22,7 +22,7 @@ from __future__ import annotations
 import dsviper
 
 from .. import definitions
-from .._attachment import Attachment
+from .._attachment import AttachmentProxy
 from .._proxy import AnyConceptKey
 <u.dependencies.attachments:{d|from .. import <d.name;format="lsc">};separator="\n">
 <if(u.attachments)>
@@ -52,7 +52,7 @@ class <s.name>:
 >>
 
 one(a, s) ::= <<
-    <a.name> = Attachment(
+    <a.name> = AttachmentProxy(
         dsviper.ValueUUId.create("<a.runtimeId>"),
         definitions, <s.keyType.bindingType.typeInNamespace>, <document(a)>)
 >>

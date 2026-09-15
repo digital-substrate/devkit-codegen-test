@@ -1,4 +1,4 @@
-"""Un attachment, et ce qu'on en fait — écrit une fois, pour tous.
+"""L'accesseur typé d'un attachment — écrit une fois, pour tous.
 
 CE FICHIER NE NOMME AUCUN TYPE DU MODÈLE, ET C'EST TOUT SON PROPOS. Le pack Python écrit
 188 lignes de template qui rendent 2 454 lignes pour `features` : une famille de fonctions
@@ -22,8 +22,16 @@ import dsviper
 from ._proxy import unwrap as _unwrap, wrap as _wrap
 
 
-class Attachment:
+class AttachmentProxy:
     """Un attachment du modèle, vu depuis l'unité qui le déclare.
+
+    `AttachmentProxy` ET NON `Attachment`, PARCE QUE `dsviper.Attachment` EXISTE ET N'EST PAS
+    ÇA. Le sien est le *descripteur* -- ce que les définitions portent : un identifiant, un
+    type de clé, un type de document. Celui-ci est l'accesseur typé qui le résout et s'en
+    sert, comme `Proxy` est l'accesseur typé d'une `Value`. Tant que les deux vivent dans
+    des modules différents la confusion n'est que de lecture ; le jour où ceux-ci entrent
+    dans `dsviper`, où ils ont vocation à aller, deux `Attachment` dans un même module
+    s'écrasent -- et c'est le dernier des deux qui gagne, sans un mot.
 
     LA BASE N'A PRESQUE PAS DE MÉTHODES À ELLE. `dsviper.Database` n'hérite pas
     d'`AttachmentGetting` — la liaison Python ne les relie pas — mais elle porte les mêmes
@@ -112,7 +120,7 @@ class Attachment:
         mutating.update(self.descriptor, key.value, _path(field), _unwrap(value))
 
     def __repr__(self) -> str:
-        return f"Attachment({self.descriptor.representation()})"
+        return f"AttachmentProxy({self.descriptor.representation()})"
 
 
 @functools.cache

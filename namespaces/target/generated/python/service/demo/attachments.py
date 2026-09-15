@@ -7,7 +7,7 @@ from __future__ import annotations
 import dsviper
 
 from .. import definitions
-from .._attachment import Attachment
+from .._attachment import AttachmentProxy
 from .._proxy import AnyConceptKey
 from .data import *
 
@@ -15,7 +15,7 @@ from .data import *
 class Player:
     """Les attachments portés par Demo::PlayerKey."""
 
-    property = Attachment(
+    property = AttachmentProxy(
         dsviper.ValueUUId.create("5f39a4c7-fa83-1290-432c-330fc392a39b"),
         definitions, PlayerKey, PlayerProperty)
 
