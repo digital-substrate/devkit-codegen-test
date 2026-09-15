@@ -8,7 +8,7 @@ change to a template is a change nobody can see.
     render.py            render both models and compile them
     render.py --check    render to a scratch tree and fail if it differs from `generated/`
 """
-import argparse, shutil, subprocess, sys
+import argparse, shutil, subprocess, sys, time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -144,8 +144,12 @@ for directory in STANDALONE:
 #
 # Ce qu'un modèle apporte en plus du rendu : ses octets, et les fonctions de ses pools. Le
 # premier est produit par `link/resources.py`, le second est ce qu'une application écrit.
-APPLICATION = {"Topology": HERE / "link/application.cpp",
-               "Service": HERE / "link/service/application.cpp"}
+APPLICATION = {"Topology": HERE / "link/application.cpp"}
+
+# LE SERVICE EST LA SEULE ÉPREUVE QUE JE N'AI PAS ÉCRITE. Un client et un serveur existants,
+# portés sur les nouveaux noms par `link/service/migrate.py` et pas autrement retouchés : ce
+# qu'ils demandent est ce qu'un consommateur demande, et non ce que j'ai pensé à offrir.
+CONSUMERS = {"Service": HERE / "link/service"}
 LIBS = [ROOT / "build" / f"lib{n}.a" for n in ("viper", "sqlite", "hash", "antlr4", "pugixml")]
 
 
@@ -155,26 +159,42 @@ def link_and_run(model, out):
         print(f"  {model + ' lien':16} ignoré (ressource ou libviper.a absente)")
         return 0
 
-    shutil.copy(resource, out)
-    if model in APPLICATION:
-        shutil.copy(APPLICATION[model], out)
-
-    link = target / "link" / model
+    # LE RENDU RESTE LE RENDU. Les octets du modèle et le code d'application ne sortent pas
+    # des templates ; les poser à côté du rendu ferait échouer `--check`, qui compare
+    # `generated/` à un rendu neuf et compterait chaque intrus comme une différence.
+    link = HERE / "build" / model
     if link.exists():
         shutil.rmtree(link)
     link.mkdir(parents=True)
 
+    shutil.copy(resource, link)
+    extra = []
+    if model in APPLICATION:
+        extra.append(Path(shutil.copy(APPLICATION[model], link)))
+
+    consumers = []
+    if model in CONSUMERS:
+        sys.path.insert(0, str(CONSUMERS[model]))
+        import migrate
+        migrate.migrate(link / "consumer")
+        sys.path.pop(0)
+        consumers = sorted((link / "consumer").glob("*.cpp"))
+
     objects = []
-    for source in sorted(out.glob("*.cpp")) + sorted(PROPOSED.glob("*.cpp")):
+    mains = {}
+    for source in sorted(out.glob("*.cpp")) + sorted(PROPOSED.glob("*.cpp")) + extra + consumers:
         o = link / (source.stem + ".o")
-        r = subprocess.run(["clang++", "-std=c++20", "-c", "-I", str(out), *INCLUDES,
-                            "-o", str(o), str(source)], capture_output=True, text=True)
+        r = subprocess.run(["clang++", "-std=c++20", "-c", "-I", str(out), "-I", str(link),
+                            *INCLUDES, "-o", str(o), str(source)], capture_output=True, text=True)
         if r.returncode:
             print(f"  !! {source.name}")
             for l in r.stderr.splitlines()[:4]:
                 print(f"     {l}")
             return 1
-        objects.append(str(o))
+        if source.stem in ("ServiceClient", "ServiceServer"):
+            mains[source.stem] = str(o)
+        else:
+            objects.append(str(o))
 
     binary = link / "testapp"
     r = subprocess.run(["clang++", "-std=c++20", "-o", str(binary), *objects,
@@ -190,7 +210,53 @@ def link_and_run(model, out):
           + ("tourne" if r.returncode == 0 else "ÉCHOUE"))
     if r.returncode and r.stderr.strip():
         print("     " + r.stderr.strip().splitlines()[-1])
+
+    if mains:
+        return r.returncode | round_trip(link, objects, mains)
     return r.returncode
+
+
+# LE VRAI TEST D'UN POOL EST UN APPEL QUI TRAVERSE UN PROCESSUS. Un `call()` local passe par
+# les mêmes `Value` mais reste du même côté du codec : rien ne vérifie que ce que le client
+# pose sur le fil est ce que le serveur y lit. Ici le client et le serveur sont deux
+# binaires, et le seul lien entre eux est le format.
+def round_trip(link, objects, mains):
+    shared = [o for o in objects if not o.endswith("Service_TestApp.o")]
+    binaries = {}
+    for name, obj in mains.items():
+        binaries[name] = link / name
+        r = subprocess.run(["clang++", "-std=c++20", "-o", str(binaries[name]), obj, *shared,
+                            *[str(l) for l in LIBS]], capture_output=True, text=True)
+        if r.returncode:
+            print(f"  {name + ' lien':16} échoue")
+            for l in r.stderr.splitlines()[:6]:
+                print(f"     {l}")
+            return 1
+
+    socket = link / "service.sock"
+    server = subprocess.Popen([str(binaries["ServiceServer"]), "-s", str(socket)],
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    try:
+        for _ in range(100):
+            if socket.exists():
+                break
+            time.sleep(0.05)
+        r = subprocess.run([str(binaries["ServiceClient"]), "-s", str(socket)],
+                           capture_output=True, text=True, timeout=30)
+    finally:
+        server.terminate()
+        server.wait(timeout=10)
+
+    if r.returncode:
+        print("  service      client ÉCHOUE")
+        for l in (r.stdout + r.stderr).strip().splitlines()[-4:]:
+            print(f"     {l}")
+        return 1
+
+    print("  service      le client parle au serveur :")
+    for l in r.stdout.strip().splitlines():
+        print(f"     {l}")
+    return 0
 
 
 if not arguments.check:

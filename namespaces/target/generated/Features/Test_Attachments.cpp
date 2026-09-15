@@ -37,33 +37,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(::Features::AnyConceptKey const & key
 
 } // namespace
 
-std::set<::Features::AnyConceptKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<::Features::AnyConceptKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<::Features::AnyConceptKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<::Features::AnyConceptKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ::Features::AnyConceptKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ::Features::AnyConceptKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Viper::Any> get(Viper::AttachmentGetting const & getting, ::Features::AnyConceptKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Viper::Any> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ::Features::AnyConceptKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<Viper::Any>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ::Features::AnyConceptKey const & key, Viper::Any const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ::Features::AnyConceptKey const & key, Viper::Any const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ::Features::AnyConceptKey const & key, Viper::Any const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ::Features::AnyConceptKey const & key, Viper::Any const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ::Features::AnyConceptKey const & key, Viper::Any const & value) {
@@ -95,33 +95,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptAKey const & key) {
 
 } // namespace
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptAKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptAKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<StructureV> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<StructureV> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<StructureV>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureV const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, StructureV const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureV const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, StructureV const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, StructureV const & value) {
@@ -132,160 +132,160 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key) {
     return Features::Db::del(db, attachment(), key);
 }
 
-void setF_bool(Viper::AttachmentMutating & mutating, ConceptAKey const & key, bool value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_boolPath(),
+void setF_bool(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, bool value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_boolPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint8(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint8Path(),
+void setF_uint8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint8Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint16(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint16_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint16Path(),
+void setF_uint16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::uint16_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint16Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint32(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint32_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint32Path(),
+void setF_uint32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::uint32_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint32Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint64(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint64_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint64Path(),
+void setF_uint64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::uint64_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint64Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int8(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int8_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int8Path(),
+void setF_int8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int8_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int8Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int16(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int16_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int16Path(),
+void setF_int16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int16_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int16Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int32(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int32_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int32Path(),
+void setF_int32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int32_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int32Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int64(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int64_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int64Path(),
+void setF_int64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int64_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int64Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_float(Viper::AttachmentMutating & mutating, ConceptAKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_floatPath(),
+void setF_float(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_floatPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_double(Viper::AttachmentMutating & mutating, ConceptAKey const & key, double value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_doublePath(),
+void setF_double(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, double value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_doublePath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uuid(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uuidPath(),
+void setF_uuid(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uuidPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_string(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::string const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_stringPath(),
+void setF_string(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::string const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_stringPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_vec(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::array<std::uint8_t, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vecPath(),
+void setF_vec(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::array<std::uint8_t, 2> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vecPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_mat(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_matPath(),
+void setF_mat(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_matPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_tuple(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_tuplePath(),
+void setF_tuple(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_tuplePath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_optional(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::optional<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_optionalPath(),
+void setF_optional(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::optional<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_optionalPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_vector(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::vector<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vectorPath(),
+void setF_vector(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::vector<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vectorPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(),
+void setF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(),
                     Features::Codec::encode(value));
 }
 
-void unionF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.unionInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void unionF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->unionInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void subtractF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtractF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
 
-void setF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(),
+void setF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(),
                     Features::Codec::encode(value));
 }
 
-void unionF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void unionF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
-void subtractF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtractF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void updateF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
-}
-
-
-void setF_E(Viper::AttachmentMutating & mutating, ConceptAKey const & key, EnumerationE value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_EPath(),
-                    Features::Codec::encode(value));
+void updateF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
 
-void setF_S(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureS const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_SPath(),
+void setF_E(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, EnumerationE value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_EPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_T(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureT const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_TPath(),
+void setF_S(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, StructureS const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_SPath(),
+                    Features::Codec::encode(value));
+}
+
+
+void setF_T(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, StructureT const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_TPath(),
                     Features::Codec::encode(value));
 }
 
@@ -311,33 +311,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptAKey const & key) {
 
 } // namespace
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptAKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptAKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::int8_t> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::int8_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::int8_t>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int8_t const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int8_t const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int8_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int8_t const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, std::int8_t const & value) {
@@ -369,33 +369,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptAKey const & key) {
 
 } // namespace
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptAKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptAKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::map<std::int8_t, std::string>> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::map<std::int8_t, std::string>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::map<std::int8_t, std::string>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value) {
@@ -406,16 +406,16 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key) {
     return Features::Db::del(db, attachment(), key);
 }
 
-void union_(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
-void subtract(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void update(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
 } // namespace Test::Attachments::ConceptA::propertiesMapInt8String
@@ -440,33 +440,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptAKey const & key) {
 
 } // namespace
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptAKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptAKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::set<std::int8_t>> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::set<std::int8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::set<std::int8_t>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, std::set<std::int8_t> const & value) {
@@ -477,12 +477,12 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key) {
     return Features::Db::del(db, attachment(), key);
 }
 
-void union_(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
-    mutating.unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
+    mutating->unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void subtract(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
-    mutating.subtractInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
+    mutating->subtractInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
 } // namespace Test::Attachments::ConceptA::propertiesSeInt8
@@ -507,33 +507,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptAKey const & key) {
 
 } // namespace
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptAKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptAKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Viper::XArray<std::int8_t>> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Viper::XArray<std::int8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<Viper::XArray<std::int8_t>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value) {
@@ -544,17 +544,17 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key) {
     return Features::Db::del(db, attachment(), key);
 }
 
-void insert(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::int8_t value) {
-    mutating.insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
+void insert(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::int8_t value) {
+    mutating->insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
                             beforePosition, newPosition, Features::Codec::encode(value));
 }
 
-void update(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & position, std::int8_t value) {
-    mutating.updateInXArray(attachment(), encodeKey(key), Viper::Path::make(), position, Features::Codec::encode(value));
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & position, std::int8_t value) {
+    mutating->updateInXArray(attachment(), encodeKey(key), Viper::Path::make(), position, Features::Codec::encode(value));
 }
 
-void remove(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & position) {
-    mutating.removeInXArray(attachment(), encodeKey(key), Viper::Path::make(), position);
+void remove(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & position) {
+    mutating->removeInXArray(attachment(), encodeKey(key), Viper::Path::make(), position);
 }
 
 } // namespace Test::Attachments::ConceptA::propertiesXArray
@@ -579,33 +579,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptBKey const & key) {
 
 } // namespace
 
-std::set<ConceptBKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptBKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptBKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptBKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptBKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptBKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<StructureT> get(Viper::AttachmentGetting const & getting, ConceptBKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<StructureT> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptBKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<StructureT>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptBKey const & key, StructureT const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptBKey const & key, StructureT const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptBKey const & key, StructureT const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptBKey const & key, StructureT const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptBKey const & key, StructureT const & value) {
@@ -616,14 +616,14 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptBKey const & key) {
     return Features::Db::del(db, attachment(), key);
 }
 
-void setField_string(Viper::AttachmentMutating & mutating, ConceptBKey const & key, std::string const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureT::field_stringPath(),
+void setField_string(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptBKey const & key, std::string const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureT::field_stringPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setField_structure_s(Viper::AttachmentMutating & mutating, ConceptBKey const & key, StructureS const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureT::field_structure_sPath(),
+void setField_structure_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptBKey const & key, StructureS const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureT::field_structure_sPath(),
                     Features::Codec::encode(value));
 }
 
@@ -649,33 +649,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCKey const & key) {
 
 } // namespace
 
-std::set<ConceptCKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<StructureU> get(Viper::AttachmentGetting const & getting, ConceptCKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<StructureU> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<StructureU>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureU const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, StructureU const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureU const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, StructureU const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCKey const & key, StructureU const & value) {
@@ -686,316 +686,316 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptCKey const & key) {
     return Features::Db::del(db, attachment(), key);
 }
 
-void setF_bool(Viper::AttachmentMutating & mutating, ConceptCKey const & key, bool value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_boolPath(),
+void setF_bool(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, bool value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_boolPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint8(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint8Path(),
+void setF_uint8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint8Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint16(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint16_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint16Path(),
+void setF_uint16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::uint16_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint16Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint32(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint32_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint32Path(),
+void setF_uint32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::uint32_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint32Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint64(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint64_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint64Path(),
+void setF_uint64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::uint64_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint64Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int8(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int8_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int8Path(),
+void setF_int8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::int8_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int8Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int16(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int16_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int16Path(),
+void setF_int16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::int16_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int16Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int32(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int32_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int32Path(),
+void setF_int32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::int32_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int32Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int64(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int64_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int64Path(),
+void setF_int64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::int64_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int64Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_float(Viper::AttachmentMutating & mutating, ConceptCKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_floatPath(),
+void setF_float(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_floatPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_double(Viper::AttachmentMutating & mutating, ConceptCKey const & key, double value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_doublePath(),
+void setF_double(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, double value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_doublePath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_blob_id(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::BlobId const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_blob_idPath(),
+void setF_blob_id(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::BlobId const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_blob_idPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_commit_id(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::CommitId const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_commit_idPath(),
+void setF_commit_id(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::CommitId const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_commit_idPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uuid(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uuidPath(),
+void setF_uuid(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uuidPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_string(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::string const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_stringPath(),
+void setF_string(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::string const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_stringPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_blob(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::Blob const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_blobPath(),
+void setF_blob(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::Blob const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_blobPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_vec(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::array<std::uint8_t, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_vecPath(),
+void setF_vec(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::array<std::uint8_t, 2> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_vecPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_mat(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_matPath(),
+void setF_mat(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_matPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_tuple(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_tuplePath(),
+void setF_tuple(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_tuplePath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_optional(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::optional<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_optionalPath(),
+void setF_optional(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::optional<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_optionalPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_vector(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::vector<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_vectorPath(),
+void setF_vector(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::vector<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_vectorPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_setPath(),
+void setF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_setPath(),
                     Features::Codec::encode(value));
 }
 
-void unionF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.unionInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void unionF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->unionInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void subtractF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtractF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
 
-void setF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_set_sPath(),
+void setF_set_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<StructureS> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_set_sPath(),
                     Features::Codec::encode(value));
 }
 
-void unionF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value) {
-    mutating.unionInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_set_sPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void unionF_set_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<StructureS> const & value) {
+    mutating->unionInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_set_sPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void subtractF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value) {
-    mutating.subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_set_sPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtractF_set_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<StructureS> const & value) {
+    mutating->subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_set_sPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
 
-void setF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(),
+void setF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(),
                     Features::Codec::encode(value));
 }
 
-void unionF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void unionF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
-void subtractF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<Test::StructureS> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtractF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<Test::StructureS> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void updateF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void updateF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
 
-void setF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(),
+void setF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(),
                     Features::Codec::encode(value));
 }
 
-void unionF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void unionF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
-void subtractF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::string> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtractF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::string> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void updateF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void updateF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
 
-void setF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::XArray<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(),
+void setF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::XArray<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(),
                     Features::Codec::encode(value));
 }
 
-void insertF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value) {
-    mutating.insertInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(),
+void insertF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value) {
+    mutating->insertInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(),
                             beforePosition, newPosition, Features::Codec::encode(value));
 }
 
-void updateF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position, std::uint8_t value) {
-    mutating.updateInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(),
+void updateF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position, std::uint8_t value) {
+    mutating->updateInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(),
                             position, Features::Codec::encode(value));
 }
 
-void removeF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position) {
-    mutating.removeInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(), position);
+void removeF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position) {
+    mutating->removeInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(), position);
 }
 
 
-void setF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::XArray<StructureS> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(),
+void setF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::XArray<StructureS> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(),
                     Features::Codec::encode(value));
 }
 
-void insertF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Test::StructureS const & value) {
-    mutating.insertInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(),
+void insertF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Test::StructureS const & value) {
+    mutating->insertInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(),
                             beforePosition, newPosition, Features::Codec::encode(value));
 }
 
-void updateF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position, Test::StructureS const & value) {
-    mutating.updateInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(),
+void updateF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position, Test::StructureS const & value) {
+    mutating->updateInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(),
                             position, Features::Codec::encode(value));
 }
 
-void removeF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position) {
-    mutating.removeInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(), position);
+void removeF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position) {
+    mutating->removeInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(), position);
 }
 
 
-void setF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(),
+void setF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(),
                     Features::Codec::encode(value));
 }
 
-void unionF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void unionF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
-void subtractF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::vector<Test::StructureS>> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtractF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::vector<Test::StructureS>> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void updateF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
-}
-
-
-void setF_variant(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::variant<std::string, std::uint8_t, StructureS> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_variantPath(),
-                    Features::Codec::encode(value));
+void updateF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
 
-void setF_any(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::Any const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_anyPath(),
+void setF_variant(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::variant<std::string, std::uint8_t, StructureS> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_variantPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_E(Viper::AttachmentMutating & mutating, ConceptCKey const & key, EnumerationE value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_EPath(),
+void setF_any(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::Any const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_anyPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_S(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureS const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_SPath(),
+void setF_E(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, EnumerationE value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_EPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_T(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureT const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_TPath(),
+void setF_S(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, StructureS const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_SPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_A(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptAKey const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_APath(),
+void setF_T(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, StructureT const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_TPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_B(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptBKey const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_BPath(),
+void setF_A(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ConceptAKey const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_APath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_C(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptCKey const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_CPath(),
+void setF_B(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ConceptBKey const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_BPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_D(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptDKey const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_DPath(),
+void setF_C(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ConceptCKey const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_CPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_Klub(Viper::AttachmentMutating & mutating, ConceptCKey const & key, KlubKey const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_KlubPath(),
+void setF_D(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ConceptDKey const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_DPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_any_concept(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ::Features::AnyConceptKey const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_any_conceptPath(),
+void setF_Klub(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, KlubKey const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_KlubPath(),
+                    Features::Codec::encode(value));
+}
+
+
+void setF_any_concept(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ::Features::AnyConceptKey const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureU::f_any_conceptPath(),
                     Features::Codec::encode(value));
 }
 
@@ -1021,33 +1021,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Viper::Any> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Viper::Any> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<Viper::Any>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::Any const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::Any const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::Any const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::Any const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::Any const & value) {
@@ -1079,33 +1079,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<::Features::AnyConceptKey> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<::Features::AnyConceptKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<::Features::AnyConceptKey>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value) {
@@ -1137,33 +1137,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Viper::Blob> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Viper::Blob> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<Viper::Blob>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::Blob const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::Blob const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::Blob const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::Blob const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::Blob const & value) {
@@ -1195,33 +1195,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Viper::BlobId> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Viper::BlobId> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<Viper::BlobId>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::BlobId const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::BlobId const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::BlobId const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::BlobId const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::BlobId const & value) {
@@ -1253,33 +1253,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<bool> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<bool> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<bool>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, bool const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, bool const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, bool const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, bool const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, bool const & value) {
@@ -1311,33 +1311,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<KlubKey> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<KlubKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<KlubKey>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, KlubKey const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, KlubKey const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, KlubKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, KlubKey const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, KlubKey const & value) {
@@ -1369,33 +1369,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Viper::CommitId> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Viper::CommitId> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<Viper::CommitId>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::CommitId const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::CommitId const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::CommitId const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::CommitId const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::CommitId const & value) {
@@ -1427,33 +1427,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<ConceptAKey> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<ConceptAKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<ConceptAKey>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ConceptAKey const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ConceptAKey const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ConceptAKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ConceptAKey const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, ConceptAKey const & value) {
@@ -1485,33 +1485,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<ConceptBKey> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<ConceptBKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<ConceptBKey>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ConceptBKey const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ConceptBKey const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ConceptBKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ConceptBKey const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, ConceptBKey const & value) {
@@ -1543,33 +1543,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<double> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<double> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<double>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, double const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, double const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, double const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, double const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, double const & value) {
@@ -1601,33 +1601,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<EnumerationE> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<EnumerationE> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<EnumerationE>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, EnumerationE const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, EnumerationE const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, EnumerationE const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, EnumerationE const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, EnumerationE const & value) {
@@ -1659,33 +1659,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<float> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<float> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<float>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, float const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, float const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, float const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, float const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, float const & value) {
@@ -1717,33 +1717,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::int16_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::int16_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::int16_t>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int16_t const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int16_t const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int16_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int16_t const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::int16_t const & value) {
@@ -1775,33 +1775,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::int32_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::int32_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::int32_t>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int32_t const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int32_t const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int32_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int32_t const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::int32_t const & value) {
@@ -1833,33 +1833,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::int64_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::int64_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::int64_t>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int64_t const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int64_t const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int64_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int64_t const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::int64_t const & value) {
@@ -1891,33 +1891,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::int8_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::int8_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::int8_t>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int8_t const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int8_t const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int8_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int8_t const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::int8_t const & value) {
@@ -1949,33 +1949,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::map<std::uint8_t, std::string>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::map<std::uint8_t, std::string>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::map<std::uint8_t, std::string>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value) {
@@ -1986,16 +1986,16 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const &
     return Features::Db::del(db, attachment(), key);
 }
 
-void union_(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
-void subtract(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void update(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
 } // namespace Test::Attachments::ConceptCoverage::docMap
@@ -2020,33 +2020,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::array<std::array<std::uint8_t, 2>, 2>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::array<std::array<std::uint8_t, 2>, 2>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::array<std::array<std::uint8_t, 2>, 2>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value) {
@@ -2078,33 +2078,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::optional<std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::optional<std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::optional<std::uint8_t>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value) {
@@ -2136,33 +2136,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::set<std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::set<std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::set<std::uint8_t>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
@@ -2173,12 +2173,12 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const &
     return Features::Db::del(db, attachment(), key);
 }
 
-void union_(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void subtract(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.subtractInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->subtractInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
 } // namespace Test::Attachments::ConceptCoverage::docSet
@@ -2203,33 +2203,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::string> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::string> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::string>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::string const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::string const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::string const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::string const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::string const & value) {
@@ -2261,33 +2261,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<StructureW> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<StructureW> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<StructureW>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, StructureW const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, StructureW const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, StructureW const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, StructureW const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, StructureW const & value) {
@@ -2298,8 +2298,8 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const &
     return Features::Db::del(db, attachment(), key);
 }
 
-void setF_single(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureW::f_singlePath(),
+void setF_single(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureW::f_singlePath(),
                     Features::Codec::encode(value));
 }
 
@@ -2325,33 +2325,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::tuple<std::uint8_t, std::string>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::tuple<std::uint8_t, std::string>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::tuple<std::uint8_t, std::string>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
@@ -2383,33 +2383,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::uint16_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::uint16_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::uint16_t>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint16_t const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint16_t const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint16_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint16_t const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::uint16_t const & value) {
@@ -2441,33 +2441,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::uint32_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::uint32_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::uint32_t>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint32_t const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint32_t const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint32_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint32_t const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::uint32_t const & value) {
@@ -2499,33 +2499,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::uint64_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::uint64_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::uint64_t>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint64_t const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint64_t const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint64_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint64_t const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::uint64_t const & value) {
@@ -2557,33 +2557,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::uint8_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::uint8_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::uint8_t>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint8_t const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint8_t const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint8_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint8_t const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::uint8_t const & value) {
@@ -2615,33 +2615,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Viper::UUId> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Viper::UUId> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<Viper::UUId>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::UUId const & value) {
@@ -2673,33 +2673,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::variant<std::string, std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::variant<std::string, std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::variant<std::string, std::uint8_t>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value) {
@@ -2731,33 +2731,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::array<std::uint8_t, 2>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::array<std::uint8_t, 2>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::array<std::uint8_t, 2>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value) {
@@ -2789,33 +2789,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::vector<std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::vector<std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<std::vector<std::uint8_t>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value) {
@@ -2847,33 +2847,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ConceptCoverageKey const & key) {
 
 } // namespace
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ConceptCoverageKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<ConceptCoverageKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Viper::XArray<std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Viper::XArray<std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<Viper::XArray<std::uint8_t>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value) {
@@ -2884,17 +2884,17 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const &
     return Features::Db::del(db, attachment(), key);
 }
 
-void insert(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value) {
-    mutating.insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
+void insert(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value) {
+    mutating->insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
                             beforePosition, newPosition, Features::Codec::encode(value));
 }
 
-void update(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & position, std::uint8_t value) {
-    mutating.updateInXArray(attachment(), encodeKey(key), Viper::Path::make(), position, Features::Codec::encode(value));
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & position, std::uint8_t value) {
+    mutating->updateInXArray(attachment(), encodeKey(key), Viper::Path::make(), position, Features::Codec::encode(value));
 }
 
-void remove(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & position) {
-    mutating.removeInXArray(attachment(), encodeKey(key), Viper::Path::make(), position);
+void remove(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & position) {
+    mutating->removeInXArray(attachment(), encodeKey(key), Viper::Path::make(), position);
 }
 
 } // namespace Test::Attachments::ConceptCoverage::docXArray
@@ -2919,33 +2919,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KlubKey const & key) {
 
 } // namespace
 
-std::set<KlubKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KlubKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KlubKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Features::Codec::decode<KlubKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KlubKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KlubKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<StructureV> get(Viper::AttachmentGetting const & getting, KlubKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<StructureV> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KlubKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Features::Codec::decode<StructureV>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureV const & value) {
-    mutating.set(attachment(), encodeKey(key), Features::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, StructureV const & value) {
+    mutating->set(attachment(), encodeKey(key), Features::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureV const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, StructureV const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KlubKey const & key, StructureV const & value) {
@@ -2956,160 +2956,160 @@ bool del(std::shared_ptr<Viper::Database> const & db, KlubKey const & key) {
     return Features::Db::del(db, attachment(), key);
 }
 
-void setF_bool(Viper::AttachmentMutating & mutating, KlubKey const & key, bool value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_boolPath(),
+void setF_bool(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, bool value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_boolPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint8(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint8Path(),
+void setF_uint8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint8Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint16(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint16_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint16Path(),
+void setF_uint16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::uint16_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint16Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint32(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint32_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint32Path(),
+void setF_uint32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::uint32_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint32Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uint64(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint64_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint64Path(),
+void setF_uint64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::uint64_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint64Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int8(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int8_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int8Path(),
+void setF_int8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::int8_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int8Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int16(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int16_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int16Path(),
+void setF_int16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::int16_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int16Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int32(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int32_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int32Path(),
+void setF_int32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::int32_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int32Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_int64(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int64_t value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int64Path(),
+void setF_int64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::int64_t value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int64Path(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_float(Viper::AttachmentMutating & mutating, KlubKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_floatPath(),
+void setF_float(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_floatPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_double(Viper::AttachmentMutating & mutating, KlubKey const & key, double value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_doublePath(),
+void setF_double(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, double value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_doublePath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_uuid(Viper::AttachmentMutating & mutating, KlubKey const & key, Viper::UUId const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uuidPath(),
+void setF_uuid(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, Viper::UUId const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uuidPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_string(Viper::AttachmentMutating & mutating, KlubKey const & key, std::string const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_stringPath(),
+void setF_string(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::string const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_stringPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_vec(Viper::AttachmentMutating & mutating, KlubKey const & key, std::array<std::uint8_t, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vecPath(),
+void setF_vec(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::array<std::uint8_t, 2> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vecPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_mat(Viper::AttachmentMutating & mutating, KlubKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_matPath(),
+void setF_mat(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_matPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_tuple(Viper::AttachmentMutating & mutating, KlubKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_tuplePath(),
+void setF_tuple(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_tuplePath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_optional(Viper::AttachmentMutating & mutating, KlubKey const & key, std::optional<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_optionalPath(),
+void setF_optional(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::optional<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_optionalPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_vector(Viper::AttachmentMutating & mutating, KlubKey const & key, std::vector<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vectorPath(),
+void setF_vector(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::vector<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vectorPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(),
+void setF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(),
                     Features::Codec::encode(value));
 }
 
-void unionF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.unionInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void unionF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->unionInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void subtractF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtractF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
 
-void setF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(),
+void setF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(),
                     Features::Codec::encode(value));
 }
 
-void unionF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+void unionF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
-void subtractF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+void subtractF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
 }
 
-void updateF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
-}
-
-
-void setF_E(Viper::AttachmentMutating & mutating, KlubKey const & key, EnumerationE value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_EPath(),
-                    Features::Codec::encode(value));
+void updateF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
 }
 
 
-void setF_S(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureS const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_SPath(),
+void setF_E(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, EnumerationE value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_EPath(),
                     Features::Codec::encode(value));
 }
 
 
-void setF_T(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureT const & value) {
-    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_TPath(),
+void setF_S(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, StructureS const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_SPath(),
+                    Features::Codec::encode(value));
+}
+
+
+void setF_T(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, StructureT const & value) {
+    mutating->update(attachment(), encodeKey(key), Test::Fields::StructureV::f_TPath(),
                     Features::Codec::encode(value));
 }
 

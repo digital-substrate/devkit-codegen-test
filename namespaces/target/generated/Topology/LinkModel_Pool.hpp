@@ -10,8 +10,8 @@
 #include "Viper_AttachmentFunctionPool.hpp"
 #include "Viper_ServiceRemote.hpp"
 
-// LE CONTEXTE SUR LEQUEL AGIT UNE FONCTION D'ATTACHMENT. Un pool ordinaire n'en prend pas ;
-// celui-ci le prend en premier argument, donc il en a besoin dans ses signatures.
+// LE CONTEXTE SUR LEQUEL LA FONCTION AGIT. Un pool ordinaire n'en prend pas ; celui-ci le
+// prend en premier argument, donc il en a besoin dans ses signatures.
 #include "Viper_AttachmentGetting.hpp"
 #include "Viper_AttachmentMutating.hpp"
 
@@ -23,6 +23,18 @@ namespace LinkModel {
 void clear(std::shared_ptr<Viper::AttachmentMutating> const & attachmentMutating, Projection::LinkKey const & linkKey);
 
 std::shared_ptr<Viper::AttachmentFunctionPool> pool();
+
+/// The same pool, seen from a client.
+class Remote final {
+public:
+    explicit Remote(std::shared_ptr<Viper::ServiceRemote> service);
+    bool isAvailable() const;
+
+    void clear(std::shared_ptr<Viper::AttachmentMutating> const & attachmentMutating, Projection::LinkKey const & linkKey) const;
+
+private:
+    std::shared_ptr<Viper::ServiceRemote> _service;
+};
 
 } // namespace LinkModel
 

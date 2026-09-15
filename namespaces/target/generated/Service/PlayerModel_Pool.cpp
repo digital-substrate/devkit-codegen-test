@@ -82,4 +82,21 @@ std::shared_ptr<Viper::AttachmentFunctionPool> pool() {
     return instance;
 }
 
+Remote::Remote(std::shared_ptr<Viper::ServiceRemote> service)
+: _service{std::move(service)} {}
+
+bool Remote::isAvailable() const {
+    return _service->queryAttachmentFunctionPool(poolId) != nullptr;
+}
+
+Demo::PlayerKey Remote::create(std::shared_ptr<Viper::AttachmentMutating> const & attachmentMutating, std::string const & nickname, Demo::Level level) const {
+    return Service::Codec::decode<Demo::PlayerKey>(
+        _service->call(attachmentMutating, poolId, "create", {Service::Codec::encode(nickname), Service::Codec::encode(level)}));
+}
+
+std::optional<Demo::PlayerKey> Remote::has_player(std::shared_ptr<Viper::AttachmentMutating> const & attachmentMutating, std::string const & nickname) const {
+    return Service::Codec::decode<std::optional<Demo::PlayerKey>>(
+        _service->call(attachmentMutating, poolId, "has_player", {Service::Codec::encode(nickname)}));
+}
+
 } // namespace PlayerModel

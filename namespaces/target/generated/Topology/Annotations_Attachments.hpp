@@ -41,15 +41,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ModelA::MaterialKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ModelA::MaterialKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ModelA::MaterialKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ModelA::MaterialKey const & key);
 
-std::optional<std::string> get(Viper::AttachmentGetting const & getting, ModelA::MaterialKey const & key);
+std::optional<std::string> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ModelA::MaterialKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ModelA::MaterialKey const & key, std::string const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ModelA::MaterialKey const & key, std::string const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ModelA::MaterialKey const & key, std::string const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ModelA::MaterialKey const & key, std::string const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -79,15 +79,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ModelB::MaterialKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ModelB::MaterialKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ModelB::MaterialKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ModelB::MaterialKey const & key);
 
-std::optional<std::string> get(Viper::AttachmentGetting const & getting, ModelB::MaterialKey const & key);
+std::optional<std::string> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ModelB::MaterialKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ModelB::MaterialKey const & key, std::string const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ModelB::MaterialKey const & key, std::string const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ModelB::MaterialKey const & key, std::string const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ModelB::MaterialKey const & key, std::string const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──

@@ -8,11 +8,11 @@ Ce document dit ce qui manque, et il n'est pas tenu à la main :
 
 ```sh
 namespaces/target/coverage.py       # ce que le pack déclare et que les nouveaux n'émettent pas
-namespaces/target/render.py         # rend les trois modèles et compile chaque fichier
+namespaces/target/render.py         # rend les quatre modèles, compile, lie, exécute
 namespaces/target/render.py --check # échoue si generated/ n'est pas à jour
 ```
 
-`coverage.py` rend le modèle le plus complet avec les deux jeux de templates, compare les
+`coverage.py` rend **les quatre modèles** avec les deux jeux de templates, compare les
 opérations déclarées, et sort non-zéro tant qu'il en manque. Un nom suffixé par un type —
 `encode_Test_StructureS` — est ramené à `encode` avant comparaison, sans quoi le décompte
 dirait le contraire de ce qu'il mesure : une famille par type remplacée par une fonction
@@ -21,12 +21,26 @@ template compterait comme une perte.
 ## L'état, au dernier passage
 
 ```
-le pack déclare 141 opérations, les nouveaux templates 117
+le pack déclare 162 opérations, les nouveaux templates 178
 absentes : 0
 ```
 
-**Toute la surface du pack C++ est reproduite.** Les 24 de différence sont les familles par
-type qui s'effondrent en une fonction, plus ce que `coverage.py` écarte avec sa raison.
+**Toute la surface du pack C++ est reproduite.** L'écart est fait des familles par type qui
+s'effondrent en une fonction d'un côté, et des unités qui déclarent chacune ce qu'elle porte
+de l'autre, plus ce que `coverage.py` écarte avec sa raison.
+
+### Ce que la mesure ne mesurait pas
+
+Elle a annoncé « absentes : 0 » pendant tout le temps où le `Remote` d'un pool d'attachments
+n'existait pas du tout. La raison est bête et vaut d'être écrite : **elle ne tournait que
+sur `features`, et `features` ne déclare aucun pool.** Pas une opération de pool n'entrait
+dans la comparaison ; le décompte ne mesurait pas ce qu'il disait mesurer. Il tourne
+maintenant sur les quatre modèles et prend leur réunion, parce qu'aucun ne porte tout.
+
+Et il reste une chose qu'il ne peut pas voir : **il compare des noms, pas des portées.**
+`description()` manquait sur les clés typées alors que `description(AnyConceptKey)` existait
+au niveau du modèle — même mot, autre portée, écart invisible. C'est le consommateur, et non
+la mesure, qui l'a trouvé.
 
 Deux sortes d'écart, et la distinction compte :
 
@@ -55,18 +69,13 @@ sur des choses que `viper` 1.2 n'a pas sous cette forme :
 | `Viper::Database` avec les définitions en paramètre | `runtime/Viper_Database.hpp` |
 | `Viper::AnyConceptKey` | généré par modèle, en attendant |
 
-Chacun porte dans son fichier la raison de sa forme. **Rien de tout cela n'est lié ni
-exécuté** : la vérification C++ est `-fsyntax-only` contre ces stubs, dont les signatures
-sont recopiées du vrai runtime. C'est la limite principale de ce qui a été fait, et elle ne
-se lèvera qu'en liant contre le vrai `viper`.
+Chacun porte dans son fichier la raison de sa forme.
 
 Le Python, lui, tourne contre le vrai `dsviper` — et il est à peine commencé.
 
 ## Ce qui reste
 
-1. **Lier contre le vrai runtime.** Tant que c'est `-fsyntax-only`, une signature recopiée de
-   travers passe inaperçue.
-2. **Les quatre ajouts au runtime**, dans l'ordre : viper d'abord, kibo ensuite, le pack en
+1. **Les deux ajouts au runtime**, dans l'ordre : viper d'abord, kibo ensuite, le pack en
    dernier.
 3. **Python**, dérivé du modèle et de Python. Les types et les namespaces sont écrits et
    tournent ; les attachments, les pools et la base ne le sont pas.
@@ -81,14 +90,16 @@ Le Python, lui, tourne contre le vrai `dsviper` — et il est à peine commencé
 |---|---|
 | ce qui est attendu | `hand/` — la référence C++, écrite depuis le modèle |
 | ce qui produit | `templated/` — les templates |
-| ce que ça donne | `generated/Topology/`, `generated/Crossing/`, `generated/Features/` |
+| ce que ça donne | `generated/Topology/`, `generated/Crossing/`, `generated/Features/`, `generated/Service/` |
+| ce qu'un consommateur doit réécrire | `link/service/migrate.py` |
 | pourquoi chaque décision | `hand/README.md`, `templated/README.md` |
 | ce qui manque | `coverage.py` |
 | Python | `python/README.md`, `python/hand/check.py` |
 
-Les trois modèles ne se recouvrent pas : `Topology` porte la topologie des namespaces,
+Les quatre modèles ne se recouvrent pas : `Topology` porte la topologie des namespaces,
 `Crossing` le système de types qui la traverse, `Features` un seul namespace avec tout le
-système de types dedans. Chacun a trouvé des défauts que les autres ne pouvaient pas voir.
+système de types dedans, `Service` les pools et le passage par un fil. Chacun a trouvé des
+défauts que les autres ne pouvaient pas voir.
 
 ## Le lien contre le vrai runtime — fait
 
@@ -156,3 +167,61 @@ des années. Je les avais lus pour ce qu'ils *produisent*, jamais pour ce qu'ils
 et le stub que j'écrivais me donnait raison par construction.
 
 Le stub était le mécanisme qui permettait de ne pas aller voir. Il n'y en a plus.
+
+
+## L'épreuve du consommateur
+
+C'est la seule que je n'ai pas écrite, et c'est pour ça qu'elle vaut. `service/` porte un
+client et un serveur existants, plus les deux ponts que le développeur écrit à la main.
+`link/service/migrate.py` les porte sur les nouveaux noms **et rien d'autre** — chaque ligne
+du script est une chose que les nouveaux templates obligent un consommateur à réécrire, et
+c'est la mesure du coût de migration :
+
+| ce que le consommateur écrivait | ce qu'il écrit | pourquoi |
+|---|---|---|
+| `Tools_FunctionPoolBridges.hpp` + `…Remotes.hpp` | `Tools_Pool.hpp` | un pool est une unité, et les deux bords d'un pool sont le même pool |
+| `Service_FunctionPools.hpp` | — | chaque pool se construit lui-même |
+| `Service::FunctionPools::tools()` | `Tools::pool()` | le nom du pool dit déjà de quel pool il s'agit |
+| `Service_Definitions.hpp` | `Service_Codec.hpp` | ce qui est du modèle entier tient dans une portée |
+| `Service::definitions()` | `Service::Codec::definitions()` | idem |
+| `namespace Service::Tools` | `namespace Tools` | une unité est un namespace de premier rang |
+| `Demo::Attachments::Player_Property::` | `Demo::Attachments::Player::property::` | un attachment a une portée, au lieu d'un nom plat |
+
+**18 substitutions sur quatre fichiers, toutes mécaniques.** Aucune ne demande de repenser
+un appel : ni un argument de plus, ni un type qui change, ni une opération qui disparaît.
+
+Le résultat tourne, et les deux binaires ne partagent que le format :
+
+```
+  Service lien      17 objets, et le programme tourne
+  service      le client parle au serveur :
+     add(32,10) -> 42
+     add_vector(v1,v2) -> (11,22,33)
+     key is 061adb2b-…:Demo::Player
+     nickname=the shadow man, level=0
+```
+
+### Ce que le consommateur a trouvé et que la mesure ne voyait pas
+
+1. **Le `Remote` d'un pool d'attachments n'existait pas.** Le pool ordinaire avait le sien ;
+   celui-là n'avait que `pool()`. Un client ne pouvait appeler aucune fonction d'attachment
+   à distance — c'est-à-dire la moitié de ce à quoi un service sert.
+2. **`description()` et `isKnown()` manquaient sur les clés typées.** Le pack les pose sur
+   chaque clé ; ici ils n'existaient qu'au niveau du modèle, sur la clé non typée. Ils sont
+   revenus, et ils répondent mieux : la réponse vient des définitions embarquées, donc un
+   descendant apparu après la génération est nommé au lieu d'être déclaré inconnu.
+3. **Le constructeur depuis le seul identifiant d'instance manquait.** Il est revenu
+   `explicit`, là où le pack le laissait implicite : toutes les clés du modèle ont la même
+   forme, donc une conversion implicite depuis `UUId` fait de n'importe quel identifiant
+   n'importe quelle clé. C'est le seul rétrécissement volontaire de la surface.
+4. **Les attachments prenaient une référence** là où le runtime remet partout un
+   `shared_ptr` — donc chaque appel d'un pont réel devait écrire `*mutating`. Alignés sur ce
+   que le runtime remet.
+
+### Et un écart assumé, mesuré sur `Crossing`
+
+Le pack donne à `Core::ThingKey` un `asWovenDerivedKey()` pour chaque concept qui en
+descend. Donc `Core` nomme `Woven`, qui nomme `Core` : l'arête pointe dans les deux sens, et
+un modèle à plusieurs unités ne peut pas la fermer. Ici le rétrécissement est chez le
+descendant, qui connaît son ancêtre de toute façon : `Woven::DerivedKey::from(thing.toAny())`
+rend le même `optional`, et se dit là où le type se nomme déjà.

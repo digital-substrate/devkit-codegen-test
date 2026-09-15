@@ -14,11 +14,17 @@ namespace Parts {
 ThingKey::ThingKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+ThingKey::ThingKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Thing} {}
+
 ThingKey ThingKey::create() { return {Viper::UUId::create(), RuntimeIds::Thing}; }
 
 Viper::UUId const & ThingKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & ThingKey::runtimeId() const noexcept { return _runtimeId; }
 bool ThingKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string ThingKey::description() const { return Crossing::Codec::description(toAny()); }
+bool ThingKey::isKnown() const { return Crossing::Codec::isKnown(toAny()); }
 Crossing::AnyConceptKey ThingKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la

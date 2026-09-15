@@ -40,15 +40,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<Core::ThingKey> keys(Viper::AttachmentGetting const & getting);
+std::set<Core::ThingKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, Core::ThingKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, Core::ThingKey const & key);
 
-std::optional<Parts::Colour> get(Viper::AttachmentGetting const & getting, Core::ThingKey const & key);
+std::optional<Parts::Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, Core::ThingKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, Parts::Colour const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, Parts::Colour const & value);
 
-void diff(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, Parts::Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, Parts::Colour const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -61,11 +61,11 @@ void diff(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, Part
 bool set(std::shared_ptr<Viper::Database> const & db, Core::ThingKey const & key, Parts::Colour const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, Core::ThingKey const & key);
 
-void setR(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value);
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, float value);
 
-void setG(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value);
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, float value);
 
-void setB(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value);
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, float value);
 
 } // namespace Woven::Attachments::Core_Thing::mark
 
@@ -82,15 +82,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<::Crossing::AnyConceptKey> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<::Crossing::AnyConceptKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, ::Crossing::AnyConceptKey const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, ::Crossing::AnyConceptKey const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, ::Crossing::AnyConceptKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, ::Crossing::AnyConceptKey const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -117,15 +117,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<Core::Colour> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<Core::Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Colour const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::Colour const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::Colour const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -138,11 +138,11 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Colou
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Core::Colour const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
-void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value);
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::uint8_t value);
 
-void setG(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value);
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::uint8_t value);
 
-void setB(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value);
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::uint8_t value);
 
 } // namespace Woven::Attachments::Knot::docColour
 
@@ -159,15 +159,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<Composites> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<Composites> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Composites const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Composites const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Composites const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Composites const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -180,28 +180,28 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Composites 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Composites const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
-void setF_tuple(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value);
+void setF_tuple(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value);
 
-void setF_optional(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value);
+void setF_optional(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value);
 
-void setF_vector(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value);
+void setF_vector(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value);
 
-void setF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
-void unionF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
-void subtractF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
-void setF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
-void unionF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
-void subtractF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
-void updateF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
-void setF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
-void unionF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
-void subtractF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::Grade> const & value);
-void updateF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
-void setF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value);
-void insertF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value);
-void updateF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value);
-void removeF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position);
-void setF_variant(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour, std::string> const & value);
+void setF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void unionF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void subtractF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void setF_map_keys(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+void unionF_map_keys(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+void subtractF_map_keys(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void updateF_map_keys(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+void setF_map_enum(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+void unionF_map_enum(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+void subtractF_map_enum(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::Grade> const & value);
+void updateF_map_enum(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+void setF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value);
+void insertF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value);
+void updateF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value);
+void removeF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & position);
+void setF_variant(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour, std::string> const & value);
 
 } // namespace Woven::Attachments::Knot::docComposites
 
@@ -218,15 +218,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<Core::Grade> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<Core::Grade> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Grade const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::Grade const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Grade const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::Grade const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -253,15 +253,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<Core::KlubKey> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<Core::KlubKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::KlubKey const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::KlubKey const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::KlubKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::KlubKey const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -288,15 +288,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<std::map<Core::Grade, Parts::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<std::map<Core::Grade, Parts::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -309,9 +309,9 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Co
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
-void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
-void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::Grade> const & value);
-void update(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::Grade> const & value);
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
 
 } // namespace Woven::Attachments::Knot::docMapEnum
 
@@ -328,15 +328,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<std::map<Core::ThingKey, Parts::ThingKey>> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<std::map<Core::ThingKey, Parts::ThingKey>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -349,9 +349,9 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Co
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
-void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
-void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
-void update(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
 
 } // namespace Woven::Attachments::Knot::docMapKeys
 
@@ -368,15 +368,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<std::optional<Core::ThingKey>> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<std::optional<Core::ThingKey>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -403,15 +403,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<Parts::Colour> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<Parts::Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Parts::Colour const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Parts::Colour const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Parts::Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Parts::Colour const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -424,11 +424,11 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Parts::Colo
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Parts::Colour const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
-void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, float value);
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, float value);
 
-void setG(Viper::AttachmentMutating & mutating, KnotKey const & key, float value);
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, float value);
 
-void setB(Viper::AttachmentMutating & mutating, KnotKey const & key, float value);
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, float value);
 
 } // namespace Woven::Attachments::Knot::docOtherColour
 
@@ -445,15 +445,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<std::set<Core::ThingKey>> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<std::set<Core::ThingKey>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -466,8 +466,8 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Co
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::set<Core::ThingKey> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
-void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
-void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
 
 } // namespace Woven::Attachments::Knot::docSet
 
@@ -484,15 +484,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<Core::ThingKey> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<Core::ThingKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::ThingKey const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::ThingKey const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::ThingKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::ThingKey const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -519,15 +519,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<std::tuple<Core::Colour, Parts::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<std::tuple<Core::Colour, Parts::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -554,15 +554,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<std::variant<Core::Colour, Parts::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<std::variant<Core::Colour, Parts::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -589,15 +589,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<std::vector<Parts::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<std::vector<Parts::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -624,15 +624,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-std::optional<Viper::XArray<Core::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key);
+std::optional<Viper::XArray<Core::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -645,9 +645,9 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArr
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Viper::XArray<Core::Colour> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
-void insert(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value);
-void update(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value);
-void remove(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position);
+void insert(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value);
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value);
+void remove(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & position);
 
 } // namespace Woven::Attachments::Knot::docXArray
 
@@ -664,15 +664,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<Parts::ThingKey> keys(Viper::AttachmentGetting const & getting);
+std::set<Parts::ThingKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, Parts::ThingKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, Parts::ThingKey const & key);
 
-std::optional<Core::Colour> get(Viper::AttachmentGetting const & getting, Parts::ThingKey const & key);
+std::optional<Core::Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, Parts::ThingKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, Core::Colour const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, Core::Colour const & value);
 
-void diff(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, Core::Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, Core::Colour const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -685,11 +685,11 @@ void diff(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, Cor
 bool set(std::shared_ptr<Viper::Database> const & db, Parts::ThingKey const & key, Core::Colour const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, Parts::ThingKey const & key);
 
-void setR(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value);
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, std::uint8_t value);
 
-void setG(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value);
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, std::uint8_t value);
 
-void setB(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value);
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, std::uint8_t value);
 
 } // namespace Woven::Attachments::Parts_Thing::mark
 

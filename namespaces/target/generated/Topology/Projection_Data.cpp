@@ -14,11 +14,17 @@ namespace Projection {
 LinkKey::LinkKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+LinkKey::LinkKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Link} {}
+
 LinkKey LinkKey::create() { return {Viper::UUId::create(), RuntimeIds::Link}; }
 
 Viper::UUId const & LinkKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & LinkKey::runtimeId() const noexcept { return _runtimeId; }
 bool LinkKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string LinkKey::description() const { return Topology::Codec::description(toAny()); }
+bool LinkKey::isKnown() const { return Topology::Codec::isKnown(toAny()); }
 Topology::AnyConceptKey LinkKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
@@ -50,11 +56,17 @@ void hash(Viper::Hash::Accumulator & h, LinkKey const & value) noexcept {
 DerivedMaterialKey::DerivedMaterialKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+DerivedMaterialKey::DerivedMaterialKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::DerivedMaterial} {}
+
 DerivedMaterialKey DerivedMaterialKey::create() { return {Viper::UUId::create(), RuntimeIds::DerivedMaterial}; }
 
 Viper::UUId const & DerivedMaterialKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & DerivedMaterialKey::runtimeId() const noexcept { return _runtimeId; }
 bool DerivedMaterialKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string DerivedMaterialKey::description() const { return Topology::Codec::description(toAny()); }
+bool DerivedMaterialKey::isKnown() const { return Topology::Codec::isKnown(toAny()); }
 
 /// L'élargissement ne perd rien et ne peut pas échouer : l'identifiant d'exécution reste
 /// celui du concept réel, et c'est pourquoi le retour est possible ensuite.

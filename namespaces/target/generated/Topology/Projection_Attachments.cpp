@@ -46,33 +46,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(LinkKey const & key) {
 
 } // namespace
 
-std::set<LinkKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<LinkKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<LinkKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Topology::Codec::decode<LinkKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, LinkKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::map<ModelA::MaterialKey, ModelB::MaterialKey>> get(Viper::AttachmentGetting const & getting, LinkKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::map<ModelA::MaterialKey, ModelB::MaterialKey>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Topology::Codec::decode<std::map<ModelA::MaterialKey, ModelB::MaterialKey>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
-    mutating.set(attachment(), encodeKey(key), Topology::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
+    mutating->set(attachment(), encodeKey(key), Topology::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
@@ -83,16 +83,16 @@ bool del(std::shared_ptr<Viper::Database> const & db, LinkKey const & key) {
     return Topology::Db::del(db, attachment(), key);
 }
 
-void union_(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Topology::Codec::encode(value)));
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Topology::Codec::encode(value)));
 }
 
-void subtract(Viper::AttachmentMutating & mutating, LinkKey const & key, std::set<ModelA::MaterialKey> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Topology::Codec::encode(value)));
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::set<ModelA::MaterialKey> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Topology::Codec::encode(value)));
 }
 
-void update(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Topology::Codec::encode(value)));
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Topology::Codec::encode(value)));
 }
 
 } // namespace Projection::Attachments::Link::mapping
@@ -117,33 +117,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(LinkKey const & key) {
 
 } // namespace
 
-std::set<LinkKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<LinkKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<LinkKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Topology::Codec::decode<LinkKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, LinkKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<ModelC::MarkerKey> get(Viper::AttachmentGetting const & getting, LinkKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<ModelC::MarkerKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Topology::Codec::decode<ModelC::MarkerKey>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelC::MarkerKey const & value) {
-    mutating.set(attachment(), encodeKey(key), Topology::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, ModelC::MarkerKey const & value) {
+    mutating->set(attachment(), encodeKey(key), Topology::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelC::MarkerKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, ModelC::MarkerKey const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, LinkKey const & key, ModelC::MarkerKey const & value) {
@@ -175,33 +175,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(LinkKey const & key) {
 
 } // namespace
 
-std::set<LinkKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<LinkKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<LinkKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Topology::Codec::decode<LinkKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, LinkKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Pair> get(Viper::AttachmentGetting const & getting, LinkKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Pair> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Topology::Codec::decode<Pair>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, LinkKey const & key, Pair const & value) {
-    mutating.set(attachment(), encodeKey(key), Topology::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, Pair const & value) {
+    mutating->set(attachment(), encodeKey(key), Topology::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, Pair const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, Pair const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, LinkKey const & key, Pair const & value) {
@@ -212,14 +212,14 @@ bool del(std::shared_ptr<Viper::Database> const & db, LinkKey const & key) {
     return Topology::Db::del(db, attachment(), key);
 }
 
-void setA(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelA::MaterialKey const & value) {
-    mutating.update(attachment(), encodeKey(key), Projection::Fields::Pair::aPath(),
+void setA(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, ModelA::MaterialKey const & value) {
+    mutating->update(attachment(), encodeKey(key), Projection::Fields::Pair::aPath(),
                     Topology::Codec::encode(value));
 }
 
 
-void setB(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelB::MaterialKey const & value) {
-    mutating.update(attachment(), encodeKey(key), Projection::Fields::Pair::bPath(),
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, ModelB::MaterialKey const & value) {
+    mutating->update(attachment(), encodeKey(key), Projection::Fields::Pair::bPath(),
                     Topology::Codec::encode(value));
 }
 

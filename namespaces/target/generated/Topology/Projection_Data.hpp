@@ -32,10 +32,27 @@ public:
     LinkKey() = default;
     LinkKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
+    /// Reconstruire une clé depuis l'identifiant d'instance seul : l'identifiant
+    /// d'exécution est celui de ce concept-ci.
+    ///
+    /// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle
+    /// ont la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
+    /// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
+    /// justement pour empêcher. `LinkKey{id}` dit la même chose et la dit exprès.
+    explicit LinkKey(Viper::UUId const & instanceId) noexcept;
+
     static LinkKey create();
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
+
+    /// Ce que la clé désigne, dit en clair, et si le modèle le connaît.
+    ///
+    /// LA RÉPONSE VIENT DES DÉFINITIONS, PAS DE LA GÉNÉRATION. Un identifiant d'exécution
+    /// peut être celui d'un descendant qui n'existait pas quand ce fichier a été écrit ;
+    /// les définitions embarquées, elles, sont lues à l'exécution et savent le nommer.
+    std::string description() const;
+    bool isKnown() const;
 
     bool isValid() const noexcept;
     Topology::AnyConceptKey toAny() const noexcept;
@@ -59,10 +76,27 @@ public:
     DerivedMaterialKey() = default;
     DerivedMaterialKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
+    /// Reconstruire une clé depuis l'identifiant d'instance seul : l'identifiant
+    /// d'exécution est celui de ce concept-ci.
+    ///
+    /// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle
+    /// ont la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
+    /// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
+    /// justement pour empêcher. `DerivedMaterialKey{id}` dit la même chose et la dit exprès.
+    explicit DerivedMaterialKey(Viper::UUId const & instanceId) noexcept;
+
     static DerivedMaterialKey create();
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
+
+    /// Ce que la clé désigne, dit en clair, et si le modèle le connaît.
+    ///
+    /// LA RÉPONSE VIENT DES DÉFINITIONS, PAS DE LA GÉNÉRATION. Un identifiant d'exécution
+    /// peut être celui d'un descendant qui n'existait pas quand ce fichier a été écrit ;
+    /// les définitions embarquées, elles, sont lues à l'exécution et savent le nommer.
+    std::string description() const;
+    bool isKnown() const;
 
     bool isValid() const noexcept;
     /// Élargir vers le parent. Implicite, parce que `is a` n'est pas une demande : partout

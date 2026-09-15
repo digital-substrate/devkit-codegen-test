@@ -14,11 +14,17 @@ namespace Woven {
 KnotKey::KnotKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+KnotKey::KnotKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Knot} {}
+
 KnotKey KnotKey::create() { return {Viper::UUId::create(), RuntimeIds::Knot}; }
 
 Viper::UUId const & KnotKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & KnotKey::runtimeId() const noexcept { return _runtimeId; }
 bool KnotKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string KnotKey::description() const { return Crossing::Codec::description(toAny()); }
+bool KnotKey::isKnown() const { return Crossing::Codec::isKnown(toAny()); }
 Crossing::AnyConceptKey KnotKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
@@ -50,11 +56,17 @@ void hash(Viper::Hash::Accumulator & h, KnotKey const & value) noexcept {
 DerivedKey::DerivedKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+DerivedKey::DerivedKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Derived} {}
+
 DerivedKey DerivedKey::create() { return {Viper::UUId::create(), RuntimeIds::Derived}; }
 
 Viper::UUId const & DerivedKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & DerivedKey::runtimeId() const noexcept { return _runtimeId; }
 bool DerivedKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string DerivedKey::description() const { return Crossing::Codec::description(toAny()); }
+bool DerivedKey::isKnown() const { return Crossing::Codec::isKnown(toAny()); }
 
 /// L'élargissement ne perd rien et ne peut pas échouer : l'identifiant d'exécution reste
 /// celui du concept réel, et c'est pourquoi le retour est possible ensuite.
@@ -93,6 +105,9 @@ void hash(Viper::Hash::Accumulator & h, DerivedKey const & value) noexcept {
 WeaveKey::WeaveKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+WeaveKey::WeaveKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Weave} {}
+
 WeaveKey::WeaveKey(Core::ThingKey const & key) noexcept
 : _instanceId{key.instanceId()}, _runtimeId{key.runtimeId()} {}
 
@@ -110,6 +125,9 @@ std::optional<Parts::ThingKey> WeaveKey::asPartsThingKey() const noexcept {
 Viper::UUId const & WeaveKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & WeaveKey::runtimeId() const noexcept { return _runtimeId; }
 bool WeaveKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string WeaveKey::description() const { return Crossing::Codec::description(toAny()); }
+bool WeaveKey::isKnown() const { return Crossing::Codec::isKnown(toAny()); }
 
 Crossing::AnyConceptKey WeaveKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 

@@ -14,11 +14,17 @@ namespace ModelC {
 MarkerKey::MarkerKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+MarkerKey::MarkerKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Marker} {}
+
 MarkerKey MarkerKey::create() { return {Viper::UUId::create(), RuntimeIds::Marker}; }
 
 Viper::UUId const & MarkerKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & MarkerKey::runtimeId() const noexcept { return _runtimeId; }
 bool MarkerKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string MarkerKey::description() const { return Topology::Codec::description(toAny()); }
+bool MarkerKey::isKnown() const { return Topology::Codec::isKnown(toAny()); }
 Topology::AnyConceptKey MarkerKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la

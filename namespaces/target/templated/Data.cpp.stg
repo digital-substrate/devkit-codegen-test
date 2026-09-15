@@ -34,11 +34,17 @@ concept(c, u) ::= <<
 <c.name>Key::<c.name>Key(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+<c.name>Key::<c.name>Key(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::<c.name>} {}
+
 <c.name>Key <c.name>Key::create() { return {Viper::UUId::create(), RuntimeIds::<c.name>}; }
 
 Viper::UUId const & <c.name>Key::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & <c.name>Key::runtimeId() const noexcept { return _runtimeId; }
 bool <c.name>Key::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string <c.name>Key::description() const { return <u.model.namespace>::Codec::description(toAny()); }
+bool <c.name>Key::isKnown() const { return <u.model.namespace>::Codec::isKnown(toAny()); }
 <if(c.parent)>
 
 /// L'élargissement ne perd rien et ne peut pas échouer : l'identifiant d'exécution reste
@@ -68,6 +74,9 @@ club(c, u) ::= <<
 <c.name>Key::<c.name>Key(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+<c.name>Key::<c.name>Key(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::<c.name>} {}
+
 <c.membersInNamespace:club_constructor(c);separator="\n\n">
 
 <c.membersInNamespace:club_getter(c);separator="\n\n">
@@ -75,6 +84,9 @@ club(c, u) ::= <<
 Viper::UUId const & <c.name>Key::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & <c.name>Key::runtimeId() const noexcept { return _runtimeId; }
 bool <c.name>Key::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string <c.name>Key::description() const { return <u.model.namespace>::Codec::description(toAny()); }
+bool <c.name>Key::isKnown() const { return <u.model.namespace>::Codec::isKnown(toAny()); }
 
 <u.model.namespace>::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 

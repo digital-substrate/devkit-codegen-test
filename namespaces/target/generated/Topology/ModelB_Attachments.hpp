@@ -38,15 +38,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<MaterialKey> keys(Viper::AttachmentGetting const & getting);
+std::set<MaterialKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, MaterialKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, MaterialKey const & key);
 
-std::optional<Colour> get(Viper::AttachmentGetting const & getting, MaterialKey const & key);
+std::optional<Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, MaterialKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, Colour const & value);
 
-void diff(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, Colour const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -59,11 +59,11 @@ void diff(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour 
 bool set(std::shared_ptr<Viper::Database> const & db, MaterialKey const & key, Colour const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, MaterialKey const & key);
 
-void setR(Viper::AttachmentMutating & mutating, MaterialKey const & key, float value);
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, float value);
 
-void setG(Viper::AttachmentMutating & mutating, MaterialKey const & key, float value);
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, float value);
 
-void setB(Viper::AttachmentMutating & mutating, MaterialKey const & key, float value);
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, float value);
 
 } // namespace ModelB::Attachments::Material::colour
 

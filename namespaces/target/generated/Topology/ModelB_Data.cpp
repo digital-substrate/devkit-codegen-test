@@ -14,11 +14,17 @@ namespace ModelB {
 MaterialKey::MaterialKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+MaterialKey::MaterialKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Material} {}
+
 MaterialKey MaterialKey::create() { return {Viper::UUId::create(), RuntimeIds::Material}; }
 
 Viper::UUId const & MaterialKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & MaterialKey::runtimeId() const noexcept { return _runtimeId; }
 bool MaterialKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string MaterialKey::description() const { return Topology::Codec::description(toAny()); }
+bool MaterialKey::isKnown() const { return Topology::Codec::isKnown(toAny()); }
 Topology::AnyConceptKey MaterialKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la

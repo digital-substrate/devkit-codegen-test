@@ -14,11 +14,17 @@ namespace Test {
 ConceptAKey::ConceptAKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+ConceptAKey::ConceptAKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::ConceptA} {}
+
 ConceptAKey ConceptAKey::create() { return {Viper::UUId::create(), RuntimeIds::ConceptA}; }
 
 Viper::UUId const & ConceptAKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & ConceptAKey::runtimeId() const noexcept { return _runtimeId; }
 bool ConceptAKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string ConceptAKey::description() const { return Features::Codec::description(toAny()); }
+bool ConceptAKey::isKnown() const { return Features::Codec::isKnown(toAny()); }
 Features::AnyConceptKey ConceptAKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
@@ -50,11 +56,17 @@ void hash(Viper::Hash::Accumulator & h, ConceptAKey const & value) noexcept {
 ConceptBKey::ConceptBKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+ConceptBKey::ConceptBKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::ConceptB} {}
+
 ConceptBKey ConceptBKey::create() { return {Viper::UUId::create(), RuntimeIds::ConceptB}; }
 
 Viper::UUId const & ConceptBKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & ConceptBKey::runtimeId() const noexcept { return _runtimeId; }
 bool ConceptBKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string ConceptBKey::description() const { return Features::Codec::description(toAny()); }
+bool ConceptBKey::isKnown() const { return Features::Codec::isKnown(toAny()); }
 Features::AnyConceptKey ConceptBKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
@@ -86,11 +98,17 @@ void hash(Viper::Hash::Accumulator & h, ConceptBKey const & value) noexcept {
 ConceptCoverageKey::ConceptCoverageKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+ConceptCoverageKey::ConceptCoverageKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::ConceptCoverage} {}
+
 ConceptCoverageKey ConceptCoverageKey::create() { return {Viper::UUId::create(), RuntimeIds::ConceptCoverage}; }
 
 Viper::UUId const & ConceptCoverageKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & ConceptCoverageKey::runtimeId() const noexcept { return _runtimeId; }
 bool ConceptCoverageKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string ConceptCoverageKey::description() const { return Features::Codec::description(toAny()); }
+bool ConceptCoverageKey::isKnown() const { return Features::Codec::isKnown(toAny()); }
 Features::AnyConceptKey ConceptCoverageKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
@@ -122,11 +140,17 @@ void hash(Viper::Hash::Accumulator & h, ConceptCoverageKey const & value) noexce
 ConceptDKey::ConceptDKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+ConceptDKey::ConceptDKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::ConceptD} {}
+
 ConceptDKey ConceptDKey::create() { return {Viper::UUId::create(), RuntimeIds::ConceptD}; }
 
 Viper::UUId const & ConceptDKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & ConceptDKey::runtimeId() const noexcept { return _runtimeId; }
 bool ConceptDKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string ConceptDKey::description() const { return Features::Codec::description(toAny()); }
+bool ConceptDKey::isKnown() const { return Features::Codec::isKnown(toAny()); }
 Features::AnyConceptKey ConceptDKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
@@ -158,11 +182,17 @@ void hash(Viper::Hash::Accumulator & h, ConceptDKey const & value) noexcept {
 ConceptCKey::ConceptCKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+ConceptCKey::ConceptCKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::ConceptC} {}
+
 ConceptCKey ConceptCKey::create() { return {Viper::UUId::create(), RuntimeIds::ConceptC}; }
 
 Viper::UUId const & ConceptCKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & ConceptCKey::runtimeId() const noexcept { return _runtimeId; }
 bool ConceptCKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string ConceptCKey::description() const { return Features::Codec::description(toAny()); }
+bool ConceptCKey::isKnown() const { return Features::Codec::isKnown(toAny()); }
 
 /// L'élargissement ne perd rien et ne peut pas échouer : l'identifiant d'exécution reste
 /// celui du concept réel, et c'est pourquoi le retour est possible ensuite.
@@ -201,11 +231,17 @@ void hash(Viper::Hash::Accumulator & h, ConceptCKey const & value) noexcept {
 EmptyKlubKey::EmptyKlubKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+EmptyKlubKey::EmptyKlubKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::EmptyKlub} {}
+
 
 
 Viper::UUId const & EmptyKlubKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & EmptyKlubKey::runtimeId() const noexcept { return _runtimeId; }
 bool EmptyKlubKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string EmptyKlubKey::description() const { return Features::Codec::description(toAny()); }
+bool EmptyKlubKey::isKnown() const { return Features::Codec::isKnown(toAny()); }
 
 Features::AnyConceptKey EmptyKlubKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
@@ -238,6 +274,9 @@ void hash(Viper::Hash::Accumulator & h, EmptyKlubKey const & value) noexcept {
 KlubKey::KlubKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+KlubKey::KlubKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Klub} {}
+
 KlubKey::KlubKey(ConceptCKey const & key) noexcept
 : _instanceId{key.instanceId()}, _runtimeId{key.runtimeId()} {}
 
@@ -255,6 +294,9 @@ std::optional<ConceptDKey> KlubKey::asConceptDKey() const noexcept {
 Viper::UUId const & KlubKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & KlubKey::runtimeId() const noexcept { return _runtimeId; }
 bool KlubKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string KlubKey::description() const { return Features::Codec::description(toAny()); }
+bool KlubKey::isKnown() const { return Features::Codec::isKnown(toAny()); }
 
 Features::AnyConceptKey KlubKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 

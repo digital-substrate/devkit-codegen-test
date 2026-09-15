@@ -43,33 +43,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ModelA::MaterialKey const & key) {
 
 } // namespace
 
-std::set<ModelA::MaterialKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ModelA::MaterialKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ModelA::MaterialKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Topology::Codec::decode<ModelA::MaterialKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ModelA::MaterialKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ModelA::MaterialKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::string> get(Viper::AttachmentGetting const & getting, ModelA::MaterialKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::string> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ModelA::MaterialKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Topology::Codec::decode<std::string>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ModelA::MaterialKey const & key, std::string const & value) {
-    mutating.set(attachment(), encodeKey(key), Topology::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ModelA::MaterialKey const & key, std::string const & value) {
+    mutating->set(attachment(), encodeKey(key), Topology::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ModelA::MaterialKey const & key, std::string const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ModelA::MaterialKey const & key, std::string const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ModelA::MaterialKey const & key, std::string const & value) {
@@ -101,33 +101,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ModelB::MaterialKey const & key) {
 
 } // namespace
 
-std::set<ModelB::MaterialKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ModelB::MaterialKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ModelB::MaterialKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Topology::Codec::decode<ModelB::MaterialKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ModelB::MaterialKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ModelB::MaterialKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::string> get(Viper::AttachmentGetting const & getting, ModelB::MaterialKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::string> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ModelB::MaterialKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Topology::Codec::decode<std::string>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ModelB::MaterialKey const & key, std::string const & value) {
-    mutating.set(attachment(), encodeKey(key), Topology::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ModelB::MaterialKey const & key, std::string const & value) {
+    mutating->set(attachment(), encodeKey(key), Topology::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ModelB::MaterialKey const & key, std::string const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ModelB::MaterialKey const & key, std::string const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ModelB::MaterialKey const & key, std::string const & value) {

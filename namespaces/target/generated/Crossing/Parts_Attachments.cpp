@@ -37,33 +37,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(ThingKey const & key) {
 
 } // namespace
 
-std::set<ThingKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<ThingKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<ThingKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<ThingKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, ThingKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ThingKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Colour> get(Viper::AttachmentGetting const & getting, ThingKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ThingKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Colour>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, Colour const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, Colour const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, ThingKey const & key, Colour const & value) {
@@ -74,20 +74,20 @@ bool del(std::shared_ptr<Viper::Database> const & db, ThingKey const & key) {
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void setR(Viper::AttachmentMutating & mutating, ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::rPath(),
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Parts::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setG(Viper::AttachmentMutating & mutating, ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::gPath(),
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Parts::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setB(Viper::AttachmentMutating & mutating, ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::bPath(),
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Parts::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 

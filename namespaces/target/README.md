@@ -74,15 +74,28 @@ layers look finished when only their headers existed.
 
 ## Where it stands now
 
-Every directory of the pack has been opened, and all but two are reproduced and compiled:
-**47 generated files for the topology model, 25 for the crossing one.** What is left is
-`Json` and `ValueHasher`, which their own source shows to be compositions over the generic
-`encode` — a few lines each, and the only reason they are not written is that nothing has
-needed them yet.
+Every directory of the pack has been opened and reproduced. Four models render, compile,
+link against `libviper.a` and run: **83 generated files for the topology model, 47 for the
+crossing one, 23 for features, 27 for the service.** `Json` and `ValueHasher` turned out to
+be compositions over the generic `encode`, a few lines each, and live in the codec.
 
-No new shape appeared in the last three pieces. What appeared instead, three times, was the
-same finding: an artefact that looked generated turns out to vary only by the model's name,
-or by one argument.
+No new shape appeared in the last pieces. What appeared instead, repeatedly, was the same
+finding: an artefact that looked generated turns out to vary only by the model's name, or by
+one argument.
+
+## The consumer's test
+
+`service/` carries a client and a server that were written against the old pack, plus the
+two bridges a developer writes by hand. `link/service/migrate.py` ports them onto the new
+names **and nothing else**: every line of that script is one thing the new templates make a
+consumer rewrite, which makes the script itself the measure of the migration cost. Eighteen
+substitutions across four files, all mechanical — no call gains an argument, changes a type,
+or loses an operation.
+
+It is the only test here that was not written to pass. It found three things the coverage
+count could not see: an attachment pool had no `Remote` at all, typed keys had lost
+`description()` and `isKnown()`, and the attachment surface took a reference where the
+runtime hands a `shared_ptr` everywhere. See `PLAN.md` for the table and the reasons.
 
 ## The mono-namespace case, which is the common one
 

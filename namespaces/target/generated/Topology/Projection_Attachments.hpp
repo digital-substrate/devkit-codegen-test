@@ -42,15 +42,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<LinkKey> keys(Viper::AttachmentGetting const & getting);
+std::set<LinkKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, LinkKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key);
 
-std::optional<std::map<ModelA::MaterialKey, ModelB::MaterialKey>> get(Viper::AttachmentGetting const & getting, LinkKey const & key);
+std::optional<std::map<ModelA::MaterialKey, ModelB::MaterialKey>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -63,9 +63,9 @@ void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<Mo
 bool set(std::shared_ptr<Viper::Database> const & db, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, LinkKey const & key);
 
-void union_(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value);
-void subtract(Viper::AttachmentMutating & mutating, LinkKey const & key, std::set<ModelA::MaterialKey> const & value);
-void update(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value);
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value);
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::set<ModelA::MaterialKey> const & value);
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value);
 
 } // namespace Projection::Attachments::Link::mapping
 
@@ -83,15 +83,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<LinkKey> keys(Viper::AttachmentGetting const & getting);
+std::set<LinkKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, LinkKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key);
 
-std::optional<ModelC::MarkerKey> get(Viper::AttachmentGetting const & getting, LinkKey const & key);
+std::optional<ModelC::MarkerKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelC::MarkerKey const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, ModelC::MarkerKey const & value);
 
-void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelC::MarkerKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, ModelC::MarkerKey const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -118,15 +118,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<LinkKey> keys(Viper::AttachmentGetting const & getting);
+std::set<LinkKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, LinkKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key);
 
-std::optional<Pair> get(Viper::AttachmentGetting const & getting, LinkKey const & key);
+std::optional<Pair> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, LinkKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, LinkKey const & key, Pair const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, Pair const & value);
 
-void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, Pair const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, Pair const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -139,9 +139,9 @@ void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, Pair const 
 bool set(std::shared_ptr<Viper::Database> const & db, LinkKey const & key, Pair const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, LinkKey const & key);
 
-void setA(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelA::MaterialKey const & value);
+void setA(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, ModelA::MaterialKey const & value);
 
-void setB(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelB::MaterialKey const & value);
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, LinkKey const & key, ModelB::MaterialKey const & value);
 
 } // namespace Projection::Attachments::Link::pair
 

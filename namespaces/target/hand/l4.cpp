@@ -4,7 +4,8 @@
 #include "Projector_Pool.hpp"
 #include "ModelA_Fields.hpp"
 
-void use_l4(Viper::AttachmentGetting & g, Viper::AttachmentMutating & m,
+void use_l4(std::shared_ptr<Viper::AttachmentGetting> const & g,
+            std::shared_ptr<Viper::AttachmentMutating> const & m,
             std::shared_ptr<Viper::ServiceRemote> svc) {
     ModelA::MaterialKey k;
 

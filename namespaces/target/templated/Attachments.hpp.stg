@@ -58,13 +58,13 @@ std::shared_ptr\<Viper::Attachment> const & descriptor();
 
 <keys(a)>
 
-bool has(Viper::AttachmentGetting const & getting, <a.keyType.typeInNamespace> const & key);
+bool has(std::shared_ptr\<Viper::AttachmentGetting> const & getting, <a.keyType.typeInNamespace> const & key);
 
 <get(a)>
 
-void set(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+void set(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value,
+void diff(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -97,31 +97,31 @@ bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.typeInNamespac
 /// dirait pas lequel. C'est l'aplatissement contraint : une portée par champ ajouterait un
 /// quatrième niveau sous l'attachment.
 field(sf, a) ::= <<
-void set<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace><sf.passBy> value);
+void set<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace><sf.passBy> value);
 <if(sf.field.isSet)><sf:field_set(a)><elseif(sf.field.isMap)><sf:field_map(a)><elseif(sf.field.isXArray)><sf:field_xarray(a)><endif>
 >>
 
 field_set(sf, a) ::= <<
-void union<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);
+void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);
 <field_subtract_set(sf, a)>
 >>
 
 field_map(sf, a) ::= <<
-void union<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);
+void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);
 <field_subtract_map(sf, a)>
-void update<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);
+void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);
 >>
 
 field_xarray(sf, a) ::= <<
-void insert<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <sf.field.elementType><sf.field.passBy> value);
-void update<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <sf.field.elementType><sf.field.passBy> value);
-void remove<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position);
+void insert<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <sf.field.elementType><sf.field.passBy> value);
+void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <sf.field.elementType><sf.field.passBy> value);
+void remove<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position);
 >>
 
 // Retirer d'une map, c'est retirer des clés : l'argument est un ensemble de clés et non une
 // map -- demander les valeurs pour effacer laisserait croire qu'elles comptent.
-field_subtract_set(sf, a) ::= <%void subtract<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);%>
-field_subtract_map(sf, a) ::= <%void subtract<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<sf.field.keyType>> const & value);%>
+field_subtract_set(sf, a) ::= <%void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);%>
+field_subtract_map(sf, a) ::= <%void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<sf.field.keyType>> const & value);%>
 
 // ── et les mêmes quand le document EST l'agrégat ──
 //
@@ -132,26 +132,26 @@ document_aggregate(a) ::= <<
 >>
 
 document_set(a) ::= <<
-void union_(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
-void subtract(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
 >>
 
 document_map(a) ::= <<
-void union_(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
 <document_subtract_map(a)>
-void update(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
 >>
 
-document_subtract_map(a) ::= <%void subtract(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<a.documentType.field.keyType>> const & value);%>
+document_subtract_map(a) ::= <%void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<a.documentType.field.keyType>> const & value);%>
 
 document_xarray(a) ::= <<
-void insert(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <a.documentType.field.elementType><a.documentType.field.passBy> value);
-void update(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <a.documentType.field.elementType><a.documentType.field.passBy> value);
-void remove(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position);
+void insert(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <a.documentType.field.elementType><a.documentType.field.passBy> value);
+void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <a.documentType.field.elementType><a.documentType.field.passBy> value);
+void remove(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position);
 >>
 
 
 // `<%…%>`, because a `>>` in the emitted text would close a `<<…>>` body. Every generic
 // type crossing into the output hits this.
-keys(a) ::= <%std::set\<<a.keyType.typeInNamespace>> keys(Viper::AttachmentGetting const & getting);%>
-get(a) ::= <%std::optional\<<a.documentType.typeInNamespace>> get(Viper::AttachmentGetting const & getting, <a.keyType.typeInNamespace> const & key);%>
+keys(a) ::= <%std::set\<<a.keyType.typeInNamespace>> keys(std::shared_ptr\<Viper::AttachmentGetting> const & getting);%>
+get(a) ::= <%std::optional\<<a.documentType.typeInNamespace>> get(std::shared_ptr\<Viper::AttachmentGetting> const & getting, <a.keyType.typeInNamespace> const & key);%>

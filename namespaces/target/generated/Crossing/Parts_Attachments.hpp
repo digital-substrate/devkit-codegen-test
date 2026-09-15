@@ -38,15 +38,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ThingKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ThingKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ThingKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ThingKey const & key);
 
-std::optional<Colour> get(Viper::AttachmentGetting const & getting, ThingKey const & key);
+std::optional<Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ThingKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, Colour const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, Colour const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -59,11 +59,11 @@ void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour con
 bool set(std::shared_ptr<Viper::Database> const & db, ThingKey const & key, Colour const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ThingKey const & key);
 
-void setR(Viper::AttachmentMutating & mutating, ThingKey const & key, float value);
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, float value);
 
-void setG(Viper::AttachmentMutating & mutating, ThingKey const & key, float value);
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, float value);
 
-void setB(Viper::AttachmentMutating & mutating, ThingKey const & key, float value);
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ThingKey const & key, float value);
 
 } // namespace Parts::Attachments::Thing::colour
 

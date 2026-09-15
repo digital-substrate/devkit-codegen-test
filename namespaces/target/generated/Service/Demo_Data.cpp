@@ -14,11 +14,17 @@ namespace Demo {
 PlayerKey::PlayerKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+PlayerKey::PlayerKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Player} {}
+
 PlayerKey PlayerKey::create() { return {Viper::UUId::create(), RuntimeIds::Player}; }
 
 Viper::UUId const & PlayerKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & PlayerKey::runtimeId() const noexcept { return _runtimeId; }
 bool PlayerKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string PlayerKey::description() const { return Service::Codec::description(toAny()); }
+bool PlayerKey::isKnown() const { return Service::Codec::isKnown(toAny()); }
 Service::AnyConceptKey PlayerKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la

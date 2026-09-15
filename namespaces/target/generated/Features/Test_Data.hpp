@@ -30,10 +30,27 @@ public:
     ConceptAKey() = default;
     ConceptAKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
+    /// Reconstruire une clé depuis l'identifiant d'instance seul : l'identifiant
+    /// d'exécution est celui de ce concept-ci.
+    ///
+    /// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle
+    /// ont la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
+    /// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
+    /// justement pour empêcher. `ConceptAKey{id}` dit la même chose et la dit exprès.
+    explicit ConceptAKey(Viper::UUId const & instanceId) noexcept;
+
     static ConceptAKey create();
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
+
+    /// Ce que la clé désigne, dit en clair, et si le modèle le connaît.
+    ///
+    /// LA RÉPONSE VIENT DES DÉFINITIONS, PAS DE LA GÉNÉRATION. Un identifiant d'exécution
+    /// peut être celui d'un descendant qui n'existait pas quand ce fichier a été écrit ;
+    /// les définitions embarquées, elles, sont lues à l'exécution et savent le nommer.
+    std::string description() const;
+    bool isKnown() const;
 
     bool isValid() const noexcept;
     Features::AnyConceptKey toAny() const noexcept;
@@ -57,10 +74,27 @@ public:
     ConceptBKey() = default;
     ConceptBKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
+    /// Reconstruire une clé depuis l'identifiant d'instance seul : l'identifiant
+    /// d'exécution est celui de ce concept-ci.
+    ///
+    /// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle
+    /// ont la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
+    /// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
+    /// justement pour empêcher. `ConceptBKey{id}` dit la même chose et la dit exprès.
+    explicit ConceptBKey(Viper::UUId const & instanceId) noexcept;
+
     static ConceptBKey create();
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
+
+    /// Ce que la clé désigne, dit en clair, et si le modèle le connaît.
+    ///
+    /// LA RÉPONSE VIENT DES DÉFINITIONS, PAS DE LA GÉNÉRATION. Un identifiant d'exécution
+    /// peut être celui d'un descendant qui n'existait pas quand ce fichier a été écrit ;
+    /// les définitions embarquées, elles, sont lues à l'exécution et savent le nommer.
+    std::string description() const;
+    bool isKnown() const;
 
     bool isValid() const noexcept;
     Features::AnyConceptKey toAny() const noexcept;
@@ -84,10 +118,27 @@ public:
     ConceptCoverageKey() = default;
     ConceptCoverageKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
+    /// Reconstruire une clé depuis l'identifiant d'instance seul : l'identifiant
+    /// d'exécution est celui de ce concept-ci.
+    ///
+    /// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle
+    /// ont la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
+    /// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
+    /// justement pour empêcher. `ConceptCoverageKey{id}` dit la même chose et la dit exprès.
+    explicit ConceptCoverageKey(Viper::UUId const & instanceId) noexcept;
+
     static ConceptCoverageKey create();
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
+
+    /// Ce que la clé désigne, dit en clair, et si le modèle le connaît.
+    ///
+    /// LA RÉPONSE VIENT DES DÉFINITIONS, PAS DE LA GÉNÉRATION. Un identifiant d'exécution
+    /// peut être celui d'un descendant qui n'existait pas quand ce fichier a été écrit ;
+    /// les définitions embarquées, elles, sont lues à l'exécution et savent le nommer.
+    std::string description() const;
+    bool isKnown() const;
 
     bool isValid() const noexcept;
     Features::AnyConceptKey toAny() const noexcept;
@@ -111,10 +162,27 @@ public:
     ConceptDKey() = default;
     ConceptDKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
+    /// Reconstruire une clé depuis l'identifiant d'instance seul : l'identifiant
+    /// d'exécution est celui de ce concept-ci.
+    ///
+    /// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle
+    /// ont la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
+    /// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
+    /// justement pour empêcher. `ConceptDKey{id}` dit la même chose et la dit exprès.
+    explicit ConceptDKey(Viper::UUId const & instanceId) noexcept;
+
     static ConceptDKey create();
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
+
+    /// Ce que la clé désigne, dit en clair, et si le modèle le connaît.
+    ///
+    /// LA RÉPONSE VIENT DES DÉFINITIONS, PAS DE LA GÉNÉRATION. Un identifiant d'exécution
+    /// peut être celui d'un descendant qui n'existait pas quand ce fichier a été écrit ;
+    /// les définitions embarquées, elles, sont lues à l'exécution et savent le nommer.
+    std::string description() const;
+    bool isKnown() const;
 
     bool isValid() const noexcept;
     Features::AnyConceptKey toAny() const noexcept;
@@ -138,10 +206,27 @@ public:
     ConceptCKey() = default;
     ConceptCKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
+    /// Reconstruire une clé depuis l'identifiant d'instance seul : l'identifiant
+    /// d'exécution est celui de ce concept-ci.
+    ///
+    /// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle
+    /// ont la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
+    /// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
+    /// justement pour empêcher. `ConceptCKey{id}` dit la même chose et la dit exprès.
+    explicit ConceptCKey(Viper::UUId const & instanceId) noexcept;
+
     static ConceptCKey create();
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
+
+    /// Ce que la clé désigne, dit en clair, et si le modèle le connaît.
+    ///
+    /// LA RÉPONSE VIENT DES DÉFINITIONS, PAS DE LA GÉNÉRATION. Un identifiant d'exécution
+    /// peut être celui d'un descendant qui n'existait pas quand ce fichier a été écrit ;
+    /// les définitions embarquées, elles, sont lues à l'exécution et savent le nommer.
+    std::string description() const;
+    bool isKnown() const;
 
     bool isValid() const noexcept;
     /// Élargir vers le parent. Implicite, parce que `is a` n'est pas une demande : partout
@@ -173,10 +258,27 @@ public:
     EmptyKlubKey() = default;
     EmptyKlubKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
+    /// Reconstruire une clé depuis l'identifiant d'instance seul : l'identifiant
+    /// d'exécution est celui de ce concept-ci.
+    ///
+    /// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle
+    /// ont la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
+    /// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
+    /// justement pour empêcher. `EmptyKlubKey{id}` dit la même chose et la dit exprès.
+    explicit EmptyKlubKey(Viper::UUId const & instanceId) noexcept;
+
 
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
+
+    /// Ce que la clé désigne, dit en clair, et si le modèle le connaît.
+    ///
+    /// LA RÉPONSE VIENT DES DÉFINITIONS, PAS DE LA GÉNÉRATION. Un identifiant d'exécution
+    /// peut être celui d'un descendant qui n'existait pas quand ce fichier a été écrit ;
+    /// les définitions embarquées, elles, sont lues à l'exécution et savent le nommer.
+    std::string description() const;
+    bool isKnown() const;
     bool isValid() const noexcept;
 
     Features::AnyConceptKey toAny() const noexcept;
@@ -199,6 +301,15 @@ public:
     KlubKey() = default;
     KlubKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
+    /// Reconstruire une clé depuis l'identifiant d'instance seul : l'identifiant
+    /// d'exécution est celui de ce concept-ci.
+    ///
+    /// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle
+    /// ont la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
+    /// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
+    /// justement pour empêcher. `KlubKey{id}` dit la même chose et la dit exprès.
+    explicit KlubKey(Viper::UUId const & instanceId) noexcept;
+
     KlubKey(ConceptCKey const & key) noexcept;
     KlubKey(ConceptDKey const & key) noexcept;
 
@@ -207,6 +318,14 @@ public:
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
+
+    /// Ce que la clé désigne, dit en clair, et si le modèle le connaît.
+    ///
+    /// LA RÉPONSE VIENT DES DÉFINITIONS, PAS DE LA GÉNÉRATION. Un identifiant d'exécution
+    /// peut être celui d'un descendant qui n'existait pas quand ce fichier a été écrit ;
+    /// les définitions embarquées, elles, sont lues à l'exécution et savent le nommer.
+    std::string description() const;
+    bool isKnown() const;
     bool isValid() const noexcept;
 
     Features::AnyConceptKey toAny() const noexcept;

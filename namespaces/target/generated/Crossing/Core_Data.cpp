@@ -14,11 +14,17 @@ namespace Core {
 OtherKey::OtherKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+OtherKey::OtherKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Other} {}
+
 OtherKey OtherKey::create() { return {Viper::UUId::create(), RuntimeIds::Other}; }
 
 Viper::UUId const & OtherKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & OtherKey::runtimeId() const noexcept { return _runtimeId; }
 bool OtherKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string OtherKey::description() const { return Crossing::Codec::description(toAny()); }
+bool OtherKey::isKnown() const { return Crossing::Codec::isKnown(toAny()); }
 Crossing::AnyConceptKey OtherKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
@@ -50,11 +56,17 @@ void hash(Viper::Hash::Accumulator & h, OtherKey const & value) noexcept {
 ThingKey::ThingKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+ThingKey::ThingKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Thing} {}
+
 ThingKey ThingKey::create() { return {Viper::UUId::create(), RuntimeIds::Thing}; }
 
 Viper::UUId const & ThingKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & ThingKey::runtimeId() const noexcept { return _runtimeId; }
 bool ThingKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string ThingKey::description() const { return Crossing::Codec::description(toAny()); }
+bool ThingKey::isKnown() const { return Crossing::Codec::isKnown(toAny()); }
 Crossing::AnyConceptKey ThingKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
@@ -86,11 +98,17 @@ void hash(Viper::Hash::Accumulator & h, ThingKey const & value) noexcept {
 SubThingKey::SubThingKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+SubThingKey::SubThingKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::SubThing} {}
+
 SubThingKey SubThingKey::create() { return {Viper::UUId::create(), RuntimeIds::SubThing}; }
 
 Viper::UUId const & SubThingKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & SubThingKey::runtimeId() const noexcept { return _runtimeId; }
 bool SubThingKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string SubThingKey::description() const { return Crossing::Codec::description(toAny()); }
+bool SubThingKey::isKnown() const { return Crossing::Codec::isKnown(toAny()); }
 
 /// L'élargissement ne perd rien et ne peut pas échouer : l'identifiant d'exécution reste
 /// celui du concept réel, et c'est pourquoi le retour est possible ensuite.
@@ -129,6 +147,9 @@ void hash(Viper::Hash::Accumulator & h, SubThingKey const & value) noexcept {
 KlubKey::KlubKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+KlubKey::KlubKey(Viper::UUId const & instanceId) noexcept
+: _instanceId{instanceId}, _runtimeId{RuntimeIds::Klub} {}
+
 KlubKey::KlubKey(OtherKey const & key) noexcept
 : _instanceId{key.instanceId()}, _runtimeId{key.runtimeId()} {}
 
@@ -146,6 +167,9 @@ std::optional<SubThingKey> KlubKey::asSubThingKey() const noexcept {
 Viper::UUId const & KlubKey::instanceId() const noexcept { return _instanceId; }
 Viper::UUId const & KlubKey::runtimeId() const noexcept { return _runtimeId; }
 bool KlubKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+std::string KlubKey::description() const { return Crossing::Codec::description(toAny()); }
+bool KlubKey::isKnown() const { return Crossing::Codec::isKnown(toAny()); }
 
 Crossing::AnyConceptKey KlubKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 

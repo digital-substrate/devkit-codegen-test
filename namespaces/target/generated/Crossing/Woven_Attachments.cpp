@@ -43,33 +43,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(Core::ThingKey const & key) {
 
 } // namespace
 
-std::set<Core::ThingKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<Core::ThingKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<Core::ThingKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<Core::ThingKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, Core::ThingKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, Core::ThingKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Parts::Colour> get(Viper::AttachmentGetting const & getting, Core::ThingKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Parts::Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, Core::ThingKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Parts::Colour>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, Parts::Colour const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, Parts::Colour const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, Parts::Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, Parts::Colour const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, Core::ThingKey const & key, Parts::Colour const & value) {
@@ -80,20 +80,20 @@ bool del(std::shared_ptr<Viper::Database> const & db, Core::ThingKey const & key
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void setR(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::rPath(),
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Parts::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setG(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::gPath(),
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Parts::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setB(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::bPath(),
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Core::ThingKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Parts::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 
@@ -119,33 +119,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<::Crossing::AnyConceptKey> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<::Crossing::AnyConceptKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<::Crossing::AnyConceptKey>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, ::Crossing::AnyConceptKey const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, ::Crossing::AnyConceptKey const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, ::Crossing::AnyConceptKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, ::Crossing::AnyConceptKey const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, ::Crossing::AnyConceptKey const & value) {
@@ -177,33 +177,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Core::Colour> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Core::Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Core::Colour>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Colour const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::Colour const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::Colour const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Core::Colour const & value) {
@@ -214,20 +214,20 @@ bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key) {
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::rPath(),
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Core::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setG(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::gPath(),
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Core::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setB(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::bPath(),
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Core::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 
@@ -253,33 +253,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Composites> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Composites> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Composites>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Composites const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Composites const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Composites const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Composites const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Composites const & value) {
@@ -290,96 +290,96 @@ bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key) {
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void setF_tuple(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value) {
-    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_tuplePath(),
+void setF_tuple(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value) {
+    mutating->update(attachment(), encodeKey(key), Woven::Fields::Composites::f_tuplePath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setF_optional(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value) {
-    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_optionalPath(),
+void setF_optional(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value) {
+    mutating->update(attachment(), encodeKey(key), Woven::Fields::Composites::f_optionalPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setF_vector(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value) {
-    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_vectorPath(),
+void setF_vector(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value) {
+    mutating->update(attachment(), encodeKey(key), Woven::Fields::Composites::f_vectorPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
-    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_setPath(),
+void setF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating->update(attachment(), encodeKey(key), Woven::Fields::Composites::f_setPath(),
                     Crossing::Codec::encode(value));
 }
 
-void unionF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
-    mutating.unionInSet(attachment(), encodeKey(key), Woven::Fields::Composites::f_setPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+void unionF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating->unionInSet(attachment(), encodeKey(key), Woven::Fields::Composites::f_setPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
 }
 
-void subtractF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
-    mutating.subtractInSet(attachment(), encodeKey(key), Woven::Fields::Composites::f_setPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+void subtractF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating->subtractInSet(attachment(), encodeKey(key), Woven::Fields::Composites::f_setPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
 }
 
 
-void setF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
-    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(),
+void setF_map_keys(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating->update(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(),
                     Crossing::Codec::encode(value));
 }
 
-void unionF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+void unionF_map_keys(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
 }
 
-void subtractF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+void subtractF_map_keys(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
 }
 
-void updateF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+void updateF_map_keys(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
 }
 
 
-void setF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
-    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(),
+void setF_map_enum(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating->update(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(),
                     Crossing::Codec::encode(value));
 }
 
-void unionF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+void unionF_map_enum(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
 }
 
-void subtractF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::Grade> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+void subtractF_map_enum(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::Grade> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
 }
 
-void updateF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+void updateF_map_enum(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
 }
 
 
-void setF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value) {
-    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(),
+void setF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value) {
+    mutating->update(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(),
                     Crossing::Codec::encode(value));
 }
 
-void insertF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value) {
-    mutating.insertInXArray(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(),
+void insertF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value) {
+    mutating->insertInXArray(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(),
                             beforePosition, newPosition, Crossing::Codec::encode(value));
 }
 
-void updateF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value) {
-    mutating.updateInXArray(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(),
+void updateF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value) {
+    mutating->updateInXArray(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(),
                             position, Crossing::Codec::encode(value));
 }
 
-void removeF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position) {
-    mutating.removeInXArray(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(), position);
+void removeF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & position) {
+    mutating->removeInXArray(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(), position);
 }
 
 
-void setF_variant(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_variantPath(),
+void setF_variant(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour, std::string> const & value) {
+    mutating->update(attachment(), encodeKey(key), Woven::Fields::Composites::f_variantPath(),
                     Crossing::Codec::encode(value));
 }
 
@@ -405,33 +405,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Core::Grade> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Core::Grade> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Core::Grade>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Grade const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::Grade const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Grade const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::Grade const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Core::Grade const & value) {
@@ -463,33 +463,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Core::KlubKey> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Core::KlubKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Core::KlubKey>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::KlubKey const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::KlubKey const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::KlubKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::KlubKey const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Core::KlubKey const & value) {
@@ -521,33 +521,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::map<Core::Grade, Parts::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::map<Core::Grade, Parts::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<std::map<Core::Grade, Parts::Colour>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
@@ -558,16 +558,16 @@ bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key) {
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
 }
 
-void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::Grade> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::Grade> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
 }
 
-void update(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
 }
 
 } // namespace Woven::Attachments::Knot::docMapEnum
@@ -592,33 +592,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::map<Core::ThingKey, Parts::ThingKey>> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::map<Core::ThingKey, Parts::ThingKey>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<std::map<Core::ThingKey, Parts::ThingKey>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
@@ -629,16 +629,16 @@ bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key) {
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
-    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating->unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
 }
 
-void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
-    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating->subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
 }
 
-void update(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
-    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating->updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
 }
 
 } // namespace Woven::Attachments::Knot::docMapKeys
@@ -663,33 +663,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::optional<Core::ThingKey>> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::optional<Core::ThingKey>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<std::optional<Core::ThingKey>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::optional<Core::ThingKey> const & value) {
@@ -721,33 +721,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Parts::Colour> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Parts::Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Parts::Colour>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Parts::Colour const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Parts::Colour const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Parts::Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Parts::Colour const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Parts::Colour const & value) {
@@ -758,20 +758,20 @@ bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key) {
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::rPath(),
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Parts::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setG(Viper::AttachmentMutating & mutating, KnotKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::gPath(),
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Parts::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setB(Viper::AttachmentMutating & mutating, KnotKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::bPath(),
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, float value) {
+    mutating->update(attachment(), encodeKey(key), Parts::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 
@@ -797,33 +797,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::set<Core::ThingKey>> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::set<Core::ThingKey>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<std::set<Core::ThingKey>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::set<Core::ThingKey> const & value) {
@@ -834,12 +834,12 @@ bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key) {
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
-    mutating.unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating->unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
 }
 
-void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
-    mutating.subtractInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating->subtractInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
 }
 
 } // namespace Woven::Attachments::Knot::docSet
@@ -864,33 +864,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Core::ThingKey> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Core::ThingKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Core::ThingKey>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::ThingKey const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::ThingKey const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::ThingKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Core::ThingKey const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Core::ThingKey const & value) {
@@ -922,33 +922,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::tuple<Core::Colour, Parts::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::tuple<Core::Colour, Parts::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<std::tuple<Core::Colour, Parts::Colour>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value) {
@@ -980,33 +980,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::variant<Core::Colour, Parts::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::variant<Core::Colour, Parts::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<std::variant<Core::Colour, Parts::Colour>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value) {
@@ -1038,33 +1038,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<std::vector<Parts::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<std::vector<Parts::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<std::vector<Parts::Colour>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::vector<Parts::Colour> const & value) {
@@ -1096,33 +1096,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(KnotKey const & key) {
 
 } // namespace
 
-std::set<KnotKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<KnotKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<KnotKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<KnotKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Viper::XArray<Core::Colour>> get(Viper::AttachmentGetting const & getting, KnotKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Viper::XArray<Core::Colour>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KnotKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Viper::XArray<Core::Colour>>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Viper::XArray<Core::Colour> const & value) {
@@ -1133,17 +1133,17 @@ bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key) {
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void insert(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value) {
-    mutating.insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
+void insert(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value) {
+    mutating->insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
                             beforePosition, newPosition, Crossing::Codec::encode(value));
 }
 
-void update(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value) {
-    mutating.updateInXArray(attachment(), encodeKey(key), Viper::Path::make(), position, Crossing::Codec::encode(value));
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value) {
+    mutating->updateInXArray(attachment(), encodeKey(key), Viper::Path::make(), position, Crossing::Codec::encode(value));
 }
 
-void remove(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position) {
-    mutating.removeInXArray(attachment(), encodeKey(key), Viper::Path::make(), position);
+void remove(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KnotKey const & key, Viper::UUId const & position) {
+    mutating->removeInXArray(attachment(), encodeKey(key), Viper::Path::make(), position);
 }
 
 } // namespace Woven::Attachments::Knot::docXArray
@@ -1168,33 +1168,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(Parts::ThingKey const & key) {
 
 } // namespace
 
-std::set<Parts::ThingKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<Parts::ThingKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<Parts::ThingKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Crossing::Codec::decode<Parts::ThingKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, Parts::ThingKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, Parts::ThingKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Core::Colour> get(Viper::AttachmentGetting const & getting, Parts::ThingKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Core::Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, Parts::ThingKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Crossing::Codec::decode<Core::Colour>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, Core::Colour const & value) {
-    mutating.set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, Core::Colour const & value) {
+    mutating->set(attachment(), encodeKey(key), Crossing::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, Core::Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, Core::Colour const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, Parts::ThingKey const & key, Core::Colour const & value) {
@@ -1205,20 +1205,20 @@ bool del(std::shared_ptr<Viper::Database> const & db, Parts::ThingKey const & ke
     return Crossing::Db::del(db, attachment(), key);
 }
 
-void setR(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::rPath(),
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Core::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setG(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::gPath(),
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Core::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
 
-void setB(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::bPath(),
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Parts::ThingKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), Core::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 

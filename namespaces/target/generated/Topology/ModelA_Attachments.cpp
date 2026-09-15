@@ -37,33 +37,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(MaterialKey const & key) {
 
 } // namespace
 
-std::set<MaterialKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<MaterialKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<MaterialKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Topology::Codec::decode<MaterialKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, MaterialKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, MaterialKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<Colour> get(Viper::AttachmentGetting const & getting, MaterialKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, MaterialKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Topology::Codec::decode<Colour>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour const & value) {
-    mutating.set(attachment(), encodeKey(key), Topology::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, Colour const & value) {
+    mutating->set(attachment(), encodeKey(key), Topology::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, Colour const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, MaterialKey const & key, Colour const & value) {
@@ -74,20 +74,20 @@ bool del(std::shared_ptr<Viper::Database> const & db, MaterialKey const & key) {
     return Topology::Db::del(db, attachment(), key);
 }
 
-void setR(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), ModelA::Fields::Colour::rPath(),
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), ModelA::Fields::Colour::rPath(),
                     Topology::Codec::encode(value));
 }
 
 
-void setG(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), ModelA::Fields::Colour::gPath(),
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), ModelA::Fields::Colour::gPath(),
                     Topology::Codec::encode(value));
 }
 
 
-void setB(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key), ModelA::Fields::Colour::bPath(),
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, std::uint8_t value) {
+    mutating->update(attachment(), encodeKey(key), ModelA::Fields::Colour::bPath(),
                     Topology::Codec::encode(value));
 }
 

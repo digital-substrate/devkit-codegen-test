@@ -57,4 +57,15 @@ std::shared_ptr<Viper::AttachmentFunctionPool> pool() {
     return instance;
 }
 
+Remote::Remote(std::shared_ptr<Viper::ServiceRemote> service)
+: _service{std::move(service)} {}
+
+bool Remote::isAvailable() const {
+    return _service->queryAttachmentFunctionPool(poolId) != nullptr;
+}
+
+void Remote::clear(std::shared_ptr<Viper::AttachmentMutating> const & attachmentMutating, Projection::LinkKey const & linkKey) const {
+    _service->call(attachmentMutating, poolId, "clear", {Topology::Codec::encode(linkKey)});
+}
+
 } // namespace LinkModel

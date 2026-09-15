@@ -51,15 +51,15 @@ extern Viper::UUId const runtimeId;
 /// aussi, et chacun le re-résoudrait depuis l'identifiant. Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<MaterialKey> keys(Viper::AttachmentGetting const & getting);
+std::set<MaterialKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, MaterialKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, MaterialKey const & key);
 
-std::optional<Colour> get(Viper::AttachmentGetting const & getting, MaterialKey const & key);
+std::optional<Colour> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, MaterialKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, Colour const & value);
 
-void diff(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, Colour const & value,
           bool recursive = false);
 
 // ── un setter par champ du document ──
@@ -67,9 +67,9 @@ void diff(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour 
 // Le document est une structure, donc chacun de ses champs est adressable seul. C'est
 // l'unique consommateur des chemins de la couche 2, et la raison pour laquelle elle existe.
 
-void setR(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
-void setG(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
-void setB(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
+void setR(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, std::uint8_t value);
+void setG(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, std::uint8_t value);
+void setB(std::shared_ptr<Viper::AttachmentMutating> const & mutating, MaterialKey const & key, std::uint8_t value);
 
 // ── et les mêmes, sur une base de données ──
 //

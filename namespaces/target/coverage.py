@@ -21,10 +21,44 @@ sys.path.insert(0, str(ROOT / "tools"))
 from render import jar, TEMPLATES                                    # noqa: E402
 from models import MODELS                                           # noqa: E402
 
-MODEL = "features"          # le modèle le plus complet : toutes les formes du langage
+# TOUS LES MODÈLES, ET NON LE PLUS COMPLET. La mesure a tourné longtemps sur `features`
+# seul -- « le modèle le plus complet : toutes les formes du langage » -- et annonçait zéro
+# absente pendant que le `Remote` d'un pool d'attachments n'existait pas du tout. Features
+# ne déclare aucun pool, donc pas une seule opération de pool n'entrait dans la comparaison :
+# le décompte ne mesurait pas ce qu'il disait mesurer. Aucun modèle ne porte tout ; c'est
+# leur réunion qui porte tout.
+MODELS_MEASURED = ["features", "service", "crossing", "namespaces"]
+
+GENERATED = {"features": "Features", "service": "Service",
+             "crossing": "Crossing", "namespaces": "Topology"}
+
+# LES UNITÉS SONT CELLES DES MODÈLES MESURÉS, LUES ET NON ÉCRITES. Une liste de namespaces
+# tenue à la main se périme au premier modèle ajouté, et se périme en silence : le suffixe
+# cesse d'être retiré, la famille par type réapparaît nom par nom, et le décompte se met à
+# réclamer des fonctions qui n'ont jamais eu à exister.
+UNITS = sorted({d.name.split("_")[0]
+                for model in GENERATED.values()
+                for d in (HERE / "generated" / model).glob("*_*.hpp")}
+               | set(GENERATED.values()))
+
+def descendant_getters():
+    """Les `as<X>Key` que le pack pose sur l'ancêtre, un par concept qui descend d'un autre."""
+    import json
+    names = set()
+    for model in MODELS_MEASURED:
+        spec = MODELS[model]
+        d = json.loads((ROOT / model / f'{spec["namespace"]}.dsm.json').read_text())
+        for c in d.get("concepts", []):
+            if not c.get("parent"):
+                continue
+            name, unit = c["name"], c["namespace_name"]
+            names.add("as" + name[0].upper() + name[1:] + "Key")
+            names.add("as" + unit[0].upper() + unit[1:] + name[0].upper() + name[1:] + "Key")
+    return names
+
 
 SUFFIX = re.compile(
-    r"_(Test|Features)_\w+$"
+    r"_(" + "|".join(UNITS) + r")_\w+$"
     r"|_(bool|uint8|uint16|uint32|uint64|int8|int16|int32|int64|float|double"
     r"|string|blob|blob_id|commit_id|uuid|any|Definitions|Types|AnyConceptKey)$"
     r"|_(vec|mat|tuple|optional|vector|set|map|xarray|variant)_?\w*$")
@@ -58,12 +92,28 @@ ABSORBED = {
     # Le nom d'un champ. Le pack en fait une fonction -- `Field::StructureU::f_A()` -- là où
     # ici c'est une constante `inline constexpr std::string_view`, utilisable en expression
     # constante. Présent, sous une forme qu'une comparaison de noms ne voit pas.
-    "un nom de champ, devenu constante": """f_A f_B f_C f_D f_E f_Klub f_S f_T
-        f_any_concept f_single field_structure_s field""",
+    "un nom de champ, devenu constante": """field_structure_s field""",
 
     # Le descripteur d'un type, que l'unité porte maintenant dans son identité de modèle, et
     # celui d'une primitive ou d'un conteneur, qui est du runtime.
     "un descripteur de type": "attachment type_void type_def_any_concept",
+
+    # L'ANNUAIRE DE POOLS DU MODÈLE. Le pack déclare `Service::FunctionPools::tools()` :
+    # le modèle tient la liste de ses pools et chacun s'y nomme. Ici un pool est une unité,
+    # donc il se construit lui-même sous `Tools::pool()` et le modèle n'a rien à tenir.
+    # La liste est calculée : chaque pool rendu porte le nom d'une entrée de l'annuaire.
+    "l'annuaire de pools du modèle": " ".join(
+        d.name.split("_")[0][0].lower() + d.name.split("_")[0][1:]
+        for model in GENERATED.values()
+        for d in (HERE / "generated" / model).glob("*_Pool.hpp")),
+
+    # LE RÉTRÉCISSEMENT VERS UN DESCENDANT, POSÉ CHEZ L'ANCÊTRE. Le pack donne à
+    # `Core::ThingKey` un `asWovenDerivedKey()` pour chaque concept qui en descend -- donc
+    # `Core` nomme `Woven`, qui nomme `Core` : l'arête pointe dans les deux sens et un
+    # modèle à plusieurs unités ne peut pas la fermer. Ici le rétrécissement est chez le
+    # descendant, qui connaît son ancêtre de toute façon : `Woven::DerivedKey::from(
+    # thing.toAny())` rend le même `optional`, et se dit là où le type se nomme déjà.
+    "le rétrécissement, déplacé chez le descendant": " ".join(descendant_getters()),
 }
 
 # RENOMMÉ : l'opération est là, sous un autre mot. Chaque entrée dit lequel, et le script
@@ -84,9 +134,9 @@ RENAMED = {
 }
 
 
-def rendered_pack(out):
-    spec = MODELS[MODEL]
-    definitions = ROOT / MODEL / f'{spec["namespace"]}.dsm.json'
+def rendered_pack(out, model):
+    spec = MODELS[model]
+    definitions = ROOT / model / f'{spec["namespace"]}.dsm.json'
     out.mkdir(parents=True, exist_ok=True)
     for feature in spec["cpp"]:
         subprocess.run(["java", "-jar", jar(), "-c", "cpp", "-n", spec["namespace"],
@@ -95,9 +145,18 @@ def rendered_pack(out):
     return sorted(out.glob("*.hpp"))
 
 
+# LE NOM D'UN CHAMP N'EST PAS UNE OPÉRATION, ET LE PACK LUI DONNE POURTANT LA FORME D'UNE.
+# `Field::StructureU::f_A()` rend le nom du champ ; ici c'est une constante. Les écarter par
+# le fichier qui les porte plutôt que par une liste de noms : la liste ne couvrait que les
+# champs d'un seul modèle, et chaque modèle ajouté en inventait de nouveaux à y recopier.
+FIELD_ARTEFACT = re.compile(r"_(Field|Path)\.hpp$")
+
+
 def operations(paths):
     found = set()
     for p in paths:
+        if FIELD_ARTEFACT.search(p.name):
+            continue
         for line in p.read_text(errors="replace").splitlines():
             s = line.strip()
             if s.startswith(("//", "*", "/*", "#")):
@@ -117,10 +176,11 @@ arguments.add_argument("--all", action="store_true",
 arguments = arguments.parse_args()
 
 import tempfile
-with tempfile.TemporaryDirectory() as scratch:
-    pack = operations(rendered_pack(Path(scratch)))
-
-mine = operations(sorted((HERE / "generated" / "Features").glob("*.hpp")))
+pack, mine = set(), set()
+for model in MODELS_MEASURED:
+    with tempfile.TemporaryDirectory() as scratch:
+        pack |= operations(rendered_pack(Path(scratch) / model, model))
+    mine |= operations(sorted((HERE / "generated" / GENERATED[model]).glob("*.hpp")))
 missing = pack - mine
 
 broken = []

@@ -37,33 +37,33 @@ std::shared_ptr<Viper::ValueKey> encodeKey(PlayerKey const & key) {
 
 } // namespace
 
-std::set<PlayerKey> keys(Viper::AttachmentGetting const & getting) {
+std::set<PlayerKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::set<PlayerKey> result;
-    for (Viper::ValueSetIter it{getting.keys(attachment())}; it.hasNext(); it.next())
+    for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
         result.insert(Service::Codec::decode<PlayerKey>(it.value()));
 
     return result;
 }
 
-bool has(Viper::AttachmentGetting const & getting, PlayerKey const & key) {
-    return getting.has(attachment(), encodeKey(key));
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, PlayerKey const & key) {
+    return getting->has(attachment(), encodeKey(key));
 }
 
-std::optional<PlayerProperty> get(Viper::AttachmentGetting const & getting, PlayerKey const & key) {
-    auto const document = getting.get(attachment(), encodeKey(key));
+std::optional<PlayerProperty> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, PlayerKey const & key) {
+    auto const document = getting->get(attachment(), encodeKey(key));
     if (document->isNil())
         return std::nullopt;
 
     return Service::Codec::decode<PlayerProperty>(document->unwrap());
 }
 
-void set(Viper::AttachmentMutating & mutating, PlayerKey const & key, PlayerProperty const & value) {
-    mutating.set(attachment(), encodeKey(key), Service::Codec::encode(value));
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, PlayerKey const & key, PlayerProperty const & value) {
+    mutating->set(attachment(), encodeKey(key), Service::Codec::encode(value));
 }
 
-void diff(Viper::AttachmentMutating & mutating, PlayerKey const & key, PlayerProperty const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, PlayerKey const & key, PlayerProperty const & value,
           bool recursive) {
-    mutating.diff(attachment(), encodeKey(key), Service::Codec::encode(value), recursive);
+    mutating->diff(attachment(), encodeKey(key), Service::Codec::encode(value), recursive);
 }
 
 bool set(std::shared_ptr<Viper::Database> const & db, PlayerKey const & key, PlayerProperty const & value) {
@@ -74,14 +74,14 @@ bool del(std::shared_ptr<Viper::Database> const & db, PlayerKey const & key) {
     return Service::Db::del(db, attachment(), key);
 }
 
-void setNickname(Viper::AttachmentMutating & mutating, PlayerKey const & key, std::string const & value) {
-    mutating.update(attachment(), encodeKey(key), Demo::Fields::PlayerProperty::nicknamePath(),
+void setNickname(std::shared_ptr<Viper::AttachmentMutating> const & mutating, PlayerKey const & key, std::string const & value) {
+    mutating->update(attachment(), encodeKey(key), Demo::Fields::PlayerProperty::nicknamePath(),
                     Service::Codec::encode(value));
 }
 
 
-void setLevel(Viper::AttachmentMutating & mutating, PlayerKey const & key, Level value) {
-    mutating.update(attachment(), encodeKey(key), Demo::Fields::PlayerProperty::levelPath(),
+void setLevel(std::shared_ptr<Viper::AttachmentMutating> const & mutating, PlayerKey const & key, Level value) {
+    mutating->update(attachment(), encodeKey(key), Demo::Fields::PlayerProperty::levelPath(),
                     Service::Codec::encode(value));
 }
 

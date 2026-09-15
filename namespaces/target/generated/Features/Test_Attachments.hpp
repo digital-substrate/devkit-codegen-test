@@ -38,15 +38,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<::Features::AnyConceptKey> keys(Viper::AttachmentGetting const & getting);
+std::set<::Features::AnyConceptKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ::Features::AnyConceptKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ::Features::AnyConceptKey const & key);
 
-std::optional<Viper::Any> get(Viper::AttachmentGetting const & getting, ::Features::AnyConceptKey const & key);
+std::optional<Viper::Any> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ::Features::AnyConceptKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ::Features::AnyConceptKey const & key, Viper::Any const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ::Features::AnyConceptKey const & key, Viper::Any const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ::Features::AnyConceptKey const & key, Viper::Any const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ::Features::AnyConceptKey const & key, Viper::Any const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -73,15 +73,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-std::optional<StructureV> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+std::optional<StructureV> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureV const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, StructureV const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureV const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, StructureV const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -94,54 +94,54 @@ void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Structu
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, StructureV const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key);
 
-void setF_bool(Viper::AttachmentMutating & mutating, ConceptAKey const & key, bool value);
+void setF_bool(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, bool value);
 
-void setF_uint8(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint8_t value);
+void setF_uint8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::uint8_t value);
 
-void setF_uint16(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint16_t value);
+void setF_uint16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::uint16_t value);
 
-void setF_uint32(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint32_t value);
+void setF_uint32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::uint32_t value);
 
-void setF_uint64(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint64_t value);
+void setF_uint64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::uint64_t value);
 
-void setF_int8(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int8_t value);
+void setF_int8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int8_t value);
 
-void setF_int16(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int16_t value);
+void setF_int16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int16_t value);
 
-void setF_int32(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int32_t value);
+void setF_int32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int32_t value);
 
-void setF_int64(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int64_t value);
+void setF_int64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int64_t value);
 
-void setF_float(Viper::AttachmentMutating & mutating, ConceptAKey const & key, float value);
+void setF_float(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, float value);
 
-void setF_double(Viper::AttachmentMutating & mutating, ConceptAKey const & key, double value);
+void setF_double(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, double value);
 
-void setF_uuid(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & value);
+void setF_uuid(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & value);
 
-void setF_string(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::string const & value);
+void setF_string(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::string const & value);
 
-void setF_vec(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::array<std::uint8_t, 2> const & value);
+void setF_vec(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::array<std::uint8_t, 2> const & value);
 
-void setF_mat(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value);
+void setF_mat(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value);
 
-void setF_tuple(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::tuple<std::uint8_t, std::string> const & value);
+void setF_tuple(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::tuple<std::uint8_t, std::string> const & value);
 
-void setF_optional(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::optional<std::uint8_t> const & value);
+void setF_optional(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::optional<std::uint8_t> const & value);
 
-void setF_vector(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::vector<std::uint8_t> const & value);
+void setF_vector(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::vector<std::uint8_t> const & value);
 
-void setF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
-void unionF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
-void subtractF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
-void setF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value);
-void unionF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value);
-void subtractF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
-void updateF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value);
-void setF_E(Viper::AttachmentMutating & mutating, ConceptAKey const & key, EnumerationE value);
+void setF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
+void unionF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
+void subtractF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
+void setF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value);
+void unionF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value);
+void subtractF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
+void updateF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value);
+void setF_E(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, EnumerationE value);
 
-void setF_S(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureS const & value);
+void setF_S(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, StructureS const & value);
 
-void setF_T(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureT const & value);
+void setF_T(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, StructureT const & value);
 
 } // namespace Test::Attachments::ConceptA::properties
 
@@ -158,15 +158,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-std::optional<std::int8_t> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+std::optional<std::int8_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int8_t const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int8_t const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int8_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::int8_t const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -193,15 +193,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-std::optional<std::map<std::int8_t, std::string>> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+std::optional<std::map<std::int8_t, std::string>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -214,9 +214,9 @@ void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::ma
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key);
 
-void union_(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
-void subtract(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
-void update(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
 
 } // namespace Test::Attachments::ConceptA::propertiesMapInt8String
 
@@ -233,15 +233,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-std::optional<std::set<std::int8_t>> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+std::optional<std::set<std::int8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -254,8 +254,8 @@ void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::se
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, std::set<std::int8_t> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key);
 
-void union_(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
-void subtract(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
 
 } // namespace Test::Attachments::ConceptA::propertiesSeInt8
 
@@ -272,15 +272,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptAKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptAKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-std::optional<Viper::XArray<std::int8_t>> get(Viper::AttachmentGetting const & getting, ConceptAKey const & key);
+std::optional<Viper::XArray<std::int8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptAKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -293,9 +293,9 @@ void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key);
 
-void insert(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::int8_t value);
-void update(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & position, std::int8_t value);
-void remove(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & position);
+void insert(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::int8_t value);
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & position, std::int8_t value);
+void remove(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & position);
 
 } // namespace Test::Attachments::ConceptA::propertiesXArray
 
@@ -312,15 +312,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptBKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptBKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptBKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptBKey const & key);
 
-std::optional<StructureT> get(Viper::AttachmentGetting const & getting, ConceptBKey const & key);
+std::optional<StructureT> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptBKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptBKey const & key, StructureT const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptBKey const & key, StructureT const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptBKey const & key, StructureT const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptBKey const & key, StructureT const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -333,9 +333,9 @@ void diff(Viper::AttachmentMutating & mutating, ConceptBKey const & key, Structu
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptBKey const & key, StructureT const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptBKey const & key);
 
-void setField_string(Viper::AttachmentMutating & mutating, ConceptBKey const & key, std::string const & value);
+void setField_string(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptBKey const & key, std::string const & value);
 
-void setField_structure_s(Viper::AttachmentMutating & mutating, ConceptBKey const & key, StructureS const & value);
+void setField_structure_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptBKey const & key, StructureS const & value);
 
 } // namespace Test::Attachments::ConceptB::propertiesB
 
@@ -352,15 +352,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCKey const & key);
 
-std::optional<StructureU> get(Viper::AttachmentGetting const & getting, ConceptCKey const & key);
+std::optional<StructureU> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureU const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, StructureU const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureU const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, StructureU const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -373,95 +373,95 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Structu
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCKey const & key, StructureU const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCKey const & key);
 
-void setF_bool(Viper::AttachmentMutating & mutating, ConceptCKey const & key, bool value);
+void setF_bool(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, bool value);
 
-void setF_uint8(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint8_t value);
+void setF_uint8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::uint8_t value);
 
-void setF_uint16(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint16_t value);
+void setF_uint16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::uint16_t value);
 
-void setF_uint32(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint32_t value);
+void setF_uint32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::uint32_t value);
 
-void setF_uint64(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint64_t value);
+void setF_uint64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::uint64_t value);
 
-void setF_int8(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int8_t value);
+void setF_int8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::int8_t value);
 
-void setF_int16(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int16_t value);
+void setF_int16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::int16_t value);
 
-void setF_int32(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int32_t value);
+void setF_int32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::int32_t value);
 
-void setF_int64(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int64_t value);
+void setF_int64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::int64_t value);
 
-void setF_float(Viper::AttachmentMutating & mutating, ConceptCKey const & key, float value);
+void setF_float(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, float value);
 
-void setF_double(Viper::AttachmentMutating & mutating, ConceptCKey const & key, double value);
+void setF_double(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, double value);
 
-void setF_blob_id(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::BlobId const & value);
+void setF_blob_id(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::BlobId const & value);
 
-void setF_commit_id(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::CommitId const & value);
+void setF_commit_id(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::CommitId const & value);
 
-void setF_uuid(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & value);
+void setF_uuid(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & value);
 
-void setF_string(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::string const & value);
+void setF_string(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::string const & value);
 
-void setF_blob(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::Blob const & value);
+void setF_blob(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::Blob const & value);
 
-void setF_vec(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::array<std::uint8_t, 2> const & value);
+void setF_vec(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::array<std::uint8_t, 2> const & value);
 
-void setF_mat(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value);
+void setF_mat(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value);
 
-void setF_tuple(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::tuple<std::uint8_t, std::string> const & value);
+void setF_tuple(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::tuple<std::uint8_t, std::string> const & value);
 
-void setF_optional(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::optional<std::uint8_t> const & value);
+void setF_optional(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::optional<std::uint8_t> const & value);
 
-void setF_vector(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::vector<std::uint8_t> const & value);
+void setF_vector(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::vector<std::uint8_t> const & value);
 
-void setF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value);
-void unionF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value);
-void subtractF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value);
-void setF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
-void unionF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
-void subtractF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
-void setF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
-void unionF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
-void subtractF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<Test::StructureS> const & value);
-void updateF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
-void setF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
-void unionF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
-void subtractF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::string> const & value);
-void updateF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
-void setF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::XArray<std::uint8_t> const & value);
-void insertF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value);
-void updateF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position, std::uint8_t value);
-void removeF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position);
-void setF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::XArray<StructureS> const & value);
-void insertF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Test::StructureS const & value);
-void updateF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position, Test::StructureS const & value);
-void removeF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position);
-void setF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
-void unionF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
-void subtractF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::vector<Test::StructureS>> const & value);
-void updateF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
-void setF_variant(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::variant<std::string, std::uint8_t, StructureS> const & value);
+void setF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value);
+void unionF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value);
+void subtractF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value);
+void setF_set_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
+void unionF_set_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
+void subtractF_set_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
+void setF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
+void unionF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
+void subtractF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<Test::StructureS> const & value);
+void updateF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
+void setF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
+void unionF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
+void subtractF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::string> const & value);
+void updateF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
+void setF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::XArray<std::uint8_t> const & value);
+void insertF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value);
+void updateF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position, std::uint8_t value);
+void removeF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position);
+void setF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::XArray<StructureS> const & value);
+void insertF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Test::StructureS const & value);
+void updateF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position, Test::StructureS const & value);
+void removeF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position);
+void setF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
+void unionF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
+void subtractF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::vector<Test::StructureS>> const & value);
+void updateF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
+void setF_variant(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::variant<std::string, std::uint8_t, StructureS> const & value);
 
-void setF_any(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::Any const & value);
+void setF_any(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::Any const & value);
 
-void setF_E(Viper::AttachmentMutating & mutating, ConceptCKey const & key, EnumerationE value);
+void setF_E(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, EnumerationE value);
 
-void setF_S(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureS const & value);
+void setF_S(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, StructureS const & value);
 
-void setF_T(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureT const & value);
+void setF_T(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, StructureT const & value);
 
-void setF_A(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptAKey const & value);
+void setF_A(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ConceptAKey const & value);
 
-void setF_B(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptBKey const & value);
+void setF_B(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ConceptBKey const & value);
 
-void setF_C(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptCKey const & value);
+void setF_C(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ConceptCKey const & value);
 
-void setF_D(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptDKey const & value);
+void setF_D(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ConceptDKey const & value);
 
-void setF_Klub(Viper::AttachmentMutating & mutating, ConceptCKey const & key, KlubKey const & value);
+void setF_Klub(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, KlubKey const & value);
 
-void setF_any_concept(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ::Features::AnyConceptKey const & value);
+void setF_any_concept(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ::Features::AnyConceptKey const & value);
 
 } // namespace Test::Attachments::ConceptC::propertiesC
 
@@ -478,15 +478,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<Viper::Any> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<Viper::Any> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::Any const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::Any const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::Any const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::Any const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -513,15 +513,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<::Features::AnyConceptKey> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<::Features::AnyConceptKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -548,15 +548,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<Viper::Blob> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<Viper::Blob> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::Blob const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::Blob const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::Blob const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::Blob const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -583,15 +583,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<Viper::BlobId> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<Viper::BlobId> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::BlobId const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::BlobId const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::BlobId const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::BlobId const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -618,15 +618,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<bool> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<bool> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, bool const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, bool const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, bool const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, bool const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -653,15 +653,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<KlubKey> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<KlubKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, KlubKey const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, KlubKey const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, KlubKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, KlubKey const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -688,15 +688,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<Viper::CommitId> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<Viper::CommitId> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::CommitId const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::CommitId const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::CommitId const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::CommitId const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -723,15 +723,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<ConceptAKey> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<ConceptAKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ConceptAKey const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ConceptAKey const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ConceptAKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ConceptAKey const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -758,15 +758,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<ConceptBKey> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<ConceptBKey> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ConceptBKey const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ConceptBKey const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, ConceptBKey const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, ConceptBKey const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -793,15 +793,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<double> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<double> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, double const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, double const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, double const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, double const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -828,15 +828,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<EnumerationE> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<EnumerationE> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, EnumerationE const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, EnumerationE const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, EnumerationE const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, EnumerationE const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -863,15 +863,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<float> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<float> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, float const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, float const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, float const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, float const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -898,15 +898,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::int16_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::int16_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int16_t const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int16_t const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int16_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int16_t const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -933,15 +933,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::int32_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::int32_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int32_t const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int32_t const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int32_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int32_t const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -968,15 +968,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::int64_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::int64_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int64_t const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int64_t const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int64_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int64_t const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1003,15 +1003,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::int8_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::int8_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int8_t const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int8_t const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::int8_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::int8_t const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1038,15 +1038,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::map<std::uint8_t, std::string>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::map<std::uint8_t, std::string>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1059,9 +1059,9 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
 
-void union_(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
-void subtract(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
-void update(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
 
 } // namespace Test::Attachments::ConceptCoverage::docMap
 
@@ -1078,15 +1078,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::array<std::array<std::uint8_t, 2>, 2>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::array<std::array<std::uint8_t, 2>, 2>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1113,15 +1113,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::optional<std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::optional<std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1148,15 +1148,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::set<std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::set<std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1169,8 +1169,8 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
 
-void union_(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
-void subtract(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
+void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
+void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
 
 } // namespace Test::Attachments::ConceptCoverage::docSet
 
@@ -1187,15 +1187,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::string> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::string> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::string const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::string const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::string const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::string const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1222,15 +1222,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<StructureW> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<StructureW> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, StructureW const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, StructureW const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, StructureW const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, StructureW const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1243,7 +1243,7 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, StructureW const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
 
-void setF_single(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint8_t value);
+void setF_single(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint8_t value);
 
 } // namespace Test::Attachments::ConceptCoverage::docStructureSingleField
 
@@ -1260,15 +1260,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::tuple<std::uint8_t, std::string>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::tuple<std::uint8_t, std::string>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1295,15 +1295,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::uint16_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::uint16_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint16_t const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint16_t const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint16_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint16_t const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1330,15 +1330,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::uint32_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::uint32_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint32_t const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint32_t const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint32_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint32_t const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1365,15 +1365,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::uint64_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::uint64_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint64_t const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint64_t const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint64_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint64_t const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1400,15 +1400,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::uint8_t> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::uint8_t> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint8_t const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint8_t const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint8_t const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint8_t const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1435,15 +1435,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<Viper::UUId> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<Viper::UUId> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1470,15 +1470,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::variant<std::string, std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::variant<std::string, std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1505,15 +1505,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::array<std::uint8_t, 2>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::array<std::uint8_t, 2>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1540,15 +1540,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<std::vector<std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<std::vector<std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1575,15 +1575,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<ConceptCoverageKey> keys(Viper::AttachmentGetting const & getting);
+std::set<ConceptCoverageKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-std::optional<Viper::XArray<std::uint8_t>> get(Viper::AttachmentGetting const & getting, ConceptCoverageKey const & key);
+std::optional<Viper::XArray<std::uint8_t>> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, ConceptCoverageKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value);
 
-void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1596,9 +1596,9 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
 
-void insert(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value);
-void update(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & position, std::uint8_t value);
-void remove(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & position);
+void insert(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value);
+void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & position, std::uint8_t value);
+void remove(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & position);
 
 } // namespace Test::Attachments::ConceptCoverage::docXArray
 
@@ -1615,15 +1615,15 @@ extern Viper::UUId const runtimeId;
 /// Une identité, un endroit.
 std::shared_ptr<Viper::Attachment> const & descriptor();
 
-std::set<KlubKey> keys(Viper::AttachmentGetting const & getting);
+std::set<KlubKey> keys(std::shared_ptr<Viper::AttachmentGetting> const & getting);
 
-bool has(Viper::AttachmentGetting const & getting, KlubKey const & key);
+bool has(std::shared_ptr<Viper::AttachmentGetting> const & getting, KlubKey const & key);
 
-std::optional<StructureV> get(Viper::AttachmentGetting const & getting, KlubKey const & key);
+std::optional<StructureV> get(std::shared_ptr<Viper::AttachmentGetting> const & getting, KlubKey const & key);
 
-void set(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureV const & value);
+void set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, StructureV const & value);
 
-void diff(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureV const & value,
+void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, StructureV const & value,
           bool recursive = false);
 
 // ── et les mêmes, sur une base de données ──
@@ -1636,54 +1636,54 @@ void diff(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureV 
 bool set(std::shared_ptr<Viper::Database> const & db, KlubKey const & key, StructureV const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, KlubKey const & key);
 
-void setF_bool(Viper::AttachmentMutating & mutating, KlubKey const & key, bool value);
+void setF_bool(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, bool value);
 
-void setF_uint8(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint8_t value);
+void setF_uint8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::uint8_t value);
 
-void setF_uint16(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint16_t value);
+void setF_uint16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::uint16_t value);
 
-void setF_uint32(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint32_t value);
+void setF_uint32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::uint32_t value);
 
-void setF_uint64(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint64_t value);
+void setF_uint64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::uint64_t value);
 
-void setF_int8(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int8_t value);
+void setF_int8(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::int8_t value);
 
-void setF_int16(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int16_t value);
+void setF_int16(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::int16_t value);
 
-void setF_int32(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int32_t value);
+void setF_int32(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::int32_t value);
 
-void setF_int64(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int64_t value);
+void setF_int64(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::int64_t value);
 
-void setF_float(Viper::AttachmentMutating & mutating, KlubKey const & key, float value);
+void setF_float(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, float value);
 
-void setF_double(Viper::AttachmentMutating & mutating, KlubKey const & key, double value);
+void setF_double(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, double value);
 
-void setF_uuid(Viper::AttachmentMutating & mutating, KlubKey const & key, Viper::UUId const & value);
+void setF_uuid(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, Viper::UUId const & value);
 
-void setF_string(Viper::AttachmentMutating & mutating, KlubKey const & key, std::string const & value);
+void setF_string(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::string const & value);
 
-void setF_vec(Viper::AttachmentMutating & mutating, KlubKey const & key, std::array<std::uint8_t, 2> const & value);
+void setF_vec(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::array<std::uint8_t, 2> const & value);
 
-void setF_mat(Viper::AttachmentMutating & mutating, KlubKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value);
+void setF_mat(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value);
 
-void setF_tuple(Viper::AttachmentMutating & mutating, KlubKey const & key, std::tuple<std::uint8_t, std::string> const & value);
+void setF_tuple(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::tuple<std::uint8_t, std::string> const & value);
 
-void setF_optional(Viper::AttachmentMutating & mutating, KlubKey const & key, std::optional<std::uint8_t> const & value);
+void setF_optional(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::optional<std::uint8_t> const & value);
 
-void setF_vector(Viper::AttachmentMutating & mutating, KlubKey const & key, std::vector<std::uint8_t> const & value);
+void setF_vector(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::vector<std::uint8_t> const & value);
 
-void setF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
-void unionF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
-void subtractF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
-void setF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value);
-void unionF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value);
-void subtractF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
-void updateF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value);
-void setF_E(Viper::AttachmentMutating & mutating, KlubKey const & key, EnumerationE value);
+void setF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
+void unionF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
+void subtractF_set(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
+void setF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value);
+void unionF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value);
+void subtractF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
+void updateF_map(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value);
+void setF_E(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, EnumerationE value);
 
-void setF_S(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureS const & value);
+void setF_S(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, StructureS const & value);
 
-void setF_T(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureT const & value);
+void setF_T(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, StructureT const & value);
 
 } // namespace Test::Attachments::Klub::propertiesD
 
