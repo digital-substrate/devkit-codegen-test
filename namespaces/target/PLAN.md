@@ -135,7 +135,18 @@ Sept défauts, dont aucun n'était visible en compilant contre des signatures re
    une base, donc cinq gabarits deviennent deux ;
 7. **un défaut dans le runtime** : `XArray::operator!=` s'écrit `!(this == other)` — un
    pointeur comparé à un objet. Il ne compile que tant que personne ne l'instancie, et un
-   ordre qui ne demande que `<` ne le rencontre pas.
+   ordre qui ne demande que `<` ne le rencontre pas ;
+8. **la lecture d'un variant ignorait son index** et rendait toujours la première
+   alternative -- ce qui passe tant qu'on n'éprouve que des variants dont la valeur est la
+   première, et casse au premier autre ;
+9. **une mat n'est pas un vec de vec** : le runtime refuse un `TypeVec` dont l'élément n'est
+   pas numérique, et il faut deux surcharges distinguées par la forme du type ;
+10. **l'identifiant de blob du fuzzer n'était pas épinglé** : un document peut tenir un
+    `blob_id`, et la base refuse une référence vers un blob absent. Le pack épingle le
+    fuzzer sur le blob vide qu'il crée autour de l'épreuve -- une ligne que j'avais lue et
+    pas reportée ;
+11. **la clé non typée n'avait aucune implémentation** -- quatre fonctions déclarées et rien
+    qui les définisse.
 
 ### Et la leçon de méthode
 
