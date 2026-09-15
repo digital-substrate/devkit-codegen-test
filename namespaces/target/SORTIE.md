@@ -87,37 +87,96 @@ voudra refuser :
 
 Je les avais fusionnées avec un argument qui se lit bien — « les deux bords d'un pool sont le
 même pool » — et qui ignore la seule question qui compte ici : **est-ce qu'un projet peut
-vouloir l'un sans l'autre ?** Pour ces trois-là, oui.
+vouloir l'un sans l'autre ?**
+
+Ce n'est pas une hypothèse. `com.digitalsubstrate.red` sélectionne dix fonctionnalités sur
+les dix-sept du pack, et **refuse exactement ces trois-là** :
+
+```
+  PRIS    FunctionPool                       refusé  FunctionPoolRemote
+  PRIS    AttachmentFunctionPool             refusé  AttachmentFunctionPoolRemote
+  PRIS    Attachments, Data, Database,       refusé  Json, Test, TestApp,
+          Model, Stream, ValueCodec,                 ValueHasher, Python,
+          ValueType, AttachmentFunctionPool_…        AttachmentFunctionPoolRemote
+```
+
+Un projet réel, dans ce système de fichiers, serait forcé de prendre un `Remote` qu'il a
+explicitement refusé — et du JSON dont il ne veut pas.
 
 **À faire** : scinder `Pool` en `Pool` + `PoolRemote`, et sortir `Json` de `Codec`.
 
 ---
 
-## Axe 2 — `generate.py`, et une seule invocation
+## Axe 2 — `generate.py`, lu chez un vrai projet
 
-Aujourd'hui `generate.py` recopie une liste de noms de dossiers et appelle kibo une fois par
-dossier. Demain il demande des fonctionnalités :
+`com.digitalsubstrate.red/generate.py` fait 198 lignes et dit ce qu'un pilote doit faire.
+Quatre choses que mon plan supposait fausses :
+
+### 1. Un projet rend plusieurs *sites*, pas un dossier
 
 ```python
-features = ['Database', 'Test']          # ce que le projet veut
-templates = resolve(features, 'cpp')     # ce que ça réclame, fermé et ordonné
+if arguments.re:      render_viper_templates(namespace='RE',          output='src/RE')
+if arguments.logic:   generate_raptor_logic (namespace='RaptorLogic', output='src/RaptorLogic')
+if arguments.editor:  generate_viper        (namespace='RE',          output='RaptorEditor/RaptorEditor')
+if arguments.python:  generate_package      (name='red', output='RaptorEditor/…/Scripts/red')
+                      generate_package      (name='red', output='demo/red')
+```
+
+Le même modèle est rendu **sous deux namespaces** (`RE`, `RaptorLogic`), vers **cinq
+destinations**, avec **des sélections différentes**. L'unité n'est donc pas le projet mais le
+site : un triplet *(namespace, destination, sélection)*, et l'utilisateur en choisit un par
+un drapeau — `-r`, `-l`, `-e`, `-p`.
+
+**La sélection de fonctionnalités appartient au site**, pas au projet. « Je veux `Database` »
+se dit pour un site donné.
+
+### 2. Des templates locales, hors du pack
+
+`templates/RaptorLogic/State.hpp.stg` vit dans le dépôt du projet. Le résolveur doit donc
+accepter une sélection qui **mélange des fonctionnalités du pack et des chemins locaux** ;
+s'il n'accepte que des noms du manifeste, il casse un usage réel. C'est exactement la
+propriété « kibo ne voit jamais un pack » qui protège ce cas : elle doit survivre au
+manifeste.
+
+### 3. La ligne est épinglée, et c'est déjà résolu avec soin
+
+```python
+KIBO_MAJOR = 2          # le jar le plus récent n'est pas la bonne réponse
+TEMPLATES_MAJOR = 2     # vérifié en lisant la bannière de chaque .stg
+```
+
+`_check_templates` lit `Templates: kibo-template-viper X.Y.Z` dans les `.stg` trouvés et
+refuse une autre ligne ; `_resolve_jar` trie sur le triplet analysé, parce qu'un tri
+alphabétique met `kibo-1.2.9.jar` après `kibo-1.2.11.jar`. La raison est écrite : *un
+générateur d'une autre ligne rend le même modèle différemment, et rien ici ne le dirait*.
+
+**C'est le mécanisme qui rend la transition sûre.** Le nouveau pack est une version majeure ;
+un projet qui n'a pas bougé refuse de générer au lieu de produire du plausible. Deux
+conséquences pour le plan : la bannière doit rester dans chaque `.stg` même à plat, et le
+manifeste doit porter la même ligne et être vérifié de la même façon.
+
+### 4. Ce qui ne sort pas des templates est déjà là
+
+`generate_resource` écrit l'en-tête C++ des octets du modèle ; `generate_package` écrit
+`resources.py` en base64 + zlib. C'est exactement ce que `link/resources.py` refait ici, et
+les deux formes coïncident.
+
+### Ce qui change, alors
+
+```python
+FEATURES_RE = ['Database', 'Service']     # ce que ce site veut
+templates   = resolve(FEATURES_RE, 'cpp') # fermé, ordonné, plus les chemins locaux
+generate(namespace='RE', templates=templates, output='src/RE')
 ```
 
 **Une seule modification de kibo, et elle est petite** : `-t` doit pouvoir être répété.
 Aujourd'hui c'est un `Path`, il faut une `List<Path>` — JCommander accumule les répétitions,
-et `AppUtils.collectTemplates` sait déjà prendre un fichier comme un dossier. Un seul
-démarrage de JVM au lieu d'un par fonctionnalité.
+et `AppUtils.collectTemplates` sait déjà prendre un fichier comme un dossier. RED passerait
+de dix démarrages de JVM à un par site.
 
-**Et kibo ne voit toujours pas de pack.** Il rend exactement ce qu'on lui désigne ; le
-manifeste est lu par le pilote, pas par lui. Ce n'est pas une limite à contourner mais une
-propriété à préserver : un projet peut écrire ses propres templates dans un répertoire et
-kibo les rend, sans rien déclarer nulle part.
-
-Le résolveur, lui, est livré avec le pack — `kibo-template-viper/tools/features.py` — parce
-que le pack est la seule chose qui connaisse ses fonctionnalités.
-
-`generate.py` dépose en plus ce qui ne sort pas des templates : les octets du modèle, et —
-tant que les runtimes ne les portent pas — le contenu de `runtime-proposed/`.
+Le résolveur est livré avec le pack — `kibo-template-viper/tools/features.py` — parce que le
+pack est la seule chose qui connaisse ses fonctionnalités. Il rend des **chemins**, ce qui
+lui permet de rendre aussi ceux qu'un projet lui donne sans les connaître.
 
 ---
 
