@@ -20,13 +20,24 @@ recopier -- deux questions qu'une vue ne pose pas.
 
 from __future__ import annotations
 
+import typing
+
 import dsviper
 
 from ._proxy import unwrap, wrap
 
+E = typing.TypeVar("E")
+K = typing.TypeVar("K")
 
-class Sequence:
-    """Une suite du runtime — vector, set, vec, tuple — dont les éléments portent leurs noms."""
+
+class Sequence(typing.Generic[E]):
+    """Une suite du runtime — vector, set, vec, tuple — dont les éléments portent leurs noms.
+
+    GÉNÉRIQUE, ET C'EST CE QUI REMPLACE UNE CLASSE PAR FORME. Le pack émet
+    `Vector_Parts_Colour`, une classe dont le nom porte le type de l'élément ; ici le type
+    est un paramètre, donc `Sequence[Colour]` dit la même chose à un lecteur et à un
+    vérificateur de types, sans qu'une classe existe pour chaque combinaison.
+    """
 
     __slots__ = ("_value",)
 
@@ -40,34 +51,28 @@ class Sequence:
     def _unwrap(self):
         return self._value
 
-    def _unwrap(self):
-        return self._value
-
-    def _unwrap(self):
-        return self._value
-
     def __len__(self) -> int:
         return len(self._value)
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator[E]:
         return (wrap(element) for element in self._value)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> E:
         return wrap(self._value[index])
 
-    def __setitem__(self, index, element) -> None:
+    def __setitem__(self, index: int, element: E) -> None:
         self._value[index] = unwrap(element)
 
-    def __contains__(self, element) -> bool:
+    def __contains__(self, element: E) -> bool:
         return unwrap(element) in self._value
 
     def __eq__(self, other) -> bool:
         return self._value == (other._value if isinstance(other, Sequence) else other)
 
-    def append(self, element) -> None:
+    def append(self, element: E) -> None:
         self._value.append(unwrap(element))
 
-    def remove(self, element) -> None:
+    def remove(self, element: E) -> None:
         self._value.remove(unwrap(element))
 
     def clear(self) -> None:
@@ -77,7 +82,7 @@ class Sequence:
         return repr(list(self))
 
 
-class Mapping:
+class Mapping(typing.Generic[K, E]):
     """Une map du runtime, dont les clés et les valeurs portent leurs noms."""
 
     __slots__ = ("_value",)
@@ -89,41 +94,44 @@ class Mapping:
     def value(self):
         return self._value
 
+    def _unwrap(self):
+        return self._value
+
     def __len__(self) -> int:
         return len(self._value)
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator[K]:
         return (wrap(key) for key in self._value)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: K) -> E:
         return wrap(self._value.at(unwrap(key)))
 
-    def __setitem__(self, key, element) -> None:
+    def __setitem__(self, key: K, element: E) -> None:
         self._value.set(unwrap(key), unwrap(element))
 
-    def __delitem__(self, key) -> None:
+    def __delitem__(self, key: K) -> None:
         del self._value[unwrap(key)]
 
-    def __contains__(self, key) -> bool:
+    def __contains__(self, key: K) -> bool:
         return unwrap(key) in self._value
 
     def __eq__(self, other) -> bool:
         return self._value == (other._value if isinstance(other, Mapping) else other)
 
-    def keys(self):
+    def keys(self) -> list[K]:
         return list(self)
 
-    def items(self):
+    def items(self) -> list[tuple[K, E]]:
         return [(key, self[key]) for key in self]
 
-    def values(self):
+    def values(self) -> list[E]:
         return [self[key] for key in self]
 
     def __repr__(self) -> str:
         return repr(dict(self.items()))
 
 
-class Ordered:
+class Ordered(typing.Generic[E]):
     """Un xarray du runtime : une suite dont chaque place a une identité stable.
 
     LA POSITION EST LA CLÉ, ET C'EST TOUT CE QUI LE DISTINGUE D'UN `vector`. Deux éditeurs
@@ -142,22 +150,26 @@ class Ordered:
     def value(self):
         return self._value
 
+    def _unwrap(self):
+        return self._value
+
     def __len__(self) -> int:
         return len(self._value)
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator[E]:
         return (wrap(element) for element in self._value)
 
-    def positions(self) -> list:
+    def positions(self) -> list[dsviper.ValueUUId]:
         return list(self._value.positions())
 
-    def at(self, position):
+    def at(self, position: dsviper.ValueUUId) -> E:
         return wrap(self._value.at(position))
 
-    def insert(self, before_position, new_position, element) -> None:
+    def insert(self, before_position: dsviper.ValueUUId, new_position: dsviper.ValueUUId,
+               element: E) -> None:
         self._value.insert(before_position, new_position, unwrap(element))
 
-    def update(self, position, element) -> None:
+    def update(self, position: dsviper.ValueUUId, element: E) -> None:
         self._value.update(position, unwrap(element))
 
     def remove(self, position) -> None:

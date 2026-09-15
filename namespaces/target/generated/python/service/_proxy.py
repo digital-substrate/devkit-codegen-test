@@ -15,6 +15,8 @@ qu'elles aient un ancêtre.
 
 from __future__ import annotations
 
+import typing
+
 import dsviper
 
 
@@ -57,7 +59,7 @@ class Proxy:
     # porter dans le template une distinction que le modèle connaît déjà.
 
     @classmethod
-    def _wrap(cls, value) -> "Proxy":
+    def _wrap(cls, value) -> typing.Self:
         return cls(value)
 
     def _unwrap(self):
@@ -81,8 +83,14 @@ def register(classes: dict) -> None:
         _CLASSES[runtime_id.encoded()] = cls
 
 
-def wrap(value):
+def wrap(value) -> typing.Any:
     """La valeur du runtime, rendue avec les noms du modèle quand il y en a.
+
+    RENDUE `Any`, ET C'EST UNE DÉCISION PLUTÔT QU'UN RENONCEMENT. Le type réel dépend de ce
+    que la valeur porte, donc il ne peut pas être écrit ici ; mais il est écrit à chaque
+    endroit qui appelle -- une propriété annotée `Sequence[Colour]`, un pool annoté
+    `MaterialKey`. Le vérificateur y trouve un type exact. Ce qu'on concède est un point de
+    passage, déclaré une fois, au lieu d'un `Any` répandu sur chaque champ.
 
     CE QUI N'A PAS DE NOM PASSE TEL QUEL, et c'est le cas de tous les types primitifs : le
     runtime rend déjà un `int`, un `str`, un `float`. Ce qui en a un -- une structure, une
@@ -120,7 +128,7 @@ def wrap(value):
     return value
 
 
-def unwrap(value):
+def unwrap(value) -> typing.Any:
     """La Value que le runtime attend, depuis ce que l'appelant a écrit.
 
     Ce qui n'est pas une de nos classes passe tel quel : `Value.loads` du runtime sait déjà

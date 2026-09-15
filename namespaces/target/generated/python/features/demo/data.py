@@ -11,7 +11,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy, register, unwrap, wrap
+from .._container import Mapping, Ordered, Sequence
+from .._proxy import AnyConceptKey, Proxy, register, unwrap, wrap
 
 # ── l'identité de cette unité dans le modèle ──
 #
@@ -270,40 +271,33 @@ class ConceptCKey(Proxy):
         return f"Demo::ConceptCKey({self.value.representation()})"
 
 class EmptyKlubKey(Proxy):
-    """Une poignée sur une instance de Demo::EmptyKlub, pas la chose elle-même.
+    """Une poignée sur une instance d'un membre de Demo::EmptyKlub.
+    ON N'Y CRÉE PAS D'INSTANCE : un club n'est pas un concept, rien n'est « un Klub ». On y
+    entre depuis la clé d'un membre, et on en sort en demandant si c'en est un. Le pack
+    donne à la clé de club un `create()` qui passe le descripteur du club là où le runtime
+    attend celui d'un concept ; c'est un vérificateur de types qui l'a dit.
     """
 
     __slots__ = ()
 
     @classmethod
     @functools.cache
-    def concept(cls):
-        """Le descripteur, résolu une fois."""
+    def club(cls) -> dsviper.TypeClub:
+        """Le descripteur du club, résolu une fois."""
         return definitions().check_club(EMPTY_KLUB)
 
     @classmethod
     @functools.cache
     def type(cls) -> dsviper.Type:
-        """Le descripteur du type de la clé.
+        return dsviper.TypeKey(cls.club())
 
-        `classmethod` et non fonction libre : en C++ il fallait `type(tag<T>{})` pour que la
-        recherche par argument trouve l'unité de T. Python n'a pas cette recherche et n'en a
-        pas besoin — l'appelant écrit déjà le nom de la classe.
-        """
-        return dsviper.TypeKey(cls.concept())
-
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
-        if isinstance(identifier, dsviper.ValueKey):
-            if identifier.type() != self.type():
-                raise TypeError("cette valeur n'est pas un Demo::EmptyKlubKey")
-            super().__init__(identifier)
-        else:
-            super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
-
-    @classmethod
-    def create(cls) -> EmptyKlubKey:
-        """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
-        return cls(dsviper.ValueUUId.create())
+    def __init__(self, key):
+        value = key.value if isinstance(key, Proxy) else key
+        if not isinstance(value, dsviper.ValueKey):
+            raise TypeError("cette valeur n'est pas une clé")
+        if not self.club().is_member(value.type_concept()):
+            raise TypeError("cette clé ne désigne pas un membre de Demo::EmptyKlub")
+        super().__init__(value.to_club_key(self.club()))
 
     @property
     def instance_id(self) -> dsviper.ValueUUId:
@@ -312,51 +306,47 @@ class EmptyKlubKey(Proxy):
     def is_valid(self) -> bool:
         return self.instance_id.is_valid()
 
+    def as_(self, cls):
+        """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
+        concept = cls.concept()
+        return cls(self.value.to_member_key(concept)) if self.value.is_member(concept) else None
+
     def __repr__(self) -> str:
         return f"Demo::EmptyKlubKey({self.value.representation()})"
 
-    def as_(self, cls):
-        """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
-        return cls(self.value.to_member_key(cls.concept())) if self.value.is_member(cls.concept()) else None
 
 
 class KlubKey(Proxy):
-    """Une poignée sur une instance de Demo::Klub, pas la chose elle-même.
+    """Une poignée sur une instance d'un membre de Demo::Klub.
 
     This is the documentation for the concept D
+
+    ON N'Y CRÉE PAS D'INSTANCE : un club n'est pas un concept, rien n'est « un Klub ». On y
+    entre depuis la clé d'un membre, et on en sort en demandant si c'en est un. Le pack
+    donne à la clé de club un `create()` qui passe le descripteur du club là où le runtime
+    attend celui d'un concept ; c'est un vérificateur de types qui l'a dit.
     """
 
     __slots__ = ()
 
     @classmethod
     @functools.cache
-    def concept(cls):
-        """Le descripteur, résolu une fois."""
+    def club(cls) -> dsviper.TypeClub:
+        """Le descripteur du club, résolu une fois."""
         return definitions().check_club(KLUB)
 
     @classmethod
     @functools.cache
     def type(cls) -> dsviper.Type:
-        """Le descripteur du type de la clé.
+        return dsviper.TypeKey(cls.club())
 
-        `classmethod` et non fonction libre : en C++ il fallait `type(tag<T>{})` pour que la
-        recherche par argument trouve l'unité de T. Python n'a pas cette recherche et n'en a
-        pas besoin — l'appelant écrit déjà le nom de la classe.
-        """
-        return dsviper.TypeKey(cls.concept())
-
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
-        if isinstance(identifier, dsviper.ValueKey):
-            if identifier.type() != self.type():
-                raise TypeError("cette valeur n'est pas un Demo::KlubKey")
-            super().__init__(identifier)
-        else:
-            super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
-
-    @classmethod
-    def create(cls) -> KlubKey:
-        """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
-        return cls(dsviper.ValueUUId.create())
+    def __init__(self, key):
+        value = key.value if isinstance(key, Proxy) else key
+        if not isinstance(value, dsviper.ValueKey):
+            raise TypeError("cette valeur n'est pas une clé")
+        if not self.club().is_member(value.type_concept()):
+            raise TypeError("cette clé ne désigne pas un membre de Demo::Klub")
+        super().__init__(value.to_club_key(self.club()))
 
     @property
     def instance_id(self) -> dsviper.ValueUUId:
@@ -365,12 +355,13 @@ class KlubKey(Proxy):
     def is_valid(self) -> bool:
         return self.instance_id.is_valid()
 
-    def __repr__(self) -> str:
-        return f"Demo::KlubKey({self.value.representation()})"
-
     def as_(self, cls):
         """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
-        return cls(self.value.to_member_key(cls.concept())) if self.value.is_member(cls.concept()) else None
+        concept = cls.concept()
+        return cls(self.value.to_member_key(concept)) if self.value.is_member(concept) else None
+
+    def __repr__(self) -> str:
+        return f"Demo::KlubKey({self.value.representation()})"
 
 class EnumerationE(enum.Enum):
     """Demo::EnumerationE.
@@ -642,59 +633,59 @@ class StructureV(Proxy):
         self.value.set("f_string", value)
 
     @property
-    def f_vec(self) -> typing.Any:
+    def f_vec(self) -> Sequence[int]:
         return wrap(self.value.at("f_vec", encoded=False))
 
     @f_vec.setter
-    def f_vec(self, value: typing.Any) -> None:
+    def f_vec(self, value: Sequence[int]) -> None:
         self.value.set("f_vec", unwrap(value))
 
     @property
-    def f_mat(self) -> typing.Any:
+    def f_mat(self) -> Sequence[Sequence[int]]:
         return wrap(self.value.at("f_mat", encoded=False))
 
     @f_mat.setter
-    def f_mat(self, value: typing.Any) -> None:
+    def f_mat(self, value: Sequence[Sequence[int]]) -> None:
         self.value.set("f_mat", unwrap(value))
 
     @property
-    def f_tuple(self) -> typing.Any:
+    def f_tuple(self) -> Sequence[int | str]:
         return wrap(self.value.at("f_tuple", encoded=False))
 
     @f_tuple.setter
-    def f_tuple(self, value: typing.Any) -> None:
+    def f_tuple(self, value: Sequence[int | str]) -> None:
         self.value.set("f_tuple", unwrap(value))
 
     @property
-    def f_optional(self) -> typing.Any:
+    def f_optional(self) -> int | None:
         return wrap(self.value.at("f_optional", encoded=False))
 
     @f_optional.setter
-    def f_optional(self, value: typing.Any) -> None:
+    def f_optional(self, value: int | None) -> None:
         self.value.set("f_optional", unwrap(value))
 
     @property
-    def f_vector(self) -> typing.Any:
+    def f_vector(self) -> Sequence[int]:
         return wrap(self.value.at("f_vector", encoded=False))
 
     @f_vector.setter
-    def f_vector(self, value: typing.Any) -> None:
+    def f_vector(self, value: Sequence[int]) -> None:
         self.value.set("f_vector", unwrap(value))
 
     @property
-    def f_set(self) -> typing.Any:
+    def f_set(self) -> Sequence[int]:
         return wrap(self.value.at("f_set", encoded=False))
 
     @f_set.setter
-    def f_set(self, value: typing.Any) -> None:
+    def f_set(self, value: Sequence[int]) -> None:
         self.value.set("f_set", unwrap(value))
 
     @property
-    def f_map(self) -> typing.Any:
+    def f_map(self) -> Mapping[int, str]:
         return wrap(self.value.at("f_map", encoded=False))
 
     @f_map.setter
-    def f_map(self, value: typing.Any) -> None:
+    def f_map(self, value: Mapping[int, str]) -> None:
         self.value.set("f_map", unwrap(value))
 
     @property
@@ -875,115 +866,115 @@ class StructureU(Proxy):
         self.value.set("f_blob", value)
 
     @property
-    def f_vec(self) -> typing.Any:
+    def f_vec(self) -> Sequence[int]:
         return wrap(self.value.at("f_vec", encoded=False))
 
     @f_vec.setter
-    def f_vec(self, value: typing.Any) -> None:
+    def f_vec(self, value: Sequence[int]) -> None:
         self.value.set("f_vec", unwrap(value))
 
     @property
-    def f_mat(self) -> typing.Any:
+    def f_mat(self) -> Sequence[Sequence[int]]:
         return wrap(self.value.at("f_mat", encoded=False))
 
     @f_mat.setter
-    def f_mat(self, value: typing.Any) -> None:
+    def f_mat(self, value: Sequence[Sequence[int]]) -> None:
         self.value.set("f_mat", unwrap(value))
 
     @property
-    def f_tuple(self) -> typing.Any:
+    def f_tuple(self) -> Sequence[int | str]:
         return wrap(self.value.at("f_tuple", encoded=False))
 
     @f_tuple.setter
-    def f_tuple(self, value: typing.Any) -> None:
+    def f_tuple(self, value: Sequence[int | str]) -> None:
         self.value.set("f_tuple", unwrap(value))
 
     @property
-    def f_optional(self) -> typing.Any:
+    def f_optional(self) -> int | None:
         return wrap(self.value.at("f_optional", encoded=False))
 
     @f_optional.setter
-    def f_optional(self, value: typing.Any) -> None:
+    def f_optional(self, value: int | None) -> None:
         self.value.set("f_optional", unwrap(value))
 
     @property
-    def f_vector(self) -> typing.Any:
+    def f_vector(self) -> Sequence[int]:
         return wrap(self.value.at("f_vector", encoded=False))
 
     @f_vector.setter
-    def f_vector(self, value: typing.Any) -> None:
+    def f_vector(self, value: Sequence[int]) -> None:
         self.value.set("f_vector", unwrap(value))
 
     @property
-    def f_set(self) -> typing.Any:
+    def f_set(self) -> Sequence[int]:
         return wrap(self.value.at("f_set", encoded=False))
 
     @f_set.setter
-    def f_set(self, value: typing.Any) -> None:
+    def f_set(self, value: Sequence[int]) -> None:
         self.value.set("f_set", unwrap(value))
 
     @property
-    def f_set_s(self) -> typing.Any:
+    def f_set_s(self) -> Sequence[StructureS]:
         return wrap(self.value.at("f_set_s", encoded=False))
 
     @f_set_s.setter
-    def f_set_s(self, value: typing.Any) -> None:
+    def f_set_s(self, value: Sequence[StructureS]) -> None:
         self.value.set("f_set_s", unwrap(value))
 
     @property
-    def f_map_s1(self) -> typing.Any:
+    def f_map_s1(self) -> Mapping[StructureS, str]:
         return wrap(self.value.at("f_map_s1", encoded=False))
 
     @f_map_s1.setter
-    def f_map_s1(self, value: typing.Any) -> None:
+    def f_map_s1(self, value: Mapping[StructureS, str]) -> None:
         self.value.set("f_map_s1", unwrap(value))
 
     @property
-    def f_map_s2(self) -> typing.Any:
+    def f_map_s2(self) -> Mapping[str, StructureS]:
         return wrap(self.value.at("f_map_s2", encoded=False))
 
     @f_map_s2.setter
-    def f_map_s2(self, value: typing.Any) -> None:
+    def f_map_s2(self, value: Mapping[str, StructureS]) -> None:
         self.value.set("f_map_s2", unwrap(value))
 
     @property
-    def f_xarray(self) -> typing.Any:
+    def f_xarray(self) -> Ordered[int]:
         return wrap(self.value.at("f_xarray", encoded=False))
 
     @f_xarray.setter
-    def f_xarray(self, value: typing.Any) -> None:
+    def f_xarray(self, value: Ordered[int]) -> None:
         self.value.set("f_xarray", unwrap(value))
 
     @property
-    def f_xarray_s(self) -> typing.Any:
+    def f_xarray_s(self) -> Ordered[StructureS]:
         return wrap(self.value.at("f_xarray_s", encoded=False))
 
     @f_xarray_s.setter
-    def f_xarray_s(self, value: typing.Any) -> None:
+    def f_xarray_s(self, value: Ordered[StructureS]) -> None:
         self.value.set("f_xarray_s", unwrap(value))
 
     @property
-    def f_map_vs(self) -> typing.Any:
+    def f_map_vs(self) -> Mapping[Sequence[StructureS], str]:
         return wrap(self.value.at("f_map_vs", encoded=False))
 
     @f_map_vs.setter
-    def f_map_vs(self, value: typing.Any) -> None:
+    def f_map_vs(self, value: Mapping[Sequence[StructureS], str]) -> None:
         self.value.set("f_map_vs", unwrap(value))
 
     @property
-    def f_variant(self) -> typing.Any:
+    def f_variant(self) -> str | int | StructureS:
         return wrap(self.value.at("f_variant", encoded=False))
 
     @f_variant.setter
-    def f_variant(self, value: typing.Any) -> None:
+    def f_variant(self, value: str | int | StructureS) -> None:
         self.value.set("f_variant", unwrap(value))
 
     @property
-    def f_any(self) -> dsviper.ValueAny:
+    def f_any(self) -> typing.Any:
         return self.value.at("f_any")
 
     @f_any.setter
-    def f_any(self, value: dsviper.ValueAny) -> None:
+    def f_any(self, value: typing.Any) -> None:
         self.value.set("f_any", value)
 
     @property
@@ -1051,11 +1042,11 @@ class StructureU(Proxy):
         self.value.set("f_Klub", unwrap(value))
 
     @property
-    def f_any_concept(self) -> typing.Any:
+    def f_any_concept(self) -> AnyConceptKey:
         return wrap(self.value.at("f_any_concept", encoded=False))
 
     @f_any_concept.setter
-    def f_any_concept(self, value: typing.Any) -> None:
+    def f_any_concept(self, value: AnyConceptKey) -> None:
         self.value.set("f_any_concept", unwrap(value))
 
     def __repr__(self) -> str:

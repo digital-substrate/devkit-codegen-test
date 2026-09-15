@@ -23,7 +23,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy, register, unwrap, wrap
+from .._container import Mapping, Ordered, Sequence
+from .._proxy import AnyConceptKey, Proxy, register, unwrap, wrap
 <u.dependencies.types:{d|from .. import <d.name;format="lsc">};separator="\n">
 
 # ── l'identité de cette unité dans le modèle ──
@@ -75,11 +76,56 @@ concept(c, u) ::= <<
 // `to_member_key(concept)` la posent au descripteur, qui la connaît. Un `as_(cls)` générique
 // dit la même chose pour tous les membres, et pour ceux qu'un modèle ajoutera ensuite.
 club(c, u) ::= <<
-<key(c, u, "club")>
+<if(c.hasDocumentation)>
+<endif>
+class <c.name>Key(Proxy):
+    """Une poignée sur une instance d'un membre de <u.name>::<c.name>.
+<if(c.hasDocumentation)>
+
+    <c.documentation>
+<endif>
+
+    ON N'Y CRÉE PAS D'INSTANCE : un club n'est pas un concept, rien n'est « un Klub ». On y
+    entre depuis la clé d'un membre, et on en sort en demandant si c'en est un. Le pack
+    donne à la clé de club un `create()` qui passe le descripteur du club là où le runtime
+    attend celui d'un concept ; c'est un vérificateur de types qui l'a dit.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def club(cls) -> dsviper.TypeClub:
+        """Le descripteur du club, résolu une fois."""
+        return definitions().check_club(<c.name;format="usc">)
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.Type:
+        return dsviper.TypeKey(cls.club())
+
+    def __init__(self, key):
+        value = key.value if isinstance(key, Proxy) else key
+        if not isinstance(value, dsviper.ValueKey):
+            raise TypeError("cette valeur n'est pas une clé")
+        if not self.club().is_member(value.type_concept()):
+            raise TypeError("cette clé ne désigne pas un membre de <u.name>::<c.name>")
+        super().__init__(value.to_club_key(self.club()))
+
+    @property
+    def instance_id(self) -> dsviper.ValueUUId:
+        return self.value.instance_id()
+
+    def is_valid(self) -> bool:
+        return self.instance_id.is_valid()
 
     def as_(self, cls):
         """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
-        return cls(self.value.to_member_key(cls.concept())) if self.value.is_member(cls.concept()) else None
+        concept = cls.concept()
+        return cls(self.value.to_member_key(concept)) if self.value.is_member(concept) else None
+
+    def __repr__(self) -> str:
+        return f"<u.name>::<c.name>Key({self.value.representation()})"
 >>
 
 key(c, u, kind) ::= <<
@@ -221,12 +267,13 @@ read(f) ::= <%<if(f.bindingType.useProxy)>return wrap(self.value.at("<f.name>", 
 write(f) ::= <%self.value.set("<f.name>", <if(f.bindingType.useProxy)>unwrap(value)<else>value<endif>)%>
 repr_field(f) ::= <%<f.name>={self.<f.name>}%>
 
-// L'ANNOTATION D'UN CONTENEUR EST CE QUE LE RUNTIME REND, ET NON UNE CLASSE QUI N'EXISTE PAS.
-// Le pack génère un proxy par forme de conteneur -- `Optional_Colour`, `Map_A_to_B` -- et
-// peut donc les nommer ; ici ces classes n'existent pas, parce qu'une seule suffirait et
-// qu'aucune n'est nécessaire. `typing.Any` dit ce qui est vrai : le runtime rend l'objet
-// Python qui correspond, et sa forme est dans le descripteur de type.
-hint(f) ::= <%<if(f.bindingType.isNamed)><f.bindingType.typeInNamespace><elseif(f.bindingType.useProxy)>typing.Any<else><f.bindingType.type><endif>%>
+// L'ANNOTATION EST LA FORME ENTIÈRE, ET LE MODÈLE LA DONNE. `Sequence[Colour]`,
+// `MaterialKey | None`, `Mapping[MaterialKey, MaterialKey]` : le pack obtient la même chose
+// en émettant une classe par combinaison, ici les vues sont génériques et la combinaison
+// s'écrit. Une annotation qui s'arrêterait à « un conteneur » rendrait le vérificateur
+// aveugle -- `Any` accepte toute affectation, donc un champ de couleurs prendrait un entier
+// sans un mot.
+hint(f) ::= <%<f.bindingType.annotation>%>
 
 registered(v) ::= <%<v.name;format="usc">: <v.name>%>
 registered_key(v) ::= <%<v.name;format="usc">: <v.name>Key%>

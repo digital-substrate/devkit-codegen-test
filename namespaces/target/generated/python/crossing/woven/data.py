@@ -11,7 +11,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy, register, unwrap, wrap
+from .._container import Mapping, Ordered, Sequence
+from .._proxy import AnyConceptKey, Proxy, register, unwrap, wrap
 from .. import parts
 from .. import core
 
@@ -126,44 +127,38 @@ class DerivedKey(Proxy):
         return f"Woven::DerivedKey({self.value.representation()})"
 
 class WeaveKey(Proxy):
-    """Une poignée sur une instance de Woven::Weave, pas la chose elle-même.
+    """Une poignée sur une instance d'un membre de Woven::Weave.
 
     Un club dont les membres viennent de deux fournisseurs ET PORTENT LE MÊME NOM : le nom
     du getter ne peut pas être `asThingKey` des deux côtés, et un nom de fonction ne peut pas
     contenir `::`. C'est le cas que Core::Klub ne montre pas, ses membres étant chez lui.
+
+    ON N'Y CRÉE PAS D'INSTANCE : un club n'est pas un concept, rien n'est « un Klub ». On y
+    entre depuis la clé d'un membre, et on en sort en demandant si c'en est un. Le pack
+    donne à la clé de club un `create()` qui passe le descripteur du club là où le runtime
+    attend celui d'un concept ; c'est un vérificateur de types qui l'a dit.
     """
 
     __slots__ = ()
 
     @classmethod
     @functools.cache
-    def concept(cls):
-        """Le descripteur, résolu une fois."""
+    def club(cls) -> dsviper.TypeClub:
+        """Le descripteur du club, résolu une fois."""
         return definitions().check_club(WEAVE)
 
     @classmethod
     @functools.cache
     def type(cls) -> dsviper.Type:
-        """Le descripteur du type de la clé.
+        return dsviper.TypeKey(cls.club())
 
-        `classmethod` et non fonction libre : en C++ il fallait `type(tag<T>{})` pour que la
-        recherche par argument trouve l'unité de T. Python n'a pas cette recherche et n'en a
-        pas besoin — l'appelant écrit déjà le nom de la classe.
-        """
-        return dsviper.TypeKey(cls.concept())
-
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
-        if isinstance(identifier, dsviper.ValueKey):
-            if identifier.type() != self.type():
-                raise TypeError("cette valeur n'est pas un Woven::WeaveKey")
-            super().__init__(identifier)
-        else:
-            super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
-
-    @classmethod
-    def create(cls) -> WeaveKey:
-        """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
-        return cls(dsviper.ValueUUId.create())
+    def __init__(self, key):
+        value = key.value if isinstance(key, Proxy) else key
+        if not isinstance(value, dsviper.ValueKey):
+            raise TypeError("cette valeur n'est pas une clé")
+        if not self.club().is_member(value.type_concept()):
+            raise TypeError("cette clé ne désigne pas un membre de Woven::Weave")
+        super().__init__(value.to_club_key(self.club()))
 
     @property
     def instance_id(self) -> dsviper.ValueUUId:
@@ -172,12 +167,13 @@ class WeaveKey(Proxy):
     def is_valid(self) -> bool:
         return self.instance_id.is_valid()
 
-    def __repr__(self) -> str:
-        return f"Woven::WeaveKey({self.value.representation()})"
-
     def as_(self, cls):
         """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
-        return cls(self.value.to_member_key(cls.concept())) if self.value.is_member(cls.concept()) else None
+        concept = cls.concept()
+        return cls(self.value.to_member_key(concept)) if self.value.is_member(concept) else None
+
+    def __repr__(self) -> str:
+        return f"Woven::WeaveKey({self.value.representation()})"
 
 class Entities(Proxy):
     """Woven::Entities.
@@ -275,11 +271,11 @@ class Entities(Proxy):
         self.value.set("f_klub", unwrap(value))
 
     @property
-    def f_any_concept(self) -> typing.Any:
+    def f_any_concept(self) -> AnyConceptKey:
         return wrap(self.value.at("f_any_concept", encoded=False))
 
     @f_any_concept.setter
-    def f_any_concept(self, value: typing.Any) -> None:
+    def f_any_concept(self, value: AnyConceptKey) -> None:
         self.value.set("f_any_concept", unwrap(value))
 
     def __repr__(self) -> str:
@@ -310,67 +306,67 @@ class Composites(Proxy):
             setattr(self, name, field)
 
     @property
-    def f_tuple(self) -> typing.Any:
+    def f_tuple(self) -> Sequence[core.Colour | parts.Colour]:
         return wrap(self.value.at("f_tuple", encoded=False))
 
     @f_tuple.setter
-    def f_tuple(self, value: typing.Any) -> None:
+    def f_tuple(self, value: Sequence[core.Colour | parts.Colour]) -> None:
         self.value.set("f_tuple", unwrap(value))
 
     @property
-    def f_optional(self) -> typing.Any:
+    def f_optional(self) -> core.ThingKey | None:
         return wrap(self.value.at("f_optional", encoded=False))
 
     @f_optional.setter
-    def f_optional(self, value: typing.Any) -> None:
+    def f_optional(self, value: core.ThingKey | None) -> None:
         self.value.set("f_optional", unwrap(value))
 
     @property
-    def f_vector(self) -> typing.Any:
+    def f_vector(self) -> Sequence[parts.Colour]:
         return wrap(self.value.at("f_vector", encoded=False))
 
     @f_vector.setter
-    def f_vector(self, value: typing.Any) -> None:
+    def f_vector(self, value: Sequence[parts.Colour]) -> None:
         self.value.set("f_vector", unwrap(value))
 
     @property
-    def f_set(self) -> typing.Any:
+    def f_set(self) -> Sequence[core.ThingKey]:
         return wrap(self.value.at("f_set", encoded=False))
 
     @f_set.setter
-    def f_set(self, value: typing.Any) -> None:
+    def f_set(self, value: Sequence[core.ThingKey]) -> None:
         self.value.set("f_set", unwrap(value))
 
     @property
-    def f_map_keys(self) -> typing.Any:
+    def f_map_keys(self) -> Mapping[core.ThingKey, parts.ThingKey]:
         return wrap(self.value.at("f_map_keys", encoded=False))
 
     @f_map_keys.setter
-    def f_map_keys(self, value: typing.Any) -> None:
+    def f_map_keys(self, value: Mapping[core.ThingKey, parts.ThingKey]) -> None:
         self.value.set("f_map_keys", unwrap(value))
 
     @property
-    def f_map_enum(self) -> typing.Any:
+    def f_map_enum(self) -> Mapping[core.Grade, parts.Colour]:
         return wrap(self.value.at("f_map_enum", encoded=False))
 
     @f_map_enum.setter
-    def f_map_enum(self, value: typing.Any) -> None:
+    def f_map_enum(self, value: Mapping[core.Grade, parts.Colour]) -> None:
         self.value.set("f_map_enum", unwrap(value))
 
     @property
-    def f_xarray(self) -> typing.Any:
+    def f_xarray(self) -> Ordered[core.Colour]:
         return wrap(self.value.at("f_xarray", encoded=False))
 
     @f_xarray.setter
-    def f_xarray(self, value: typing.Any) -> None:
+    def f_xarray(self, value: Ordered[core.Colour]) -> None:
         self.value.set("f_xarray", unwrap(value))
 
     @property
-    def f_variant(self) -> typing.Any:
+    def f_variant(self) -> core.Colour | parts.Colour | str:
         return wrap(self.value.at("f_variant", encoded=False))
 
     @f_variant.setter
-    def f_variant(self, value: typing.Any) -> None:
+    def f_variant(self, value: core.Colour | parts.Colour | str) -> None:
         self.value.set("f_variant", unwrap(value))
 
     def __repr__(self) -> str:

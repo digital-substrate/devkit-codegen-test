@@ -10,6 +10,7 @@ C'est moins qu'un compilateur et beaucoup plus qu'une lecture.
     render-python.py --check    échoue si generated/python/ n'est pas à jour
 """
 import argparse
+import json
 import shutil
 import subprocess
 import sys
@@ -94,6 +95,39 @@ for model, spec in MODELS.items():
         for line in r.stderr.strip().splitlines()[-3:]:
             print(f"     {line}")
 
+# ET CE QU'UN VÉRIFICATEUR DE TYPES EN DIT. C'est l'équivalent le plus proche du compilateur
+# que le C++ a : il lit les annotations et refuse ce qui ne s'accorde pas. Sans lui, écrire
+# `typing.Any` partout passerait pour du typage -- `Any` accepte toute affectation, donc un
+# champ de couleurs prendrait un entier sans un mot, et rien ne le dirait.
+def typecheck(package):
+    if shutil.which("pyright") is None:
+        print(f"  {'types':11} pyright absent, non vérifié")
+        return 0
+
+    configuration = package / "pyrightconfig.json"
+    configuration.write_text(json.dumps({
+        "include": ["."],
+        "extraPaths": [str(package), str(ROOT.parent / "com.digitalsubstrate.viper" / "dsviper_wheel")],
+        "typeCheckingMode": "standard",
+    }))
+    r = subprocess.run(["pyright", "--outputjson"], cwd=package, capture_output=True, text=True)
+    configuration.unlink()
+
+    try:
+        diagnostics = json.loads(r.stdout)["generalDiagnostics"]
+    except (ValueError, KeyError):
+        print(f"  {'types':11} pyright n'a rien rendu d'exploitable")
+        return 1
+
+    errors = [d for d in diagnostics if d["severity"] == "error"]
+    print(f"  {'types':11} {len(errors):3} erreur(s) de typage"
+          + ("" if errors else " — les annotations tiennent"))
+    for d in errors[:5]:
+        name = "/".join(d["file"].split("/")[-2:])
+        print(f"     {name}:{d['range']['start']['line'] + 1}  {d['message'].splitlines()[0][:70]}")
+    return 1 if errors else 0
+
+
 # ET LES MÊMES ASSERTIONS QUE LA RÉFÉRENCE ÉCRITE À LA MAIN. Un module qui s'importe n'est
 # pas un module qui marche : l'import ne dit rien de ce qu'un attachment écrit ni de ce qu'une
 # base relit. La référence dit ce qu'on veut, le rendu dit ce qu'on obtient, et c'est la même
@@ -109,6 +143,8 @@ if not arguments.check and status == 0:
             if "ÉCHEC" in line:
                 print(f"     {line.strip()}")
         status = 1
+
+    status |= typecheck(target)
 
 if arguments.check:
     # LES BYTECODES NE SONT PAS DU RENDU. Importer un paquet en écrit un à côté de chaque

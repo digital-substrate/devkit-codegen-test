@@ -11,7 +11,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy, register, unwrap, wrap
+from .._container import Mapping, Ordered, Sequence
+from .._proxy import AnyConceptKey, Proxy, register, unwrap, wrap
 
 # ── l'identité de cette unité dans le modèle ──
 #
@@ -175,42 +176,36 @@ class SubThingKey(Proxy):
         return f"Core::SubThingKey({self.value.representation()})"
 
 class KlubKey(Proxy):
-    """Une poignée sur une instance de Core::Klub, pas la chose elle-même.
+    """Une poignée sur une instance d'un membre de Core::Klub.
 
     Un club, dont les membres vivent ici.
+
+    ON N'Y CRÉE PAS D'INSTANCE : un club n'est pas un concept, rien n'est « un Klub ». On y
+    entre depuis la clé d'un membre, et on en sort en demandant si c'en est un. Le pack
+    donne à la clé de club un `create()` qui passe le descripteur du club là où le runtime
+    attend celui d'un concept ; c'est un vérificateur de types qui l'a dit.
     """
 
     __slots__ = ()
 
     @classmethod
     @functools.cache
-    def concept(cls):
-        """Le descripteur, résolu une fois."""
+    def club(cls) -> dsviper.TypeClub:
+        """Le descripteur du club, résolu une fois."""
         return definitions().check_club(KLUB)
 
     @classmethod
     @functools.cache
     def type(cls) -> dsviper.Type:
-        """Le descripteur du type de la clé.
+        return dsviper.TypeKey(cls.club())
 
-        `classmethod` et non fonction libre : en C++ il fallait `type(tag<T>{})` pour que la
-        recherche par argument trouve l'unité de T. Python n'a pas cette recherche et n'en a
-        pas besoin — l'appelant écrit déjà le nom de la classe.
-        """
-        return dsviper.TypeKey(cls.concept())
-
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
-        if isinstance(identifier, dsviper.ValueKey):
-            if identifier.type() != self.type():
-                raise TypeError("cette valeur n'est pas un Core::KlubKey")
-            super().__init__(identifier)
-        else:
-            super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
-
-    @classmethod
-    def create(cls) -> KlubKey:
-        """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
-        return cls(dsviper.ValueUUId.create())
+    def __init__(self, key):
+        value = key.value if isinstance(key, Proxy) else key
+        if not isinstance(value, dsviper.ValueKey):
+            raise TypeError("cette valeur n'est pas une clé")
+        if not self.club().is_member(value.type_concept()):
+            raise TypeError("cette clé ne désigne pas un membre de Core::Klub")
+        super().__init__(value.to_club_key(self.club()))
 
     @property
     def instance_id(self) -> dsviper.ValueUUId:
@@ -219,12 +214,13 @@ class KlubKey(Proxy):
     def is_valid(self) -> bool:
         return self.instance_id.is_valid()
 
-    def __repr__(self) -> str:
-        return f"Core::KlubKey({self.value.representation()})"
-
     def as_(self, cls):
         """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
-        return cls(self.value.to_member_key(cls.concept())) if self.value.is_member(cls.concept()) else None
+        concept = cls.concept()
+        return cls(self.value.to_member_key(concept)) if self.value.is_member(concept) else None
+
+    def __repr__(self) -> str:
+        return f"Core::KlubKey({self.value.representation()})"
 
 class Grade(enum.Enum):
     """Core::Grade.
@@ -456,27 +452,27 @@ class Scalars(Proxy):
         self.value.set("f_blob", value)
 
     @property
-    def f_any(self) -> dsviper.ValueAny:
+    def f_any(self) -> typing.Any:
         return self.value.at("f_any")
 
     @f_any.setter
-    def f_any(self, value: dsviper.ValueAny) -> None:
+    def f_any(self, value: typing.Any) -> None:
         self.value.set("f_any", value)
 
     @property
-    def f_vec(self) -> typing.Any:
+    def f_vec(self) -> Sequence[int]:
         return wrap(self.value.at("f_vec", encoded=False))
 
     @f_vec.setter
-    def f_vec(self, value: typing.Any) -> None:
+    def f_vec(self, value: Sequence[int]) -> None:
         self.value.set("f_vec", unwrap(value))
 
     @property
-    def f_mat(self) -> typing.Any:
+    def f_mat(self) -> Sequence[Sequence[int]]:
         return wrap(self.value.at("f_mat", encoded=False))
 
     @f_mat.setter
-    def f_mat(self, value: typing.Any) -> None:
+    def f_mat(self, value: Sequence[Sequence[int]]) -> None:
         self.value.set("f_mat", unwrap(value))
 
     def __repr__(self) -> str:
@@ -543,27 +539,27 @@ class Bag(Proxy):
             setattr(self, name, field)
 
     @property
-    def members(self) -> typing.Any:
+    def members(self) -> Sequence[ThingKey]:
         return wrap(self.value.at("members", encoded=False))
 
     @members.setter
-    def members(self, value: typing.Any) -> None:
+    def members(self, value: Sequence[ThingKey]) -> None:
         self.value.set("members", unwrap(value))
 
     @property
-    def tints(self) -> typing.Any:
+    def tints(self) -> Mapping[ThingKey, Colour]:
         return wrap(self.value.at("tints", encoded=False))
 
     @tints.setter
-    def tints(self, value: typing.Any) -> None:
+    def tints(self, value: Mapping[ThingKey, Colour]) -> None:
         self.value.set("tints", unwrap(value))
 
     @property
-    def trail(self) -> typing.Any:
+    def trail(self) -> Ordered[Colour]:
         return wrap(self.value.at("trail", encoded=False))
 
     @trail.setter
-    def trail(self, value: typing.Any) -> None:
+    def trail(self, value: Ordered[Colour]) -> None:
         self.value.set("trail", unwrap(value))
 
     def __repr__(self) -> str:
@@ -626,11 +622,11 @@ class Defaults(Proxy):
         self.value.set("f_uuid", value)
 
     @property
-    def f_vec(self) -> typing.Any:
+    def f_vec(self) -> Sequence[int]:
         return wrap(self.value.at("f_vec", encoded=False))
 
     @f_vec.setter
-    def f_vec(self, value: typing.Any) -> None:
+    def f_vec(self, value: Sequence[int]) -> None:
         self.value.set("f_vec", unwrap(value))
 
     @property

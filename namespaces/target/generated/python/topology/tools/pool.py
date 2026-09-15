@@ -8,6 +8,9 @@ import typing
 
 import dsviper
 
+from .._container import Mapping, Ordered, Sequence
+from .._proxy import AnyConceptKey
+
 
 
 class Pool:
@@ -36,13 +39,26 @@ class Remote:
     corps sont identiques -- ce qui traverse le fil est le format, pas l'appel.
     """
 
-    __slots__ = ("_funcs",)
+    __slots__ = ("_queried",)
 
     def __init__(self, service: dsviper.ServiceRemote):
-        self._funcs = service.function_pool_funcs(Pool.NAME)
+        self._queried = service.function_pool_funcs(Pool.NAME)
 
     def is_available(self) -> bool:
-        return self._funcs is not None
+        return self._queried is not None
+
+    @property
+    def _funcs(self):
+        """Les fonctions, ou une erreur qui dit laquelle manque.
+
+        UN SERVICE PEUT NE PAS PORTER CE POOL, et `is_available()` est là pour le demander.
+        Appeler sans avoir demandé donnait « NoneType n'est pas indexable », qui ne nomme ni
+        le pool ni le service ; un vérificateur de types l'a signalé avant qu'un appelant ne
+        le rencontre.
+        """
+        if self._queried is None:
+            raise RuntimeError(f"le service ne porte pas le pool {Pool.NAME}")
+        return self._queried
 
     def reset(self) -> None:
         self._funcs["reset"]()

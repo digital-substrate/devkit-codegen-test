@@ -8,6 +8,9 @@ import typing
 
 import dsviper
 
+from .._container import Mapping, Ordered, Sequence
+from .._proxy import AnyConceptKey
+
 from .. import projection
 
 class Pool:
@@ -28,13 +31,20 @@ class Pool:
 class Remote:
     """Le même pool, vu d'un client."""
 
-    __slots__ = ("_funcs",)
+    __slots__ = ("_queried",)
 
     def __init__(self, service: dsviper.ServiceRemote):
-        self._funcs = service.attachment_function_pool_funcs(Pool.NAME)
+        self._queried = service.attachment_function_pool_funcs(Pool.NAME)
 
     def is_available(self) -> bool:
-        return self._funcs is not None
+        return self._queried is not None
+
+    @property
+    def _funcs(self):
+        """Les fonctions, ou une erreur qui dit laquelle manque."""
+        if self._queried is None:
+            raise RuntimeError(f"le service ne porte pas le pool {Pool.NAME}")
+        return self._queried
 
     def clear(self, attachment_mutating: dsviper.AttachmentMutating, link_key: projection.LinkKey) -> None:
         self._funcs["clear"](attachment_mutating, link_key._unwrap())

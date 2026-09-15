@@ -240,3 +240,54 @@ Trois choses, chacune parce que Python les impose :
    génère un par forme, donc il pouvait les nommer ; ici l'annotation est `typing.Any` et le
    runtime rend l'objet Python qui correspond. Un nom ne permet pas de distinguer les deux,
    donc le modèle le dit.
+
+
+## Le typage, mesuré
+
+La question posée était : est-ce que la liaison Python fait perdre le typage ? La réponse
+était oui, et elle est mesurée avant et après.
+
+**Avant.** 74 annotations valaient `typing.Any` — tous les champs conteneurs — et un
+vérificateur ne savait rien :
+
+```
+  Type of "c.f_vector"      is "Any"
+  Type of "c.f_vector[0]"   is "Any"
+  x: int = c.f_vector       (aucune erreur : Any s'affecte à tout)
+```
+
+**Après.** Les trois vues sont génériques et le modèle écrit la forme entière :
+
+```
+  Type of "c.f_vector"      is "Sequence[Colour]"
+  Type of "c.f_vector[0]"   is "Colour"
+  Type of "c.f_optional"    is "ThingKey | None"
+  Type of "c.f_map_enum"    is "Mapping[Grade, Colour]"
+  Type of "c.f_variant"     is "crossing.core.data.Colour | crossing.parts.data.Colour | str"
+
+  error  Type "Sequence[Colour]" is not assignable to declared type "int"
+  error  Cannot assign to attribute "f_vector" for class "Composites"
+```
+
+La seconde erreur est la meilleure : elle refuse un `Core::Colour` là où un `Parts::Colour`
+est attendu. Deux types homonymes de deux unités, séparés par un vérificateur — ce qui était
+le problème de départ de tout le chantier, tenu jusque dans l'outillage.
+
+**Une seule concession, déclarée une fois.** `wrap()` rend `typing.Any`, parce que le type
+réel dépend de ce que la valeur porte. Mais il est écrit à chaque endroit qui appelle, donc
+le vérificateur y trouve un type exact : ce qui est concédé est un point de passage, pas un
+`Any` répandu sur chaque champ.
+
+**`render-python.py` le vérifie maintenant à chaque rendu** — 0 erreur sur les quatre
+modèles — et s'annonce non vérifié si `pyright` n'est pas là.
+
+### Trois défauts que le vérificateur a trouvés
+
+1. **La clé d'un club avait un `create()`**, qui passait le descripteur du club là où le
+   runtime attend celui d'un concept. On ne crée pas d'instance d'un club : rien n'est « un
+   Klub ». On y entre depuis la clé d'un membre, et on en sort en demandant si c'en est un.
+2. **Le `Remote` d'un pool indexait des fonctions qui pouvaient être absentes.** Un service
+   peut ne pas porter le pool, `is_available()` est là pour le demander, et appeler sans
+   avoir demandé donnait « NoneType n'est pas indexable » — qui ne nomme ni le pool ni le
+   service. C'est maintenant une erreur qui les nomme.
+3. **`unwrap` construisait un ensemble d'éléments non hachables** selon son type déclaré.
