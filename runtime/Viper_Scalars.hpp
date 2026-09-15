@@ -8,7 +8,12 @@
 namespace Viper {
 struct BlobId { std::string value; bool operator==(BlobId const &) const = default; bool operator<(BlobId const & o) const { return value < o.value; } };
 struct CommitId { std::string value; bool operator==(CommitId const &) const = default; bool operator<(CommitId const & o) const { return value < o.value; } };
-struct Blob { std::vector<std::byte> bytes; bool operator==(Blob const &) const = default; bool operator<(Blob const & o) const { return bytes < o.bytes; } };
+struct Blob {
+    std::vector<std::byte> storage;
+    Blob() = default;
+    explicit Blob(std::size_t size) : storage(size) {}
+    std::size_t size() const { return storage.size(); }
+    std::vector<std::byte> bytes; bool operator==(Blob const &) const = default; bool operator<(Blob const & o) const { return bytes < o.bytes; } };
 /// Une séquence ordonnée dont les positions sont stables : le conteneur propre au runtime.
 class StreamWriting;
 class StreamReading;

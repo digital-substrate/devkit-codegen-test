@@ -121,3 +121,76 @@ field_write(f) ::= <<    write(w, value.<f.name>);>>
 field_read(f) ::= <%read(r, Viper::Codec::tag\<<f.typeInNamespace>>{})%>
 
 plain_read_head(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>>) {%>
+
+// ── et le socle ──
+model(m) ::= <<
+// <m.namespace> — les fonctions injectées.
+//
+// <m.generated>
+
+#include "<m.include.Codec>"
+
+#include "<m.include.Resources>"
+
+#include "Viper_Definitions.hpp"
+#include "Viper_DefinitionsDecoder.hpp"
+#include "Viper_Types.hpp"
+
+#include \<cstring>
+
+namespace <m.namespace>::Codec {
+
+// LE MODÈLE EST UNE DONNÉE, PAS DU CODE. Rien n'enregistre les types un par un : le
+// document est embarqué tel quel et décodé au premier appel. C'est ce qui garde le socle
+// petit -- aucun artefact d'enregistrement à découper par unité -- et c'est aussi la
+// réponse à « qui tient la liste des concepts connus » : cette donnée-là.
+std::shared_ptr\<Viper::Definitions const> const & definitions() {
+    static std::shared_ptr\<Viper::Definitions const> instance;
+    if (!instance) {
+        Viper::Blob blob(sizeof(Resources::definitions));
+        std::memcpy(blob.storage.data(), Resources::definitions, blob.size());
+        instance = Viper::DefinitionsDecoder::decode(blob, Viper::StreamTokenBinaryCodec::Instance());
+    }
+    return instance;
+}
+
+std::shared_ptr\<Viper::StreamCodecInstancing> const & stream() {
+    static auto const instance = Viper::StreamBinaryCodec::Instance();
+    return instance;
+}
+
+// INTERROGER LE MODÈLE, ET NON ÉNUMÉRER À LA GÉNÉRATION. Le pack fige la liste des concepts
+// au moment où le code est écrit. Or `Viper::Definitions::extendConcepts` existe : un modèle
+// apprend des concepts en cours d'exécution, d'un pair ou d'un document plus récent. Une
+// liste figée répond alors « inconnu » pour un concept que le runtime connaît -- ce que le
+// pack reconnaît lui-même dans un commentaire.
+bool isKnown(Viper::AnyConceptKey const & key) {
+    return definitions()->queryConcept(key.runtimeId()) != nullptr;
+}
+
+std::string description(Viper::AnyConceptKey const & key) {
+    auto const concept_ = definitions()->queryConcept(key.runtimeId());
+    if (!concept_)
+        return key.instanceId().uuidString() + ":?(" + key.runtimeId().uuidString() + ")";
+
+    return key.instanceId().uuidString() + ":" + concept_->representation();
+}
+
+// Le même corps des deux côtés : dériver n'est pas adhérer, et c'est le descripteur qui
+// porte la différence, pas le code.
+bool isMember(Viper::AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_) {
+    auto const instance = definitions()->queryConcept(key.runtimeId());
+    if (!instance)
+        return false;                                  // un concept que ce modèle ignore
+
+    if (auto const target = std::dynamic_pointer_cast\<Viper::TypeConcept>(concept_))
+        return instance->isMember(target);
+
+    if (auto const club = std::dynamic_pointer_cast\<Viper::TypeClub>(concept_))
+        return club->hasMember(instance);
+
+    return false;
+}
+
+} // namespace <m.namespace>::Codec
+>>

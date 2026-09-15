@@ -56,3 +56,88 @@ void write(Viper::Codec::Writer & w, <e.name> const & value);
 >>
 
 plain_read(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>>);%>
+
+// ── et le socle, rendu une fois pour tout le modèle ──
+//
+// MÊME FICHIER, DEUX ENTRÉES. `unit(u)` sort une fois par namespace, `model(m)` une fois
+// pour le modèle, et kibo rend les deux : c'est précisément pour cela que la discrimination
+// se fait sur l'entrée déclarée. Le codec d'une unité et le socle qui le porte se lisent
+// ensemble, ce qui est où un lecteur les cherche.
+//
+// QUATRE DÉCLARATIONS, ET LE CRITÈRE EST LE MÊME POUR LES QUATRE : elles ont besoin du
+// modèle entier, donc aucun namespace ne peut en répondre. C'est tout ce que le socle est.
+model(m) ::= <<
+// <m.namespace> — les fonctions injectées, qu'aucun namespace ne peut revendiquer.
+//
+// <m.generated>
+
+#ifndef <m.namespace>_Codec_hpp
+#define <m.namespace>_Codec_hpp
+
+#include "Viper_AnyConceptKey.hpp"
+#include "Viper_Codec.hpp"
+#include "Viper_Stream.hpp"
+#include "Viper_Values.hpp"
+
+#include \<memory>
+#include \<string>
+
+namespace <m.namespace>::Codec {
+
+using Viper::Codec::tag;
+
+/// Le modèle, décodé une fois depuis la ressource qui le porte.
+std::shared_ptr\<Viper::Definitions const> const & definitions();
+
+/// Le codec de flux par lequel passe l'aller-retour.
+std::shared_ptr\<Viper::StreamCodecInstancing> const & stream();
+
+// ── ce que la clé non typée ne peut pas porter elle-même ──
+//
+// LES DEUX SEULS MEMBRES DE L'AnyConceptKey GÉNÉRÉE QUI AVAIENT BESOIN DU MODÈLE. Les sept
+// autres sont deux uuid, leurs comparaisons et leur hachage. Fonctions libres et non
+// membres : un seul membre aurait obligé la classe entière à être générée.
+
+/// Le nom du concept, tel que le modèle le connaît, ou une forme brute s'il l'ignore.
+std::string description(Viper::AnyConceptKey const & key);
+
+/// Si ce modèle sait de quel concept il s'agit. Faux pour une instance venue d'un modèle
+/// plus récent, ce qui est normal et non une erreur.
+bool isKnown(Viper::AnyConceptKey const & key);
+
+/// Si l'instance relève de ce concept -- ou de ce club. Le descripteur porte la différence
+/// entre dériver et adhérer, et c'est l'unique opération dont un rétrécissement a besoin.
+bool isMember(Viper::AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_);
+
+// ── le passage entre les deux mondes ──
+//
+// GÉNÉRIQUES, ET C'EST LE RÉSULTAT DE TOUT CE QUI PRÉCÈDE. Le pack écrit le même corps de
+// dix lignes une fois par type, dont seul le suffixe change ; ce qui change est exactement
+// ce qu'une unité implémente -- `write`/`read` pour la valeur, `type` pour son descripteur
+// -- et les deux sont trouvés par ADL. Un template remplace la famille encode_X/decode_X.
+
+/// Une valeur C++ vers une Viper::Value.
+template\<class T>
+std::shared_ptr\<Viper::Value> encode(T const & value) {
+    auto const encoder = stream()->createEncoder();
+    Viper::Codec::Writer writer{encoder};
+    write(writer, value);                                   // ADL : l'unité de value
+
+    return Viper::ValueDecoder::decode(encoder->endEncoding(), stream(),
+                                       type(tag\<T>{}),      // ADL : l'unité, ou le runtime
+                                       definitions());
+}
+
+/// Et le retour.
+template\<class T>
+T decode(std::shared_ptr\<Viper::Value const> const & value) {
+    auto const decoder = stream()->createDecoder(Viper::ValueEncoder::encode(value, stream()));
+    Viper::Codec::Reader reader{decoder, definitions()};
+
+    return read(reader, tag\<T>{});                          // ADL : l'unité de T
+}
+
+} // namespace <m.namespace>::Codec
+
+#endif
+>>

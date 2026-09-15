@@ -316,3 +316,53 @@ Asking the model gives today's answer. Enumerating gives the generation day's.
 `isMember` is the same call with one difference carried by the descriptor rather than by the
 code: a concept descriptor asks whether the instance derives from it, a club descriptor asks
 whether it belongs. Deriving is not joining, and one function covers both.
+
+## The injected module — and two things it is not
+
+`Topology_Codec.hpp` / `.cpp`. The base, and it is four declarations:
+
+```
+definitions()                          the model as the runtime knows it
+stream()                               the stream codec the round trip goes through
+encode<T> / decode<T>                  between a C++ value and a Viper::Value
+description / isKnown / isMember       what the untyped key cannot carry itself
+```
+
+One criterion for all four: each needs the whole model, so no namespace can answer for it.
+That is the entire definition of the base, and this is the entire base.
+
+### It holds no registration, because the model is data
+
+The pack generates no type-registration code at all. It embeds the `.dsm` as a resource and
+decodes it at first use:
+
+```cpp
+Viper::Blob blob(sizeof(Resources::definitions));
+std::memcpy(blob.storage.data(), Resources::definitions, blob.size());
+instance = Viper::DefinitionsDecoder::decode(blob, Viper::StreamTokenBinaryCodec::Instance());
+```
+
+So there was never a registration artefact to split per unit — the question of who holds the
+set of known concepts was answered before it was asked, by the document itself.
+
+### It holds no primitive or container descriptor, and it did an hour ago
+
+`type(tag<std::uint8_t>)` and `type(tag<std::map<K,V>>)` were put here on the reasoning that
+a `Type` is registered in the model's `Definitions`, so obtaining one needs the whole model.
+**That reasoning was wrong**, and the pack's own code says so: a primitive's type is
+`Viper::TypeUInt8::Instance()`, a runtime singleton, and a container's is
+`Viper::TypeMap::make(keyType, elementType)`, composed from its elements. Neither consults
+the model.
+
+They are therefore entirely the runtime's, as one inline function per primitive and one
+template per container shape — and the container template composes by lookup, so
+
+```cpp
+type(tag<std::map<ModelA::MaterialKey, ModelB::MaterialKey>>{})
+```
+
+is built by a runtime template from two units' descriptors, with **nothing generated for it**.
+The shape that forced a base into existence now produces no line anywhere.
+
+**The base is smaller than the argument that created it.** Each time something was traced
+rather than assumed, it left.

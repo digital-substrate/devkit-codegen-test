@@ -296,3 +296,23 @@ because a structure's fields have one order and it is the model's.
 Every generated file of the topology model now compiles: five artefacts per unit, headers
 and implementations, on all five namespaces. The crossing model compiles too except the
 three files that name `AnyConceptKey`.
+
+## The injected module, generated — one file, two entries
+
+`Codec.hpp.stg` and `Codec.cpp.stg` now declare both `unit(u)` and `model(m)`: the first
+renders once per namespace, the second once for the model. That is what discriminating on
+the declared entry was for, and it puts a unit's codec and the base that carries it in the
+same file, which is where a reader looks.
+
+The render matches `../hand/Topology_Codec.hpp` exactly and `.cpp` but for one comment.
+**All 34 generated files of the topology model compile**, base included.
+
+**The base is four declarations**, and the criterion is the same for all four: each needs
+the whole model. Everything else that had been put there left once it was traced — the
+registration, because the model is embedded data rather than generated code, and the
+primitive and container descriptors, because a primitive's type is a runtime singleton and a
+container's composes from its elements.
+
+`type(tag<std::map<ModelA::MaterialKey, ModelB::MaterialKey>>{})` is now assembled by a
+runtime template from two units' descriptors. The shape this whole line of work started
+from produces no generated line at all.

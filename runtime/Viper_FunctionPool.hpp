@@ -70,8 +70,7 @@ public:
     void add(std::shared_ptr<Function> const & function);
 };
 
-/// Le type et la valeur du néant, que rend une fonction sans retour.
-class TypeVoid { public: static std::shared_ptr<Type> Instance(); };
+/// La valeur du néant, que rend une fonction sans retour. Son type est celui du runtime.
 class Void { public: static std::shared_ptr<Value> Instance(); };
 
 } // ns

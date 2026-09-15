@@ -20,10 +20,34 @@
 
 #include "Topology_Codec.hpp"
 
+#include "Topology_Resources.hpp"      // le modèle, en octets
+
 #include "Viper_Definitions.hpp"
+#include "Viper_DefinitionsDecoder.hpp"
 #include "Viper_Types.hpp"
 
+#include <cstring>
+
 namespace Topology::Codec {
+
+/// LE MODÈLE EST UNE DONNÉE, PAS DU CODE. Rien n'enregistre les types un par un : le `.dsm`
+/// est embarqué tel quel et décodé au premier appel. C'est ce qui rend le socle petit --
+/// il n'y a pas d'artefact d'enregistrement à générer par unité -- et c'est aussi ce qui
+/// répond à « qui tient la liste des concepts connus » : cette liste-là.
+std::shared_ptr<Viper::Definitions const> const & definitions() {
+    static std::shared_ptr<Viper::Definitions const> instance;
+    if (!instance) {
+        Viper::Blob blob(sizeof(Resources::definitions));
+        std::memcpy(blob.storage.data(), Resources::definitions, blob.size());
+        instance = Viper::DefinitionsDecoder::decode(blob, Viper::StreamTokenBinaryCodec::Instance());
+    }
+    return instance;
+}
+
+std::shared_ptr<Viper::StreamCodecInstancing> const & stream() {
+    static auto const instance = Viper::StreamBinaryCodec::Instance();
+    return instance;
+}
 
 bool isKnown(Viper::AnyConceptKey const & key) {
     return definitions()->queryConcept(key.runtimeId()) != nullptr;

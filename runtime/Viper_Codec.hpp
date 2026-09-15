@@ -8,6 +8,7 @@
 #ifndef Viper_Codec_hpp
 #define Viper_Codec_hpp
 #include "Viper_Scalars.hpp"
+#include "Viper_Types.hpp"
 #include "Viper_Stream.hpp"
 #include "Viper_UUId.hpp"
 #include <array>
@@ -91,33 +92,72 @@ Any           read(Reader &, tag<Any>);
 // donc trouvables par ADL depuis n'importe quelle portée, et la règle devient unique --
 // `type(tag<T>{})` marche pour tout T, que T soit d'une unité, une primitive ou un
 // conteneur de std.
-std::shared_ptr<Type> const & type(tag<bool>);
-std::shared_ptr<Type> const & type(tag<std::uint8_t>);
-std::shared_ptr<Type> const & type(tag<std::uint16_t>);
-std::shared_ptr<Type> const & type(tag<std::uint32_t>);
-std::shared_ptr<Type> const & type(tag<std::uint64_t>);
-std::shared_ptr<Type> const & type(tag<std::int8_t>);
-std::shared_ptr<Type> const & type(tag<std::int16_t>);
-std::shared_ptr<Type> const & type(tag<std::int32_t>);
-std::shared_ptr<Type> const & type(tag<std::int64_t>);
-std::shared_ptr<Type> const & type(tag<float>);
-std::shared_ptr<Type> const & type(tag<double>);
-std::shared_ptr<Type> const & type(tag<std::string>);
-std::shared_ptr<Type> const & type(tag<UUId>);
-std::shared_ptr<Type> const & type(tag<BlobId>);
-std::shared_ptr<Type> const & type(tag<CommitId>);
-std::shared_ptr<Type> const & type(tag<Blob>);
-std::shared_ptr<Type> const & type(tag<Any>);
-std::shared_ptr<Type> const & type(tag<AnyConceptKey>);
+// ILS NE CONSULTENT PAS LE MODÈLE, DONC ILS NE SONT PAS GÉNÉRÉS. Le type d'une primitive
+// est un singleton du runtime ; celui d'un conteneur se compose à partir de ceux de ses
+// éléments, et `type(tag<T>{})` sur l'élément part chez l'unité de T par ADL. Un
+// `map<ModelA::MaterialKey, ModelB::MaterialKey>` obtient donc son descripteur d'un
+// template du runtime nourri par deux unités, sans qu'une ligne soit générée pour lui.
+#define VIPER_PRIMITIVE_TYPE_OF(T, N) \
+    inline std::shared_ptr<Type> const & type(tag<T>) { \
+        static std::shared_ptr<Type> const instance{Type##N::Instance()}; \
+        return instance; \
+    }
+VIPER_PRIMITIVE_TYPE_OF(bool, Bool)
+VIPER_PRIMITIVE_TYPE_OF(std::uint8_t, UInt8)
+VIPER_PRIMITIVE_TYPE_OF(std::uint16_t, UInt16)
+VIPER_PRIMITIVE_TYPE_OF(std::uint32_t, UInt32)
+VIPER_PRIMITIVE_TYPE_OF(std::uint64_t, UInt64)
+VIPER_PRIMITIVE_TYPE_OF(std::int8_t, Int8)
+VIPER_PRIMITIVE_TYPE_OF(std::int16_t, Int16)
+VIPER_PRIMITIVE_TYPE_OF(std::int32_t, Int32)
+VIPER_PRIMITIVE_TYPE_OF(std::int64_t, Int64)
+VIPER_PRIMITIVE_TYPE_OF(float, Float)
+VIPER_PRIMITIVE_TYPE_OF(double, Double)
+VIPER_PRIMITIVE_TYPE_OF(std::string, String)
+VIPER_PRIMITIVE_TYPE_OF(UUId, UUId)
+VIPER_PRIMITIVE_TYPE_OF(BlobId, BlobId)
+VIPER_PRIMITIVE_TYPE_OF(CommitId, CommitId)
+VIPER_PRIMITIVE_TYPE_OF(Blob, Blob)
+VIPER_PRIMITIVE_TYPE_OF(Any, Any)
+#undef VIPER_PRIMITIVE_TYPE_OF
 
-template<class T> std::shared_ptr<Type> const & type(tag<std::vector<T>>);
-template<class T> std::shared_ptr<Type> const & type(tag<std::set<T>>);
-template<class K, class V> std::shared_ptr<Type> const & type(tag<std::map<K,V>>);
-template<class T> std::shared_ptr<Type> const & type(tag<std::optional<T>>);
-template<class T> std::shared_ptr<Type> const & type(tag<XArray<T>>);
-template<class... T> std::shared_ptr<Type> const & type(tag<std::tuple<T...>>);
-template<class... T> std::shared_ptr<Type> const & type(tag<std::variant<T...>>);
-template<class T, std::size_t N> std::shared_ptr<Type> const & type(tag<std::array<T,N>>);
+inline std::shared_ptr<Type> const & type(tag<AnyConceptKey>) {
+    static std::shared_ptr<Type> const instance{TypeAnyConcept::InstanceTypeKey()};
+    return instance;
+}
+
+template<class T> std::shared_ptr<Type> const & type(tag<std::vector<T>>) {
+    static std::shared_ptr<Type> const instance{TypeVector::make(type(tag<T>{}))};
+    return instance;
+}
+template<class T> std::shared_ptr<Type> const & type(tag<std::set<T>>) {
+    static std::shared_ptr<Type> const instance{TypeSet::make(type(tag<T>{}))};
+    return instance;
+}
+template<class T> std::shared_ptr<Type> const & type(tag<std::optional<T>>) {
+    static std::shared_ptr<Type> const instance{TypeOptional::make(type(tag<T>{}))};
+    return instance;
+}
+template<class T> std::shared_ptr<Type> const & type(tag<XArray<T>>) {
+    static std::shared_ptr<Type> const instance{TypeXArray::make(type(tag<T>{}))};
+    return instance;
+}
+template<class K, class V> std::shared_ptr<Type> const & type(tag<std::map<K,V>>) {
+    static std::shared_ptr<Type> const instance{TypeMap::make(type(tag<K>{}), type(tag<V>{}))};
+    return instance;
+}
+template<class T, std::size_t N> std::shared_ptr<Type> const & type(tag<std::array<T,N>>) {
+    static std::shared_ptr<Type> const instance{TypeVec::make(type(tag<T>{}), N)};
+    return instance;
+}
+template<class... T> std::shared_ptr<Type> const & type(tag<std::tuple<T...>>) {
+    static std::shared_ptr<Type> const instance{TypeTuple::make({type(tag<T>{})...})};
+    return instance;
+}
+template<class... T> std::shared_ptr<Type> const & type(tag<std::variant<T...>>) {
+    static std::shared_ptr<Type> const instance{TypeVariant::make({type(tag<T>{})...})};
+    return instance;
+}
 
 // LES CONTENEURS, ET LE CONTRAT QUI REND LE PONT STATIQUE/DYNAMIQUE POSSIBLE.
 //
