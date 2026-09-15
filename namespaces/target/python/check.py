@@ -28,6 +28,16 @@ from topology import definitions, tools
 from topology import model_a as modela, model_b as modelb
 from topology.model_a import attachments as modela_attachments
 from topology.model_b import attachments as modelb_attachments
+# LA RÉFÉRENCE N'ÉCRIT PAS TOUT LE MODÈLE, ET N'A PAS À LE FAIRE. Elle porte les deux unités
+# qui posent les questions de conception -- deux types homonymes, deux attachments homonymes.
+# Les conteneurs en posent une autre, et il faut pour elle un document qui en soit un : c'est
+# `Projection`, que les templates rendent et que personne n'a écrit à la main. Ces
+# assertions-là ne tournent donc que sur un rendu, et l'annoncent quand elles ne tournent pas.
+try:
+    from topology import model_c, projection
+    from topology.projection import attachments as projection_attachments
+except ImportError:
+    projection = None
 
 
 def check(label, condition):
@@ -116,6 +126,29 @@ database.close()
 ok &= check("deux attachments homonymes ont des descripteurs distincts",
             modela_attachments.material.colour.descriptor.runtime_id()
             != modelb_attachments.material.colour.descriptor.runtime_id())
+
+# ── un conteneur rend ses éléments avec leurs noms ──
+#
+# C'EST CE QUE LE PACK OBTIENT EN GÉNÉRANT UNE CLASSE PAR FORME. Ici aucune classe de
+# conteneur n'est générée : la valeur porte son type, une table dit quelle classe va avec
+# quel identifiant, et la vue enveloppe en lisant. La différence doit être invisible d'ici.
+if projection is None:
+    print("  --   les conteneurs : pas dans ce paquet, ces assertions ne tournent pas")
+else:
+    link = projection.LinkKey.create()
+    a, b = modela.MaterialKey.create(), modelb.MaterialKey.create()
+
+    projection_attachments.link.mapping.set(mutating, link, {a: b})
+    mapping = projection_attachments.link.mapping.get(mutating, link)
+    ok &= check("un document map se relit comme une correspondance", len(mapping) == 1)
+    ok &= check("et sa clé porte la classe de son unité",
+                type(next(iter(mapping))) is modela.MaterialKey)
+    ok &= check("et sa valeur celle de la sienne", type(mapping[a]) is modelb.MaterialKey)
+
+    marker = model_c.MarkerKey.create()
+    projection_attachments.link.marker.set(mutating, link, marker)
+    ok &= check("un document clé revient typé",
+                projection_attachments.link.marker.get(mutating, link) == marker)
 
 ok &= check("un pool porte son identité du modèle",
             tools.Pool.UUID.encoded() == "17e63428-03e1-41d7-ad9d-60c5665bbd66")

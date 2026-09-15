@@ -64,14 +64,79 @@ class Proxy:
         return self._value
 
 
+# ── la table des classes du modèle ──
+#
+# UNE VALEUR CONNAÎT SON TYPE, ET UN TYPE NOMMÉ CONNAÎT SON IDENTIFIANT D'EXÉCUTION. Il ne
+# manque donc qu'une table qui dise quelle classe va avec quel identifiant, et chaque unité
+# la remplit en une ligne pour les types qu'elle déclare. C'est ce qui permet à un conteneur
+# de rendre ses éléments avec leurs noms sans qu'aucune classe de conteneur soit générée :
+# le pack en émet une par combinaison rencontrée, ici il n'y en a aucune.
+
+_CLASSES: dict[str, type] = {}
+
+
+def register(classes: dict) -> None:
+    """Déclarer les classes d'une unité, par l'identifiant d'exécution de leur type."""
+    for runtime_id, cls in classes.items():
+        _CLASSES[runtime_id.encoded()] = cls
+
+
+def wrap(value):
+    """La valeur du runtime, rendue avec les noms du modèle quand il y en a.
+
+    CE QUI N'A PAS DE NOM PASSE TEL QUEL, et c'est le cas de tous les types primitifs : le
+    runtime rend déjà un `int`, un `str`, un `float`. Ce qui en a un -- une structure, une
+    clé, une énumération -- reçoit sa classe. Ce qui en contient d'autres reçoit une vue qui
+    enveloppe en lisant.
+    """
+    code = getattr(value, "type_code", None)
+    if code is None:
+        return value
+
+    code = code()
+    if code == "struct" or code == "enum":
+        cls = _CLASSES.get(value.type().runtime_id().encoded())
+        return cls._wrap(value) if cls is not None else value
+
+    if code == "key":
+        cls = _CLASSES.get(value.type_concept().runtime_id().encoded())
+        return cls(value) if cls is not None else AnyConceptKey(value)
+
+    if code in ("optional", "any"):
+        return None if value.is_nil() else wrap(value.unwrap())
+
+    if code == "variant":
+        return wrap(value.unwrap())
+
+    from ._container import Mapping, Ordered, Sequence
+
+    if code == "map":
+        return Mapping(value)
+    if code == "xarray":
+        return Ordered(value)
+    if code in ("vector", "set", "vec", "mat", "tuple"):
+        return Sequence(value)
+
+    return value
+
+
 def unwrap(value):
     """La Value que le runtime attend, depuis ce que l'appelant a écrit.
 
     Ce qui n'est pas une de nos classes passe tel quel : `Value.loads` du runtime sait déjà
     convertir un objet Python depuis le descripteur de type, donc un `int`, un `str` ou un
-    `dict` n'a besoin de rien ici.
+    `dict` n'a besoin de rien ici. Un conteneur Python est déplié élément par élément, parce
+    qu'il peut en contenir qui, eux, ont une classe.
     """
-    return value._unwrap() if hasattr(value, "_unwrap") else value
+    if hasattr(value, "_unwrap"):
+        return value._unwrap()
+    if isinstance(value, (list, tuple)):
+        return [unwrap(element) for element in value]
+    if isinstance(value, set):
+        return {unwrap(element) for element in value}
+    if isinstance(value, dict):
+        return {unwrap(key): unwrap(element) for key, element in value.items()}
+    return value
 
 
 class AnyConceptKey(Proxy):

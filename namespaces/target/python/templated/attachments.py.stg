@@ -30,23 +30,31 @@ from .data import *
 <endif>
 
 
-<u.attachments:by_concept(u);separator="\n\n">
+<u.attachmentScopes:by_concept(u);separator="\n\n">
 >>
 
-// UNE CLASSE PAR CONCEPT PORTEUR, et l'attachment est son attribut. Le concept peut
-// appartenir à une autre unité -- `Annotations::note` est porté par `ModelA::Material` -- et
-// c'est alors le nom de l'unité d'origine qui nomme la classe, faute de quoi deux attachments
-// homonymes sur deux concepts homonymes se heurteraient.
-by_concept(a, u) ::= <<
-class <a.conceptScope>:
-    """Les attachments portés par <a.keyType.type>."""
+// UNE CLASSE PAR CONCEPT PORTEUR, ET TOUS SES ATTACHMENTS DEDANS. Le concept peut appartenir
+// à une autre unité -- `Annotations::note` est porté par `ModelA::Material` -- et c'est alors
+// le nom de l'unité d'origine qui nomme la classe, faute de quoi deux attachments homonymes
+// sur deux concepts homonymes se heurteraient.
+//
+// LE GROUPEMENT VIENT DU MODÈLE ET NON D'ICI. En C++ trois `namespace Link` fusionnent, donc
+// une portée par attachment suffisait ; trois `class Link` ne fusionnent pas, il n'en reste
+// qu'une et les deux premières disparaissent sans que rien le dise.
+by_concept(s, u) ::= <<
+class <s.name>:
+    """Les attachments portés par <s.keyType.type>."""
 
+<s.attachments:one(s);separator="\n\n">
+
+
+<s.name;format="lsc"> = <s.name>()
+>>
+
+one(a, s) ::= <<
     <a.name> = Attachment(
         dsviper.ValueUUId.create("<a.runtimeId>"),
-        definitions, <a.keyType.bindingType.typeInNamespace>, <document(a)>)
-
-
-<a.conceptScope;format="lsc"> = <a.conceptScope>()
+        definitions, <s.keyType.bindingType.typeInNamespace>, <document(a)>)
 >>
 
 // LE DOCUMENT N'A UNE CLASSE QUE SI UNE UNITÉ LE DÉCLARE. Une structure, une énumération,

@@ -23,7 +23,7 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy
+from .._proxy import Proxy, register, unwrap, wrap
 <u.dependencies.types:{d|from .. import <d.name;format="lsc">};separator="\n">
 
 # ── l'identité de cette unité dans le modèle ──
@@ -49,6 +49,11 @@ from .._proxy import Proxy
 <if(u.structures)><u.sortedStructures:structure(u);separator="\n\n\n">
 
 <endif>
+
+# Les classes de cette unité, par l'identifiant d'exécution de leur type : c'est ce qui
+# permet à `wrap` de rendre un élément de conteneur avec son nom, sans qu'aucune classe de
+# conteneur existe.
+register({<u.concepts:registered_key();separator=", "><if(u.clubs)>, <u.clubs:registered_key();separator=", "><endif><if(u.enumerations)>, <u.enumerations:registered();separator=", "><endif><if(u.structures)>, <u.structures:registered();separator=", "><endif>})
 
 __all__ = [<u.concepts:exported_key();separator=", "><if(u.clubs)>, <u.clubs:exported_key();separator=", "><endif><if(u.enumerations)>, <u.enumerations:exported();separator=", "><endif><if(u.structures)>, <u.structures:exported();separator=", "><endif>]
 >>
@@ -207,8 +212,13 @@ field(f, s) ::= <<
         <write(f)>
 >>
 
-read(f) ::= <%<if(f.bindingType.isNamed)>return <f.bindingType.typeInNamespace>._wrap(self.value.at("<f.name>", encoded=False))<else>return self.value.at("<f.name>")<endif>%>
-write(f) ::= <%self.value.set("<f.name>", <if(f.bindingType.isNamed)>value._unwrap()<else>value<endif>)%>
+// UN SEUL PASSAGE POUR TOUT CE QUI N'EST PAS UN PRIMITIF. `wrap` lit le type que la valeur
+// porte et rend la classe qui va avec, ou une vue qui enveloppe ses éléments ; il n'y a donc
+// pas à distinguer ici une structure d'un `vector<Colour>`, et aucune classe de conteneur
+// n'a à être générée. `unwrap` fait le chemin inverse et accepte aussi bien une classe qu'une
+// liste Python.
+read(f) ::= <%<if(f.bindingType.useProxy)>return wrap(self.value.at("<f.name>", encoded=False))<else>return self.value.at("<f.name>")<endif>%>
+write(f) ::= <%self.value.set("<f.name>", <if(f.bindingType.useProxy)>unwrap(value)<else>value<endif>)%>
 repr_field(f) ::= <%<f.name>={self.<f.name>}%>
 
 // L'ANNOTATION D'UN CONTENEUR EST CE QUE LE RUNTIME REND, ET NON UNE CLASSE QUI N'EXISTE PAS.
@@ -217,3 +227,6 @@ repr_field(f) ::= <%<f.name>={self.<f.name>}%>
 // qu'aucune n'est nécessaire. `typing.Any` dit ce qui est vrai : le runtime rend l'objet
 // Python qui correspond, et sa forme est dans le descripteur de type.
 hint(f) ::= <%<if(f.bindingType.isNamed)><f.bindingType.typeInNamespace><elseif(f.bindingType.useProxy)>typing.Any<else><f.bindingType.type><endif>%>
+
+registered(v) ::= <%<v.name;format="usc">: <v.name>%>
+registered_key(v) ::= <%<v.name;format="usc">: <v.name>Key%>

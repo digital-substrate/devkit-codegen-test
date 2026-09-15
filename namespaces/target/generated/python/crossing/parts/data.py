@@ -11,7 +11,7 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy
+from .._proxy import Proxy, register, unwrap, wrap
 
 # ── l'identité de cette unité dans le modèle ──
 #
@@ -147,5 +147,10 @@ class Colour(Proxy):
     def __repr__(self) -> str:
         return f"Parts::Colour(r={self.r}, g={self.g}, b={self.b})"
 
+
+# Les classes de cette unité, par l'identifiant d'exécution de leur type : c'est ce qui
+# permet à `wrap` de rendre un élément de conteneur avec son nom, sans qu'aucune classe de
+# conteneur existe.
+register({THING: ThingKey, GRADE: Grade, COLOUR: Colour})
 
 __all__ = ["ThingKey", "Grade", "Colour"]

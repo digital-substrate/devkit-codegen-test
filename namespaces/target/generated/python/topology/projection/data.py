@@ -11,7 +11,7 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy
+from .._proxy import Proxy, register, unwrap, wrap
 from .. import model_b
 from .. import model_a
 
@@ -147,22 +147,27 @@ class Pair(Proxy):
 
     @property
     def a(self) -> model_a.MaterialKey:
-        return model_a.MaterialKey._wrap(self.value.at("a", encoded=False))
+        return wrap(self.value.at("a", encoded=False))
 
     @a.setter
     def a(self, value: model_a.MaterialKey) -> None:
-        self.value.set("a", value._unwrap())
+        self.value.set("a", unwrap(value))
 
     @property
     def b(self) -> model_b.MaterialKey:
-        return model_b.MaterialKey._wrap(self.value.at("b", encoded=False))
+        return wrap(self.value.at("b", encoded=False))
 
     @b.setter
     def b(self, value: model_b.MaterialKey) -> None:
-        self.value.set("b", value._unwrap())
+        self.value.set("b", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Projection::Pair(a={self.a}, b={self.b})"
 
+
+# Les classes de cette unité, par l'identifiant d'exécution de leur type : c'est ce qui
+# permet à `wrap` de rendre un élément de conteneur avec son nom, sans qu'aucune classe de
+# conteneur existe.
+register({LINK: LinkKey, DERIVED_MATERIAL: DerivedMaterialKey, PAIR: Pair})
 
 __all__ = ["LinkKey", "DerivedMaterialKey", "Pair"]

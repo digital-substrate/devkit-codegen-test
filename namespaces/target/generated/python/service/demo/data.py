@@ -11,7 +11,7 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy
+from .._proxy import Proxy, register, unwrap, wrap
 
 # ── l'identité de cette unité dans le modèle ──
 #
@@ -125,11 +125,11 @@ class PlayerProperty(Proxy):
 
     @property
     def level(self) -> Level:
-        return Level._wrap(self.value.at("level", encoded=False))
+        return wrap(self.value.at("level", encoded=False))
 
     @level.setter
     def level(self, value: Level) -> None:
-        self.value.set("level", value._unwrap())
+        self.value.set("level", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Demo::PlayerProperty(nickname={self.nickname}, level={self.level})"
@@ -183,5 +183,10 @@ class Vector3(Proxy):
     def __repr__(self) -> str:
         return f"Demo::Vector3(x={self.x}, y={self.y}, z={self.z})"
 
+
+# Les classes de cette unité, par l'identifiant d'exécution de leur type : c'est ce qui
+# permet à `wrap` de rendre un élément de conteneur avec son nom, sans qu'aucune classe de
+# conteneur existe.
+register({PLAYER: PlayerKey, LEVEL: Level, PLAYER_PROPERTY: PlayerProperty, VECTOR_3: Vector3})
 
 __all__ = ["PlayerKey", "Level", "PlayerProperty", "Vector3"]

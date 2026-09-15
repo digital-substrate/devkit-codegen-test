@@ -11,7 +11,7 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy
+from .._proxy import Proxy, register, unwrap, wrap
 
 # ── l'identité de cette unité dans le modèle ──
 #
@@ -506,11 +506,11 @@ class StructureT(Proxy):
 
     @property
     def field_structure_s(self) -> StructureS:
-        return StructureS._wrap(self.value.at("field_structure_s", encoded=False))
+        return wrap(self.value.at("field_structure_s", encoded=False))
 
     @field_structure_s.setter
     def field_structure_s(self, value: StructureS) -> None:
-        self.value.set("field_structure_s", value._unwrap())
+        self.value.set("field_structure_s", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Demo::StructureT(field_string={self.field_string}, field_structure_s={self.field_structure_s})"
@@ -643,83 +643,83 @@ class StructureV(Proxy):
 
     @property
     def f_vec(self) -> typing.Any:
-        return self.value.at("f_vec")
+        return wrap(self.value.at("f_vec", encoded=False))
 
     @f_vec.setter
     def f_vec(self, value: typing.Any) -> None:
-        self.value.set("f_vec", value)
+        self.value.set("f_vec", unwrap(value))
 
     @property
     def f_mat(self) -> typing.Any:
-        return self.value.at("f_mat")
+        return wrap(self.value.at("f_mat", encoded=False))
 
     @f_mat.setter
     def f_mat(self, value: typing.Any) -> None:
-        self.value.set("f_mat", value)
+        self.value.set("f_mat", unwrap(value))
 
     @property
     def f_tuple(self) -> typing.Any:
-        return self.value.at("f_tuple")
+        return wrap(self.value.at("f_tuple", encoded=False))
 
     @f_tuple.setter
     def f_tuple(self, value: typing.Any) -> None:
-        self.value.set("f_tuple", value)
+        self.value.set("f_tuple", unwrap(value))
 
     @property
     def f_optional(self) -> typing.Any:
-        return self.value.at("f_optional")
+        return wrap(self.value.at("f_optional", encoded=False))
 
     @f_optional.setter
     def f_optional(self, value: typing.Any) -> None:
-        self.value.set("f_optional", value)
+        self.value.set("f_optional", unwrap(value))
 
     @property
     def f_vector(self) -> typing.Any:
-        return self.value.at("f_vector")
+        return wrap(self.value.at("f_vector", encoded=False))
 
     @f_vector.setter
     def f_vector(self, value: typing.Any) -> None:
-        self.value.set("f_vector", value)
+        self.value.set("f_vector", unwrap(value))
 
     @property
     def f_set(self) -> typing.Any:
-        return self.value.at("f_set")
+        return wrap(self.value.at("f_set", encoded=False))
 
     @f_set.setter
     def f_set(self, value: typing.Any) -> None:
-        self.value.set("f_set", value)
+        self.value.set("f_set", unwrap(value))
 
     @property
     def f_map(self) -> typing.Any:
-        return self.value.at("f_map")
+        return wrap(self.value.at("f_map", encoded=False))
 
     @f_map.setter
     def f_map(self, value: typing.Any) -> None:
-        self.value.set("f_map", value)
+        self.value.set("f_map", unwrap(value))
 
     @property
     def f_E(self) -> EnumerationE:
-        return EnumerationE._wrap(self.value.at("f_E", encoded=False))
+        return wrap(self.value.at("f_E", encoded=False))
 
     @f_E.setter
     def f_E(self, value: EnumerationE) -> None:
-        self.value.set("f_E", value._unwrap())
+        self.value.set("f_E", unwrap(value))
 
     @property
     def f_S(self) -> StructureS:
-        return StructureS._wrap(self.value.at("f_S", encoded=False))
+        return wrap(self.value.at("f_S", encoded=False))
 
     @f_S.setter
     def f_S(self, value: StructureS) -> None:
-        self.value.set("f_S", value._unwrap())
+        self.value.set("f_S", unwrap(value))
 
     @property
     def f_T(self) -> StructureT:
-        return StructureT._wrap(self.value.at("f_T", encoded=False))
+        return wrap(self.value.at("f_T", encoded=False))
 
     @f_T.setter
     def f_T(self, value: StructureT) -> None:
-        self.value.set("f_T", value._unwrap())
+        self.value.set("f_T", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Demo::StructureV(f_bool={self.f_bool}, f_uint8={self.f_uint8}, f_uint16={self.f_uint16}, f_uint32={self.f_uint32}, f_uint64={self.f_uint64}, f_int8={self.f_int8}, f_int16={self.f_int16}, f_int32={self.f_int32}, f_int64={self.f_int64}, f_float={self.f_float}, f_double={self.f_double}, f_uuid={self.f_uuid}, f_string={self.f_string}, f_vec={self.f_vec}, f_mat={self.f_mat}, f_tuple={self.f_tuple}, f_optional={self.f_optional}, f_vector={self.f_vector}, f_set={self.f_set}, f_map={self.f_map}, f_E={self.f_E}, f_S={self.f_S}, f_T={self.f_T})"
@@ -876,107 +876,107 @@ class StructureU(Proxy):
 
     @property
     def f_vec(self) -> typing.Any:
-        return self.value.at("f_vec")
+        return wrap(self.value.at("f_vec", encoded=False))
 
     @f_vec.setter
     def f_vec(self, value: typing.Any) -> None:
-        self.value.set("f_vec", value)
+        self.value.set("f_vec", unwrap(value))
 
     @property
     def f_mat(self) -> typing.Any:
-        return self.value.at("f_mat")
+        return wrap(self.value.at("f_mat", encoded=False))
 
     @f_mat.setter
     def f_mat(self, value: typing.Any) -> None:
-        self.value.set("f_mat", value)
+        self.value.set("f_mat", unwrap(value))
 
     @property
     def f_tuple(self) -> typing.Any:
-        return self.value.at("f_tuple")
+        return wrap(self.value.at("f_tuple", encoded=False))
 
     @f_tuple.setter
     def f_tuple(self, value: typing.Any) -> None:
-        self.value.set("f_tuple", value)
+        self.value.set("f_tuple", unwrap(value))
 
     @property
     def f_optional(self) -> typing.Any:
-        return self.value.at("f_optional")
+        return wrap(self.value.at("f_optional", encoded=False))
 
     @f_optional.setter
     def f_optional(self, value: typing.Any) -> None:
-        self.value.set("f_optional", value)
+        self.value.set("f_optional", unwrap(value))
 
     @property
     def f_vector(self) -> typing.Any:
-        return self.value.at("f_vector")
+        return wrap(self.value.at("f_vector", encoded=False))
 
     @f_vector.setter
     def f_vector(self, value: typing.Any) -> None:
-        self.value.set("f_vector", value)
+        self.value.set("f_vector", unwrap(value))
 
     @property
     def f_set(self) -> typing.Any:
-        return self.value.at("f_set")
+        return wrap(self.value.at("f_set", encoded=False))
 
     @f_set.setter
     def f_set(self, value: typing.Any) -> None:
-        self.value.set("f_set", value)
+        self.value.set("f_set", unwrap(value))
 
     @property
     def f_set_s(self) -> typing.Any:
-        return self.value.at("f_set_s")
+        return wrap(self.value.at("f_set_s", encoded=False))
 
     @f_set_s.setter
     def f_set_s(self, value: typing.Any) -> None:
-        self.value.set("f_set_s", value)
+        self.value.set("f_set_s", unwrap(value))
 
     @property
     def f_map_s1(self) -> typing.Any:
-        return self.value.at("f_map_s1")
+        return wrap(self.value.at("f_map_s1", encoded=False))
 
     @f_map_s1.setter
     def f_map_s1(self, value: typing.Any) -> None:
-        self.value.set("f_map_s1", value)
+        self.value.set("f_map_s1", unwrap(value))
 
     @property
     def f_map_s2(self) -> typing.Any:
-        return self.value.at("f_map_s2")
+        return wrap(self.value.at("f_map_s2", encoded=False))
 
     @f_map_s2.setter
     def f_map_s2(self, value: typing.Any) -> None:
-        self.value.set("f_map_s2", value)
+        self.value.set("f_map_s2", unwrap(value))
 
     @property
     def f_xarray(self) -> typing.Any:
-        return self.value.at("f_xarray")
+        return wrap(self.value.at("f_xarray", encoded=False))
 
     @f_xarray.setter
     def f_xarray(self, value: typing.Any) -> None:
-        self.value.set("f_xarray", value)
+        self.value.set("f_xarray", unwrap(value))
 
     @property
     def f_xarray_s(self) -> typing.Any:
-        return self.value.at("f_xarray_s")
+        return wrap(self.value.at("f_xarray_s", encoded=False))
 
     @f_xarray_s.setter
     def f_xarray_s(self, value: typing.Any) -> None:
-        self.value.set("f_xarray_s", value)
+        self.value.set("f_xarray_s", unwrap(value))
 
     @property
     def f_map_vs(self) -> typing.Any:
-        return self.value.at("f_map_vs")
+        return wrap(self.value.at("f_map_vs", encoded=False))
 
     @f_map_vs.setter
     def f_map_vs(self, value: typing.Any) -> None:
-        self.value.set("f_map_vs", value)
+        self.value.set("f_map_vs", unwrap(value))
 
     @property
     def f_variant(self) -> typing.Any:
-        return self.value.at("f_variant")
+        return wrap(self.value.at("f_variant", encoded=False))
 
     @f_variant.setter
     def f_variant(self, value: typing.Any) -> None:
-        self.value.set("f_variant", value)
+        self.value.set("f_variant", unwrap(value))
 
     @property
     def f_any(self) -> dsviper.ValueAny:
@@ -988,78 +988,83 @@ class StructureU(Proxy):
 
     @property
     def f_E(self) -> EnumerationE:
-        return EnumerationE._wrap(self.value.at("f_E", encoded=False))
+        return wrap(self.value.at("f_E", encoded=False))
 
     @f_E.setter
     def f_E(self, value: EnumerationE) -> None:
-        self.value.set("f_E", value._unwrap())
+        self.value.set("f_E", unwrap(value))
 
     @property
     def f_S(self) -> StructureS:
-        return StructureS._wrap(self.value.at("f_S", encoded=False))
+        return wrap(self.value.at("f_S", encoded=False))
 
     @f_S.setter
     def f_S(self, value: StructureS) -> None:
-        self.value.set("f_S", value._unwrap())
+        self.value.set("f_S", unwrap(value))
 
     @property
     def f_T(self) -> StructureT:
-        return StructureT._wrap(self.value.at("f_T", encoded=False))
+        return wrap(self.value.at("f_T", encoded=False))
 
     @f_T.setter
     def f_T(self, value: StructureT) -> None:
-        self.value.set("f_T", value._unwrap())
+        self.value.set("f_T", unwrap(value))
 
     @property
     def f_A(self) -> ConceptAKey:
-        return ConceptAKey._wrap(self.value.at("f_A", encoded=False))
+        return wrap(self.value.at("f_A", encoded=False))
 
     @f_A.setter
     def f_A(self, value: ConceptAKey) -> None:
-        self.value.set("f_A", value._unwrap())
+        self.value.set("f_A", unwrap(value))
 
     @property
     def f_B(self) -> ConceptBKey:
-        return ConceptBKey._wrap(self.value.at("f_B", encoded=False))
+        return wrap(self.value.at("f_B", encoded=False))
 
     @f_B.setter
     def f_B(self, value: ConceptBKey) -> None:
-        self.value.set("f_B", value._unwrap())
+        self.value.set("f_B", unwrap(value))
 
     @property
     def f_C(self) -> ConceptCKey:
-        return ConceptCKey._wrap(self.value.at("f_C", encoded=False))
+        return wrap(self.value.at("f_C", encoded=False))
 
     @f_C.setter
     def f_C(self, value: ConceptCKey) -> None:
-        self.value.set("f_C", value._unwrap())
+        self.value.set("f_C", unwrap(value))
 
     @property
     def f_D(self) -> ConceptDKey:
-        return ConceptDKey._wrap(self.value.at("f_D", encoded=False))
+        return wrap(self.value.at("f_D", encoded=False))
 
     @f_D.setter
     def f_D(self, value: ConceptDKey) -> None:
-        self.value.set("f_D", value._unwrap())
+        self.value.set("f_D", unwrap(value))
 
     @property
     def f_Klub(self) -> KlubKey:
-        return KlubKey._wrap(self.value.at("f_Klub", encoded=False))
+        return wrap(self.value.at("f_Klub", encoded=False))
 
     @f_Klub.setter
     def f_Klub(self, value: KlubKey) -> None:
-        self.value.set("f_Klub", value._unwrap())
+        self.value.set("f_Klub", unwrap(value))
 
     @property
     def f_any_concept(self) -> typing.Any:
-        return self.value.at("f_any_concept")
+        return wrap(self.value.at("f_any_concept", encoded=False))
 
     @f_any_concept.setter
     def f_any_concept(self, value: typing.Any) -> None:
-        self.value.set("f_any_concept", value)
+        self.value.set("f_any_concept", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Demo::StructureU(f_bool={self.f_bool}, f_uint8={self.f_uint8}, f_uint16={self.f_uint16}, f_uint32={self.f_uint32}, f_uint64={self.f_uint64}, f_int8={self.f_int8}, f_int16={self.f_int16}, f_int32={self.f_int32}, f_int64={self.f_int64}, f_float={self.f_float}, f_double={self.f_double}, f_blob_id={self.f_blob_id}, f_commit_id={self.f_commit_id}, f_uuid={self.f_uuid}, f_string={self.f_string}, f_blob={self.f_blob}, f_vec={self.f_vec}, f_mat={self.f_mat}, f_tuple={self.f_tuple}, f_optional={self.f_optional}, f_vector={self.f_vector}, f_set={self.f_set}, f_set_s={self.f_set_s}, f_map_s1={self.f_map_s1}, f_map_s2={self.f_map_s2}, f_xarray={self.f_xarray}, f_xarray_s={self.f_xarray_s}, f_map_vs={self.f_map_vs}, f_variant={self.f_variant}, f_any={self.f_any}, f_E={self.f_E}, f_S={self.f_S}, f_T={self.f_T}, f_A={self.f_A}, f_B={self.f_B}, f_C={self.f_C}, f_D={self.f_D}, f_Klub={self.f_Klub}, f_any_concept={self.f_any_concept})"
 
+
+# Les classes de cette unité, par l'identifiant d'exécution de leur type : c'est ce qui
+# permet à `wrap` de rendre un élément de conteneur avec son nom, sans qu'aucune classe de
+# conteneur existe.
+register({CONCEPT_A: ConceptAKey, CONCEPT_B: ConceptBKey, CONCEPT_COVERAGE: ConceptCoverageKey, CONCEPT_D: ConceptDKey, CONCEPT_C: ConceptCKey, EMPTY_KLUB: EmptyKlubKey, KLUB: KlubKey, ENUMERATION_E: EnumerationE, STRUCTURE_S: StructureS, STRUCTURE_T: StructureT, STRUCTURE_U: StructureU, STRUCTURE_V: StructureV, STRUCTURE_W: StructureW})
 
 __all__ = ["ConceptAKey", "ConceptBKey", "ConceptCoverageKey", "ConceptDKey", "ConceptCKey", "EmptyKlubKey", "KlubKey", "EnumerationE", "StructureS", "StructureT", "StructureU", "StructureV", "StructureW"]

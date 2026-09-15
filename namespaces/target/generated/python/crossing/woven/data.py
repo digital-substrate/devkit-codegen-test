@@ -11,7 +11,7 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy
+from .._proxy import Proxy, register, unwrap, wrap
 from .. import parts
 from .. import core
 
@@ -204,83 +204,83 @@ class Entities(Proxy):
 
     @property
     def f_core_grade(self) -> core.Grade:
-        return core.Grade._wrap(self.value.at("f_core_grade", encoded=False))
+        return wrap(self.value.at("f_core_grade", encoded=False))
 
     @f_core_grade.setter
     def f_core_grade(self, value: core.Grade) -> None:
-        self.value.set("f_core_grade", value._unwrap())
+        self.value.set("f_core_grade", unwrap(value))
 
     @property
     def f_parts_grade(self) -> parts.Grade:
-        return parts.Grade._wrap(self.value.at("f_parts_grade", encoded=False))
+        return wrap(self.value.at("f_parts_grade", encoded=False))
 
     @f_parts_grade.setter
     def f_parts_grade(self, value: parts.Grade) -> None:
-        self.value.set("f_parts_grade", value._unwrap())
+        self.value.set("f_parts_grade", unwrap(value))
 
     @property
     def f_core_colour(self) -> core.Colour:
-        return core.Colour._wrap(self.value.at("f_core_colour", encoded=False))
+        return wrap(self.value.at("f_core_colour", encoded=False))
 
     @f_core_colour.setter
     def f_core_colour(self, value: core.Colour) -> None:
-        self.value.set("f_core_colour", value._unwrap())
+        self.value.set("f_core_colour", unwrap(value))
 
     @property
     def f_parts_colour(self) -> parts.Colour:
-        return parts.Colour._wrap(self.value.at("f_parts_colour", encoded=False))
+        return wrap(self.value.at("f_parts_colour", encoded=False))
 
     @f_parts_colour.setter
     def f_parts_colour(self, value: parts.Colour) -> None:
-        self.value.set("f_parts_colour", value._unwrap())
+        self.value.set("f_parts_colour", unwrap(value))
 
     @property
     def f_single(self) -> core.Single:
-        return core.Single._wrap(self.value.at("f_single", encoded=False))
+        return wrap(self.value.at("f_single", encoded=False))
 
     @f_single.setter
     def f_single(self, value: core.Single) -> None:
-        self.value.set("f_single", value._unwrap())
+        self.value.set("f_single", unwrap(value))
 
     @property
     def f_thing(self) -> core.ThingKey:
-        return core.ThingKey._wrap(self.value.at("f_thing", encoded=False))
+        return wrap(self.value.at("f_thing", encoded=False))
 
     @f_thing.setter
     def f_thing(self, value: core.ThingKey) -> None:
-        self.value.set("f_thing", value._unwrap())
+        self.value.set("f_thing", unwrap(value))
 
     @property
     def f_sub_thing(self) -> core.SubThingKey:
-        return core.SubThingKey._wrap(self.value.at("f_sub_thing", encoded=False))
+        return wrap(self.value.at("f_sub_thing", encoded=False))
 
     @f_sub_thing.setter
     def f_sub_thing(self, value: core.SubThingKey) -> None:
-        self.value.set("f_sub_thing", value._unwrap())
+        self.value.set("f_sub_thing", unwrap(value))
 
     @property
     def f_other_thing(self) -> parts.ThingKey:
-        return parts.ThingKey._wrap(self.value.at("f_other_thing", encoded=False))
+        return wrap(self.value.at("f_other_thing", encoded=False))
 
     @f_other_thing.setter
     def f_other_thing(self, value: parts.ThingKey) -> None:
-        self.value.set("f_other_thing", value._unwrap())
+        self.value.set("f_other_thing", unwrap(value))
 
     @property
     def f_klub(self) -> core.KlubKey:
-        return core.KlubKey._wrap(self.value.at("f_klub", encoded=False))
+        return wrap(self.value.at("f_klub", encoded=False))
 
     @f_klub.setter
     def f_klub(self, value: core.KlubKey) -> None:
-        self.value.set("f_klub", value._unwrap())
+        self.value.set("f_klub", unwrap(value))
 
     @property
     def f_any_concept(self) -> typing.Any:
-        return self.value.at("f_any_concept")
+        return wrap(self.value.at("f_any_concept", encoded=False))
 
     @f_any_concept.setter
     def f_any_concept(self, value: typing.Any) -> None:
-        self.value.set("f_any_concept", value)
+        self.value.set("f_any_concept", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Woven::Entities(f_core_grade={self.f_core_grade}, f_parts_grade={self.f_parts_grade}, f_core_colour={self.f_core_colour}, f_parts_colour={self.f_parts_colour}, f_single={self.f_single}, f_thing={self.f_thing}, f_sub_thing={self.f_sub_thing}, f_other_thing={self.f_other_thing}, f_klub={self.f_klub}, f_any_concept={self.f_any_concept})"
@@ -311,67 +311,67 @@ class Composites(Proxy):
 
     @property
     def f_tuple(self) -> typing.Any:
-        return self.value.at("f_tuple")
+        return wrap(self.value.at("f_tuple", encoded=False))
 
     @f_tuple.setter
     def f_tuple(self, value: typing.Any) -> None:
-        self.value.set("f_tuple", value)
+        self.value.set("f_tuple", unwrap(value))
 
     @property
     def f_optional(self) -> typing.Any:
-        return self.value.at("f_optional")
+        return wrap(self.value.at("f_optional", encoded=False))
 
     @f_optional.setter
     def f_optional(self, value: typing.Any) -> None:
-        self.value.set("f_optional", value)
+        self.value.set("f_optional", unwrap(value))
 
     @property
     def f_vector(self) -> typing.Any:
-        return self.value.at("f_vector")
+        return wrap(self.value.at("f_vector", encoded=False))
 
     @f_vector.setter
     def f_vector(self, value: typing.Any) -> None:
-        self.value.set("f_vector", value)
+        self.value.set("f_vector", unwrap(value))
 
     @property
     def f_set(self) -> typing.Any:
-        return self.value.at("f_set")
+        return wrap(self.value.at("f_set", encoded=False))
 
     @f_set.setter
     def f_set(self, value: typing.Any) -> None:
-        self.value.set("f_set", value)
+        self.value.set("f_set", unwrap(value))
 
     @property
     def f_map_keys(self) -> typing.Any:
-        return self.value.at("f_map_keys")
+        return wrap(self.value.at("f_map_keys", encoded=False))
 
     @f_map_keys.setter
     def f_map_keys(self, value: typing.Any) -> None:
-        self.value.set("f_map_keys", value)
+        self.value.set("f_map_keys", unwrap(value))
 
     @property
     def f_map_enum(self) -> typing.Any:
-        return self.value.at("f_map_enum")
+        return wrap(self.value.at("f_map_enum", encoded=False))
 
     @f_map_enum.setter
     def f_map_enum(self, value: typing.Any) -> None:
-        self.value.set("f_map_enum", value)
+        self.value.set("f_map_enum", unwrap(value))
 
     @property
     def f_xarray(self) -> typing.Any:
-        return self.value.at("f_xarray")
+        return wrap(self.value.at("f_xarray", encoded=False))
 
     @f_xarray.setter
     def f_xarray(self, value: typing.Any) -> None:
-        self.value.set("f_xarray", value)
+        self.value.set("f_xarray", unwrap(value))
 
     @property
     def f_variant(self) -> typing.Any:
-        return self.value.at("f_variant")
+        return wrap(self.value.at("f_variant", encoded=False))
 
     @f_variant.setter
     def f_variant(self, value: typing.Any) -> None:
-        self.value.set("f_variant", value)
+        self.value.set("f_variant", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Woven::Composites(f_tuple={self.f_tuple}, f_optional={self.f_optional}, f_vector={self.f_vector}, f_set={self.f_set}, f_map_keys={self.f_map_keys}, f_map_enum={self.f_map_enum}, f_xarray={self.f_xarray}, f_variant={self.f_variant})"
@@ -402,22 +402,27 @@ class Nested(Proxy):
 
     @property
     def f_composites(self) -> Composites:
-        return Composites._wrap(self.value.at("f_composites", encoded=False))
+        return wrap(self.value.at("f_composites", encoded=False))
 
     @f_composites.setter
     def f_composites(self, value: Composites) -> None:
-        self.value.set("f_composites", value._unwrap())
+        self.value.set("f_composites", unwrap(value))
 
     @property
     def f_entities(self) -> Entities:
-        return Entities._wrap(self.value.at("f_entities", encoded=False))
+        return wrap(self.value.at("f_entities", encoded=False))
 
     @f_entities.setter
     def f_entities(self, value: Entities) -> None:
-        self.value.set("f_entities", value._unwrap())
+        self.value.set("f_entities", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Woven::Nested(f_composites={self.f_composites}, f_entities={self.f_entities})"
 
+
+# Les classes de cette unité, par l'identifiant d'exécution de leur type : c'est ce qui
+# permet à `wrap` de rendre un élément de conteneur avec son nom, sans qu'aucune classe de
+# conteneur existe.
+register({KNOT: KnotKey, DERIVED: DerivedKey, WEAVE: WeaveKey, COMPOSITES: Composites, ENTITIES: Entities, NESTED: Nested})
 
 __all__ = ["KnotKey", "DerivedKey", "WeaveKey", "Composites", "Entities", "Nested"]

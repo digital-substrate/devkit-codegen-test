@@ -11,7 +11,7 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy
+from .._proxy import Proxy, register, unwrap, wrap
 
 # ── l'identité de cette unité dans le modèle ──
 #
@@ -465,19 +465,19 @@ class Scalars(Proxy):
 
     @property
     def f_vec(self) -> typing.Any:
-        return self.value.at("f_vec")
+        return wrap(self.value.at("f_vec", encoded=False))
 
     @f_vec.setter
     def f_vec(self, value: typing.Any) -> None:
-        self.value.set("f_vec", value)
+        self.value.set("f_vec", unwrap(value))
 
     @property
     def f_mat(self) -> typing.Any:
-        return self.value.at("f_mat")
+        return wrap(self.value.at("f_mat", encoded=False))
 
     @f_mat.setter
     def f_mat(self, value: typing.Any) -> None:
-        self.value.set("f_mat", value)
+        self.value.set("f_mat", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Core::Scalars(f_bool={self.f_bool}, f_uint8={self.f_uint8}, f_uint16={self.f_uint16}, f_uint32={self.f_uint32}, f_uint64={self.f_uint64}, f_int8={self.f_int8}, f_int16={self.f_int16}, f_int32={self.f_int32}, f_int64={self.f_int64}, f_float={self.f_float}, f_double={self.f_double}, f_blob_id={self.f_blob_id}, f_commit_id={self.f_commit_id}, f_uuid={self.f_uuid}, f_string={self.f_string}, f_blob={self.f_blob}, f_any={self.f_any}, f_vec={self.f_vec}, f_mat={self.f_mat})"
@@ -544,27 +544,27 @@ class Bag(Proxy):
 
     @property
     def members(self) -> typing.Any:
-        return self.value.at("members")
+        return wrap(self.value.at("members", encoded=False))
 
     @members.setter
     def members(self, value: typing.Any) -> None:
-        self.value.set("members", value)
+        self.value.set("members", unwrap(value))
 
     @property
     def tints(self) -> typing.Any:
-        return self.value.at("tints")
+        return wrap(self.value.at("tints", encoded=False))
 
     @tints.setter
     def tints(self, value: typing.Any) -> None:
-        self.value.set("tints", value)
+        self.value.set("tints", unwrap(value))
 
     @property
     def trail(self) -> typing.Any:
-        return self.value.at("trail")
+        return wrap(self.value.at("trail", encoded=False))
 
     @trail.setter
     def trail(self, value: typing.Any) -> None:
-        self.value.set("trail", value)
+        self.value.set("trail", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Core::Bag(members={self.members}, tints={self.tints}, trail={self.trail})"
@@ -627,30 +627,35 @@ class Defaults(Proxy):
 
     @property
     def f_vec(self) -> typing.Any:
-        return self.value.at("f_vec")
+        return wrap(self.value.at("f_vec", encoded=False))
 
     @f_vec.setter
     def f_vec(self, value: typing.Any) -> None:
-        self.value.set("f_vec", value)
+        self.value.set("f_vec", unwrap(value))
 
     @property
     def f_grade(self) -> Grade:
-        return Grade._wrap(self.value.at("f_grade", encoded=False))
+        return wrap(self.value.at("f_grade", encoded=False))
 
     @f_grade.setter
     def f_grade(self, value: Grade) -> None:
-        self.value.set("f_grade", value._unwrap())
+        self.value.set("f_grade", unwrap(value))
 
     @property
     def f_colour(self) -> Colour:
-        return Colour._wrap(self.value.at("f_colour", encoded=False))
+        return wrap(self.value.at("f_colour", encoded=False))
 
     @f_colour.setter
     def f_colour(self, value: Colour) -> None:
-        self.value.set("f_colour", value._unwrap())
+        self.value.set("f_colour", unwrap(value))
 
     def __repr__(self) -> str:
         return f"Core::Defaults(f_uint8={self.f_uint8}, f_float={self.f_float}, f_string={self.f_string}, f_uuid={self.f_uuid}, f_vec={self.f_vec}, f_grade={self.f_grade}, f_colour={self.f_colour})"
 
+
+# Les classes de cette unité, par l'identifiant d'exécution de leur type : c'est ce qui
+# permet à `wrap` de rendre un élément de conteneur avec son nom, sans qu'aucune classe de
+# conteneur existe.
+register({OTHER: OtherKey, THING: ThingKey, SUB_THING: SubThingKey, KLUB: KlubKey, GRADE: Grade, BAG: Bag, COLOUR: Colour, DEFAULTS: Defaults, SCALARS: Scalars, SINGLE: Single})
 
 __all__ = ["OtherKey", "ThingKey", "SubThingKey", "KlubKey", "Grade", "Bag", "Colour", "Defaults", "Scalars", "Single"]

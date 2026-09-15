@@ -19,7 +19,7 @@ from typing import Callable
 
 import dsviper
 
-from ._proxy import unwrap as _unwrap
+from ._proxy import unwrap as _unwrap, wrap as _wrap
 
 
 class Attachment:
@@ -39,6 +39,12 @@ class Attachment:
                  key: type, document: type | None):
         self._runtime_id = runtime_id
         self._definitions = definitions
+
+        # LES DEUX CLASSES NE SERVENT PAS À CONVERTIR — `wrap` le fait depuis le type que la
+        # valeur porte. Elles sont retenues parce que les nommer dans l'unité **force leur
+        # import**, et que c'est l'import qui remplit la table des classes. Sans elles la
+        # conversion marcherait tant que quelqu'un d'autre a importé l'unité d'abord, ce qui
+        # est la pire forme de correction : celle qui dépend de l'ordre.
         self._key = key
         self._document = document
 
@@ -57,7 +63,7 @@ class Attachment:
     # deviner : c'est lui qui dit sur quoi l'appel porte — un état en mémoire, une base.
 
     def keys(self, getting: dsviper.AttachmentGetting) -> set:
-        return {self._key(k) for k in getting.keys(self.descriptor)}
+        return {_wrap(key) for key in getting.keys(self.descriptor)}
 
     def has(self, getting: dsviper.AttachmentGetting, key) -> bool:
         return getting.has(self.descriptor, key.value)
@@ -70,15 +76,13 @@ class Attachment:
         pour ça. C'est l'écart le plus visible avec la sortie du pack, et il est délibéré.
         """
         document = getting.get(self.descriptor, key.value)
-        if document.is_nil():
-            return None
-        value = document.unwrap()
-        return self._document(value) if self._document is not None else value
+        return None if document.is_nil() else _wrap(document.unwrap())
 
     def diff_keys(self, current: dsviper.AttachmentGetting, other: dsviper.AttachmentGetting):
         added, removed, different, same = dsviper.AttachmentGetting.diff_keys(
             current, other, self.descriptor)
-        return tuple({self._key(k) for k in s} for s in (added, removed, different, same))
+        return tuple({_wrap(key) for key in group}
+                     for group in (added, removed, different, same))
 
     # ── écrire ──
 

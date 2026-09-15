@@ -22,21 +22,9 @@ class Link:
         dsviper.ValueUUId.create("e44613ce-ada0-c8a2-a9d1-20b04ae443c0"),
         definitions, LinkKey, None)
 
-
-link = Link()
-
-class Link:
-    """Les attachments portés par Projection::LinkKey."""
-
     marker = Attachment(
         dsviper.ValueUUId.create("5b7db20d-fe60-2c96-206c-ec6686b46822"),
         definitions, LinkKey, model_c.MarkerKey)
-
-
-link = Link()
-
-class Link:
-    """Les attachments portés par Projection::LinkKey."""
 
     pair = Attachment(
         dsviper.ValueUUId.create("2b04b57b-9677-e209-6000-91c489d81323"),
