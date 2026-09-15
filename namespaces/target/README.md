@@ -14,6 +14,10 @@ namespaces/target/render.py --check    # échoue si generated/ n'est pas à jour
 ```
 `../../crossing/target/hand/` holds the two shapes the topology model does not declare.
 
+**`PLAN.md` dit où en est le chantier et ce qui manque**, et il ne se tient pas à la main :
+`coverage.py` compare les opérations déclarées par les deux jeux de templates et sort
+non-zéro tant qu'il en manque.
+
 ## Where it stands, measured
 
 The pack is **73 templates, 8 737 lines, 17 directories**. What is in `templated/` is
