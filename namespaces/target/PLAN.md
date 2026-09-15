@@ -94,6 +94,13 @@ forme arrêtée.
 Rien dans le chantier ne dépend de cette suite : `check.py` ne la lance pas et n'en dit
 rien. Elle est notée ici pour ne pas être oubliée, pas pour être contournée.
 
+## Sortir du mode exploratoire
+
+Les conditions et les trois axes sont dans [`SORTIE.md`](SORTIE.md). La condition qui décide
+est la troisième : **le Template Model a-t-il cessé de grossir ?** Python lui a réclamé cinq
+champs nouveaux ; une cible de plus qui ne réclame rien est la seule preuve possible que le
+contrat est stable — et c'est pourquoi Node se fait avant le rangement.
+
 ## Ce qui reste
 
 1. **Les deux ajouts au runtime**, dans l'ordre : viper d'abord, kibo ensuite, le pack en

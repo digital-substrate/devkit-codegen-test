@@ -74,6 +74,11 @@ pool. C'est corrigé, et c'est la raison d'être de l'épreuve du service.
 
 ## Ce qui reste à ranger, et où ça ira
 
+**Le plan de sortie est dans [`SORTIE.md`](SORTIE.md)** : les cinq conditions qui disent
+quand l'exploration s'arrête, et les trois axes du rangement — les templates dans
+`kibo-template-viper`, `generate.py` et sa sélection, les épreuves en face des dossiers
+générés.
+
 Tout vit sous `namespaces/`, qui est le nom d'un des quatre modèles. C'est un reste de la
 phase exploratoire et ce n'est pas tenable : le chantier n'appartient pas à ce modèle-là.
 **On reste ainsi pour l'instant**, le temps de voir à quoi le projet fini ressemble — il
