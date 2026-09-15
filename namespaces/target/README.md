@@ -100,8 +100,10 @@ runtime hands a `shared_ptr` everywhere. See `PLAN.md` for the table and the rea
 ## The mono-namespace case, which is the common one
 
 A generator organised around namespaces has to degrade well when a model declares a single
-one, and most do. `features/all.dsm` is that case: one namespace, `Test`, inside the model
-`Features`, with every shape of the type system in it.
+one, and most do. `features/all.dsm` is that case: one namespace, `Demo`, inside the model
+`Features`, with every shape of the type system in it. It was called `Test` until the name
+collided with the test artefacts the generator emits — `Test_Test.hpp` read as a mistake
+rather than as a unit called `Test`, which is exactly the doubt a name should not create.
 
 ```
 pack     59 fichiers   30 019 lignes

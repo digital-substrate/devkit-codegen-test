@@ -1,4 +1,4 @@
-namespace Test {7fdd9ba9-b85e-4b33-a749-9b9615e43452}  {
+namespace Demo {7fdd9ba9-b85e-4b33-a749-9b9615e43452}  {
 
 """This is the documentation for the concept A"""
 concept ConceptA;

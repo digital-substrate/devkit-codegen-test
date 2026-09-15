@@ -1,16 +1,16 @@
-// unité Test — ce qu'il faut en savoir pour l'éprouver.
+// unité Demo — ce qu'il faut en savoir pour l'éprouver.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 
-#ifndef Test_Test_hpp
-#define Test_Test_hpp
+#ifndef Demo_Test_hpp
+#define Demo_Test_hpp
 
 #include "Viper_Database.hpp"
 
 #include <cstddef>
 #include <memory>
 
-namespace Test {
+namespace Demo {
 
 /// Éprouver chaque type déclaré ici, par chaque codec.
 void test();
@@ -29,6 +29,6 @@ void testDatabase(std::shared_ptr<Viper::Database> const & db);
 /// casse.
 void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count);
 
-} // namespace Test
+} // namespace Demo
 
 #endif

@@ -1,4 +1,4 @@
-// unité Test — comment nommer et adresser les champs de ses structures.
+// unité Demo — comment nommer et adresser les champs de ses structures.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 //
@@ -6,8 +6,8 @@
 // position, not a type. Its types header includes the units it reaches; this one reaches
 // none.
 
-#ifndef Test_Fields_hpp
-#define Test_Fields_hpp
+#ifndef Demo_Fields_hpp
+#define Demo_Fields_hpp
 
 #include "Viper_Path.hpp"
 
@@ -15,7 +15,7 @@
 #include <string>
 #include <string_view>
 
-namespace Test::Fields::StructureS {
+namespace Demo::Fields::StructureS {
 
 inline constexpr std::string_view f_float{"f_float"};
 inline constexpr std::string_view f_string{"f_string"};
@@ -23,9 +23,9 @@ inline constexpr std::string_view f_string{"f_string"};
 std::shared_ptr<Viper::Path const> const & f_floatPath();
 std::shared_ptr<Viper::Path const> const & f_stringPath();
 
-} // namespace Test::Fields::StructureS
+} // namespace Demo::Fields::StructureS
 
-namespace Test::Fields::StructureT {
+namespace Demo::Fields::StructureT {
 
 inline constexpr std::string_view field_string{"field_string"};
 inline constexpr std::string_view field_structure_s{"field_structure_s"};
@@ -33,9 +33,9 @@ inline constexpr std::string_view field_structure_s{"field_structure_s"};
 std::shared_ptr<Viper::Path const> const & field_stringPath();
 std::shared_ptr<Viper::Path const> const & field_structure_sPath();
 
-} // namespace Test::Fields::StructureT
+} // namespace Demo::Fields::StructureT
 
-namespace Test::Fields::StructureU {
+namespace Demo::Fields::StructureU {
 
 inline constexpr std::string_view f_bool{"f_bool"};
 inline constexpr std::string_view f_uint8{"f_uint8"};
@@ -117,9 +117,9 @@ std::shared_ptr<Viper::Path const> const & f_DPath();
 std::shared_ptr<Viper::Path const> const & f_KlubPath();
 std::shared_ptr<Viper::Path const> const & f_any_conceptPath();
 
-} // namespace Test::Fields::StructureU
+} // namespace Demo::Fields::StructureU
 
-namespace Test::Fields::StructureV {
+namespace Demo::Fields::StructureV {
 
 inline constexpr std::string_view f_bool{"f_bool"};
 inline constexpr std::string_view f_uint8{"f_uint8"};
@@ -169,14 +169,14 @@ std::shared_ptr<Viper::Path const> const & f_EPath();
 std::shared_ptr<Viper::Path const> const & f_SPath();
 std::shared_ptr<Viper::Path const> const & f_TPath();
 
-} // namespace Test::Fields::StructureV
+} // namespace Demo::Fields::StructureV
 
-namespace Test::Fields::StructureW {
+namespace Demo::Fields::StructureW {
 
 inline constexpr std::string_view f_single{"f_single"};
 
 std::shared_ptr<Viper::Path const> const & f_singlePath();
 
-} // namespace Test::Fields::StructureW
+} // namespace Demo::Fields::StructureW
 
 #endif

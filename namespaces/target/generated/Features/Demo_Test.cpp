@@ -1,16 +1,16 @@
-// unité Test — l'épreuve de ses types.
+// unité Demo — l'épreuve de ses types.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 
-#include "Test_Test.hpp"
+#include "Demo_Test.hpp"
 
-#include "Test_Attachments.hpp"
-#include "Test_Codec.hpp"
-#include "Test_Model.hpp"
+#include "Demo_Attachments.hpp"
+#include "Demo_Codec.hpp"
+#include "Demo_Model.hpp"
 
 #include "Features_Test.hpp"
 
-namespace Test {
+namespace Demo {
 
 void test() {
     Features::Test::roundTrip<ConceptAKey>();
@@ -198,4 +198,4 @@ void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count
         db, Attachments::Klub::propertiesD::descriptor(), count);
 }
 
-} // namespace Test
+} // namespace Demo

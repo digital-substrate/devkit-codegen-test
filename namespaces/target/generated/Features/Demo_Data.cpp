@@ -1,13 +1,13 @@
-// unité Test — l'implémentation de ses types.
+// unité Demo — l'implémentation de ses types.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 
-#include "Test_Data.hpp"
+#include "Demo_Data.hpp"
 
-#include "Test_Model.hpp"
+#include "Demo_Model.hpp"
 #include "Features_Codec.hpp"
 
-namespace Test {
+namespace Demo {
 
 // ── ConceptA ──
 
@@ -648,4 +648,4 @@ void hash(Viper::Hash::Accumulator & h, StructureW const & value) noexcept {
     hash(h, value.f_single);
 }
 
-} // namespace Test
+} // namespace Demo

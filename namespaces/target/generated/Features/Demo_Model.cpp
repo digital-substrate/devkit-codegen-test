@@ -1,14 +1,14 @@
-// unité Test — son identité dans le modèle.
+// unité Demo — son identité dans le modèle.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 
-#include "Test_Model.hpp"
+#include "Demo_Model.hpp"
 
 #include "Features_Codec.hpp"
 
 #include "Viper_Definitions.hpp"
 
-namespace Test {
+namespace Demo {
 
 namespace RuntimeIds {
 Viper::UUId const ConceptA{Viper::UUId::parse("bcc4e978-a438-ddba-66b9-d767b3b2649e")};
@@ -139,4 +139,4 @@ std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<StructureW>) {
     return instance;
 }
 
-} // namespace Test
+} // namespace Demo

@@ -1,18 +1,18 @@
-// unité Test — son identité dans le modèle.
+// unité Demo — son identité dans le modèle.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 
-#ifndef Test_Model_hpp
-#define Test_Model_hpp
+#ifndef Demo_Model_hpp
+#define Demo_Model_hpp
 
-#include "Test_Data.hpp"
+#include "Demo_Data.hpp"
 
 #include "Viper_TypedCodec.hpp"
 #include "Viper_Types.hpp"
 
 #include <memory>
 
-namespace Test {
+namespace Demo {
 
 /// L'identité de chaque type déclaré ici.
 namespace RuntimeIds {
@@ -58,6 +58,6 @@ std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<StructureU>);
 std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<StructureV>);
 std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<StructureW>);
 
-} // namespace Test
+} // namespace Demo
 
 #endif

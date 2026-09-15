@@ -1,9 +1,9 @@
-// unité Test — les types qu'elle déclare.
+// unité Demo — les types qu'elle déclare.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 
-#ifndef Test_Data_hpp
-#define Test_Data_hpp
+#ifndef Demo_Data_hpp
+#define Demo_Data_hpp
 
 
 #include "Features_AnyConcept.hpp"
@@ -22,7 +22,7 @@
 #include <functional>
 #include <optional>
 
-namespace Test {
+namespace Demo {
 
 /** This is the documentation for the concept A */
 class ConceptAKey final {
@@ -468,43 +468,43 @@ bool operator<(StructureU const &, StructureU const &) noexcept;
 
 void hash(Viper::Hash::Accumulator & h, StructureU const & value) noexcept;
 
-} // namespace Test
+} // namespace Demo
 
-template<> struct std::hash<Test::ConceptAKey> {
-    std::size_t operator()(Test::ConceptAKey const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::ConceptAKey> {
+    std::size_t operator()(Demo::ConceptAKey const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::ConceptBKey> {
-    std::size_t operator()(Test::ConceptBKey const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::ConceptBKey> {
+    std::size_t operator()(Demo::ConceptBKey const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::ConceptCoverageKey> {
-    std::size_t operator()(Test::ConceptCoverageKey const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::ConceptCoverageKey> {
+    std::size_t operator()(Demo::ConceptCoverageKey const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::ConceptDKey> {
-    std::size_t operator()(Test::ConceptDKey const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::ConceptDKey> {
+    std::size_t operator()(Demo::ConceptDKey const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::ConceptCKey> {
-    std::size_t operator()(Test::ConceptCKey const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::ConceptCKey> {
+    std::size_t operator()(Demo::ConceptCKey const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::EmptyKlubKey> {
-    std::size_t operator()(Test::EmptyKlubKey const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::EmptyKlubKey> {
+    std::size_t operator()(Demo::EmptyKlubKey const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::KlubKey> {
-    std::size_t operator()(Test::KlubKey const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::KlubKey> {
+    std::size_t operator()(Demo::KlubKey const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::StructureS> {
-    std::size_t operator()(Test::StructureS const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::StructureS> {
+    std::size_t operator()(Demo::StructureS const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::StructureW> {
-    std::size_t operator()(Test::StructureW const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::StructureW> {
+    std::size_t operator()(Demo::StructureW const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::StructureT> {
-    std::size_t operator()(Test::StructureT const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::StructureT> {
+    std::size_t operator()(Demo::StructureT const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::StructureV> {
-    std::size_t operator()(Test::StructureV const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::StructureV> {
+    std::size_t operator()(Demo::StructureV const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::StructureU> {
-    std::size_t operator()(Test::StructureU const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Demo::StructureU> {
+    std::size_t operator()(Demo::StructureU const & v) const noexcept { return Viper::Hash::of(v); }
 };
 
 #endif

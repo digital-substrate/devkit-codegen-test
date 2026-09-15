@@ -1,4 +1,4 @@
-// unité Test — les données accrochées aux concepts qu'elle déclare.
+// unité Demo — les données accrochées aux concepts qu'elle déclare.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 //
@@ -8,10 +8,10 @@
 // not only when two attachments would otherwise collide, so that adding one never
 // renames another.
 
-#ifndef Test_Attachments_hpp
-#define Test_Attachments_hpp
+#ifndef Demo_Attachments_hpp
+#define Demo_Attachments_hpp
 
-#include "Test_Data.hpp"
+#include "Demo_Data.hpp"
 
 #include "Viper_Attachment.hpp"
 #include "Viper_AttachmentGetting.hpp"
@@ -25,7 +25,7 @@
 #include <optional>
 #include <set>
 
-namespace Test::Attachments::AnyConcept::propertiesAnyConceptAny {
+namespace Demo::Attachments::AnyConcept::propertiesAnyConceptAny {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -58,9 +58,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ::Feature
 
 bool set(std::shared_ptr<Viper::Database> const & db, ::Features::AnyConceptKey const & key, Viper::Any const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ::Features::AnyConceptKey const & key);
-} // namespace Test::Attachments::AnyConcept::propertiesAnyConceptAny
+} // namespace Demo::Attachments::AnyConcept::propertiesAnyConceptAny
 
-namespace Test::Attachments::ConceptA::properties {
+namespace Demo::Attachments::ConceptA::properties {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -143,9 +143,9 @@ void setF_S(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Concept
 
 void setF_T(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, StructureT const & value);
 
-} // namespace Test::Attachments::ConceptA::properties
+} // namespace Demo::Attachments::ConceptA::properties
 
-namespace Test::Attachments::ConceptA::propertiesInt8 {
+namespace Demo::Attachments::ConceptA::propertiesInt8 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -178,9 +178,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAK
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key, std::int8_t const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key);
-} // namespace Test::Attachments::ConceptA::propertiesInt8
+} // namespace Demo::Attachments::ConceptA::propertiesInt8
 
-namespace Test::Attachments::ConceptA::propertiesMapInt8String {
+namespace Demo::Attachments::ConceptA::propertiesMapInt8String {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -218,9 +218,9 @@ void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Concept
 void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
 void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
 
-} // namespace Test::Attachments::ConceptA::propertiesMapInt8String
+} // namespace Demo::Attachments::ConceptA::propertiesMapInt8String
 
-namespace Test::Attachments::ConceptA::propertiesSeInt8 {
+namespace Demo::Attachments::ConceptA::propertiesSeInt8 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -257,9 +257,9 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptAKey const & key);
 void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
 void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
 
-} // namespace Test::Attachments::ConceptA::propertiesSeInt8
+} // namespace Demo::Attachments::ConceptA::propertiesSeInt8
 
-namespace Test::Attachments::ConceptA::propertiesXArray {
+namespace Demo::Attachments::ConceptA::propertiesXArray {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -297,9 +297,9 @@ void insert(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Concept
 void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & position, std::int8_t value);
 void remove(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptAKey const & key, Viper::UUId const & position);
 
-} // namespace Test::Attachments::ConceptA::propertiesXArray
+} // namespace Demo::Attachments::ConceptA::propertiesXArray
 
-namespace Test::Attachments::ConceptB::propertiesB {
+namespace Demo::Attachments::ConceptB::propertiesB {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -337,9 +337,9 @@ void setField_string(std::shared_ptr<Viper::AttachmentMutating> const & mutating
 
 void setField_structure_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptBKey const & key, StructureS const & value);
 
-} // namespace Test::Attachments::ConceptB::propertiesB
+} // namespace Demo::Attachments::ConceptB::propertiesB
 
-namespace Test::Attachments::ConceptC::propertiesC {
+namespace Demo::Attachments::ConceptC::propertiesC {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -423,7 +423,7 @@ void unionF_set_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, C
 void subtractF_set_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
 void setF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
 void unionF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
-void subtractF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<Test::StructureS> const & value);
+void subtractF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<Demo::StructureS> const & value);
 void updateF_map_s1(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
 void setF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
 void unionF_map_s2(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
@@ -434,12 +434,12 @@ void insertF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating,
 void updateF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position, std::uint8_t value);
 void removeF_xarray(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position);
 void setF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::XArray<StructureS> const & value);
-void insertF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Test::StructureS const & value);
-void updateF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position, Test::StructureS const & value);
+void insertF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Demo::StructureS const & value);
+void updateF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position, Demo::StructureS const & value);
 void removeF_xarray_s(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, Viper::UUId const & position);
 void setF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
 void unionF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
-void subtractF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::vector<Test::StructureS>> const & value);
+void subtractF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::set<std::vector<Demo::StructureS>> const & value);
 void updateF_map_vs(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
 void setF_variant(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, std::variant<std::string, std::uint8_t, StructureS> const & value);
 
@@ -463,9 +463,9 @@ void setF_Klub(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Conc
 
 void setF_any_concept(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCKey const & key, ::Features::AnyConceptKey const & value);
 
-} // namespace Test::Attachments::ConceptC::propertiesC
+} // namespace Demo::Attachments::ConceptC::propertiesC
 
-namespace Test::Attachments::ConceptCoverage::docAny {
+namespace Demo::Attachments::ConceptCoverage::docAny {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -498,9 +498,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::Any const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docAny
+} // namespace Demo::Attachments::ConceptCoverage::docAny
 
-namespace Test::Attachments::ConceptCoverage::docAnyConceptKey {
+namespace Demo::Attachments::ConceptCoverage::docAnyConceptKey {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -533,9 +533,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, ::Features::AnyConceptKey const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docAnyConceptKey
+} // namespace Demo::Attachments::ConceptCoverage::docAnyConceptKey
 
-namespace Test::Attachments::ConceptCoverage::docBlob {
+namespace Demo::Attachments::ConceptCoverage::docBlob {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -568,9 +568,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::Blob const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docBlob
+} // namespace Demo::Attachments::ConceptCoverage::docBlob
 
-namespace Test::Attachments::ConceptCoverage::docBlobId {
+namespace Demo::Attachments::ConceptCoverage::docBlobId {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -603,9 +603,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::BlobId const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docBlobId
+} // namespace Demo::Attachments::ConceptCoverage::docBlobId
 
-namespace Test::Attachments::ConceptCoverage::docBool {
+namespace Demo::Attachments::ConceptCoverage::docBool {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -638,9 +638,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, bool const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docBool
+} // namespace Demo::Attachments::ConceptCoverage::docBool
 
-namespace Test::Attachments::ConceptCoverage::docClubKey {
+namespace Demo::Attachments::ConceptCoverage::docClubKey {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -673,9 +673,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, KlubKey const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docClubKey
+} // namespace Demo::Attachments::ConceptCoverage::docClubKey
 
-namespace Test::Attachments::ConceptCoverage::docCommitId {
+namespace Demo::Attachments::ConceptCoverage::docCommitId {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -708,9 +708,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::CommitId const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docCommitId
+} // namespace Demo::Attachments::ConceptCoverage::docCommitId
 
-namespace Test::Attachments::ConceptCoverage::docConceptKey {
+namespace Demo::Attachments::ConceptCoverage::docConceptKey {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -743,9 +743,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, ConceptAKey const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docConceptKey
+} // namespace Demo::Attachments::ConceptCoverage::docConceptKey
 
-namespace Test::Attachments::ConceptCoverage::docConceptKeyB {
+namespace Demo::Attachments::ConceptCoverage::docConceptKeyB {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -778,9 +778,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, ConceptBKey const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docConceptKeyB
+} // namespace Demo::Attachments::ConceptCoverage::docConceptKeyB
 
-namespace Test::Attachments::ConceptCoverage::docDouble {
+namespace Demo::Attachments::ConceptCoverage::docDouble {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -813,9 +813,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, double const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docDouble
+} // namespace Demo::Attachments::ConceptCoverage::docDouble
 
-namespace Test::Attachments::ConceptCoverage::docEnumeration {
+namespace Demo::Attachments::ConceptCoverage::docEnumeration {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -848,9 +848,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, EnumerationE const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docEnumeration
+} // namespace Demo::Attachments::ConceptCoverage::docEnumeration
 
-namespace Test::Attachments::ConceptCoverage::docFloat {
+namespace Demo::Attachments::ConceptCoverage::docFloat {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -883,9 +883,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, float const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docFloat
+} // namespace Demo::Attachments::ConceptCoverage::docFloat
 
-namespace Test::Attachments::ConceptCoverage::docInt16 {
+namespace Demo::Attachments::ConceptCoverage::docInt16 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -918,9 +918,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::int16_t const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docInt16
+} // namespace Demo::Attachments::ConceptCoverage::docInt16
 
-namespace Test::Attachments::ConceptCoverage::docInt32 {
+namespace Demo::Attachments::ConceptCoverage::docInt32 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -953,9 +953,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::int32_t const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docInt32
+} // namespace Demo::Attachments::ConceptCoverage::docInt32
 
-namespace Test::Attachments::ConceptCoverage::docInt64 {
+namespace Demo::Attachments::ConceptCoverage::docInt64 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -988,9 +988,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::int64_t const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docInt64
+} // namespace Demo::Attachments::ConceptCoverage::docInt64
 
-namespace Test::Attachments::ConceptCoverage::docInt8 {
+namespace Demo::Attachments::ConceptCoverage::docInt8 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1023,9 +1023,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::int8_t const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docInt8
+} // namespace Demo::Attachments::ConceptCoverage::docInt8
 
-namespace Test::Attachments::ConceptCoverage::docMap {
+namespace Demo::Attachments::ConceptCoverage::docMap {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1063,9 +1063,9 @@ void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Concept
 void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
 void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
 
-} // namespace Test::Attachments::ConceptCoverage::docMap
+} // namespace Demo::Attachments::ConceptCoverage::docMap
 
-namespace Test::Attachments::ConceptCoverage::docMat {
+namespace Demo::Attachments::ConceptCoverage::docMat {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1098,9 +1098,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docMat
+} // namespace Demo::Attachments::ConceptCoverage::docMat
 
-namespace Test::Attachments::ConceptCoverage::docOptional {
+namespace Demo::Attachments::ConceptCoverage::docOptional {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1133,9 +1133,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::optional<std::uint8_t> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docOptional
+} // namespace Demo::Attachments::ConceptCoverage::docOptional
 
-namespace Test::Attachments::ConceptCoverage::docSet {
+namespace Demo::Attachments::ConceptCoverage::docSet {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1172,9 +1172,9 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const &
 void union_(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
 void subtract(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
 
-} // namespace Test::Attachments::ConceptCoverage::docSet
+} // namespace Demo::Attachments::ConceptCoverage::docSet
 
-namespace Test::Attachments::ConceptCoverage::docString {
+namespace Demo::Attachments::ConceptCoverage::docString {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1207,9 +1207,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::string const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docString
+} // namespace Demo::Attachments::ConceptCoverage::docString
 
-namespace Test::Attachments::ConceptCoverage::docStructureSingleField {
+namespace Demo::Attachments::ConceptCoverage::docStructureSingleField {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1245,9 +1245,9 @@ bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const &
 
 void setF_single(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, std::uint8_t value);
 
-} // namespace Test::Attachments::ConceptCoverage::docStructureSingleField
+} // namespace Demo::Attachments::ConceptCoverage::docStructureSingleField
 
-namespace Test::Attachments::ConceptCoverage::docTuple {
+namespace Demo::Attachments::ConceptCoverage::docTuple {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1280,9 +1280,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::tuple<std::uint8_t, std::string> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docTuple
+} // namespace Demo::Attachments::ConceptCoverage::docTuple
 
-namespace Test::Attachments::ConceptCoverage::docUInt16 {
+namespace Demo::Attachments::ConceptCoverage::docUInt16 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1315,9 +1315,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::uint16_t const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docUInt16
+} // namespace Demo::Attachments::ConceptCoverage::docUInt16
 
-namespace Test::Attachments::ConceptCoverage::docUInt32 {
+namespace Demo::Attachments::ConceptCoverage::docUInt32 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1350,9 +1350,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::uint32_t const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docUInt32
+} // namespace Demo::Attachments::ConceptCoverage::docUInt32
 
-namespace Test::Attachments::ConceptCoverage::docUInt64 {
+namespace Demo::Attachments::ConceptCoverage::docUInt64 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1385,9 +1385,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::uint64_t const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docUInt64
+} // namespace Demo::Attachments::ConceptCoverage::docUInt64
 
-namespace Test::Attachments::ConceptCoverage::docUInt8 {
+namespace Demo::Attachments::ConceptCoverage::docUInt8 {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1420,9 +1420,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::uint8_t const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docUInt8
+} // namespace Demo::Attachments::ConceptCoverage::docUInt8
 
-namespace Test::Attachments::ConceptCoverage::docUUId {
+namespace Demo::Attachments::ConceptCoverage::docUUId {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1455,9 +1455,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, Viper::UUId const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docUUId
+} // namespace Demo::Attachments::ConceptCoverage::docUUId
 
-namespace Test::Attachments::ConceptCoverage::docVariant {
+namespace Demo::Attachments::ConceptCoverage::docVariant {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1490,9 +1490,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::variant<std::string, std::uint8_t> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docVariant
+} // namespace Demo::Attachments::ConceptCoverage::docVariant
 
-namespace Test::Attachments::ConceptCoverage::docVec {
+namespace Demo::Attachments::ConceptCoverage::docVec {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1525,9 +1525,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::array<std::uint8_t, 2> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docVec
+} // namespace Demo::Attachments::ConceptCoverage::docVec
 
-namespace Test::Attachments::ConceptCoverage::docVector {
+namespace Demo::Attachments::ConceptCoverage::docVector {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1560,9 +1560,9 @@ void diff(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCo
 
 bool set(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key, std::vector<std::uint8_t> const & value);
 bool del(std::shared_ptr<Viper::Database> const & db, ConceptCoverageKey const & key);
-} // namespace Test::Attachments::ConceptCoverage::docVector
+} // namespace Demo::Attachments::ConceptCoverage::docVector
 
-namespace Test::Attachments::ConceptCoverage::docXArray {
+namespace Demo::Attachments::ConceptCoverage::docXArray {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1600,9 +1600,9 @@ void insert(std::shared_ptr<Viper::AttachmentMutating> const & mutating, Concept
 void update(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & position, std::uint8_t value);
 void remove(std::shared_ptr<Viper::AttachmentMutating> const & mutating, ConceptCoverageKey const & key, Viper::UUId const & position);
 
-} // namespace Test::Attachments::ConceptCoverage::docXArray
+} // namespace Demo::Attachments::ConceptCoverage::docXArray
 
-namespace Test::Attachments::Klub::propertiesD {
+namespace Demo::Attachments::Klub::propertiesD {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -1685,6 +1685,6 @@ void setF_S(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey
 
 void setF_T(std::shared_ptr<Viper::AttachmentMutating> const & mutating, KlubKey const & key, StructureT const & value);
 
-} // namespace Test::Attachments::Klub::propertiesD
+} // namespace Demo::Attachments::Klub::propertiesD
 
 #endif

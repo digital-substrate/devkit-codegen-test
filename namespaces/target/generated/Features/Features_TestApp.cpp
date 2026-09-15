@@ -4,7 +4,7 @@
 
 #include "Features_Test.hpp"
 
-#include "Test_Test.hpp"
+#include "Demo_Test.hpp"
 
 #include "Viper_Database.hpp"
 #include "Viper_DatabaseTransactionMode.hpp"
@@ -19,15 +19,15 @@ namespace {
 /// Les unités du modèle, dans l'ordre où il les déclare. La seule liste produite à ce
 /// niveau -- et la seule chose qu'une unité ne peut pas dire d'elle-même.
 void testTypes() {
-    Test::test();
+    Demo::test();
 }
 
 void testDatabase(std::shared_ptr<Viper::Database> const & db) {
-    Test::testDatabase(db);
+    Demo::testDatabase(db);
 }
 
 void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
-    Test::fuzzDatabase(db, count);
+    Demo::fuzzDatabase(db, count);
 }
 
 } // namespace

@@ -1,4 +1,4 @@
-// unité Test — ce qu'il faut à ses types pour traverser vers le runtime.
+// unité Demo — ce qu'il faut à ses types pour traverser vers le runtime.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 //
@@ -7,16 +7,16 @@
 // des types en a besoin aussi, et elle ne sérialise rien. Encoding to a Value, to JSON, and hashing are compositions of the two below,
 // and every container is the runtime's -- ModelA owns Material, not std::set.
 
-#ifndef Test_Codec_hpp
-#define Test_Codec_hpp
+#ifndef Demo_Codec_hpp
+#define Demo_Codec_hpp
 
-#include "Test_Data.hpp"
+#include "Demo_Data.hpp"
 
 #include "Viper_TypedCodec.hpp"
 
 #include <memory>
 
-namespace Test {
+namespace Demo {
 
 void write(Viper::Codec::Writer & w, ConceptAKey const & value);
 ConceptAKey read(Viper::Codec::Reader & r, Viper::Codec::tag<ConceptAKey>);
@@ -57,6 +57,6 @@ StructureV read(Viper::Codec::Reader & r, Viper::Codec::tag<StructureV>);
 void write(Viper::Codec::Writer & w, StructureW const & value);
 StructureW read(Viper::Codec::Reader & r, Viper::Codec::tag<StructureW>);
 
-} // namespace Test
+} // namespace Demo
 
 #endif

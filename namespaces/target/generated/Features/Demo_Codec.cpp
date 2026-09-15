@@ -1,10 +1,10 @@
-// unité Test — l'implémentation du pont.
+// unité Demo — l'implémentation du pont.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 
-#include "Test_Codec.hpp"
+#include "Demo_Codec.hpp"
 
-#include "Test_Model.hpp"
+#include "Demo_Model.hpp"
 
 #include "Features_Codec.hpp"
 
@@ -15,7 +15,7 @@
 #include "Viper_TypeErrors.hpp"
 #include "Viper_Types.hpp"
 
-namespace Test {
+namespace Demo {
 
 
 void write(Viper::Codec::Writer & w, ConceptAKey const & value) {
@@ -116,7 +116,7 @@ void write(Viper::Codec::Writer & w, EnumerationE value) {
         case EnumerationE::C: w.streamWriting->writeUInt8(2); break;
         default:
             throw Viper::TypeErrors::invalidEnumerationIndex(
-                "Test", "EnumerationE", __FUNCTION__, static_cast<std::uint8_t>(value));
+                "Demo", "EnumerationE", __FUNCTION__, static_cast<std::uint8_t>(value));
     }
 }
 
@@ -126,7 +126,7 @@ EnumerationE read(Viper::Codec::Reader & r, Viper::Codec::tag<EnumerationE>) {
         case 1: return EnumerationE::B;
         case 2: return EnumerationE::C;
         default:
-            throw Viper::TypeErrors::invalidEnumerationIndex("Test", "EnumerationE", __FUNCTION__, index);
+            throw Viper::TypeErrors::invalidEnumerationIndex("Demo", "EnumerationE", __FUNCTION__, index);
     }
 }
 
@@ -300,4 +300,4 @@ StructureW read(Viper::Codec::Reader & r, Viper::Codec::tag<StructureW>) {
 }
 
 
-} // namespace Test
+} // namespace Demo

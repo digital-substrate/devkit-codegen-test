@@ -1,10 +1,10 @@
-// unité Test — l'implémentation de l'adressage de ses champs.
+// unité Demo — l'implémentation de l'adressage de ses champs.
 //
 // Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/features/Features.dsm.json by kibo-2.0.0.jar
 
-#include "Test_Fields.hpp"
+#include "Demo_Fields.hpp"
 
-namespace Test::Fields::StructureS {
+namespace Demo::Fields::StructureS {
 
 std::shared_ptr<Viper::Path const> const & f_floatPath() {
     static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_float})};
@@ -16,9 +16,9 @@ std::shared_ptr<Viper::Path const> const & f_stringPath() {
     return instance;
 }
 
-} // namespace Test::Fields::StructureS
+} // namespace Demo::Fields::StructureS
 
-namespace Test::Fields::StructureT {
+namespace Demo::Fields::StructureT {
 
 std::shared_ptr<Viper::Path const> const & field_stringPath() {
     static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{field_string})};
@@ -30,9 +30,9 @@ std::shared_ptr<Viper::Path const> const & field_structure_sPath() {
     return instance;
 }
 
-} // namespace Test::Fields::StructureT
+} // namespace Demo::Fields::StructureT
 
-namespace Test::Fields::StructureU {
+namespace Demo::Fields::StructureU {
 
 std::shared_ptr<Viper::Path const> const & f_boolPath() {
     static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_bool})};
@@ -229,9 +229,9 @@ std::shared_ptr<Viper::Path const> const & f_any_conceptPath() {
     return instance;
 }
 
-} // namespace Test::Fields::StructureU
+} // namespace Demo::Fields::StructureU
 
-namespace Test::Fields::StructureV {
+namespace Demo::Fields::StructureV {
 
 std::shared_ptr<Viper::Path const> const & f_boolPath() {
     static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_bool})};
@@ -348,13 +348,13 @@ std::shared_ptr<Viper::Path const> const & f_TPath() {
     return instance;
 }
 
-} // namespace Test::Fields::StructureV
+} // namespace Demo::Fields::StructureV
 
-namespace Test::Fields::StructureW {
+namespace Demo::Fields::StructureW {
 
 std::shared_ptr<Viper::Path const> const & f_singlePath() {
     static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_single})};
     return instance;
 }
 
-} // namespace Test::Fields::StructureW
+} // namespace Demo::Fields::StructureW
