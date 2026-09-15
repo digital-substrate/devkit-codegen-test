@@ -40,3 +40,8 @@ cmake-build*/
 # Le paquet que la liaison devrait porter, déposé dans la référence par `python/check.py`.
 # La source est `runtime-proposed/dsviper_codegen/`.
 namespaces/target/python/hand/topology/_codegen/
+
+# Le paquet que la liaison devrait porter, déposé dans la référence Node.
+# La source est `namespaces/target/runtime-proposed/node/`.
+namespaces/target/node/hand/src/_codegen/
+namespaces/target/node/hand/dist/

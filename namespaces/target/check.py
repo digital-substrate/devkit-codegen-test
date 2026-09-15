@@ -48,6 +48,7 @@ STAGES = [
     ("C++    — couverture du pack existant", HERE / "cpp/coverage.py", []),
     ("Python — rend, importe, éprouve, type", HERE / "python/render.py", flags),
     ("Python — la référence écrite à la main", HERE / "python/check.py", []),
+    ("Node   — compile en strict, et tourne", HERE / "node/check.py", []),
 ]
 
 status = 0
