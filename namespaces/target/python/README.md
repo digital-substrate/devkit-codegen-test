@@ -116,3 +116,80 @@ runtime par son type — ce qui décide de la forme du code généré : il faut 
 la même raison, découverte en écrivant.
 
 À signaler à `viper`, avec le `XArray::operator!=` du C++.
+
+
+## Le layout, et qui le fabrique
+
+**Le générateur.** Pas `generate.py`, et l'argument est le même que celui qui a fait ce
+chantier : en Python, le chemin d'un fichier *est* son namespace. Un module qui écrit
+`from ..modelb import Colour` est correct à un endroit et faux partout ailleurs. Un
+générateur qui rendrait des fichiers plats à charge pour un script de les déplacer ensuite
+émettrait du texte faux là où il l'écrit, et juste seulement après qu'autre chose ait
+tourné. Le chemin fait partie de ce qui est généré.
+
+L'articulation existait déjà dans kibo : `TargetLayout` répond aux deux bouts de la même
+question — où le rendu se pose, et par quel chemin un artefact en atteint un autre.
+`PackageLayout` refusait de répondre au second (« la convention n'est pas arrêtée »). Elle
+l'est maintenant :
+
+| | C++ | paquet |
+|---|---|---|
+| une unité | un préfixe : `ModelA_Data.hpp` | un répertoire : `modela/data.py` |
+| ce que le modèle porte | `Topology_Codec.hpp` | à la racine : `codec.py` |
+| atteindre une autre unité | `#include "ModelB_Data.hpp"` | `modelb.data` |
+
+Le nom du fichier reste celui du template : `Data.py.stg` rendu pour `ModelA` donne
+`modela/data.py`. Rien n'est déduit du nom du template au-delà du retrait de l'extension —
+une règle qui traduirait `Data` en `__init__.py` serait une convention cachée dans le
+générateur, et un pack ne pourrait pas s'en défaire. Un pack qui veut un initialisateur
+écrit un template appelé `__init__.py.stg`, et comme celui-ci déclare `unit(u)` *et*
+`model(m)`, un seul fichier produit l'initialisateur de chaque unité et celui de la racine.
+
+**Et les chemins rendus s'arrêtent à la racine du paquet**, sans les points de tête. La
+profondeur d'un import relatif dépend d'où se trouve le fichier *importateur*, et c'est la
+seule chose que le layout ne peut pas savoir : il est interrogé par l'artefact atteint, pas
+par celui qui atteint. Un template, lui, connaît sa profondeur — il est écrit pour une unité
+ou pour le modèle, jamais pour les deux. Donc la réponse est `modelb.data`, et le template
+écrit `from ..<chemin> import` ou `from .<chemin> import` selon ce qu'il est. Relatif et non
+absolu parce que le nom du paquet est le choix du projet, pas celui du modèle.
+
+**Ce que `generate.py` garde**, et qui ne se déduit d'aucun modèle : où la racine du paquet
+se trouve, les octets embarqués (`resources.py`), et les métadonnées de distribution
+(`pyproject.toml`).
+
+### Ce que ça donne, et ce qu'on écrit pour s'en servir
+
+```
+topology/
+├── __init__.py          définitions du modèle          model(m)
+├── modela/
+│   ├── __init__.py      ce que l'unité expose          unit(u)
+│   ├── data.py          concepts, structures, énums    unit(u)
+│   └── attachments.py                                  unit(u)
+├── modelb/              ... les mêmes noms, sans un renommage
+└── tools/
+    ├── __init__.py                                     pool(p)
+    └── pool.py          le pool et son Remote          pool(p)
+```
+
+```python
+from topology import definitions
+from topology.modela import Colour, MaterialKey, attachments
+
+key = MaterialKey.create()
+attachments.material.colour.set(mutating, key, Colour(r=1, g=2, b=3))
+attachments.material.colour.update(mutating, key, "r", 9)
+attachments.material.colour.get(database, key)      # les mêmes appels sur une base
+```
+
+Et le cas qui a déclenché le chantier, écrit en entier :
+
+```python
+from topology.modela import attachments as a
+from topology.modelb import attachments as b
+# a.material.colour et b.material.colour : rien ne se touche.
+```
+
+Là où le pack écrit `modela_material_colour_get(...)` et `modelb_material_colour_get(...)` —
+le namespace, le concept et l'attachment collés dans un identifiant parce qu'un module plat
+n'a pas d'autre moyen de les distinguer.

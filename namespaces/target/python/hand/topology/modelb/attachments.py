@@ -1,4 +1,4 @@
-"""ModelA — les attachments que ce namespace déclare.
+"""ModelB — les attachments que ce namespace déclare.
 
 UN ATTACHMENT EST UN OBJET, PAS UNE FAMILLE DE FONCTIONS. Le pack écrit
 `modela_material_colour_get(getting, key)` : le namespace, le concept et le nom de
@@ -21,10 +21,10 @@ from .data import Colour, MaterialKey
 
 
 class Material:
-    """Les attachments portés par ModelA::Material."""
+    """Les attachments portés par ModelB::Material."""
 
     colour = Attachment(
-        dsviper.ValueUUId.create("faf658ea-5586-890a-0c4a-5cd2c9209b28"),
+        dsviper.ValueUUId.create("09eeb3f7-b0a6-9ad9-a80f-d2a85070ec08"),
         definitions, MaterialKey, Colour)
 
 

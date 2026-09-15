@@ -15,6 +15,7 @@ import dsviper
 from topology import definitions, tools
 from topology import modela, modelb
 from topology.modela import attachments as modela_attachments
+from topology.modelb import attachments as modelb_attachments
 
 
 def check(label, condition):
@@ -97,6 +98,13 @@ database.close()
 # Rien à éprouver de plus ici : `dsviper` n'offre pas de quoi construire un pool depuis
 # Python, donc la classe est le bord client et son identité est tout ce qu'elle affirme
 # hors connexion.
+# Deux attachments homonymes, sur deux concepts homonymes, dans deux unités : le cas qui a
+# déclenché tout le chantier. Le pack les distingue par `modela_material_colour_get` contre
+# `modelb_material_colour_get` ; ici rien ne se touche.
+ok &= check("deux attachments homonymes ont des descripteurs distincts",
+            modela_attachments.material.colour.descriptor.runtime_id()
+            != modelb_attachments.material.colour.descriptor.runtime_id())
+
 ok &= check("un pool porte son identité du modèle",
             tools.Pool.UUID.encoded() == "17e63428-03e1-41d7-ad9d-60c5665bbd66")
 
