@@ -3,6 +3,7 @@
 #include "Viper_UUId.hpp"
 #include <memory>
 #include <set>
+#include <vector>
 namespace Viper {
 class Attachment;
 class TypeConcept;
@@ -12,6 +13,9 @@ class TypeClub;
 class Definitions {
 public:
     std::shared_ptr<Attachment> checkAttachment(UUId const & runtimeId) const;
+
+    /// Tous les attachments du modèle. C'est par là qu'on construit sans rien générer.
+    std::vector<std::shared_ptr<Attachment>> attachments() const;
     std::shared_ptr<TypeConcept> checkConcept(UUId const & runtimeId) const;
 
     /// Le concept d'un identifiant, ou rien s'il vient d'un modèle que celui-ci ne

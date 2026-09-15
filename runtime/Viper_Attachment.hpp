@@ -2,6 +2,7 @@
 #define Viper_Attachment_hpp
 #include "Viper_UUId.hpp"
 #include <memory>
+#include <string>
 namespace Viper {
 class Type;
 class TypeKey;
@@ -14,6 +15,9 @@ public:
     std::shared_ptr<TypeSet> const keysType;
     std::shared_ptr<TypeOptional> const optionalDocumentType;
     UUId const runtimeId;
+
+    /// Son nom qualifié -- le namespace qui le déclare, et le sien.
+    std::string identifier() const;
 };
 }
 #endif

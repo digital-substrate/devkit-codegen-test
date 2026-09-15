@@ -22,14 +22,30 @@ public:
 
 class ValueKey final : public Value {
 public:
+    bool equal(std::shared_ptr<Value const> const & other) const override;
     UUId const instanceId{};
     static std::shared_ptr<ValueKey> cast(std::shared_ptr<Value> const & value);
     static std::shared_ptr<ValueKey const> cast(std::shared_ptr<Value const> const & value);
     std::shared_ptr<Type> type() const override;
 };
 
+class ValueBool final : public Value {
+public:
+    static std::shared_ptr<ValueBool> from(bool value);
+    std::shared_ptr<Type> type() const override;
+    bool equal(std::shared_ptr<Value const> const & other) const override;
+};
+
+class ValueVoid final : public Value {
+public:
+    static std::shared_ptr<Value> Instance();
+    std::shared_ptr<Type> type() const override;
+    bool equal(std::shared_ptr<Value const> const & other) const override;
+};
+
 class ValueOptional final : public Value {
 public:
+    bool equal(std::shared_ptr<Value const> const & other) const override;
     std::shared_ptr<Type> type() const override;
     bool isNil() const;
     std::shared_ptr<Value> unwrap() const;
@@ -37,6 +53,7 @@ public:
 
 class ValueSet final : public Value {
 public:
+    bool equal(std::shared_ptr<Value const> const & other) const override;
     std::shared_ptr<Type> type() const override;
     void add(std::shared_ptr<Value const> const & value);
     std::size_t size() const;

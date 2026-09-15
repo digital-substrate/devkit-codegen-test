@@ -16,7 +16,17 @@ public:
     /// Vrai si ce concept est celui-là, ou en dérive.
     bool isMember(std::shared_ptr<TypeConcept> const & typeConcept) const;
 };
-class TypeStructure final : public Type {};
+class TypeStructureField final {
+public:
+    std::string const name;
+    std::shared_ptr<Type> const type;
+};
+
+class TypeStructure final : public Type {
+public:
+    static std::shared_ptr<TypeStructure> cast(std::shared_ptr<Type> const & type);
+    std::vector<std::shared_ptr<TypeStructureField>> const & fields() const;
+};
 class TypeEnumeration final : public Type {};
 class TypeClub final : public Type {
 public:

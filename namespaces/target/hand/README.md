@@ -427,3 +427,43 @@ one without asking. The shape that spans two units asks nothing either.
 
 That is the layer-3 claim holding for a fifth and sixth domain, and this time it was checked
 by compiling the thing that depends on it rather than by reading the template.
+
+## The dynamic side of attachments — 787 template lines, nothing to generate
+
+`Topology_AttachmentPool.hpp/.cpp`. The pack's second-largest artefact: 764 lines of
+template producing **9 125 lines** for a real model, one class per operation per attachment.
+
+**Not one of those lines names a C++ type.** Every body casts its arguments to
+`Viper::Value`, calls the interface, and returns a Value:
+
+```cpp
+auto const attachment{getting->definitions()->checkAttachment(runtimeId)};
+auto const key{Viper::ValueKey::cast(args.at(0))};
+return Viper::ValueBool::from(getting->has(attachment, key));
+```
+
+What varies between two attachments is the runtime id, the key and document **type
+descriptors**, and the function's **name** — three things the `Definitions` already carry.
+So the answer to "what must be generated here?" is: nothing. Walk the model's attachments
+and build the pool.
+
+Two classes carrying a body, a walk over `definitions()->attachments()`, and a path built
+from the structure descriptor's field names. The file is rendered once per model and depends
+on none — the same shape as the untyped key, and it will migrate the same way.
+
+**The path, in particular, is where layer 2 turns out not to be needed.** The pack calls the
+generated `Path::Colour::r()`; what that returns is `Viper::Path::makeField("r")`, and the
+field's name is in the structure's descriptor. Layer 2 serves the developer writing C++, and
+the dynamic bridge does not need it.
+
+**And one template hazard whose fix improved the code.** `std::vector<std::shared_ptr<Viper::Value>>`
+ends in `>>`, which closes a StringTemplate body — on a 150-line verbatim file, silently, in
+the middle of a declaration. Writing a space would be a workaround leaking into the output.
+An alias removes the nesting instead:
+
+```cpp
+using ValuePtr = std::shared_ptr<Viper::Value>;
+using Args = std::vector<ValuePtr>;
+```
+
+Not a single `>>` is left in the file, and it reads better than it did.
