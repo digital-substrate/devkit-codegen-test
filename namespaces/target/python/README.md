@@ -218,8 +218,18 @@ n'a pas d'autre moyen de les distinguer.
 | `pool.py.stg` | `pool(p)`, `attachment_pool(p)` | `<pool>/pool.py` — le pool et son `Remote` |
 
 **Ce qui ne sort pas des templates** est déposé par `render-python.py` : `resources.py`, les
-octets du modèle produits par `link/resources.py`, et les deux fichiers de
-`runtime-proposed/dsviper/` que la liaison ne porte pas encore.
+octets du modèle produits par `link/resources.py`. Et rien d'autre — ce qui ne varie d'aucun
+modèle est maintenant dans la liaison, sous `dsviper.codegen`, et le code rendu l'importe :
+
+```python
+from dsviper.codegen import AnyConceptKey, AttachmentProxy, Mapping, Ordered, Proxy, Sequence
+from dsviper.codegen import register, unwrap, wrap
+```
+
+Neuf noms, et ils sont tout ce que la génération suppose du côté Python. `Proxy` et les trois
+vues portent ce qu'une classe générée a en commun avec toutes les autres ; `AttachmentProxy`
+est l'accesseur typé d'un attachment ; `wrap`, `unwrap` et `register` sont le passage entre
+une valeur du runtime et un nom du modèle.
 
 **L'épreuve est la même pour la référence et pour le rendu.** `python/check.py` prend le
 paquet à éprouver : sans argument la référence écrite à la main, avec `generated/python` le

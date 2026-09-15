@@ -16,14 +16,14 @@ from __future__ import annotations
 import dsviper
 
 from .. import definitions
-from .._attachment import Attachment
+from .._codegen import AttachmentProxy
 from .data import Colour, MaterialKey
 
 
 class Material:
     """Les attachments portés par ModelA::Material."""
 
-    colour = Attachment(
+    colour = AttachmentProxy(
         dsviper.ValueUUId.create("faf658ea-5586-890a-0c4a-5cd2c9209b28"),
         definitions, MaterialKey, Colour)
 

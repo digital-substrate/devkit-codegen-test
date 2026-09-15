@@ -8,8 +8,7 @@ import typing
 
 import dsviper
 
-from .._container import Mapping, Ordered, Sequence
-from .._proxy import AnyConceptKey
+from .._codegen import AnyConceptKey, Mapping, Ordered, Sequence
 
 
 

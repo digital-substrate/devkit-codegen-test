@@ -19,7 +19,7 @@ from typing import Callable
 
 import dsviper
 
-from ._proxy import unwrap as _unwrap, wrap as _wrap
+from .proxy import unwrap as _unwrap, wrap as _wrap
 
 
 class AttachmentProxy:

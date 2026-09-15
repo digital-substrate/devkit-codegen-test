@@ -11,4 +11,3 @@ lecteur veut les deux sous le même nom.
 """
 
 from .data import *
-from . import attachments

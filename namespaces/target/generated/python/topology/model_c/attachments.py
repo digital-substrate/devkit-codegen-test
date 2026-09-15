@@ -7,6 +7,5 @@ from __future__ import annotations
 import dsviper
 
 from .. import definitions
-from .._attachment import AttachmentProxy
-from .._proxy import AnyConceptKey
+from .._codegen import AnyConceptKey, AttachmentProxy
 

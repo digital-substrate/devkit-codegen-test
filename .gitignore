@@ -37,6 +37,6 @@ CLAUDE.md
 build/
 cmake-build*/
 
-# Les deux fichiers que `dsviper` ne porte pas encore, déposés dans un paquet par
-# `render-python.py` et par `python/check.py`. La source est `runtime-proposed/dsviper/`.
-namespaces/target/python/hand/topology/_*.py
+# Le paquet que la liaison devrait porter, déposé dans la référence par `python/check.py`.
+# La source est `runtime-proposed/dsviper_codegen/`.
+namespaces/target/python/hand/topology/_codegen/

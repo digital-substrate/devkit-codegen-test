@@ -24,7 +24,7 @@ import typing
 
 import dsviper
 
-from ._proxy import unwrap, wrap
+from .proxy import unwrap, wrap
 
 E = typing.TypeVar("E")
 K = typing.TypeVar("K")

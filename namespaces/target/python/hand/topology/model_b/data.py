@@ -17,7 +17,7 @@ import functools
 import dsviper
 
 from .. import definitions
-from .._proxy import Proxy
+from .._codegen import Proxy
 
 
 # ── l'identité de cette unité dans le modèle ──

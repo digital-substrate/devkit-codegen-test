@@ -11,8 +11,7 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._container import Mapping, Ordered, Sequence
-from .._proxy import AnyConceptKey, Proxy, register, unwrap, wrap
+from .._codegen import AnyConceptKey, Mapping, Ordered, Proxy, Sequence, register, unwrap, wrap
 from .. import model_b
 from .. import model_a
 

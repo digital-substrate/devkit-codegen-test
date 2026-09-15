@@ -7,8 +7,7 @@ from __future__ import annotations
 import dsviper
 
 from .. import definitions
-from .._attachment import AttachmentProxy
-from .._proxy import AnyConceptKey
+from .._codegen import AnyConceptKey, AttachmentProxy
 from .. import model_b
 from .. import model_c
 from .. import model_a

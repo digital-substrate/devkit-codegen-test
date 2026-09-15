@@ -39,11 +39,12 @@ MODELS = _module(ROOT / "tools" / "models.py", "kibo_tools_models").MODELS
 TEMPLATES = HERE / "python" / "templated"
 RESOURCES = HERE / "link" / "resources"
 
-# CE QUE `dsviper` NE PORTE PAS ENCORE, copié dans chaque paquet. Le pendant exact des deux
-# en-têtes de `runtime-proposed/` du côté C++ : aucun ne nomme un type d'un modèle, aucun ne
-# varie d'un modèle à l'autre, et le jour où la liaison les portera le code généré les
-# importera au lieu de les recevoir.
-PROPOSED = ROOT / "runtime-proposed" / "dsviper"
+# CE QUE LA LIAISON DEVRAIT PORTER ET NE PORTE PAS. Aucun de ces modules ne nomme un type
+# d'un modèle et aucun ne varie d'un modèle à l'autre : leur place est dans `dsviper`, sous
+# `dsviper.codegen`. En attendant, ils sont déposés dans chaque paquet rendu sous `_codegen`,
+# et le code généré écrit `from .._codegen import …`. Le jour où la liaison les portera, ce
+# sera `from dsviper.codegen import …` : une ligne dans chacun des trois templates.
+PROPOSED = ROOT / "runtime-proposed" / "dsviper_codegen"
 
 arguments = argparse.ArgumentParser(description=__doc__,
     formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -71,10 +72,11 @@ for model, spec in MODELS.items():
         status = 1
         continue
 
-    # Ce qui ne sort pas des templates : les octets du modèle, et le runtime qui manque.
+    # Ce qui ne sort pas des templates : les octets du modèle, et le paquet que la liaison
+    # devrait porter.
     shutil.copy(RESOURCES / f"{namespace}_resources.py", package / "resources.py")
-    for proposed in PROPOSED.glob("_*.py"):
-        shutil.copy(proposed, package)
+    shutil.copytree(PROPOSED, package / "_codegen",
+                    ignore=shutil.ignore_patterns("__pycache__", "README.md"))
 
     modules = sorted(p.relative_to(target).with_suffix("") for p in package.rglob("*.py"))
     names = [".".join(m.parts[:-1] if m.parts[-1] == "__init__" else m.parts) for m in modules]

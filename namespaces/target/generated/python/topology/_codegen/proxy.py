@@ -116,7 +116,7 @@ def wrap(value) -> typing.Any:
     if code == "variant":
         return wrap(value.unwrap())
 
-    from ._container import Mapping, Ordered, Sequence
+    from .container import Mapping, Ordered, Sequence
 
     if code == "map":
         return Mapping(value)
