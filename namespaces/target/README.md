@@ -1,182 +1,68 @@
-# target — what the generator should produce, written by hand
+# target — the C++ reference, and how far it has got
 
-These files are **not generated**. They are the specification: the output a developer
-should get, written first, so the generator has something to be measured against rather
-than a design to be inferred from whatever it currently emits.
+The success condition is **iso-functionality**: everything the existing templates produce
+must still be produced, in the idioms this work proposes. Not "most of it", and not "the
+interesting parts".
 
-Only `Data` is covered so far, in C++, for one multi-namespace model and one mono. Class
-bodies are elided — they do not change. What is being specified is the file boundaries,
-the includes, the scopes, and where the cross-cutting parts land.
+`hand/` is the reference, written from the model and compiled. `templated/` reproduces it.
+`../../crossing/target/hand/` holds the two shapes the topology model does not declare.
 
-## What it says
+## Where it stands, measured
 
-**A unit per DSM namespace, and the namespace stated once.** `Demo::PlayerKey`, not
-`Service::Demo::PlayerKey`; `ModelA::MaterialKey`, not `ModelA_MaterialKey`. In mono and
-in multi, the same layout — no special case for the common one.
+The pack is **73 templates, 8 737 lines, 17 directories**. What is in `templated/` is
+**14 templates, 1 561 lines**, and it does not cover everything.
 
-**Includes carry no path**, resolved by one `-I` per unit. This is the convention viper,
-ge and red already follow, for generated and hand-written code alike, and it is what keeps
-a unit's directory a build concern rather than a code one.
+The table below is not an estimate. Each row was checked by rendering two unrelated models
+and comparing the output with the model's namespace substituted — an artefact that comes out
+**byte-identical** for two different models is not generated code, whatever file it lives in.
 
-**A composing unit's includes are its dependency set**, computed rather than composed.
-`Projection` reaches `ModelA` and `ModelB` through a structure's fields, and `ModelC`
-through an attachment document type alone — the edge that carried no dependency at all
-before `9328acd`.
+| pack directory | templates | lines | where it goes |
+|---|---:|---:|---|
+| `Data` | 4 | 944 | done — `Data.hpp/cpp.stg`, `AnyConcept.hpp.stg` |
+| `Stream` | 4 | 908 | done — `Codec.hpp/cpp.stg`, entry `unit` |
+| `ValueCodec` | 4 | 497 | done — one generic `encode`/`decode` |
+| `ValueType` | 2 | 373 | done — `Model.hpp/cpp.stg`, plus runtime templates |
+| `Attachments` | 2 | 340 | done — `Attachments.hpp/cpp.stg` |
+| `Model` | 6 | 216 | done — `Fields.hpp/cpp.stg`, entry `model` |
+| `FunctionPool`, `…Remote`, `AttachmentFunctionPool`, `…Remote` | 10 | 555 | done — `Pool.hpp/cpp.stg` |
+| `Database` — 11 of 13 | 11 | ~1 638 | **not generated at all** |
+| `Database/DatabaseAttachments` | 2 | 156 | per-attachment, so per-unit — to do |
+| `AttachmentFunctionPool_Attachments` | 2 | 787 | the dynamic side of attachments — to do |
+| `Test` | 14 | 1 403 | **declared only** — `Test.hpp.stg` has no implementation |
+| `TestApp` | 4 | 294 | a command-line driver — to do |
+| `Json` | 4 | 262 | a composition over `encode` — a few lines |
+| `ValueHasher` | 2 | 287 | a composition over `encode` — a few lines |
+| `Python` | 2 | 77 | the Python binding of this C++ — out of this pass |
 
-**Names collide and nothing is renamed.** `ModelA::MaterialKey` and `ModelB::MaterialKey`
-coexist in different scopes and different files. The flat prefix existed to fake exactly
-this.
+## What the measurement found
 
-## Three decisions this exercise forced, now settled
+**Eleven of the thirteen `Database` templates emit code that does not mention the model.**
+`Databasing`, `Database`, `DatabaseSQLite`, `DatabaseRemote`, `DatabaseRemoteRPCSideClient`
+and `DatabaseHelper` render byte-identical output for two unrelated models — 1 607 lines,
+zero difference, once the namespace name is substituted. They are runtime code wearing a
+template, and the only generated thing about them is the namespace they are wrapped in.
 
-**`-n` names the base unit, not an enclosing scope.** `AnyConceptKey` has to live
-somewhere: it carries no model dependency — it is `(instanceId, runtimeId)` — and belongs
-in the runtime, but viper 1.2's API is closed. So it is emitted as a unit of its own that
-every other unit includes and that includes none of them. It is a peer, not a parent:
-`ModelA::MaterialKey` is top-level, not `Topology::ModelA::MaterialKey`.
+Only `DatabaseAttachments` is genuinely per-model, and it is per-attachment, so it is a unit
+artefact like the others.
 
-**A mono project gains a header**, which follows from the first decision rather than
-being a separate choice: base unit plus driver unit, in mono as in multi. It is reached
-transitively, so a consumer still writes one include. One layout, no special case for the
-common one.
+**`Json` and `ValueHasher` are compositions, and their own source says so.**
 
-**A namespace with nothing to emit gets a file all the same.** `Annotations` contributes
-nothing to `Data`, and `Annotations_Data.hpp` exists anyway. A predictable path is worth
-more than a file saved: a build lists `<unit>/<unit>_<feature>.hpp` without asking what
-the model happens to contain, and the day the namespace gains a concept its consumers
-already include it.
+```
+encode_X(v)     = JsonValueEncoder::json_encode(ValueEncoder::encode_X(v))
+hexdigest_X(v)  = hexdigestValue(ValueEncoder::encode_X(v))
+```
 
-## What `Definitions` and `ValueType` added
+Neither adds anything per type beyond the name. 549 lines of template for what is one
+function template each over the generic `encode` — which is the layer-3 claim, holding for a
+third and fourth domain.
 
-They were expected to be "the base layer" wholesale. Only one of them is.
+**`Test` is the one claim not yet checked.** `Test.hpp.stg` declares a `fuzz` per type and a
+`test()` and asserts that the pack's 1 403 lines collapse into that. **Nothing verifies it:**
+no test implementation has been written, which is the same gap that made the first four
+layers look finished when only their headers existed.
 
-**`ValueType` does not split, and the reason is checkable.** It includes `Viper_Types.hpp`
-and nothing generated; every function returns a `Viper::Type` and composes out of the
-others. The namespace appears only inside a symbol name, never as a C++ type reference,
-so the table has no dependency on any unit and cannot acquire one. Splitting it would
-break the single-instance memoisation each function relies on, and would leave a shape
-spanning two namespaces — `type_map_ModelA_MaterialKey_to_ModelB_MaterialKey` — belonging
-to neither unit. It stays whole, in the base.
+## What is not yet proven
 
-That also settles `typeSuffix`. Carrying the DSM namespace in a flat symbol name is not a
-leftover of the prefix era: it is a structural, deduplicated name for a type shape, and it
-must read the same whether the model has one namespace or five. It is the one place a
-namespace legitimately appears flattened.
-
-**`Definitions` does split, and it is two things in one file.** The per-namespace
-`RuntimeIds` and `AttachmentRuntimeIds` blocks belong to each unit; `definitions()`,
-which decodes the blob the caller embeds, is base. So the base keeps the one edge that
-points outside the pack — `Topology_Resources.hpp` is written by `generate.py`, not by a
-template — and no unit inherits it.
-
-`RuntimeIds` stays a scope where `ValueType` did not, and the distinction is worth
-keeping: `ValueType` is a feature name and a feature is a file, while
-`ModelA::RuntimeIds::Material` genuinely distinguishes the UUID from the type
-`ModelA::MaterialKey`. Both belong to ModelA.
-
-**And `Annotations` is empty in `Data` but not in `Definitions`** — one attachment
-runtime id, no concept ids. Whether a unit has content depends on the feature, which is
-the argument for emitting a file per unit per feature rather than asking the model.
-
-## What `Attachments` and the pools added
-
-**The attachment-borne edge is visible in a signature.** Every accessor of
-`Annotations::Attachments::Material_Note` takes a `ModelA::MaterialKey`, so that unit
-does not compile without including `ModelA_Data.hpp`. The edge that carried no
-dependency at all before `9328acd`, and that both `backbone` projections rely on, is not
-a subtlety of the graph: it is in the function signatures.
-
-**A spanning container is written where it is declared, but its type descriptor is not.**
-`Link_Mapping` takes `std::map<ModelA::MaterialKey, ModelB::MaterialKey>` in
-`Projection_Attachments.hpp`, because `Projection` is the unit that declares it. The
-matching `type_map_ModelA_MaterialKey_to_ModelB_MaterialKey()` stays in the base. The same
-shape, split by what kind of thing it is.
-
-**A pool is a unit, and `Tools` is the degenerate one**: it names no namespaced type, so
-it includes nothing and depends on nothing. `Projector` is the opposite — its signature
-names two namespaces, which is what creates the composing layer rather than being a
-problem the composing layer has to absorb.
-
-The scope is `Tools`, not `Topology::FunctionPoolBridges::Tools`. The pool's name is the
-unit's name; `FunctionPoolBridges` was a template name that had become a namespace level.
-
-**And a worry about cycles was misplaced.** The base unit is a root — `Topology_Data.hpp`
-and `Topology_ValueType.hpp` include nothing generated — while a registry of every pool
-plainly depends on all of them. Both hold at once, because **the root/sink distinction is
-a property of files, not of units**: a namespace reopens across files, a file's includes
-do not. `namespace Topology` therefore spans a root file and a sink file, and the layering
-is a layering of artefacts. A unit may contribute at several layers.
-
-## One rule this raised, and the measurement behind it
-
-An attachment's scope named its concept **unqualified**, so two attachments declared in
-one namespace on same-named concepts of two others looked like a collision waiting to
-happen. The model now contains the case, and the generator handles it: it counts
-attachments in the namespace sharing a name and a key-concept name, and prefixes the
-key's namespace only when more than one exists. It never collides.
-
-What it does instead is make the name a function of the whole namespace's attachment
-set. With only the `ModelA` one present the scope is `Material_Note`; adding the
-`ModelB` one renames it to `ModelA_Material_Note`. A source-compatible model change
-moves a generated symbol.
-
-**Proposed: qualify whenever the concept is not this unit's own, always.** A longer name
-in the common case, for a name that does not move — and one that reads like the
-signature beside it, which already says `ModelA::MaterialKey`.
-
-## What `Path` added
-
-**An artefact can be per-unit and reach nothing at all.** `Path` describes where a
-field sits, not what type it has — every accessor returns a `Viper::Path` — so it is
-per-unit like `Data` and its only include is the runtime's. `Field` has the same shape.
-
-The striking case is `Projection::Path::Pair`. That structure holds a
-`key<ModelA::Material>` and a `key<ModelB::Material>`, and
-`Projection_Attachments.hpp` must include both driver units because its accessors take
-those types. `Projection_Path.hpp` includes neither. **Same structure, same unit, two
-artefacts, two different dependency sets** — which is why the include list is computed
-per artefact rather than per unit.
-
-**And a feature is not a migration unit.** `Model` bundles three artefacts of three
-kinds: `Definitions` (base plus per-unit, and the one edge pointing outside the pack),
-and `Field` and `Path` (per-unit, no edges at all). The directory groups what is emitted
-together; it says nothing about what moves together. Since the scope is declared by each
-`.stg`'s entry template, migration is already per artefact and needs no further
-mechanism.
-
-## What Python and node added
-
-**The re-export file is where the collision is actually answered.** Today
-`__init__.py` is one line — `from .data import *` — and it works only because every
-class carries its namespace in its name: `ModelA_MaterialKey`. Removing that prefix puts
-the ambiguity back, and this file has to decide. The rule: re-export the names exactly
-one unit declares, and leave the rest reachable through their unit. `Marker`, `Link`,
-`Pair` are flat; `Material` and `Colour` are not, because two units declare each. In a
-mono-namespace model nothing can collide, so everything is flat and the common case sees
-what it sees today, minus the prefix.
-
-node already has half the idiom: `index.ts` re-exports `data` flat and everything else
-under a name (`export * as types`, `* as path`). The same distinction simply moves from
-features to units.
-
-**A spanning container needs a home in Python and node, where C++ needed none.** In C++
-the shape is `std::map<...>`, written inline where it is used, and only its *descriptor*
-lives in the base. Python and node have to generate a class for it. Putting it in the
-declaring unit would let two units declaring the same shape produce two distinct
-classes, and an `isinstance` check would stop meaning what it says — so it goes in a
-sink module of the base package, `topology/containers.py`, which imports the units while
-`topology/data.py` imports none of them.
-
-That is the C++ pool registry again, in another language: **the root/sink distinction is
-a property of modules, not of packages.** A package spans both, exactly as a namespace
-did.
-
-**And the attachment rule carries over verbatim.** With the prefix gone the two
-`Material` classes no longer tell themselves apart, so
-`annotations/attachments.py` aliases them by unit — the same answer the C++ target
-proposes for the scope name, reached independently.
-
-## Still to write
-
-The remaining features in Python and node, if the C++ set proves not to have covered
-the shapes. Nothing here suggests it has not.
+That the decomposition absorbs everything. Two of the three largest remaining pieces —
+`Test` at 1 403 lines and `AttachmentFunctionPool_Attachments` at 787 — have not been opened
+beyond their signatures, and they are where a new shape is most likely to appear.
