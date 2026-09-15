@@ -467,3 +467,50 @@ using Args = std::vector<ValuePtr>;
 ```
 
 Not a single `>>` is left in the file, and it reads better than it did.
+
+## The database — the generated class adds nothing
+
+The question is whether the API can take `Viper::Database` instead of the generated one:
+
+```cpp
+std::set<MaterialKey> keys(std::shared_ptr<Database const> const & db);
+std::set<MaterialKey> keys(std::shared_ptr<Viper::Database const> const & db);
+```
+
+**It can, and the measurement says why.** Of the 1 638 lines the pack emits for the database,
+the model appears at **four places**, all in the SQLite implementation: twice writing the
+model's definitions into a new database, twice checking that an opened one contains them.
+
+```cpp
+definitions->extend(Topology::definitions());        // creating
+if (!definitions->contains(Topology::definitions())) // opening
+```
+
+That is an argument, not a type. Everything else — the transaction, the blobs, the
+attachments, the remote, the SQLite backing — is model-independent, which is why two
+unrelated models render it byte-identical.
+
+**And the per-model type costs something.** Two models in one program have two incompatible
+`Database` classes over the same file, so neither can be handed the other's handle. One class
+with the definitions as a parameter gives one handle, and each model extends it with its own —
+which is what `extendDefinitions` is already for.
+
+**The same argument applies to the untyped key, in the other direction.** It stays with the
+model only because the shipped runtime has no such type; a per-model copy stops two models
+from exchanging a key, and that is a cost accepted under a constraint rather than a design
+preference.
+
+## Layer 6 — the same attachment, on another support
+
+`Topology_Db.hpp` and `ModelA_Database.hpp/.cpp`. Five operations — `keys`, `has`, `get`,
+`set`, `del` — and nothing they do depends on *which* attachment: convert the key, encode or
+decode the document, call the database. The pack writes the five once per attachment; as
+templates over the key and the document they need only a runtime id, and the per-attachment
+file becomes five forwards.
+
+The document is stored encoded, so it crosses the same stream as everywhere else, under the
+same format contract as the static/dynamic bridge.
+
+**And the attachment's runtime id is declared once.** It sits beside the in-memory
+operations, and the database scope reads it from there rather than restating it — one
+attachment, one identity, in one place.

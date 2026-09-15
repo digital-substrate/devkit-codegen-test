@@ -12,6 +12,11 @@ class TypeEnumeration;
 class TypeClub;
 class Definitions {
 public:
+    struct ExtendInfo {};
+
+    static std::shared_ptr<Definitions> make();
+    void extend(std::shared_ptr<Definitions const> const & other);
+    bool contains(std::shared_ptr<Definitions const> const & other) const;
     std::shared_ptr<Attachment> checkAttachment(UUId const & runtimeId) const;
 
     /// Tous les attachments du modèle. C'est par là qu'on construit sans rien générer.
