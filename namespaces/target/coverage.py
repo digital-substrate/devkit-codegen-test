@@ -38,7 +38,7 @@ GENERATED = {"features": "Features", "service": "Service",
 # réclamer des fonctions qui n'ont jamais eu à exister.
 UNITS = sorted({d.name.split("_")[0]
                 for model in GENERATED.values()
-                for d in (HERE / "generated" / model).glob("*_*.hpp")}
+                for d in (HERE / "generated/cpp" / model).glob("*_*.hpp")}
                | set(GENERATED.values()))
 
 def descendant_getters():
@@ -105,7 +105,7 @@ ABSORBED = {
     "l'annuaire de pools du modèle": " ".join(
         d.name.split("_")[0][0].lower() + d.name.split("_")[0][1:]
         for model in GENERATED.values()
-        for d in (HERE / "generated" / model).glob("*_Pool.hpp")),
+        for d in (HERE / "generated/cpp" / model).glob("*_Pool.hpp")),
 
     # LE RÉTRÉCISSEMENT VERS UN DESCENDANT, POSÉ CHEZ L'ANCÊTRE. Le pack donne à
     # `Core::ThingKey` un `asWovenDerivedKey()` pour chaque concept qui en descend -- donc
@@ -180,7 +180,7 @@ pack, mine = set(), set()
 for model in MODELS_MEASURED:
     with tempfile.TemporaryDirectory() as scratch:
         pack |= operations(rendered_pack(Path(scratch) / model, model))
-    mine |= operations(sorted((HERE / "generated" / GENERATED[model]).glob("*.hpp")))
+    mine |= operations(sorted((HERE / "generated/cpp" / GENERATED[model]).glob("*.hpp")))
 missing = pack - mine
 
 broken = []

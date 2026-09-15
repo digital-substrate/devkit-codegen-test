@@ -1,0 +1,187 @@
+# Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/service/Service.dsm.json by kibo-2.0.0.jar
+
+"""Demo — les types que ce namespace déclare."""
+
+from __future__ import annotations
+
+import enum
+import functools
+import typing
+
+import dsviper
+
+from .. import definitions
+from .._proxy import Proxy
+
+# ── l'identité de cette unité dans le modèle ──
+#
+# LE MÊME ARTEFACT QU'EN C++, POUR LA MÊME RAISON : plusieurs couches en ont besoin et ce
+# n'est pas de la sérialisation. Il tient ici en une constante par type, parce qu'il n'y a
+# pas de tag à porter — l'appelant nomme la classe.
+
+PLAYER: dsviper.ValueUUId = dsviper.ValueUUId.create("c177a251-4de8-57a0-de3b-6cc2ae68eb13")
+LEVEL: dsviper.ValueUUId = dsviper.ValueUUId.create("238d8f84-734d-df83-fc48-f4dc69cc127a")
+PLAYER_PROPERTY: dsviper.ValueUUId = dsviper.ValueUUId.create("2fa5978a-9426-26a5-e8e7-35c80ce00ffd")
+VECTOR_3: dsviper.ValueUUId = dsviper.ValueUUId.create("9099c892-b971-86b4-6d84-ab38cc2d3d16")
+
+class PlayerKey(Proxy):
+    """Une poignée sur une instance de Demo::Player, pas la chose elle-même.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def concept(cls):
+        """Le descripteur, résolu une fois."""
+        return definitions().check_concept(PLAYER)
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.Type:
+        """Le descripteur du type de la clé.
+
+        `classmethod` et non fonction libre : en C++ il fallait `type(tag<T>{})` pour que la
+        recherche par argument trouve l'unité de T. Python n'a pas cette recherche et n'en a
+        pas besoin — l'appelant écrit déjà le nom de la classe.
+        """
+        return dsviper.TypeKey(cls.concept())
+
+    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+        if isinstance(identifier, dsviper.ValueKey):
+            if identifier.type() != self.type():
+                raise TypeError("cette valeur n'est pas un Demo::PlayerKey")
+            super().__init__(identifier)
+        else:
+            super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def create(cls) -> PlayerKey:
+        """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
+        return cls(dsviper.ValueUUId.create())
+
+    @property
+    def instance_id(self) -> dsviper.ValueUUId:
+        return self.value.instance_id()
+
+    def is_valid(self) -> bool:
+        return self.instance_id.is_valid()
+
+    def __repr__(self) -> str:
+        return f"Demo::PlayerKey({self.value.representation()})"
+
+class Level(enum.Enum):
+    """Demo::Level.
+    UNE ÉNUMÉRATION PYTHON, PAS UN PROXY. Le pack en fait une classe qui enveloppe une
+    `ValueEnumeration` ; Python en a une, et le runtime sait convertir depuis le nom d'un
+    cas. Envelopper n'apporterait que du poids — et `Finish.matte` se lit mieux que
+    `Finish("matte")`.
+    """
+
+    beginner = "beginner"
+    intermediate = "intermediate"
+    expert = "expert"
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.TypeEnumeration:
+        return definitions().check_enumeration(LEVEL)
+
+    @classmethod
+    def _wrap(cls, value) -> Level:
+        return cls(value.name())
+
+    def _unwrap(self) -> str:
+        return self.value
+
+class PlayerProperty(Proxy):
+    """Demo::PlayerProperty.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.TypeStructure:
+        return definitions().check_structure(PLAYER_PROPERTY)
+
+    def __init__(self, value: dsviper.ValueStructure | None = None, /, **fields):
+        if value is None:
+            value = dsviper.ValueStructure(self.type())
+        elif value.type() != self.type():
+            raise TypeError("cette valeur n'est pas un Demo::PlayerProperty")
+        super().__init__(value)
+
+        for name, field in fields.items():
+            setattr(self, name, field)
+
+    @property
+    def nickname(self) -> str:
+        return self.value.at("nickname")
+
+    @nickname.setter
+    def nickname(self, value: str) -> None:
+        self.value.set("nickname", value)
+
+    @property
+    def level(self) -> Level:
+        return Level._wrap(self.value.at("level", encoded=False))
+
+    @level.setter
+    def level(self, value: Level) -> None:
+        self.value.set("level", value._unwrap())
+
+    def __repr__(self) -> str:
+        return f"Demo::PlayerProperty(nickname={self.nickname}, level={self.level})"
+
+
+class Vector3(Proxy):
+    """Demo::Vector3.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.TypeStructure:
+        return definitions().check_structure(VECTOR_3)
+
+    def __init__(self, value: dsviper.ValueStructure | None = None, /, **fields):
+        if value is None:
+            value = dsviper.ValueStructure(self.type())
+        elif value.type() != self.type():
+            raise TypeError("cette valeur n'est pas un Demo::Vector3")
+        super().__init__(value)
+
+        for name, field in fields.items():
+            setattr(self, name, field)
+
+    @property
+    def x(self) -> float:
+        return self.value.at("x")
+
+    @x.setter
+    def x(self, value: float) -> None:
+        self.value.set("x", value)
+
+    @property
+    def y(self) -> float:
+        return self.value.at("y")
+
+    @y.setter
+    def y(self, value: float) -> None:
+        self.value.set("y", value)
+
+    @property
+    def z(self) -> float:
+        return self.value.at("z")
+
+    @z.setter
+    def z(self, value: float) -> None:
+        self.value.set("z", value)
+
+    def __repr__(self) -> str:
+        return f"Demo::Vector3(x={self.x}, y={self.y}, z={self.z})"
+
+
+__all__ = ["PlayerKey", "Level", "PlayerProperty", "Vector3"]

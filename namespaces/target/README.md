@@ -72,6 +72,48 @@ third and fourth domain.
 no test implementation has been written, which is the same gap that made the first four
 layers look finished when only their headers existed.
 
+## Où se trouve le code généré
+
+Une seule règle : **`generated/` est rangé par cible**, et rien d'autre n'y est rangé. Ce qui
+n'y est pas est soit une source, soit un artefact de construction.
+
+```
+namespaces/target/
+├── generated/
+│   ├── cpp/                  le rendu C++, un répertoire par modèle
+│   │   ├── Topology/         83 fichiers
+│   │   ├── Crossing/         47
+│   │   ├── Features/         23
+│   │   └── Service/          27
+│   └── python/               le rendu Python, un paquet par modèle
+│       ├── topology/         25 modules
+│       ├── crossing/         13
+│       ├── features/          7
+│       └── service/          11
+├── templated/                les templates C++
+├── hand/                     la référence C++, écrite à la main
+├── python/
+│   ├── templated/            les templates Python
+│   ├── hand/                 la référence Python, écrite à la main
+│   └── check.py              les assertions, qui tournent sur l'une ou sur l'autre
+├── link/                     ce qui ne sort pas des templates : les octets du modèle,
+│                             le code d'application, la migration du service existant
+├── build/                    objets et binaires — jamais versionné
+├── render.py                 rend le C++, compile, lie, exécute
+├── render-python.py          rend le Python, importe tout, rejoue les assertions
+└── coverage.py               ce que le pack déclare et que les nouveaux n'émettent pas
+```
+
+Deux commandes, et elles disent tout :
+
+```sh
+namespaces/target/render.py            # C++  : rend, compile, lie, exécute
+namespaces/target/render-python.py     # Python : rend, importe, éprouve
+```
+
+Chacune accepte `--check`, qui échoue si le rendu versionné n'est plus ce que les templates
+produisent.
+
 ## Where it stands now
 
 Every directory of the pack has been opened and reproduced. Four models render, compile,

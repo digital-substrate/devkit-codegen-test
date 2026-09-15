@@ -49,6 +49,20 @@ class Proxy:
     def hexdigest(self) -> str:
         return dsviper.Value.hexdigest(self._value)
 
+    # ── le passage, dans les deux sens ──
+    #
+    # UN SEUL COUPLE DE NOMS POUR TOUT CE QUI A UNE CLASSE. Une structure et une clé sont des
+    # `Proxy` ; une énumération est une `enum.Enum` de Python et n'en est pas une. Sans un
+    # protocole commun, le code généré devrait savoir laquelle des deux il tient — donc
+    # porter dans le template une distinction que le modèle connaît déjà.
+
+    @classmethod
+    def _wrap(cls, value) -> "Proxy":
+        return cls(value)
+
+    def _unwrap(self):
+        return self._value
+
 
 def unwrap(value):
     """La Value que le runtime attend, depuis ce que l'appelant a écrit.
@@ -57,4 +71,40 @@ def unwrap(value):
     convertir un objet Python depuis le descripteur de type, donc un `int`, un `str` ou un
     `dict` n'a besoin de rien ici.
     """
-    return value.value if isinstance(value, Proxy) else value
+    return value._unwrap() if hasattr(value, "_unwrap") else value
+
+
+class AnyConceptKey(Proxy):
+    """Une clé sur une instance de n'importe quel concept.
+
+    LE C++ EN GÉNÈRE UNE PAR MODÈLE ; ICI IL N'EN FAUT AUCUNE. Elle ne nomme aucun type :
+    elle enveloppe un `ValueKey` et pose ses questions au descripteur que la valeur porte
+    déjà. Ce qu'une version générée y ajoutait — savoir nommer les concepts du modèle — est
+    dans les définitions embarquées, lues à l'exécution, ce qui la rend juste aussi pour un
+    descendant apparu après la génération.
+    """
+
+    __slots__ = ()
+
+    def __init__(self, value: dsviper.ValueKey):
+        if not isinstance(value, dsviper.ValueKey):
+            raise TypeError("cette valeur n'est pas une clé")
+        super().__init__(value)
+
+    @property
+    def instance_id(self) -> dsviper.ValueUUId:
+        return self.value.instance_id()
+
+    @property
+    def runtime_id(self) -> dsviper.ValueUUId:
+        return self.value.type_concept().runtime_id()
+
+    def is_valid(self) -> bool:
+        return self.instance_id.is_valid()
+
+    def as_(self, cls):
+        """La clé vue comme celle d'un concept donné, ou `None` si elle n'en est pas une."""
+        return cls(self.value) if self.value.type() == cls.type() else None
+
+    def __repr__(self) -> str:
+        return f"AnyConceptKey({self.value.representation()})"

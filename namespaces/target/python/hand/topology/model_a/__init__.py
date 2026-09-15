@@ -6,8 +6,8 @@ l'unité rend public. Deux raisons, et la seconde est la vraie : un module qui n
 rien ne peut pas créer de cycle d'import, et `attachments` a besoin de `data` alors que le
 lecteur veut les deux sous le même nom.
 
-    from topology.modela import Colour, MaterialKey
-    from topology.modela import attachments
+    from topology.model_a import Colour, MaterialKey
+    from topology.model_a import attachments
 """
 
 from .data import *

@@ -5,17 +5,29 @@ Le C++ était vérifié par un compilateur contre des stubs ; ici le vrai runtim
 importable, donc la référence tourne réellement. Une assertion qui passe vaut mieux qu'une
 signature qui compile.
 """
+import shutil
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+HERE = Path(__file__).resolve().parent
+
+# LE PAQUET À ÉPROUVER EST DONNÉ, PARCE QU'IL Y EN A DEUX. La référence écrite à la main dit
+# ce qu'on veut ; le rendu des templates dit ce qu'on obtient. Les mêmes assertions doivent
+# passer sur les deux, sans quoi la référence ne référence rien.
+package = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else HERE / "hand"
+
+# Ce que `dsviper` ne porte pas encore, déposé dans le paquet comme il l'est dans un rendu.
+for proposed in (HERE.parents[2] / "runtime-proposed" / "dsviper").glob("_*.py"):
+    shutil.copy(proposed, package / "topology")
+
+sys.path.insert(0, str(package))
 
 import dsviper
 
 from topology import definitions, tools
-from topology import modela, modelb
-from topology.modela import attachments as modela_attachments
-from topology.modelb import attachments as modelb_attachments
+from topology import model_a as modela, model_b as modelb
+from topology.model_a import attachments as modela_attachments
+from topology.model_b import attachments as modelb_attachments
 
 
 def check(label, condition):

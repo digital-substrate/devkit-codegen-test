@@ -1,8 +1,9 @@
-"""ModelB — les types que ce namespace déclare.
+"""ModelA — les types que ce namespace déclare.
 
-Les mêmes noms que ModelA, et des types différents. C'est le cas qui a tout déclenché, et
-en Python il ne coûte rien : `topology.modela.Colour` et `topology.modelb.Colour` sont deux
-classes de deux modules, et aucune n'a besoin d'être renommée.
+UN NAMESPACE EST UN PAQUET, et c'est gratuit. Le pack aplatit en `Test_StructureS` parce
+qu'il met tout dans un module ; ici `ModelA::Colour` est `topology.model_a.Colour`, et
+`ModelB::Colour` est `topology.model_b.Colour`. Les deux coexistent sans qu'un nom bouge, ce
+qui était tout le problème.
 
 UNE CLASSE GÉNÉRÉE ENVELOPPE UNE `dsviper.Value`, ELLE NE LA COPIE PAS. C'est le choix du
 runtime et non une transposition : la donnée vit dans la Value, la classe lui donne des noms.
@@ -26,8 +27,9 @@ from .._proxy import Proxy
 # pas de la sérialisation. Ici il tient en trois fonctions parce qu'il n'y a pas de tag à
 # porter — l'appelant nomme la classe.
 
-MATERIAL = dsviper.ValueUUId.create("fcbafe56-84de-904a-574a-7013e31b8a53")
-COLOUR = dsviper.ValueUUId.create("a75f5fbe-e310-cca6-ba0c-9c763942e461")
+MATERIAL = dsviper.ValueUUId.create("de42abc9-3fd6-ac10-63ba-d0d6fba6cb9e")
+FINISH = dsviper.ValueUUId.create("cc101b86-fc5f-855a-b0f6-59844b9f5e3e")
+COLOUR = dsviper.ValueUUId.create("887a78c8-07ff-3c8a-8172-ff5ae381dfd9")
 
 
 @functools.cache
@@ -56,7 +58,7 @@ class MaterialKey(Proxy):
             identifier = dsviper.ValueUUId.INVALID
         if isinstance(identifier, dsviper.ValueKey):
             if identifier.type() != self.type():
-                raise TypeError("cette valeur n'est pas un ModelB::MaterialKey")
+                raise TypeError("cette valeur n'est pas un ModelA::MaterialKey")
             super().__init__(identifier)
         else:
             super().__init__(dsviper.ValueKey.create(_concept_type(), identifier))
@@ -70,15 +72,12 @@ class MaterialKey(Proxy):
     def instance_id(self) -> dsviper.ValueUUId:
         return self._value.instance_id
 
-    def __hash__(self) -> float:
-        return self._value.hash()
-
     def __repr__(self) -> str:
-        return f"ModelB::MaterialKey({self._value.representation()})"
+        return f"ModelA::MaterialKey({self._value.representation()})"
 
 
 class Colour(Proxy):
-    """Une couleur en virgule flottante.
+    """Une couleur en canaux 8 bits.
 
     LES CHAMPS SONT DES PROPRIÉTÉS SUR LA VALUE, et c'est ce qui remplace toute la couche 2
     du C++. Là-bas il fallait un `Fields::Colour::r` pour nommer un champ et un
@@ -97,14 +96,14 @@ class Colour(Proxy):
         if value is None:
             value = dsviper.ValueStructure(self.type())
         elif value.type() != self.type():
-            raise TypeError("cette valeur n'est pas un ModelB::Colour")
+            raise TypeError("cette valeur n'est pas un ModelA::Colour")
         super().__init__(value)
 
         for name, field in fields.items():
             setattr(self, name, field)
 
     @property
-    def r(self) -> float:
+    def r(self) -> int:
         return self._value.at("r")
 
     @r.setter
@@ -112,7 +111,7 @@ class Colour(Proxy):
         self._value.set("r", value)
 
     @property
-    def g(self) -> float:
+    def g(self) -> int:
         return self._value.at("g")
 
     @g.setter
@@ -120,7 +119,7 @@ class Colour(Proxy):
         self._value.set("g", value)
 
     @property
-    def b(self) -> float:
+    def b(self) -> int:
         return self._value.at("b")
 
     @b.setter
@@ -128,4 +127,4 @@ class Colour(Proxy):
         self._value.set("b", value)
 
     def __repr__(self) -> str:
-        return f"ModelB::Colour(r={self.r}, g={self.g}, b={self.b})"
+        return f"ModelA::Colour(r={self.r}, g={self.g}, b={self.b})"

@@ -1,0 +1,57 @@
+# Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/service/Service.dsm.json by kibo-2.0.0.jar
+
+"""Tools — le pool, et le même vu d'un client."""
+
+from __future__ import annotations
+
+import typing
+
+import dsviper
+
+from .. import demo
+
+class Pool:
+    """Le pool, tenu en main — un `dsviper.FunctionPool` déjà obtenu."""
+
+    __slots__ = ("_funcs",)
+
+    NAME = "Tools"
+    UUID = dsviper.ValueUUId.create("7aa5aea2-c9de-4f91-8371-7995aca8c947")
+
+    def __init__(self, pool: dsviper.FunctionPool):
+        self._funcs = pool.funcs
+
+    def add(self, a: int, b: int) -> int:
+        return self._funcs["add"](a, b)
+
+    def add_vector(self, a: demo.Vector3, b: demo.Vector3) -> demo.Vector3:
+        return demo.Vector3._wrap(self._funcs["add_vector"](a._unwrap(), b._unwrap()))
+
+    def random_string(self, size: int) -> str:
+        return self._funcs["random_string"](size)
+
+
+class Remote:
+    """Le même pool, vu d'un client.
+
+    LE SEUL ÉCART AVEC `Pool` EST L'OBTENTION DES FONCTIONS, et il tient en une ligne : d'un
+    côté un pool qu'on a en main, de l'autre un service qu'on interroge par son nom. Les
+    corps sont identiques -- ce qui traverse le fil est le format, pas l'appel.
+    """
+
+    __slots__ = ("_funcs",)
+
+    def __init__(self, service: dsviper.ServiceRemote):
+        self._funcs = service.function_pool_funcs(Pool.NAME)
+
+    def is_available(self) -> bool:
+        return self._funcs is not None
+
+    def add(self, a: int, b: int) -> int:
+        return self._funcs["add"](a, b)
+
+    def add_vector(self, a: demo.Vector3, b: demo.Vector3) -> demo.Vector3:
+        return demo.Vector3._wrap(self._funcs["add_vector"](a._unwrap(), b._unwrap()))
+
+    def random_string(self, size: int) -> str:
+        return self._funcs["random_string"](size)

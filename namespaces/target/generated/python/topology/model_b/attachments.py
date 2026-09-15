@@ -1,0 +1,23 @@
+# Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
+
+"""ModelB — les attachments que ce namespace déclare."""
+
+from __future__ import annotations
+
+import dsviper
+
+from .. import definitions
+from .._attachment import Attachment
+from .._proxy import AnyConceptKey
+from .data import *
+
+
+class Material:
+    """Les attachments portés par ModelB::MaterialKey."""
+
+    colour = Attachment(
+        dsviper.ValueUUId.create("09eeb3f7-b0a6-9ad9-a80f-d2a85070ec08"),
+        definitions, MaterialKey, Colour)
+
+
+material = Material()

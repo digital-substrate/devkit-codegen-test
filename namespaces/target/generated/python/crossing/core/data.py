@@ -1,0 +1,656 @@
+# Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
+
+"""Core — les types que ce namespace déclare."""
+
+from __future__ import annotations
+
+import enum
+import functools
+import typing
+
+import dsviper
+
+from .. import definitions
+from .._proxy import Proxy
+
+# ── l'identité de cette unité dans le modèle ──
+#
+# LE MÊME ARTEFACT QU'EN C++, POUR LA MÊME RAISON : plusieurs couches en ont besoin et ce
+# n'est pas de la sérialisation. Il tient ici en une constante par type, parce qu'il n'y a
+# pas de tag à porter — l'appelant nomme la classe.
+
+OTHER: dsviper.ValueUUId = dsviper.ValueUUId.create("fe5c9495-ee60-2c05-59a7-76a3acb2102c")
+THING: dsviper.ValueUUId = dsviper.ValueUUId.create("43ac162e-d31b-650b-ff35-6e284bd06ea2")
+SUB_THING: dsviper.ValueUUId = dsviper.ValueUUId.create("4953d146-1dcb-1d23-03b4-2d7e90cef4b2")
+KLUB: dsviper.ValueUUId = dsviper.ValueUUId.create("f99852de-1837-1c8c-c831-4fc0ceee8688")
+GRADE: dsviper.ValueUUId = dsviper.ValueUUId.create("fbfc67e2-b360-2377-80bf-d58461a34eb0")
+BAG: dsviper.ValueUUId = dsviper.ValueUUId.create("2a160921-2e7a-0f1a-2800-10ef9b577166")
+COLOUR: dsviper.ValueUUId = dsviper.ValueUUId.create("771d31fe-d3b9-603c-ca38-43a03717815e")
+DEFAULTS: dsviper.ValueUUId = dsviper.ValueUUId.create("7da8213c-bddd-98ee-c3c1-c9b26e3e6ef5")
+SCALARS: dsviper.ValueUUId = dsviper.ValueUUId.create("3e6c9792-57f3-e845-33fb-a29fdcb567f9")
+SINGLE: dsviper.ValueUUId = dsviper.ValueUUId.create("52b43309-f09f-02d0-fe4e-6baf9f7adf49")
+
+class OtherKey(Proxy):
+    """Une poignée sur une instance de Core::Other, pas la chose elle-même.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def concept(cls):
+        """Le descripteur, résolu une fois."""
+        return definitions().check_concept(OTHER)
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.Type:
+        """Le descripteur du type de la clé.
+
+        `classmethod` et non fonction libre : en C++ il fallait `type(tag<T>{})` pour que la
+        recherche par argument trouve l'unité de T. Python n'a pas cette recherche et n'en a
+        pas besoin — l'appelant écrit déjà le nom de la classe.
+        """
+        return dsviper.TypeKey(cls.concept())
+
+    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+        if isinstance(identifier, dsviper.ValueKey):
+            if identifier.type() != self.type():
+                raise TypeError("cette valeur n'est pas un Core::OtherKey")
+            super().__init__(identifier)
+        else:
+            super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def create(cls) -> OtherKey:
+        """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
+        return cls(dsviper.ValueUUId.create())
+
+    @property
+    def instance_id(self) -> dsviper.ValueUUId:
+        return self.value.instance_id()
+
+    def is_valid(self) -> bool:
+        return self.instance_id.is_valid()
+
+    def __repr__(self) -> str:
+        return f"Core::OtherKey({self.value.representation()})"
+
+
+class ThingKey(Proxy):
+    """Une poignée sur une instance de Core::Thing, pas la chose elle-même.
+
+    Ce sur quoi on accroche des choses.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def concept(cls):
+        """Le descripteur, résolu une fois."""
+        return definitions().check_concept(THING)
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.Type:
+        """Le descripteur du type de la clé.
+
+        `classmethod` et non fonction libre : en C++ il fallait `type(tag<T>{})` pour que la
+        recherche par argument trouve l'unité de T. Python n'a pas cette recherche et n'en a
+        pas besoin — l'appelant écrit déjà le nom de la classe.
+        """
+        return dsviper.TypeKey(cls.concept())
+
+    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+        if isinstance(identifier, dsviper.ValueKey):
+            if identifier.type() != self.type():
+                raise TypeError("cette valeur n'est pas un Core::ThingKey")
+            super().__init__(identifier)
+        else:
+            super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def create(cls) -> ThingKey:
+        """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
+        return cls(dsviper.ValueUUId.create())
+
+    @property
+    def instance_id(self) -> dsviper.ValueUUId:
+        return self.value.instance_id()
+
+    def is_valid(self) -> bool:
+        return self.instance_id.is_valid()
+
+    def __repr__(self) -> str:
+        return f"Core::ThingKey({self.value.representation()})"
+
+
+class SubThingKey(Proxy):
+    """Une poignée sur une instance de Core::SubThing, pas la chose elle-même.
+
+    Un dérivé, dans le même namespace : le cas facile de l'héritage.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def concept(cls):
+        """Le descripteur, résolu une fois."""
+        return definitions().check_concept(SUB_THING)
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.Type:
+        """Le descripteur du type de la clé.
+
+        `classmethod` et non fonction libre : en C++ il fallait `type(tag<T>{})` pour que la
+        recherche par argument trouve l'unité de T. Python n'a pas cette recherche et n'en a
+        pas besoin — l'appelant écrit déjà le nom de la classe.
+        """
+        return dsviper.TypeKey(cls.concept())
+
+    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+        if isinstance(identifier, dsviper.ValueKey):
+            if identifier.type() != self.type():
+                raise TypeError("cette valeur n'est pas un Core::SubThingKey")
+            super().__init__(identifier)
+        else:
+            super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def create(cls) -> SubThingKey:
+        """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
+        return cls(dsviper.ValueUUId.create())
+
+    @property
+    def instance_id(self) -> dsviper.ValueUUId:
+        return self.value.instance_id()
+
+    def is_valid(self) -> bool:
+        return self.instance_id.is_valid()
+
+    def __repr__(self) -> str:
+        return f"Core::SubThingKey({self.value.representation()})"
+
+class KlubKey(Proxy):
+    """Une poignée sur une instance de Core::Klub, pas la chose elle-même.
+
+    Un club, dont les membres vivent ici.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def concept(cls):
+        """Le descripteur, résolu une fois."""
+        return definitions().check_club(KLUB)
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.Type:
+        """Le descripteur du type de la clé.
+
+        `classmethod` et non fonction libre : en C++ il fallait `type(tag<T>{})` pour que la
+        recherche par argument trouve l'unité de T. Python n'a pas cette recherche et n'en a
+        pas besoin — l'appelant écrit déjà le nom de la classe.
+        """
+        return dsviper.TypeKey(cls.concept())
+
+    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+        if isinstance(identifier, dsviper.ValueKey):
+            if identifier.type() != self.type():
+                raise TypeError("cette valeur n'est pas un Core::KlubKey")
+            super().__init__(identifier)
+        else:
+            super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def create(cls) -> KlubKey:
+        """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
+        return cls(dsviper.ValueUUId.create())
+
+    @property
+    def instance_id(self) -> dsviper.ValueUUId:
+        return self.value.instance_id()
+
+    def is_valid(self) -> bool:
+        return self.instance_id.is_valid()
+
+    def __repr__(self) -> str:
+        return f"Core::KlubKey({self.value.representation()})"
+
+    def as_(self, cls):
+        """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
+        return cls(self.value.to_member_key(cls.concept())) if self.value.is_member(cls.concept()) else None
+
+class Grade(enum.Enum):
+    """Core::Grade.
+
+    Une énumération, que d'autres namespaces vont référencer.
+
+    UNE ÉNUMÉRATION PYTHON, PAS UN PROXY. Le pack en fait une classe qui enveloppe une
+    `ValueEnumeration` ; Python en a une, et le runtime sait convertir depuis le nom d'un
+    cas. Envelopper n'apporterait que du poids — et `Finish.matte` se lit mieux que
+    `Finish("matte")`.
+    """
+
+    low = "low"
+    high = "high"
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.TypeEnumeration:
+        return definitions().check_enumeration(GRADE)
+
+    @classmethod
+    def _wrap(cls, value) -> Grade:
+        return cls(value.name())
+
+    def _unwrap(self) -> str:
+        return self.value
+
+class Colour(Proxy):
+    """Core::Colour.
+
+    Le même nom que Parts::Colour, un type différent -- la collision de re-export.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.TypeStructure:
+        return definitions().check_structure(COLOUR)
+
+    def __init__(self, value: dsviper.ValueStructure | None = None, /, **fields):
+        if value is None:
+            value = dsviper.ValueStructure(self.type())
+        elif value.type() != self.type():
+            raise TypeError("cette valeur n'est pas un Core::Colour")
+        super().__init__(value)
+
+        for name, field in fields.items():
+            setattr(self, name, field)
+
+    @property
+    def r(self) -> int:
+        return self.value.at("r")
+
+    @r.setter
+    def r(self, value: int) -> None:
+        self.value.set("r", value)
+
+    @property
+    def g(self) -> int:
+        return self.value.at("g")
+
+    @g.setter
+    def g(self, value: int) -> None:
+        self.value.set("g", value)
+
+    @property
+    def b(self) -> int:
+        return self.value.at("b")
+
+    @b.setter
+    def b(self, value: int) -> None:
+        self.value.set("b", value)
+
+    def __repr__(self) -> str:
+        return f"Core::Colour(r={self.r}, g={self.g}, b={self.b})"
+
+
+class Scalars(Proxy):
+    """Core::Scalars.
+
+    Toutes les formes scalaires du langage, dans le namespace qui n'en référence aucun
+    autre. Ce qui ne peut pas traverser une frontière est couvert ici, une fois.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.TypeStructure:
+        return definitions().check_structure(SCALARS)
+
+    def __init__(self, value: dsviper.ValueStructure | None = None, /, **fields):
+        if value is None:
+            value = dsviper.ValueStructure(self.type())
+        elif value.type() != self.type():
+            raise TypeError("cette valeur n'est pas un Core::Scalars")
+        super().__init__(value)
+
+        for name, field in fields.items():
+            setattr(self, name, field)
+
+    @property
+    def f_bool(self) -> bool:
+        return self.value.at("f_bool")
+
+    @f_bool.setter
+    def f_bool(self, value: bool) -> None:
+        self.value.set("f_bool", value)
+
+    @property
+    def f_uint8(self) -> int:
+        return self.value.at("f_uint8")
+
+    @f_uint8.setter
+    def f_uint8(self, value: int) -> None:
+        self.value.set("f_uint8", value)
+
+    @property
+    def f_uint16(self) -> int:
+        return self.value.at("f_uint16")
+
+    @f_uint16.setter
+    def f_uint16(self, value: int) -> None:
+        self.value.set("f_uint16", value)
+
+    @property
+    def f_uint32(self) -> int:
+        return self.value.at("f_uint32")
+
+    @f_uint32.setter
+    def f_uint32(self, value: int) -> None:
+        self.value.set("f_uint32", value)
+
+    @property
+    def f_uint64(self) -> int:
+        return self.value.at("f_uint64")
+
+    @f_uint64.setter
+    def f_uint64(self, value: int) -> None:
+        self.value.set("f_uint64", value)
+
+    @property
+    def f_int8(self) -> int:
+        return self.value.at("f_int8")
+
+    @f_int8.setter
+    def f_int8(self, value: int) -> None:
+        self.value.set("f_int8", value)
+
+    @property
+    def f_int16(self) -> int:
+        return self.value.at("f_int16")
+
+    @f_int16.setter
+    def f_int16(self, value: int) -> None:
+        self.value.set("f_int16", value)
+
+    @property
+    def f_int32(self) -> int:
+        return self.value.at("f_int32")
+
+    @f_int32.setter
+    def f_int32(self, value: int) -> None:
+        self.value.set("f_int32", value)
+
+    @property
+    def f_int64(self) -> int:
+        return self.value.at("f_int64")
+
+    @f_int64.setter
+    def f_int64(self, value: int) -> None:
+        self.value.set("f_int64", value)
+
+    @property
+    def f_float(self) -> float:
+        return self.value.at("f_float")
+
+    @f_float.setter
+    def f_float(self, value: float) -> None:
+        self.value.set("f_float", value)
+
+    @property
+    def f_double(self) -> float:
+        return self.value.at("f_double")
+
+    @f_double.setter
+    def f_double(self, value: float) -> None:
+        self.value.set("f_double", value)
+
+    @property
+    def f_blob_id(self) -> dsviper.ValueBlobId:
+        return self.value.at("f_blob_id")
+
+    @f_blob_id.setter
+    def f_blob_id(self, value: dsviper.ValueBlobId) -> None:
+        self.value.set("f_blob_id", value)
+
+    @property
+    def f_commit_id(self) -> dsviper.ValueCommitId:
+        return self.value.at("f_commit_id")
+
+    @f_commit_id.setter
+    def f_commit_id(self, value: dsviper.ValueCommitId) -> None:
+        self.value.set("f_commit_id", value)
+
+    @property
+    def f_uuid(self) -> dsviper.ValueUUId:
+        return self.value.at("f_uuid")
+
+    @f_uuid.setter
+    def f_uuid(self, value: dsviper.ValueUUId) -> None:
+        self.value.set("f_uuid", value)
+
+    @property
+    def f_string(self) -> str:
+        return self.value.at("f_string")
+
+    @f_string.setter
+    def f_string(self, value: str) -> None:
+        self.value.set("f_string", value)
+
+    @property
+    def f_blob(self) -> dsviper.ValueBlob:
+        return self.value.at("f_blob")
+
+    @f_blob.setter
+    def f_blob(self, value: dsviper.ValueBlob) -> None:
+        self.value.set("f_blob", value)
+
+    @property
+    def f_any(self) -> dsviper.ValueAny:
+        return self.value.at("f_any")
+
+    @f_any.setter
+    def f_any(self, value: dsviper.ValueAny) -> None:
+        self.value.set("f_any", value)
+
+    @property
+    def f_vec(self) -> typing.Any:
+        return self.value.at("f_vec")
+
+    @f_vec.setter
+    def f_vec(self, value: typing.Any) -> None:
+        self.value.set("f_vec", value)
+
+    @property
+    def f_mat(self) -> typing.Any:
+        return self.value.at("f_mat")
+
+    @f_mat.setter
+    def f_mat(self, value: typing.Any) -> None:
+        self.value.set("f_mat", value)
+
+    def __repr__(self) -> str:
+        return f"Core::Scalars(f_bool={self.f_bool}, f_uint8={self.f_uint8}, f_uint16={self.f_uint16}, f_uint32={self.f_uint32}, f_uint64={self.f_uint64}, f_int8={self.f_int8}, f_int16={self.f_int16}, f_int32={self.f_int32}, f_int64={self.f_int64}, f_float={self.f_float}, f_double={self.f_double}, f_blob_id={self.f_blob_id}, f_commit_id={self.f_commit_id}, f_uuid={self.f_uuid}, f_string={self.f_string}, f_blob={self.f_blob}, f_any={self.f_any}, f_vec={self.f_vec}, f_mat={self.f_mat})"
+
+
+class Single(Proxy):
+    """Core::Single.
+
+    Une structure à un seul champ : le cas zéro/un que le générateur traite à part.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.TypeStructure:
+        return definitions().check_structure(SINGLE)
+
+    def __init__(self, value: dsviper.ValueStructure | None = None, /, **fields):
+        if value is None:
+            value = dsviper.ValueStructure(self.type())
+        elif value.type() != self.type():
+            raise TypeError("cette valeur n'est pas un Core::Single")
+        super().__init__(value)
+
+        for name, field in fields.items():
+            setattr(self, name, field)
+
+    @property
+    def f_single(self) -> int:
+        return self.value.at("f_single")
+
+    @f_single.setter
+    def f_single(self, value: int) -> None:
+        self.value.set("f_single", value)
+
+    def __repr__(self) -> str:
+        return f"Core::Single(f_single={self.f_single})"
+
+
+class Bag(Proxy):
+    """Core::Bag.
+
+    Et un document ordinaire dont un champ est un agrégat : les mêmes opérations, à une
+    adresse au lieu de la racine.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.TypeStructure:
+        return definitions().check_structure(BAG)
+
+    def __init__(self, value: dsviper.ValueStructure | None = None, /, **fields):
+        if value is None:
+            value = dsviper.ValueStructure(self.type())
+        elif value.type() != self.type():
+            raise TypeError("cette valeur n'est pas un Core::Bag")
+        super().__init__(value)
+
+        for name, field in fields.items():
+            setattr(self, name, field)
+
+    @property
+    def members(self) -> typing.Any:
+        return self.value.at("members")
+
+    @members.setter
+    def members(self, value: typing.Any) -> None:
+        self.value.set("members", value)
+
+    @property
+    def tints(self) -> typing.Any:
+        return self.value.at("tints")
+
+    @tints.setter
+    def tints(self, value: typing.Any) -> None:
+        self.value.set("tints", value)
+
+    @property
+    def trail(self) -> typing.Any:
+        return self.value.at("trail")
+
+    @trail.setter
+    def trail(self, value: typing.Any) -> None:
+        self.value.set("trail", value)
+
+    def __repr__(self) -> str:
+        return f"Core::Bag(members={self.members}, tints={self.tints}, trail={self.trail})"
+
+
+class Defaults(Proxy):
+    """Core::Defaults.
+
+    Les valeurs par défaut, qui sont un chemin de code à part.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    @functools.cache
+    def type(cls) -> dsviper.TypeStructure:
+        return definitions().check_structure(DEFAULTS)
+
+    def __init__(self, value: dsviper.ValueStructure | None = None, /, **fields):
+        if value is None:
+            value = dsviper.ValueStructure(self.type())
+        elif value.type() != self.type():
+            raise TypeError("cette valeur n'est pas un Core::Defaults")
+        super().__init__(value)
+
+        for name, field in fields.items():
+            setattr(self, name, field)
+
+    @property
+    def f_uint8(self) -> int:
+        return self.value.at("f_uint8")
+
+    @f_uint8.setter
+    def f_uint8(self, value: int) -> None:
+        self.value.set("f_uint8", value)
+
+    @property
+    def f_float(self) -> float:
+        return self.value.at("f_float")
+
+    @f_float.setter
+    def f_float(self, value: float) -> None:
+        self.value.set("f_float", value)
+
+    @property
+    def f_string(self) -> str:
+        return self.value.at("f_string")
+
+    @f_string.setter
+    def f_string(self, value: str) -> None:
+        self.value.set("f_string", value)
+
+    @property
+    def f_uuid(self) -> dsviper.ValueUUId:
+        return self.value.at("f_uuid")
+
+    @f_uuid.setter
+    def f_uuid(self, value: dsviper.ValueUUId) -> None:
+        self.value.set("f_uuid", value)
+
+    @property
+    def f_vec(self) -> typing.Any:
+        return self.value.at("f_vec")
+
+    @f_vec.setter
+    def f_vec(self, value: typing.Any) -> None:
+        self.value.set("f_vec", value)
+
+    @property
+    def f_grade(self) -> Grade:
+        return Grade._wrap(self.value.at("f_grade", encoded=False))
+
+    @f_grade.setter
+    def f_grade(self, value: Grade) -> None:
+        self.value.set("f_grade", value._unwrap())
+
+    @property
+    def f_colour(self) -> Colour:
+        return Colour._wrap(self.value.at("f_colour", encoded=False))
+
+    @f_colour.setter
+    def f_colour(self, value: Colour) -> None:
+        self.value.set("f_colour", value._unwrap())
+
+    def __repr__(self) -> str:
+        return f"Core::Defaults(f_uint8={self.f_uint8}, f_float={self.f_float}, f_string={self.f_string}, f_uuid={self.f_uuid}, f_vec={self.f_vec}, f_grade={self.f_grade}, f_colour={self.f_colour})"
+
+
+__all__ = ["OtherKey", "ThingKey", "SubThingKey", "KlubKey", "Grade", "Bag", "Colour", "Defaults", "Scalars", "Single"]

@@ -5,7 +5,9 @@ Un paquet livré embarque le document et le décode au chargement ; la référen
 pareil, sinon elle se lie mais ne tourne pas -- ce qui était le cas tant que la ressource
 était un octet nul.
 """
+import base64
 import sys
+import zlib
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -49,4 +51,19 @@ for model, definitions in MODELS.items():
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(HEAD.format(model=model) + f"namespace {model}::Resources {{\n\n{body}\n"
                    f"}} // namespace {model}::Resources\n\n#endif\n")
-    print(f"  {model:10} {len(body.splitlines()):5} lignes d'octets")
+
+    # LES MÊMES OCTETS, SOUS LA FORME QU'UN PAQUET PORTE. Un en-tête C++ embarque un tableau
+    # d'octets ; une roue Python embarque une chaîne, compressée puis encodée, parce que
+    # c'est ce qu'un fichier source Python sait contenir sans se déformer.
+    payload = base64.b64encode(zlib.compress(bytes(blob))).decode()
+    chunks = "\n".join(f'    "{payload[i:i + 92]}"' for i in range(0, len(payload), 92))
+    python = ROOT / "namespaces/target/link/resources" / f"{model}_resources.py"
+    python.write_text(
+        f'"""modèle {model} — le modèle, en octets.\n\n'
+        "LE .DSM EMBARQUÉ TEL QUEL, compressé et encodé. Le générateur ne produit aucun code\n"
+        "d'enregistrement de types : le document est embarqué et décodé au chargement.\n\n"
+        'Produit par `link/resources.py`. Ce n\'est pas un texte écrit à la main.\n"""\n\n'
+        f"B64_DEFINITIONS = (\n{chunks}\n)\n")
+
+    print(f"  {model:10} {len(body.splitlines()):5} lignes d'octets, "
+          f"{len(payload):6} caractères encodés")

@@ -103,7 +103,7 @@ parser.add_argument("--check", action="store_true",
                     help="fail if `generated/` is not what the templates produce")
 arguments = parser.parse_args()
 
-target = HERE / (".check" if arguments.check else "generated")
+target = HERE / (".check" if arguments.check else "generated/cpp")
 if target.exists():
     shutil.rmtree(target)
 
@@ -264,7 +264,7 @@ if not arguments.check:
         status |= link_and_run(model, target / model)
 
 if arguments.check:
-    same = subprocess.run(["diff", "-r", str(HERE / "generated"), str(target)],
+    same = subprocess.run(["diff", "-r", str(HERE / "generated/cpp"), str(target)],
                           capture_output=True, text=True)
     shutil.rmtree(target)
     if same.returncode:

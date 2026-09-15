@@ -193,3 +193,50 @@ from topology.modelb import attachments as b
 Là où le pack écrit `modela_material_colour_get(...)` et `modelb_material_colour_get(...)` —
 le namespace, le concept et l'attachment collés dans un identifiant parce qu'un module plat
 n'a pas d'autre moyen de les distinguer.
+
+
+## Les templates, et le rendu
+
+Écrits, rendus pour les quatre modèles, et éprouvés :
+
+```
+  Features      7 modules, tous les modules s'importent
+  Service      11 modules, tous les modules s'importent
+  Crossing     13 modules, tous les modules s'importent
+  Topology     25 modules, tous les modules s'importent
+  épreuve      19 assertions sur le rendu, toutes passent
+```
+
+**Le rendu est dans `namespaces/target/generated/python/<modèle>/`**, un paquet par modèle,
+à côté de `generated/cpp/<Modèle>/`. Quatre templates le produisent :
+
+| template | entrées déclarées | rend |
+|---|---|---|
+| `__init__.py.stg` | `model(m)`, `unit(u)`, `pool(p)`, `attachment_pool(p)` | l'initialisateur de chaque paquet |
+| `data.py.stg` | `unit(u)` | `<unité>/data.py` — concepts, clubs, énumérations, structures |
+| `attachments.py.stg` | `unit(u)` | `<unité>/attachments.py` |
+| `pool.py.stg` | `pool(p)`, `attachment_pool(p)` | `<pool>/pool.py` — le pool et son `Remote` |
+
+**Ce qui ne sort pas des templates** est déposé par `render-python.py` : `resources.py`, les
+octets du modèle produits par `link/resources.py`, et les deux fichiers de
+`runtime-proposed/dsviper/` que la liaison ne porte pas encore.
+
+**L'épreuve est la même pour la référence et pour le rendu.** `python/check.py` prend le
+paquet à éprouver : sans argument la référence écrite à la main, avec `generated/python` le
+rendu des templates. Les mêmes dix-neuf assertions passent sur les deux — sans quoi la
+référence ne référencerait rien.
+
+### Ce que le rendu a demandé au générateur
+
+Trois choses, chacune parce que Python les impose :
+
+1. **Le layout** — une unité est un répertoire. Déjà décrit plus haut.
+2. **La seconde orthographe d'un proxy** — `Colour` dans son unité, `model_a.Colour` ailleurs,
+   le pendant exact de `convertTypeInNamespace` du côté natif. Un pool n'appartenant à aucun
+   namespace, tout type nommé lui est étranger et se qualifie : ce n'est pas un cas
+   particulier mais la règle générale appliquée à une unité qui n'a pas de types à elle.
+3. **Savoir si une unité déclare le type** — une structure, une énumération, une clé ont une
+   classe ; un `map<…>` ou un `xarray<…>` n'en ont pas et n'en ont pas besoin. Le pack en
+   génère un par forme, donc il pouvait les nommer ; ici l'annotation est `typing.Any` et le
+   runtime rend l'objet Python qui correspond. Un nom ne permet pas de distinguer les deux,
+   donc le modèle le dit.
