@@ -1,0 +1,232 @@
+// Woven — l'implémentation de ses types.
+//
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
+
+#include "Woven_Data.hpp"
+
+#include "Woven_Model.hpp"
+#include "Crossing_Codec.hpp"
+
+namespace Woven {
+
+// ── Knot ──
+
+KnotKey::KnotKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
+: _instanceId{instanceId}, _runtimeId{runtimeId} {}
+
+KnotKey KnotKey::create() { return {Viper::UUId::create(), RuntimeIds::Knot}; }
+
+Viper::UUId const & KnotKey::instanceId() const noexcept { return _instanceId; }
+Viper::UUId const & KnotKey::runtimeId() const noexcept { return _runtimeId; }
+bool KnotKey::isValid() const noexcept { return _instanceId.isValid(); }
+Crossing::AnyConceptKey KnotKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
+
+/// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
+/// hiérarchie -- y compris ce qui a été déclaré après cette unité.
+std::optional<KnotKey> KnotKey::from(Crossing::AnyConceptKey const & key) noexcept {
+    if (!Crossing::Codec::isMember(key, conceptType(Viper::Codec::tag<KnotKey>{})))
+        return std::nullopt;
+
+    return KnotKey{key.instanceId(), key.runtimeId()};
+}
+
+bool operator==(KnotKey const & l, KnotKey const & r) noexcept {
+    return l.instanceId() == r.instanceId() && l.runtimeId() == r.runtimeId();
+}
+bool operator!=(KnotKey const & l, KnotKey const & r) noexcept { return !(l == r); }
+bool operator<(KnotKey const & l, KnotKey const & r) noexcept {
+    if (l.instanceId() != r.instanceId())
+        return l.instanceId() < r.instanceId();
+    return l.runtimeId() < r.runtimeId();
+}
+
+void hash(Viper::Hash::Accumulator & h, KnotKey const & value) noexcept {
+    hash(h, value.instanceId());
+    hash(h, value.runtimeId());
+}
+
+// ── Derived ──
+
+DerivedKey::DerivedKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
+: _instanceId{instanceId}, _runtimeId{runtimeId} {}
+
+DerivedKey DerivedKey::create() { return {Viper::UUId::create(), RuntimeIds::Derived}; }
+
+Viper::UUId const & DerivedKey::instanceId() const noexcept { return _instanceId; }
+Viper::UUId const & DerivedKey::runtimeId() const noexcept { return _runtimeId; }
+bool DerivedKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+/// L'élargissement ne perd rien et ne peut pas échouer : l'identifiant d'exécution reste
+/// celui du concept réel, et c'est pourquoi le retour est possible ensuite.
+DerivedKey::operator Core::ThingKey() const noexcept { return {_instanceId, _runtimeId}; }
+
+Crossing::AnyConceptKey DerivedKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
+
+/// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
+/// hiérarchie -- y compris ce qui a été déclaré après cette unité.
+std::optional<DerivedKey> DerivedKey::from(Crossing::AnyConceptKey const & key) noexcept {
+    if (!Crossing::Codec::isMember(key, conceptType(Viper::Codec::tag<DerivedKey>{})))
+        return std::nullopt;
+
+    return DerivedKey{key.instanceId(), key.runtimeId()};
+}
+
+bool operator==(DerivedKey const & l, DerivedKey const & r) noexcept {
+    return l.instanceId() == r.instanceId() && l.runtimeId() == r.runtimeId();
+}
+bool operator!=(DerivedKey const & l, DerivedKey const & r) noexcept { return !(l == r); }
+bool operator<(DerivedKey const & l, DerivedKey const & r) noexcept {
+    if (l.instanceId() != r.instanceId())
+        return l.instanceId() < r.instanceId();
+    return l.runtimeId() < r.runtimeId();
+}
+
+void hash(Viper::Hash::Accumulator & h, DerivedKey const & value) noexcept {
+    hash(h, value.instanceId());
+    hash(h, value.runtimeId());
+}
+
+// ── Weave ──
+
+WeaveKey::WeaveKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
+: _instanceId{instanceId}, _runtimeId{runtimeId} {}
+
+WeaveKey::WeaveKey(Core::ThingKey const & key) noexcept
+: _instanceId{key.instanceId()}, _runtimeId{key.runtimeId()} {}
+
+WeaveKey::WeaveKey(Parts::ThingKey const & key) noexcept
+: _instanceId{key.instanceId()}, _runtimeId{key.runtimeId()} {}
+
+std::optional<Core::ThingKey> WeaveKey::asCoreThingKey() const noexcept {
+    return Core::ThingKey::from(toAny());
+}
+
+std::optional<Parts::ThingKey> WeaveKey::asPartsThingKey() const noexcept {
+    return Parts::ThingKey::from(toAny());
+}
+
+Viper::UUId const & WeaveKey::instanceId() const noexcept { return _instanceId; }
+Viper::UUId const & WeaveKey::runtimeId() const noexcept { return _runtimeId; }
+bool WeaveKey::isValid() const noexcept { return _instanceId.isValid(); }
+
+Crossing::AnyConceptKey WeaveKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
+
+/// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
+/// hiérarchie -- y compris ce qui a été déclaré après cette unité.
+std::optional<WeaveKey> WeaveKey::from(Crossing::AnyConceptKey const & key) noexcept {
+    if (!Crossing::Codec::isMember(key, clubType(Viper::Codec::tag<WeaveKey>{})))
+        return std::nullopt;
+
+    return WeaveKey{key.instanceId(), key.runtimeId()};
+}
+
+bool operator==(WeaveKey const & l, WeaveKey const & r) noexcept {
+    return l.instanceId() == r.instanceId() && l.runtimeId() == r.runtimeId();
+}
+bool operator!=(WeaveKey const & l, WeaveKey const & r) noexcept { return !(l == r); }
+bool operator<(WeaveKey const & l, WeaveKey const & r) noexcept {
+    if (l.instanceId() != r.instanceId())
+        return l.instanceId() < r.instanceId();
+    return l.runtimeId() < r.runtimeId();
+}
+
+void hash(Viper::Hash::Accumulator & h, WeaveKey const & value) noexcept {
+    hash(h, value.instanceId());
+    hash(h, value.runtimeId());
+}
+
+
+// ── Composites ──
+
+bool operator==(Composites const & l, Composites const & r) noexcept {
+    return l.f_tuple == r.f_tuple
+        && l.f_optional == r.f_optional
+        && l.f_vector == r.f_vector
+        && l.f_set == r.f_set
+        && l.f_map_keys == r.f_map_keys
+        && l.f_map_enum == r.f_map_enum
+        && l.f_xarray == r.f_xarray
+        && l.f_variant == r.f_variant;
+}
+bool operator!=(Composites const & l, Composites const & r) noexcept { return !(l == r); }
+bool operator<(Composites const & l, Composites const & r) noexcept {
+    if (l.f_tuple != r.f_tuple) return l.f_tuple < r.f_tuple;
+    if (l.f_optional != r.f_optional) return l.f_optional < r.f_optional;
+    if (l.f_vector != r.f_vector) return l.f_vector < r.f_vector;
+    if (l.f_set != r.f_set) return l.f_set < r.f_set;
+    if (l.f_map_keys != r.f_map_keys) return l.f_map_keys < r.f_map_keys;
+    if (l.f_map_enum != r.f_map_enum) return l.f_map_enum < r.f_map_enum;
+    if (l.f_xarray != r.f_xarray) return l.f_xarray < r.f_xarray;
+    return l.f_variant < r.f_variant;
+}
+
+void hash(Viper::Hash::Accumulator & h, Composites const & value) noexcept {
+    hash(h, value.f_tuple);
+    hash(h, value.f_optional);
+    hash(h, value.f_vector);
+    hash(h, value.f_set);
+    hash(h, value.f_map_keys);
+    hash(h, value.f_map_enum);
+    hash(h, value.f_xarray);
+    hash(h, value.f_variant);
+}
+
+// ── Entities ──
+
+bool operator==(Entities const & l, Entities const & r) noexcept {
+    return l.f_core_grade == r.f_core_grade
+        && l.f_parts_grade == r.f_parts_grade
+        && l.f_core_colour == r.f_core_colour
+        && l.f_parts_colour == r.f_parts_colour
+        && l.f_single == r.f_single
+        && l.f_thing == r.f_thing
+        && l.f_sub_thing == r.f_sub_thing
+        && l.f_other_thing == r.f_other_thing
+        && l.f_klub == r.f_klub
+        && l.f_any_concept == r.f_any_concept;
+}
+bool operator!=(Entities const & l, Entities const & r) noexcept { return !(l == r); }
+bool operator<(Entities const & l, Entities const & r) noexcept {
+    if (l.f_core_grade != r.f_core_grade) return l.f_core_grade < r.f_core_grade;
+    if (l.f_parts_grade != r.f_parts_grade) return l.f_parts_grade < r.f_parts_grade;
+    if (l.f_core_colour != r.f_core_colour) return l.f_core_colour < r.f_core_colour;
+    if (l.f_parts_colour != r.f_parts_colour) return l.f_parts_colour < r.f_parts_colour;
+    if (l.f_single != r.f_single) return l.f_single < r.f_single;
+    if (l.f_thing != r.f_thing) return l.f_thing < r.f_thing;
+    if (l.f_sub_thing != r.f_sub_thing) return l.f_sub_thing < r.f_sub_thing;
+    if (l.f_other_thing != r.f_other_thing) return l.f_other_thing < r.f_other_thing;
+    if (l.f_klub != r.f_klub) return l.f_klub < r.f_klub;
+    return l.f_any_concept < r.f_any_concept;
+}
+
+void hash(Viper::Hash::Accumulator & h, Entities const & value) noexcept {
+    hash(h, value.f_core_grade);
+    hash(h, value.f_parts_grade);
+    hash(h, value.f_core_colour);
+    hash(h, value.f_parts_colour);
+    hash(h, value.f_single);
+    hash(h, value.f_thing);
+    hash(h, value.f_sub_thing);
+    hash(h, value.f_other_thing);
+    hash(h, value.f_klub);
+    hash(h, value.f_any_concept);
+}
+
+// ── Nested ──
+
+bool operator==(Nested const & l, Nested const & r) noexcept {
+    return l.f_composites == r.f_composites
+        && l.f_entities == r.f_entities;
+}
+bool operator!=(Nested const & l, Nested const & r) noexcept { return !(l == r); }
+bool operator<(Nested const & l, Nested const & r) noexcept {
+    if (l.f_composites != r.f_composites) return l.f_composites < r.f_composites;
+    return l.f_entities < r.f_entities;
+}
+
+void hash(Viper::Hash::Accumulator & h, Nested const & value) noexcept {
+    hash(h, value.f_composites);
+    hash(h, value.f_entities);
+}
+
+} // namespace Woven

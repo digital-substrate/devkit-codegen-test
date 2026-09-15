@@ -1,0 +1,99 @@
+// Core — son identité dans le modèle.
+//
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
+
+#include "Core_Model.hpp"
+
+#include "Crossing_Codec.hpp"
+
+#include "Viper_Definitions.hpp"
+
+namespace Core {
+
+namespace RuntimeIds {
+Viper::UUId const Other{Viper::UUId::parse("fe5c9495-ee60-2c05-59a7-76a3acb2102c")};
+Viper::UUId const Thing{Viper::UUId::parse("43ac162e-d31b-650b-ff35-6e284bd06ea2")};
+Viper::UUId const SubThing{Viper::UUId::parse("4953d146-1dcb-1d23-03b4-2d7e90cef4b2")};
+Viper::UUId const Klub{Viper::UUId::parse("f99852de-1837-1c8c-c831-4fc0ceee8688")};
+Viper::UUId const Grade{Viper::UUId::parse("fbfc67e2-b360-2377-80bf-d58461a34eb0")};
+Viper::UUId const Colour{Viper::UUId::parse("771d31fe-d3b9-603c-ca38-43a03717815e")};
+Viper::UUId const Defaults{Viper::UUId::parse("7da8213c-bddd-98ee-c3c1-c9b26e3e6ef5")};
+Viper::UUId const Scalars{Viper::UUId::parse("3e6c9792-57f3-e845-33fb-a29fdcb567f9")};
+Viper::UUId const Single{Viper::UUId::parse("52b43309-f09f-02d0-fe4e-6baf9f7adf49")};
+} // namespace RuntimeIds
+
+std::shared_ptr<Viper::Type> const & conceptType(Viper::Codec::tag<OtherKey>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkConcept(RuntimeIds::Other)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & conceptType(Viper::Codec::tag<ThingKey>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkConcept(RuntimeIds::Thing)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & conceptType(Viper::Codec::tag<SubThingKey>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkConcept(RuntimeIds::SubThing)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & clubType(Viper::Codec::tag<KlubKey>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkClub(RuntimeIds::Klub)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<OtherKey>) {
+    static std::shared_ptr<Viper::Type> const instance{Viper::TypeKey::make(conceptType(Viper::Codec::tag<OtherKey>{}))};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<ThingKey>) {
+    static std::shared_ptr<Viper::Type> const instance{Viper::TypeKey::make(conceptType(Viper::Codec::tag<ThingKey>{}))};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<SubThingKey>) {
+    static std::shared_ptr<Viper::Type> const instance{Viper::TypeKey::make(conceptType(Viper::Codec::tag<SubThingKey>{}))};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<KlubKey>) {
+    static std::shared_ptr<Viper::Type> const instance{Viper::TypeKey::make(clubType(Viper::Codec::tag<KlubKey>{}))};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Grade>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkEnumeration(RuntimeIds::Grade)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Colour>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkStructure(RuntimeIds::Colour)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Defaults>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkStructure(RuntimeIds::Defaults)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Scalars>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkStructure(RuntimeIds::Scalars)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Single>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkStructure(RuntimeIds::Single)};
+    return instance;
+}
+
+} // namespace Core

@@ -5,6 +5,13 @@ must still be produced, in the idioms this work proposes. Not "most of it", and 
 interesting parts".
 
 `hand/` is the reference, written from the model and compiled. `templated/` reproduces it.
+**`generated/` is what it produces**, versioned, so that a change to a template is visible as
+a change to the output rather than as a change nobody can read.
+
+```sh
+namespaces/target/render.py            # rend les deux modèles dans generated/, et compile
+namespaces/target/render.py --check    # échoue si generated/ n'est pas à jour
+```
 `../../crossing/target/hand/` holds the two shapes the topology model does not declare.
 
 ## Where it stands, measured

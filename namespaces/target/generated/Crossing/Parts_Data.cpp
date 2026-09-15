@@ -1,0 +1,75 @@
+// Parts — l'implémentation de ses types.
+//
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
+
+#include "Parts_Data.hpp"
+
+#include "Parts_Model.hpp"
+#include "Crossing_Codec.hpp"
+
+namespace Parts {
+
+// ── Thing ──
+
+ThingKey::ThingKey(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
+: _instanceId{instanceId}, _runtimeId{runtimeId} {}
+
+ThingKey ThingKey::create() { return {Viper::UUId::create(), RuntimeIds::Thing}; }
+
+Viper::UUId const & ThingKey::instanceId() const noexcept { return _instanceId; }
+Viper::UUId const & ThingKey::runtimeId() const noexcept { return _runtimeId; }
+bool ThingKey::isValid() const noexcept { return _instanceId.isValid(); }
+Crossing::AnyConceptKey ThingKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
+
+/// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la
+/// hiérarchie -- y compris ce qui a été déclaré après cette unité.
+std::optional<ThingKey> ThingKey::from(Crossing::AnyConceptKey const & key) noexcept {
+    if (!Crossing::Codec::isMember(key, conceptType(Viper::Codec::tag<ThingKey>{})))
+        return std::nullopt;
+
+    return ThingKey{key.instanceId(), key.runtimeId()};
+}
+
+bool operator==(ThingKey const & l, ThingKey const & r) noexcept {
+    return l.instanceId() == r.instanceId() && l.runtimeId() == r.runtimeId();
+}
+bool operator!=(ThingKey const & l, ThingKey const & r) noexcept { return !(l == r); }
+bool operator<(ThingKey const & l, ThingKey const & r) noexcept {
+    if (l.instanceId() != r.instanceId())
+        return l.instanceId() < r.instanceId();
+    return l.runtimeId() < r.runtimeId();
+}
+
+void hash(Viper::Hash::Accumulator & h, ThingKey const & value) noexcept {
+    hash(h, value.instanceId());
+    hash(h, value.runtimeId());
+}
+
+
+// ── Grade ──
+
+void hash(Viper::Hash::Accumulator & h, Grade value) noexcept {
+    hash(h, static_cast<std::uint8_t>(value));
+}
+
+// ── Colour ──
+
+bool operator==(Colour const & l, Colour const & r) noexcept {
+    return l.r == r.r
+        && l.g == r.g
+        && l.b == r.b;
+}
+bool operator!=(Colour const & l, Colour const & r) noexcept { return !(l == r); }
+bool operator<(Colour const & l, Colour const & r) noexcept {
+    if (l.r != r.r) return l.r < r.r;
+    if (l.g != r.g) return l.g < r.g;
+    return l.b < r.b;
+}
+
+void hash(Viper::Hash::Accumulator & h, Colour const & value) noexcept {
+    hash(h, value.r);
+    hash(h, value.g);
+    hash(h, value.b);
+}
+
+} // namespace Parts

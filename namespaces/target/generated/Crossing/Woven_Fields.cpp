@@ -1,0 +1,117 @@
+// Woven — l'implémentation de l'adressage de ses champs.
+//
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
+
+#include "Woven_Fields.hpp"
+
+namespace Woven::Fields::Composites {
+
+std::shared_ptr<Viper::Path const> const & f_tuplePath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_tuple})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_optionalPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_optional})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_vectorPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_vector})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_setPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_set})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_map_keysPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_map_keys})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_map_enumPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_map_enum})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_xarrayPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_xarray})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_variantPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_variant})};
+    return instance;
+}
+
+} // namespace Woven::Fields::Composites
+
+namespace Woven::Fields::Entities {
+
+std::shared_ptr<Viper::Path const> const & f_core_gradePath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_core_grade})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_parts_gradePath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_parts_grade})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_core_colourPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_core_colour})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_parts_colourPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_parts_colour})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_singlePath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_single})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_thingPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_thing})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_sub_thingPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_sub_thing})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_other_thingPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_other_thing})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_klubPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_klub})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_any_conceptPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_any_concept})};
+    return instance;
+}
+
+} // namespace Woven::Fields::Entities
+
+namespace Woven::Fields::Nested {
+
+std::shared_ptr<Viper::Path const> const & f_compositesPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_composites})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & f_entitiesPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{f_entities})};
+    return instance;
+}
+
+} // namespace Woven::Fields::Nested

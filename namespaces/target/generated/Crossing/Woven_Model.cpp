@@ -1,0 +1,74 @@
+// Woven — son identité dans le modèle.
+//
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
+
+#include "Woven_Model.hpp"
+
+#include "Crossing_Codec.hpp"
+
+#include "Viper_Definitions.hpp"
+
+namespace Woven {
+
+namespace RuntimeIds {
+Viper::UUId const Knot{Viper::UUId::parse("f60cecc5-a96c-bab5-77f1-1130bc338fda")};
+Viper::UUId const Derived{Viper::UUId::parse("d0d3c1b6-50b8-9684-bec1-3b9b3583e571")};
+Viper::UUId const Weave{Viper::UUId::parse("356db13d-6594-8f58-4602-b13293f04281")};
+Viper::UUId const Composites{Viper::UUId::parse("77ab62f8-cfe3-5a99-7af4-c2f2befc866a")};
+Viper::UUId const Entities{Viper::UUId::parse("e8bdbb4b-956b-a468-b60d-0dc796c6a949")};
+Viper::UUId const Nested{Viper::UUId::parse("3cfb3a88-6f75-c5d2-f501-5bb814a9c6f4")};
+} // namespace RuntimeIds
+
+std::shared_ptr<Viper::Type> const & conceptType(Viper::Codec::tag<KnotKey>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkConcept(RuntimeIds::Knot)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & conceptType(Viper::Codec::tag<DerivedKey>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkConcept(RuntimeIds::Derived)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & clubType(Viper::Codec::tag<WeaveKey>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkClub(RuntimeIds::Weave)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<KnotKey>) {
+    static std::shared_ptr<Viper::Type> const instance{Viper::TypeKey::make(conceptType(Viper::Codec::tag<KnotKey>{}))};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<DerivedKey>) {
+    static std::shared_ptr<Viper::Type> const instance{Viper::TypeKey::make(conceptType(Viper::Codec::tag<DerivedKey>{}))};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<WeaveKey>) {
+    static std::shared_ptr<Viper::Type> const instance{Viper::TypeKey::make(clubType(Viper::Codec::tag<WeaveKey>{}))};
+    return instance;
+}
+
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Composites>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkStructure(RuntimeIds::Composites)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Entities>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkStructure(RuntimeIds::Entities)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Nested>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkStructure(RuntimeIds::Nested)};
+    return instance;
+}
+
+} // namespace Woven
