@@ -558,3 +558,46 @@ round-trips an attachment whose key or document may belong to another unit, so i
 unit's codec and model identity. `Annotations` keys on `ModelA::Material`, and `Projection`
 has a document spanning `ModelA` and `ModelB` — both failed to compile until the attachment
 dependencies were included. The dependency set is right; every artefact has to ask for it.
+
+## Json and the hasher — 549 lines of template, four functions
+
+Their own source says what they are:
+
+```
+json encode_X(v)  = json_encode(ValueEncoder::encode_X(v))
+hexdigest_X(v)    = hexdigestValue(ValueEncoder::encode_X(v))
+```
+
+Nothing varies but the type, and the type is already a parameter. Two function templates and
+one real function — `hexdigestValue`, which makes a hasher, runs the runtime's value hash and
+returns the digest. That one line is all that 287 lines of `ValueHasher` do; the rest is it,
+called after an encode, once per type.
+
+`json.cpp` checks that both work on a unit's type and on a `std::map` spanning nothing any
+unit declared.
+
+**And the pack's naming turned out to be load-bearing.** Calling both `hexdigest` does not
+compile: from `hexdigest(T const &)`, the call `hexdigest(encode(value))` picks the template
+again — an exact match — over the `Value` overload, which would need a conversion. The
+function calls itself. `hexdigestValue` is not a readability choice, it is what separates
+them, and the pack had it right for a reason its comments do not give.
+
+## The pack, from end to end
+
+Every directory is opened, and the result is one table:
+
+| what it is | pack | here |
+|---|---:|---:|
+| the type system, per unit | 3 278 | `Data`, `Codec`, `Model`, `Fields` |
+| attachments, per unit | 340 | `Attachments` |
+| pools, per unit | 555 | `Pool` |
+| the database, per unit | 156 | `Database` |
+| tests, per unit | 1 403 | one list |
+| the runtime wearing a template | 1 638 | nothing |
+| the dynamic side of attachments | 787 | nothing |
+| compositions over `encode` | 1 046 | four functions |
+| the driver | 294 | one |
+
+**8 737 lines of template become 1 900**, and the reduction is not compression: two thirds of
+what the pack emits either does not name the model at all, or is one function applied once
+per type with the type for its only variable.

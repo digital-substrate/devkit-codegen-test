@@ -92,6 +92,8 @@ model(m) ::= <<
 
 #include "<m.namespace>_AnyConcept.hpp"
 #include "Viper_Codec.hpp"
+#include "Viper_Hasher.hpp"
+#include "Viper_Json.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Stream.hpp"
 #include "Viper_Values.hpp"
@@ -174,6 +176,42 @@ T decode(std::shared_ptr\<Viper::Value const> const & value) {
     Viper::Codec::Reader reader{decoder, definitions()};
 
     return read(reader, tag\<T>{});                          // ADL : l'unité de T
+}
+
+// ── ce que le pack écrit encore une fois par type, et qui n'en demande pas ──
+//
+// DEUX FAMILLES, ET LEUR PROPRE SOURCE DIT CE QU'ELLES SONT :
+//
+//   json encode_X(v)     = json_encode(ValueEncoder::encode_X(v))
+//   hexdigest_X(v)       = hexdigestValue(ValueEncoder::encode_X(v))
+//
+// 549 lignes de template pour deux compositions au-dessus de l'`encode` générique. Rien
+// n'y varie que le type, et le type est déjà un paramètre.
+
+/// Le JSON d'une valeur, et le retour.
+template\<class T>
+std::string jsonEncode(T const & value) {
+    return Viper::JsonValueEncoder::json_encode(encode(value));
+}
+
+template\<class T>
+T jsonDecode(std::string const & json) {
+    return decode\<T>(Viper::JsonValueDecoder::json_decode(json, type(tag\<T>{}), definitions()));
+}
+
+/// L'empreinte d'une Value -- ce que les deux familles avaient en commun sans le dire.
+///
+/// DEUX NOMS, ET LE PACK AVAIT RAISON DE LE FAIRE. Appeler les deux `hexdigest` ne marche
+/// pas : depuis `hexdigest(T const &)`, l'appel `hexdigest(encode(value))` reprend le
+/// template -- qui correspond exactement -- plutôt que la surcharge sur `Value`, qui
+/// demanderait une conversion. La fonction s'appelle elle-même. Le nom distinct n'est pas
+/// une commodité de lecture, c'est ce qui départage.
+std::string hexdigestValue(std::shared_ptr\<Viper::Value const> const & value);
+
+/// Et celle d'une valeur C++, qui n'est que la précédente après encodage.
+template\<class T>
+std::string hexdigest(T const & value) {
+    return hexdigestValue(encode(value));
 }
 
 } // namespace <m.namespace>::Codec

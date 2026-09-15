@@ -24,6 +24,7 @@
 
 #include "Viper_Definitions.hpp"
 #include "Viper_DefinitionsDecoder.hpp"
+#include "Viper_Hasher.hpp"
 #include "Viper_Types.hpp"
 
 #include <cstring>
@@ -80,6 +81,16 @@ bool isMember(AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & co
         return club->hasMember(instance);
 
     return false;
+}
+
+/// LA SEULE LIGNE DES 549 QUI FASSE QUELQUE CHOSE. Tout le reste de ValueHasher est cette
+/// fonction appelée après un encodage, écrite une fois par type -- et elle n'était même pas
+/// déclarée dans l'en-tête, parce que rien hors de ce fichier ne l'appelait. Une unité si.
+std::string hexdigestValue(std::shared_ptr<Viper::Value const> const & value) {
+    auto const hasher = Viper::HashSHA1::make();
+    Viper::ValueHasher::hash(value, hasher);
+
+    return hasher->hexDigest();
 }
 
 } // namespace Topology::Codec
