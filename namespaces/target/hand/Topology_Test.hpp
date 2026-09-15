@@ -16,6 +16,7 @@
 #define Topology_Test_hpp
 
 #include "Topology_Codec.hpp"
+#include "Topology_Db.hpp"
 
 #include "Viper_Assert.hpp"
 #include "Viper_Fuzzer.hpp"
@@ -86,6 +87,46 @@ void roundTrip() {
     roundTripStream<T>();
     roundTripValue<T>();
     roundTripJson<T>();
+}
+
+// ── et le même sur un support persistant ──
+//
+// LE CORPS DU PACK, MOT POUR MOT, SUR DEUX PARAMÈTRES. `TestDatabase` écrit ces quinze
+// lignes une fois par attachment, et la seule chose qui y varie est la portée appelée --
+// donc la clé, le document, et l'identifiant. Écrites une fois, elles ne demandent plus
+// qu'une liste, comme les allers-retours de codec au-dessus.
+
+/// Poser, relire, remplacer, effacer -- et vérifier qu'il ne reste rien.
+template<class Key, class Document>
+void roundTripAttachment(std::shared_ptr<Viper::Database> const & db, Viper::UUId const & attachment) {
+    auto const name{"Topology.Test"};
+
+    VIPER_ASSERT(name, Db::keys<Key>(db, attachment).empty());
+
+    auto const key{fuzz<Key>()};
+    VIPER_ASSERT(name, Db::set(db, attachment, key, fuzz<Document>()));
+    VIPER_ASSERT(name, Db::get<Document>(db, attachment, key).has_value());
+
+    // remplacer : la même clé, un autre document
+    VIPER_ASSERT(name, Db::set(db, attachment, key, fuzz<Document>()));
+    VIPER_ASSERT(name, Db::get<Document>(db, attachment, key).has_value());
+
+    VIPER_ASSERT(name, Db::del(db, attachment, key));
+    VIPER_ASSERT(name, !Db::get<Document>(db, attachment, key).has_value());
+    VIPER_ASSERT(name, !Db::del(db, attachment, key));      // effacer deux fois ne ment pas
+
+    VIPER_ASSERT(name, Db::keys<Key>(db, attachment).empty());
+}
+
+/// En remplir un, puis tout relire. Ce que `TestDatabaseFuzz` fait, sans la répétition.
+template<class Key, class Document>
+void fuzzAttachment(std::shared_ptr<Viper::Database> const & db, Viper::UUId const & attachment,
+                    std::size_t count) {
+    for (std::size_t n{}; n < count; ++n)
+        Db::set(db, attachment, fuzz<Key>(), fuzz<Document>());
+
+    for (auto const & key : Db::keys<Key>(db, attachment))
+        (void)Db::get<Document>(db, attachment, key);
 }
 
 } // namespace Topology::Test

@@ -534,3 +534,27 @@ same format contract as the static/dynamic bridge.
 **And the attachment's runtime id is declared once.** It sits beside the in-memory
 operations, and the database scope reads it from there rather than restating it — one
 attachment, one identity, in one place.
+
+## The database tests, and the driver — the last of the pack
+
+`TestDatabase` and `TestDatabaseFuzz` write fifteen lines per attachment in which the only
+thing that varies is the scope called. As templates over the key and the document, they need
+a runtime id and nothing else, and a unit's `testDatabase(db)` is one line per attachment.
+
+**Separate from `test()` because it asks for something.** The codecs need nothing the model
+does not already carry; a database is a support that has to be opened, and the caller decides
+which.
+
+**`TestApp` is the only artefact that enumerates the units**, and that is its reason to
+exist. Everything else this generator produces is per unit and knows only itself; someone has
+to say that a model is made of these. That is an assembly, so it belongs to the base.
+
+The pack writes four drivers — codec, database, database fuzz, remote database — differing
+only in the options they accept and the calls they launch. Here there is one, because what
+they launch has become a list rather than seven families of functions.
+
+**And the dependency gap fired again**, in the one place left: a unit's `testDatabase`
+round-trips an attachment whose key or document may belong to another unit, so it needs that
+unit's codec and model identity. `Annotations` keys on `ModelA::Material`, and `Projection`
+has a document spanning `ModelA` and `ModelB` — both failed to compile until the attachment
+dependencies were included. The dependency set is right; every artefact has to ask for it.

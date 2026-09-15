@@ -25,13 +25,13 @@ and comparing the output with the model's namespace substituted — an artefact 
 | `Attachments` | 2 | 340 | done — `Attachments.hpp/cpp.stg` |
 | `Model` | 6 | 216 | done — `Fields.hpp/cpp.stg`, entry `model` |
 | `FunctionPool`, `…Remote`, `AttachmentFunctionPool`, `…Remote` | 10 | 555 | done — `Pool.hpp/cpp.stg` |
-| `Database` — 11 of 13 | 11 | ~1 638 | **not generated at all** |
-| `Database/DatabaseAttachments` | 2 | 156 | per-attachment, so per-unit — to do |
-| `AttachmentFunctionPool_Attachments` | 2 | 787 | the dynamic side of attachments — to do |
-| `Test` | 14 | 1 403 | **declared only** — `Test.hpp.stg` has no implementation |
-| `TestApp` | 4 | 294 | a command-line driver — to do |
-| `Json` | 4 | 262 | a composition over `encode` — a few lines |
-| `ValueHasher` | 2 | 287 | a composition over `encode` — a few lines |
+| `Database` — 11 of 13 | 11 | ~1 638 | **not generated at all** — the model appears at four places, as an argument |
+| `Database/DatabaseAttachments` | 2 | 156 | done — `Database.hpp/cpp.stg`, `Db.hpp.stg` |
+| `AttachmentFunctionPool_Attachments` | 2 | 787 | done — **nothing generated**, a walk over the model's attachments |
+| `Test` | 14 | 1 403 | done — `Test.hpp/cpp.stg`, five templates and a list per unit |
+| `TestApp` | 4 | 294 | done — `TestApp.cpp.stg`, one driver |
+| `Json` | 4 | 262 | a composition over `encode` — a few lines, not yet written |
+| `ValueHasher` | 2 | 287 | a composition over `encode` — a few lines, not yet written |
 | `Python` | 2 | 77 | the Python binding of this C++ — out of this pass |
 
 ## What the measurement found
@@ -61,8 +61,14 @@ third and fourth domain.
 no test implementation has been written, which is the same gap that made the first four
 layers look finished when only their headers existed.
 
-## What is not yet proven
+## Where it stands now
 
-That the decomposition absorbs everything. Two of the three largest remaining pieces —
-`Test` at 1 403 lines and `AttachmentFunctionPool_Attachments` at 787 — have not been opened
-beyond their signatures, and they are where a new shape is most likely to appear.
+Every directory of the pack has been opened, and all but two are reproduced and compiled:
+**47 generated files for the topology model, 25 for the crossing one.** What is left is
+`Json` and `ValueHasher`, which their own source shows to be compositions over the generic
+`encode` — a few lines each, and the only reason they are not written is that nothing has
+needed them yet.
+
+No new shape appeared in the last three pieces. What appeared instead, three times, was the
+same finding: an artefact that looked generated turns out to vary only by the model's name,
+or by one argument.

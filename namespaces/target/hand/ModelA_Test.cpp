@@ -12,6 +12,8 @@
 #include "ModelA_Test.hpp"
 
 #include "ModelA_Codec.hpp"        // write, read
+#include "ModelA_Attachments.hpp"   // runtimeId
+#include "ModelA_Database.hpp"
 #include "ModelA_Model.hpp"        // type -- le descripteur dont le fuzz part
 
 #include "Topology_Test.hpp"       // les allers-retours génériques
@@ -22,6 +24,11 @@ void test() {
     Topology::Test::roundTrip<MaterialKey>();
     Topology::Test::roundTrip<Finish>();
     Topology::Test::roundTrip<Colour>();
+}
+
+void testDatabase(std::shared_ptr<Viper::Database> const & db) {
+    Topology::Test::roundTripAttachment<MaterialKey, Colour>(
+        db, Attachments::Material::colour::runtimeId);
 }
 
 } // namespace ModelA

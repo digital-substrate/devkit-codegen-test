@@ -1,4 +1,4 @@
-// ModelA — ce qu'il faut savoir de ModelA pour l'éprouver.
+// Annotations — ce qu'il faut savoir de Annotations pour l'éprouver.
 //
 // UNE LIGNE, ET C'EST LA CORRECTION QUE CE FICHIER PORTE. Le premier jet déclarait ici un
 // `fuzz` par type déclaré, en supposant qu'une unité seule sait fabriquer un de ses types.
@@ -8,14 +8,14 @@
 // Il ne reste donc à une unité qu'une chose que personne d'autre ne sait : la liste de ce
 // qu'elle déclare.
 
-#ifndef ModelA_Test_hpp
-#define ModelA_Test_hpp
+#ifndef Annotations_Test_hpp
+#define Annotations_Test_hpp
 
 #include "Viper_Database.hpp"
 
 #include <memory>
 
-namespace ModelA {
+namespace Annotations {
 
 /// Éprouver chaque type déclaré ici, par chaque codec.
 void test();
@@ -27,6 +27,6 @@ void test();
 /// lequel.
 void testDatabase(std::shared_ptr<Viper::Database> const & db);
 
-} // namespace ModelA
+} // namespace Annotations
 
 #endif
