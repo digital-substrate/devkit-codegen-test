@@ -17,6 +17,8 @@
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
+#include <map>
+
 #include <cstdint>
 #include <optional>
 #include <set>
@@ -39,7 +41,9 @@ void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour con
           bool recursive = false);
 
 void setR(Viper::AttachmentMutating & mutating, ThingKey const & key, float value);
+
 void setG(Viper::AttachmentMutating & mutating, ThingKey const & key, float value);
+
 void setB(Viper::AttachmentMutating & mutating, ThingKey const & key, float value);
 
 } // namespace Parts::Attachments::Thing::colour

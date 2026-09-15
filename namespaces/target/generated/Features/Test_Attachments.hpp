@@ -17,6 +17,8 @@
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
+#include <map>
+
 #include <cstdint>
 #include <optional>
 #include <set>
@@ -57,27 +59,52 @@ void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Structu
           bool recursive = false);
 
 void setF_bool(Viper::AttachmentMutating & mutating, ConceptAKey const & key, bool value);
+
 void setF_uint8(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint8_t value);
+
 void setF_uint16(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint16_t value);
+
 void setF_uint32(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint32_t value);
+
 void setF_uint64(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint64_t value);
+
 void setF_int8(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int8_t value);
+
 void setF_int16(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int16_t value);
+
 void setF_int32(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int32_t value);
+
 void setF_int64(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int64_t value);
+
 void setF_float(Viper::AttachmentMutating & mutating, ConceptAKey const & key, float value);
+
 void setF_double(Viper::AttachmentMutating & mutating, ConceptAKey const & key, double value);
+
 void setF_uuid(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & value);
+
 void setF_string(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::string const & value);
+
 void setF_vec(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::array<std::uint8_t, 2> const & value);
+
 void setF_mat(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value);
+
 void setF_tuple(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::tuple<std::uint8_t, std::string> const & value);
+
 void setF_optional(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::optional<std::uint8_t> const & value);
+
 void setF_vector(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::vector<std::uint8_t> const & value);
+
 void setF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
+void unionF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
+void subtractF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
 void setF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value);
+void unionF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value);
+void subtractF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value);
+void updateF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value);
 void setF_E(Viper::AttachmentMutating & mutating, ConceptAKey const & key, EnumerationE value);
+
 void setF_S(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureS const & value);
+
 void setF_T(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureT const & value);
 
 } // namespace Test::Attachments::ConceptA::properties
@@ -116,6 +143,11 @@ void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map
 
 void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value,
           bool recursive = false);
+
+void union_(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
+void subtract(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
+void update(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value);
+
 } // namespace Test::Attachments::ConceptA::propertiesMapInt8String
 
 namespace Test::Attachments::ConceptA::propertiesSeInt8 {
@@ -134,6 +166,10 @@ void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set
 
 void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value,
           bool recursive = false);
+
+void union_(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
+void subtract(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value);
+
 } // namespace Test::Attachments::ConceptA::propertiesSeInt8
 
 namespace Test::Attachments::ConceptA::propertiesXArray {
@@ -152,6 +188,11 @@ void set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::X
 
 void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::XArray<std::int8_t> const & value,
           bool recursive = false);
+
+void insert(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::int8_t value);
+void update(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & position, std::int8_t value);
+void remove(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & position);
+
 } // namespace Test::Attachments::ConceptA::propertiesXArray
 
 namespace Test::Attachments::ConceptB::propertiesB {
@@ -172,6 +213,7 @@ void diff(Viper::AttachmentMutating & mutating, ConceptBKey const & key, Structu
           bool recursive = false);
 
 void setField_string(Viper::AttachmentMutating & mutating, ConceptBKey const & key, std::string const & value);
+
 void setField_structure_s(Viper::AttachmentMutating & mutating, ConceptBKey const & key, StructureS const & value);
 
 } // namespace Test::Attachments::ConceptB::propertiesB
@@ -194,43 +236,93 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Structu
           bool recursive = false);
 
 void setF_bool(Viper::AttachmentMutating & mutating, ConceptCKey const & key, bool value);
+
 void setF_uint8(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint8_t value);
+
 void setF_uint16(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint16_t value);
+
 void setF_uint32(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint32_t value);
+
 void setF_uint64(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint64_t value);
+
 void setF_int8(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int8_t value);
+
 void setF_int16(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int16_t value);
+
 void setF_int32(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int32_t value);
+
 void setF_int64(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int64_t value);
+
 void setF_float(Viper::AttachmentMutating & mutating, ConceptCKey const & key, float value);
+
 void setF_double(Viper::AttachmentMutating & mutating, ConceptCKey const & key, double value);
+
 void setF_blob_id(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::BlobId const & value);
+
 void setF_commit_id(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::CommitId const & value);
+
 void setF_uuid(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & value);
+
 void setF_string(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::string const & value);
+
 void setF_blob(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::Blob const & value);
+
 void setF_vec(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::array<std::uint8_t, 2> const & value);
+
 void setF_mat(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value);
+
 void setF_tuple(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::tuple<std::uint8_t, std::string> const & value);
+
 void setF_optional(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::optional<std::uint8_t> const & value);
+
 void setF_vector(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::vector<std::uint8_t> const & value);
+
 void setF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value);
+void unionF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value);
+void subtractF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value);
 void setF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
+void unionF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
+void subtractF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value);
 void setF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
+void unionF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
+void subtractF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<Test::StructureS> const & value);
+void updateF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value);
 void setF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
+void unionF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
+void subtractF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::string> const & value);
+void updateF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value);
 void setF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::XArray<std::uint8_t> const & value);
+void insertF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value);
+void updateF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position, std::uint8_t value);
+void removeF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position);
 void setF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::XArray<StructureS> const & value);
+void insertF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Test::StructureS const & value);
+void updateF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position, Test::StructureS const & value);
+void removeF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position);
 void setF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
+void unionF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
+void subtractF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::vector<Test::StructureS>> const & value);
+void updateF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value);
 void setF_variant(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::variant<std::string, std::uint8_t, StructureS> const & value);
+
 void setF_any(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::Any const & value);
+
 void setF_E(Viper::AttachmentMutating & mutating, ConceptCKey const & key, EnumerationE value);
+
 void setF_S(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureS const & value);
+
 void setF_T(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureT const & value);
+
 void setF_A(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptAKey const & value);
+
 void setF_B(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptBKey const & value);
+
 void setF_C(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptCKey const & value);
+
 void setF_D(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptDKey const & value);
+
 void setF_Klub(Viper::AttachmentMutating & mutating, ConceptCKey const & key, KlubKey const & value);
+
 void setF_any_concept(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ::Features::AnyConceptKey const & value);
 
 } // namespace Test::Attachments::ConceptC::propertiesC
@@ -539,6 +631,11 @@ void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, s
 
 void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value,
           bool recursive = false);
+
+void union_(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
+void subtract(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
+void update(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value);
+
 } // namespace Test::Attachments::ConceptCoverage::docMap
 
 namespace Test::Attachments::ConceptCoverage::docMat {
@@ -593,6 +690,10 @@ void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, s
 
 void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value,
           bool recursive = false);
+
+void union_(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
+void subtract(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value);
+
 } // namespace Test::Attachments::ConceptCoverage::docSet
 
 namespace Test::Attachments::ConceptCoverage::docString {
@@ -812,6 +913,11 @@ void set(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, V
 
 void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::XArray<std::uint8_t> const & value,
           bool recursive = false);
+
+void insert(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value);
+void update(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & position, std::uint8_t value);
+void remove(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & position);
+
 } // namespace Test::Attachments::ConceptCoverage::docXArray
 
 namespace Test::Attachments::Klub::propertiesD {
@@ -832,27 +938,52 @@ void diff(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureV 
           bool recursive = false);
 
 void setF_bool(Viper::AttachmentMutating & mutating, KlubKey const & key, bool value);
+
 void setF_uint8(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint8_t value);
+
 void setF_uint16(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint16_t value);
+
 void setF_uint32(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint32_t value);
+
 void setF_uint64(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint64_t value);
+
 void setF_int8(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int8_t value);
+
 void setF_int16(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int16_t value);
+
 void setF_int32(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int32_t value);
+
 void setF_int64(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int64_t value);
+
 void setF_float(Viper::AttachmentMutating & mutating, KlubKey const & key, float value);
+
 void setF_double(Viper::AttachmentMutating & mutating, KlubKey const & key, double value);
+
 void setF_uuid(Viper::AttachmentMutating & mutating, KlubKey const & key, Viper::UUId const & value);
+
 void setF_string(Viper::AttachmentMutating & mutating, KlubKey const & key, std::string const & value);
+
 void setF_vec(Viper::AttachmentMutating & mutating, KlubKey const & key, std::array<std::uint8_t, 2> const & value);
+
 void setF_mat(Viper::AttachmentMutating & mutating, KlubKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value);
+
 void setF_tuple(Viper::AttachmentMutating & mutating, KlubKey const & key, std::tuple<std::uint8_t, std::string> const & value);
+
 void setF_optional(Viper::AttachmentMutating & mutating, KlubKey const & key, std::optional<std::uint8_t> const & value);
+
 void setF_vector(Viper::AttachmentMutating & mutating, KlubKey const & key, std::vector<std::uint8_t> const & value);
+
 void setF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
+void unionF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
+void subtractF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
 void setF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value);
+void unionF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value);
+void subtractF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value);
+void updateF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value);
 void setF_E(Viper::AttachmentMutating & mutating, KlubKey const & key, EnumerationE value);
+
 void setF_S(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureS const & value);
+
 void setF_T(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureT const & value);
 
 } // namespace Test::Attachments::Klub::propertiesD

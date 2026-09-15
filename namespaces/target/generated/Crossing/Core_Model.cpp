@@ -16,6 +16,7 @@ Viper::UUId const Thing{Viper::UUId::parse("43ac162e-d31b-650b-ff35-6e284bd06ea2
 Viper::UUId const SubThing{Viper::UUId::parse("4953d146-1dcb-1d23-03b4-2d7e90cef4b2")};
 Viper::UUId const Klub{Viper::UUId::parse("f99852de-1837-1c8c-c831-4fc0ceee8688")};
 Viper::UUId const Grade{Viper::UUId::parse("fbfc67e2-b360-2377-80bf-d58461a34eb0")};
+Viper::UUId const Bag{Viper::UUId::parse("2a160921-2e7a-0f1a-2800-10ef9b577166")};
 Viper::UUId const Colour{Viper::UUId::parse("771d31fe-d3b9-603c-ca38-43a03717815e")};
 Viper::UUId const Defaults{Viper::UUId::parse("7da8213c-bddd-98ee-c3c1-c9b26e3e6ef5")};
 Viper::UUId const Scalars{Viper::UUId::parse("3e6c9792-57f3-e845-33fb-a29fdcb567f9")};
@@ -69,6 +70,12 @@ std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<KlubKey>) {
 std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Grade>) {
     static std::shared_ptr<Viper::Type> const instance{
         Crossing::Codec::definitions()->checkEnumeration(RuntimeIds::Grade)};
+    return instance;
+}
+
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Bag>) {
+    static std::shared_ptr<Viper::Type> const instance{
+        Crossing::Codec::definitions()->checkStructure(RuntimeIds::Bag)};
     return instance;
 }
 

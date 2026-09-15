@@ -76,6 +76,22 @@ struct Single {
 };
 
 attachment<Thing, Colour> colour;
+
+"""Un document qui EST un agrégat : ses opérations ne sont pas celles d'un document
+ordinaire, puisqu'on peut y ajouter et en retirer sans l'écraser."""
+attachment<Thing, set<key<Thing>>> related;
+attachment<Thing, map<key<Thing>, Colour>> palette;
+attachment<Thing, xarray<Colour>> history;
+
+"""Et un document ordinaire dont un champ est un agrégat : les mêmes opérations, à une
+adresse au lieu de la racine."""
+struct Bag {
+  set<key<Thing>> members;
+  map<key<Thing>, Colour> tints;
+  xarray<Colour> trail;
+};
+
+attachment<Thing, Bag> bag;
 attachment<Thing, Scalars> scalars;
 
 }; // ns

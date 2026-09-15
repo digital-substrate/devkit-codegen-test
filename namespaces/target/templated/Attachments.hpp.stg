@@ -19,6 +19,8 @@ unit(u) ::= <<
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
+#include \<map>
+
 #include \<cstdint>
 #include \<optional>
 #include \<set>
@@ -58,13 +60,76 @@ void diff(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> cons
 <if(a.documentType.isStructure)>
 
 <a.documentType.structure.fields:field(a);separator="\n">
+<elseif(a.documentType.field.isNotBox)>
+
+<a:document_aggregate()>
 <endif>
 
 } // namespace <u.name>::Attachments::<a.conceptScope>::<a.name>
 >>
 
 /// Un setter par champ du document -- l'unique consommateur des chemins de la couche 2.
-field(sf, a) ::= <<void set<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace><sf.passBy> value);>>
+///
+/// ET LES MUTATIONS D'AGRÉGAT QUAND LE CHAMP EN EST UN. `set` remplace le champ ; celles-ci
+/// ajoutent, retirent ou déplacent à l'intérieur, et deux écritures concurrentes sur le
+/// même ensemble se fondent là où deux remplacements s'écrasent.
+///
+/// LE NOM PORTE LE CHAMP. Un document peut avoir plusieurs champs agrégés, et `union_` ne
+/// dirait pas lequel. C'est l'aplatissement contraint : une portée par champ ajouterait un
+/// quatrième niveau sous l'attachment.
+field(sf, a) ::= <<
+void set<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace><sf.passBy> value);
+<if(sf.field.isSet)><sf:field_set(a)><elseif(sf.field.isMap)><sf:field_map(a)><elseif(sf.field.isXArray)><sf:field_xarray(a)><endif>
+>>
+
+field_set(sf, a) ::= <<
+void union<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);
+<field_subtract_set(sf, a)>
+>>
+
+field_map(sf, a) ::= <<
+void union<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);
+<field_subtract_map(sf, a)>
+void update<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);
+>>
+
+field_xarray(sf, a) ::= <<
+void insert<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <sf.field.elementType><sf.field.passBy> value);
+void update<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <sf.field.elementType><sf.field.passBy> value);
+void remove<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position);
+>>
+
+// Retirer d'une map, c'est retirer des clés : l'argument est un ensemble de clés et non une
+// map -- demander les valeurs pour effacer laisserait croire qu'elles comptent.
+field_subtract_set(sf, a) ::= <%void subtract<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value);%>
+field_subtract_map(sf, a) ::= <%void subtract<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<sf.field.keyType>> const & value);%>
+
+// ── et les mêmes quand le document EST l'agrégat ──
+//
+// `union_` et non `union`, qui est un mot du langage. L'adresse est la racine au lieu de
+// celle d'un champ, et c'est la seule différence entre les deux familles.
+document_aggregate(a) ::= <<
+<if(a.documentType.field.isSet)><a:document_set()><elseif(a.documentType.field.isMap)><a:document_map()><elseif(a.documentType.field.isXArray)><a:document_xarray()><endif>
+>>
+
+document_set(a) ::= <<
+void union_(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+void subtract(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+>>
+
+document_map(a) ::= <<
+void union_(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+<document_subtract_map(a)>
+void update(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
+>>
+
+document_subtract_map(a) ::= <%void subtract(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<a.documentType.field.keyType>> const & value);%>
+
+document_xarray(a) ::= <<
+void insert(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <a.documentType.field.elementType><a.documentType.field.passBy> value);
+void update(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <a.documentType.field.elementType><a.documentType.field.passBy> value);
+void remove(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position);
+>>
 
 
 // `<%…%>`, because a `>>` in the emitted text would close a `<<…>>` body. Every generic

@@ -71,6 +71,19 @@ void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<Mo
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
+
+void union_(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Topology::Codec::encode(value)));
+}
+
+void subtract(Viper::AttachmentMutating & mutating, LinkKey const & key, std::set<ModelA::MaterialKey> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Topology::Codec::encode(value)));
+}
+
+void update(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Topology::Codec::encode(value)));
+}
+
 } // namespace Projection::Attachments::Link::mapping
 
 namespace Projection::Attachments::Link::marker {
@@ -171,14 +184,13 @@ void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, Pair const 
 }
 
 void setA(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelA::MaterialKey const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Projection::Fields::Pair::aPath(),
+    mutating.update(attachment(), encodeKey(key), Projection::Fields::Pair::aPath(),
                     Topology::Codec::encode(value));
 }
 
+
 void setB(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelB::MaterialKey const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Projection::Fields::Pair::bPath(),
+    mutating.update(attachment(), encodeKey(key), Projection::Fields::Pair::bPath(),
                     Topology::Codec::encode(value));
 }
 

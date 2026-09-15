@@ -33,6 +33,9 @@ KlubKey read(Viper::Codec::Reader & r, Viper::Codec::tag<KlubKey>);
 void write(Viper::Codec::Writer & w, Grade value);
 Grade read(Viper::Codec::Reader & r, Viper::Codec::tag<Grade>);
 
+void write(Viper::Codec::Writer & w, Bag const & value);
+Bag read(Viper::Codec::Reader & r, Viper::Codec::tag<Bag>);
+
 void write(Viper::Codec::Writer & w, Colour const & value);
 Colour read(Viper::Codec::Reader & r, Viper::Codec::tag<Colour>);
 

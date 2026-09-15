@@ -64,20 +64,19 @@ void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour con
 }
 
 void setR(Viper::AttachmentMutating & mutating, ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Parts::Fields::Colour::rPath(),
+    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
+
 
 void setG(Viper::AttachmentMutating & mutating, ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Parts::Fields::Colour::gPath(),
+    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
+
 void setB(Viper::AttachmentMutating & mutating, ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Parts::Fields::Colour::bPath(),
+    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 

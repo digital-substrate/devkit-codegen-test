@@ -17,6 +17,8 @@
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
+#include <map>
+
 #include <cstdint>
 #include <optional>
 #include <set>

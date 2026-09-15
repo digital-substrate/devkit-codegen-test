@@ -158,23 +158,6 @@ bool operator<(Colour const &, Colour const &) noexcept;
 
 void hash(Viper::Hash::Accumulator & h, Colour const & value) noexcept;
 
-/** Les valeurs par défaut, qui sont un chemin de code à part. */
-struct Defaults final {
-    std::uint8_t f_uint8{};
-    float f_float{};
-    std::string f_string{};
-    Viper::UUId f_uuid{};
-    std::array<std::uint8_t, 2> f_vec{};
-    Grade f_grade{};
-    Colour f_colour{};
-};
-
-bool operator==(Defaults const &, Defaults const &) noexcept;
-bool operator!=(Defaults const &, Defaults const &) noexcept;
-bool operator<(Defaults const &, Defaults const &) noexcept;
-
-void hash(Viper::Hash::Accumulator & h, Defaults const & value) noexcept;
-
 /** Toutes les formes scalaires du langage, dans le namespace qui n'en référence aucun
 autre. Ce qui ne peut pas traverser une frontière est couvert ici, une fois. */
 struct Scalars final {
@@ -216,6 +199,37 @@ bool operator<(Single const &, Single const &) noexcept;
 
 void hash(Viper::Hash::Accumulator & h, Single const & value) noexcept;
 
+/** Et un document ordinaire dont un champ est un agrégat : les mêmes opérations, à une
+adresse au lieu de la racine. */
+struct Bag final {
+    std::set<ThingKey> members{};
+    std::map<ThingKey, Colour> tints{};
+    Viper::XArray<Colour> trail{};
+};
+
+bool operator==(Bag const &, Bag const &) noexcept;
+bool operator!=(Bag const &, Bag const &) noexcept;
+bool operator<(Bag const &, Bag const &) noexcept;
+
+void hash(Viper::Hash::Accumulator & h, Bag const & value) noexcept;
+
+/** Les valeurs par défaut, qui sont un chemin de code à part. */
+struct Defaults final {
+    std::uint8_t f_uint8{};
+    float f_float{};
+    std::string f_string{};
+    Viper::UUId f_uuid{};
+    std::array<std::uint8_t, 2> f_vec{};
+    Grade f_grade{};
+    Colour f_colour{};
+};
+
+bool operator==(Defaults const &, Defaults const &) noexcept;
+bool operator!=(Defaults const &, Defaults const &) noexcept;
+bool operator<(Defaults const &, Defaults const &) noexcept;
+
+void hash(Viper::Hash::Accumulator & h, Defaults const & value) noexcept;
+
 } // namespace Core
 
 template<> struct std::hash<Core::OtherKey> {
@@ -233,14 +247,17 @@ template<> struct std::hash<Core::KlubKey> {
 template<> struct std::hash<Core::Colour> {
     std::size_t operator()(Core::Colour const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Core::Defaults> {
-    std::size_t operator()(Core::Defaults const & v) const noexcept { return Viper::Hash::of(v); }
-};
 template<> struct std::hash<Core::Scalars> {
     std::size_t operator()(Core::Scalars const & v) const noexcept { return Viper::Hash::of(v); }
 };
 template<> struct std::hash<Core::Single> {
     std::size_t operator()(Core::Single const & v) const noexcept { return Viper::Hash::of(v); }
+};
+template<> struct std::hash<Core::Bag> {
+    std::size_t operator()(Core::Bag const & v) const noexcept { return Viper::Hash::of(v); }
+};
+template<> struct std::hash<Core::Defaults> {
+    std::size_t operator()(Core::Defaults const & v) const noexcept { return Viper::Hash::of(v); }
 };
 
 #endif

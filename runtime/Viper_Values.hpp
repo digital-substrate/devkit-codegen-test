@@ -51,8 +51,18 @@ public:
     std::shared_ptr<Value> unwrap() const;
 };
 
+class ValueMap final : public Value {
+public:
+    static std::shared_ptr<ValueMap> cast(std::shared_ptr<Value> const & value);
+    static std::shared_ptr<ValueMap const> cast(std::shared_ptr<Value const> const & value);
+    bool equal(std::shared_ptr<Value const> const & other) const override;
+    std::shared_ptr<Type> type() const override;
+};
+
 class ValueSet final : public Value {
 public:
+    static std::shared_ptr<ValueSet> cast(std::shared_ptr<Value> const & value);
+    static std::shared_ptr<ValueSet const> cast(std::shared_ptr<Value const> const & value);
     bool equal(std::shared_ptr<Value const> const & other) const override;
     std::shared_ptr<Type> type() const override;
     void add(std::shared_ptr<Value const> const & value);

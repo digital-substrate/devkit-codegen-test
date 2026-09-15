@@ -88,6 +88,19 @@ Grade read(Viper::Codec::Reader & r, Viper::Codec::tag<Grade>) {
 }
 
 
+void write(Viper::Codec::Writer & w, Bag const & value) {
+    write(w, value.members);
+    write(w, value.tints);
+    write(w, value.trail);
+}
+
+Bag read(Viper::Codec::Reader & r, Viper::Codec::tag<Bag>) {
+    return {read(r, Viper::Codec::tag<std::set<ThingKey>>{}),
+            read(r, Viper::Codec::tag<std::map<ThingKey, Colour>>{}),
+            read(r, Viper::Codec::tag<Viper::XArray<Colour>>{})};
+}
+
+
 void write(Viper::Codec::Writer & w, Colour const & value) {
     write(w, value.r);
     write(w, value.g);

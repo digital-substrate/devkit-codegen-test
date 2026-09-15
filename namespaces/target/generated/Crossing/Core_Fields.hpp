@@ -15,6 +15,18 @@
 #include <string>
 #include <string_view>
 
+namespace Core::Fields::Bag {
+
+inline constexpr std::string_view members{"members"};
+inline constexpr std::string_view tints{"tints"};
+inline constexpr std::string_view trail{"trail"};
+
+std::shared_ptr<Viper::Path const> const & membersPath();
+std::shared_ptr<Viper::Path const> const & tintsPath();
+std::shared_ptr<Viper::Path const> const & trailPath();
+
+} // namespace Core::Fields::Bag
+
 namespace Core::Fields::Colour {
 
 inline constexpr std::string_view r{"r"};

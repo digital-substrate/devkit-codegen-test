@@ -21,8 +21,8 @@ template compterait comme une perte.
 ## L'état, au dernier passage
 
 ```
-le pack déclare 141 opérations, les nouveaux templates 99
-absentes : 17
+le pack déclare 141 opérations, les nouveaux templates 108
+absentes : 9
 ```
 
 Les 42 de différence ne sont pas des manques : ce sont les familles par type qui
@@ -32,17 +32,27 @@ constante, un élargissement devenu conversion implicite.
 
 **Ce qui manque vraiment tient en quatre familles.**
 
-### 1. Les mutations d'un champ agrégé — 8 opérations
+### 1. ~~Les mutations d'un champ agrégé~~ — fait
 
 `unionF`, `subtractF`, `updateF`, `insertF`, `removeF`, `union_`, `subtract`, `update`
 
-Un attachment dont le document a un champ `set`, `map` ou `xarray` reçoit des opérations qui
-n'écrasent pas le champ mais le modifient : ajouter à un ensemble, retirer d'une map, insérer
-dans un xarray. Le générateur écrit ici `set` et `diff`, plus un setter par champ scalaire.
-Les variantes agrégées manquent des deux côtés, statique et dynamique.
+Un attachment dont le document est un agrégat, ou en contient un, reçoit des opérations qui
+ne l'écrasent pas mais le modifient. `set` remplace le document, `update` remplace ce qui est
+à une adresse ; celles-ci ajoutent, retirent ou déplacent à l'intérieur — et deux écritures
+concurrentes sur le même ensemble se fondent là où deux remplacements s'écrasent.
 
-**C'est le seul manque qui soit un oubli** : il a été noté une fois dans un commentaire du
-pont dynamique, et jamais rattrapé du côté statique.
+Écrites aux deux niveaux : quand le document **est** l'agrégat, l'adresse est la racine ;
+quand c'est un champ, l'adresse est celle du champ. Rien d'autre ne change, et les huit corps
+sont identiques par ailleurs.
+
+**Le fixture ne les couvrait pas** — aucun modèle ne déclarait d'attachment agrégé — donc
+`crossing` gagne un ensemble, une map, un xarray et une structure qui contient les trois.
+
+**Et le rendu a trouvé un troisième cas d'un défaut déjà vu deux fois** : les structures
+étaient émises dans l'ordre de leurs noms et non de leurs dépendances, donc `Bag`, qui
+contient une `Colour`, sortait avant elle. Le parent d'un concept, puis les membres d'un
+club, maintenant les champs d'une structure — une unité émet dans un seul fichier, et l'ordre
+de déclaration compte à chaque fois.
 
 ### 2. Les épreuves de base au-delà des attachments — 7 opérations
 

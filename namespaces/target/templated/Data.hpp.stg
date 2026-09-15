@@ -32,13 +32,13 @@ namespace <u.name> {
 
 <u.enumerations:enumeration();separator="\n\n">
 
-<u.structures:structure();separator="\n\n">
+<u.sortedStructures:structure();separator="\n\n">
 
 } // namespace <u.name>
 
 <u.concepts:std_hash(u);separator="\n">
 <u.clubs:std_hash(u);separator="\n">
-<u.structures:std_hash_value(u);separator="\n">
+<u.sortedStructures:std_hash_value(u);separator="\n">
 
 #endif
 >>
@@ -141,6 +141,12 @@ void hash(Viper::Hash::Accumulator & h, <s.name> const & value) noexcept;
 >>
 
 field(f) ::= <<    <f.typeInNamespace> <f.name>{};>>
+
+// LES STRUCTURES DANS L'ORDRE DE LEURS DÉPENDANCES, et non dans celui de leurs noms. Une
+// unité les émet dans un seul fichier, donc une structure qui en contient une autre a
+// besoin d'elle au-dessus -- `Bag` tient une `Colour`, et l'ordre alphabétique met `Bag`
+// en premier. C'est la troisième fois que la même chose se présente : le parent d'un
+// concept, puis les membres d'un club, maintenant les champs d'une structure.
 
 // `enum class` et non `enum` : le scope nomme déjà l'unité, et une énumération non scopée
 // verserait ses cases dans le namespace de l'unité, où elles heurteraient les noms des

@@ -4,6 +4,25 @@
 
 #include "Core_Fields.hpp"
 
+namespace Core::Fields::Bag {
+
+std::shared_ptr<Viper::Path const> const & membersPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{members})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & tintsPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{tints})};
+    return instance;
+}
+
+std::shared_ptr<Viper::Path const> const & trailPath() {
+    static std::shared_ptr<Viper::Path const> const instance{Viper::Path::makeField(std::string{trail})};
+    return instance;
+}
+
+} // namespace Core::Fields::Bag
+
 namespace Core::Fields::Colour {
 
 std::shared_ptr<Viper::Path const> const & rPath() {

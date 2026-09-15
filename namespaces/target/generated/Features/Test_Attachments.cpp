@@ -113,140 +113,159 @@ void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Structu
 }
 
 void setF_bool(Viper::AttachmentMutating & mutating, ConceptAKey const & key, bool value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_boolPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_boolPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint8(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uint8Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint8Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint16(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint16_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uint16Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint16Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint32(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint32_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uint32Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint32Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint64(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::uint64_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uint64Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint64Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int8(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_int8Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int8Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int16(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int16_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_int16Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int16Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int32(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int32_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_int32Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int32Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int64(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::int64_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_int64Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int64Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_float(Viper::AttachmentMutating & mutating, ConceptAKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_floatPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_floatPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_double(Viper::AttachmentMutating & mutating, ConceptAKey const & key, double value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_doublePath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_doublePath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uuid(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uuidPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uuidPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_string(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::string const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_stringPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_stringPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_vec(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::array<std::uint8_t, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_vecPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vecPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_mat(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_matPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_matPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_tuple(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_tuplePath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_tuplePath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_optional(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::optional<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_optionalPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_optionalPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_vector(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::vector<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_vectorPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vectorPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_setPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(),
                     Features::Codec::encode(value));
 }
+
+void unionF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.unionInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void subtractF_set(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
 
 void setF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_mapPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(),
                     Features::Codec::encode(value));
 }
+
+void unionF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
+void subtractF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void updateF_map(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
 
 void setF_E(Viper::AttachmentMutating & mutating, ConceptAKey const & key, EnumerationE value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_EPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_EPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_S(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureS const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_SPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_SPath(),
                     Features::Codec::encode(value));
 }
 
+
 void setF_T(Viper::AttachmentMutating & mutating, ConceptAKey const & key, StructureT const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_TPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_TPath(),
                     Features::Codec::encode(value));
 }
 
@@ -348,6 +367,19 @@ void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::ma
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
+
+void union_(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
+void subtract(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void update(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::map<std::int8_t, std::string> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
 } // namespace Test::Attachments::ConceptA::propertiesMapInt8String
 
 namespace Test::Attachments::ConceptA::propertiesSeInt8 {
@@ -397,6 +429,15 @@ void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::se
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
+
+void union_(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
+    mutating.unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void subtract(Viper::AttachmentMutating & mutating, ConceptAKey const & key, std::set<std::int8_t> const & value) {
+    mutating.subtractInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
 } // namespace Test::Attachments::ConceptA::propertiesSeInt8
 
 namespace Test::Attachments::ConceptA::propertiesXArray {
@@ -446,6 +487,20 @@ void diff(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
+
+void insert(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::int8_t value) {
+    mutating.insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
+                            beforePosition, newPosition, Features::Codec::encode(value));
+}
+
+void update(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & position, std::int8_t value) {
+    mutating.updateInXArray(attachment(), encodeKey(key), Viper::Path::make(), position, Features::Codec::encode(value));
+}
+
+void remove(Viper::AttachmentMutating & mutating, ConceptAKey const & key, Viper::UUId const & position) {
+    mutating.removeInXArray(attachment(), encodeKey(key), Viper::Path::make(), position);
+}
+
 } // namespace Test::Attachments::ConceptA::propertiesXArray
 
 namespace Test::Attachments::ConceptB::propertiesB {
@@ -497,14 +552,13 @@ void diff(Viper::AttachmentMutating & mutating, ConceptBKey const & key, Structu
 }
 
 void setField_string(Viper::AttachmentMutating & mutating, ConceptBKey const & key, std::string const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureT::field_stringPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureT::field_stringPath(),
                     Features::Codec::encode(value));
 }
 
+
 void setField_structure_s(Viper::AttachmentMutating & mutating, ConceptBKey const & key, StructureS const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureT::field_structure_sPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureT::field_structure_sPath(),
                     Features::Codec::encode(value));
 }
 
@@ -559,236 +613,315 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Structu
 }
 
 void setF_bool(Viper::AttachmentMutating & mutating, ConceptCKey const & key, bool value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_boolPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_boolPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint8(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_uint8Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint8Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint16(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint16_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_uint16Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint16Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint32(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint32_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_uint32Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint32Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint64(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::uint64_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_uint64Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uint64Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int8(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_int8Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int8Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int16(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int16_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_int16Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int16Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int32(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int32_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_int32Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int32Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int64(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::int64_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_int64Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_int64Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_float(Viper::AttachmentMutating & mutating, ConceptCKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_floatPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_floatPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_double(Viper::AttachmentMutating & mutating, ConceptCKey const & key, double value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_doublePath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_doublePath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_blob_id(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::BlobId const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_blob_idPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_blob_idPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_commit_id(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::CommitId const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_commit_idPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_commit_idPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uuid(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_uuidPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_uuidPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_string(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::string const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_stringPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_stringPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_blob(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::Blob const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_blobPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_blobPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_vec(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::array<std::uint8_t, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_vecPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_vecPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_mat(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::array<std::array<std::uint8_t, 2>, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_matPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_matPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_tuple(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_tuplePath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_tuplePath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_optional(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::optional<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_optionalPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_optionalPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_vector(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::vector<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_vectorPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_vectorPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_setPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_setPath(),
                     Features::Codec::encode(value));
 }
+
+void unionF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.unionInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void subtractF_set(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
 
 void setF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_set_sPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_set_sPath(),
                     Features::Codec::encode(value));
 }
+
+void unionF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value) {
+    mutating.unionInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_set_sPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void subtractF_set_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<StructureS> const & value) {
+    mutating.subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureU::f_set_sPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
 
 void setF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_map_s1Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(),
                     Features::Codec::encode(value));
 }
+
+void unionF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
+void subtractF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<Test::StructureS> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void updateF_map_s1(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<StructureS, std::string> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s1Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
 
 void setF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_map_s2Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(),
                     Features::Codec::encode(value));
 }
+
+void unionF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
+void subtractF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::string> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void updateF_map_s2(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::string, StructureS> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_s2Path(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
 
 void setF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::XArray<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_xarrayPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(),
                     Features::Codec::encode(value));
 }
+
+void insertF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value) {
+    mutating.insertInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(),
+                            beforePosition, newPosition, Features::Codec::encode(value));
+}
+
+void updateF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position, std::uint8_t value) {
+    mutating.updateInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(),
+                            position, Features::Codec::encode(value));
+}
+
+void removeF_xarray(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position) {
+    mutating.removeInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarrayPath(), position);
+}
+
 
 void setF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::XArray<StructureS> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_xarray_sPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(),
                     Features::Codec::encode(value));
 }
+
+void insertF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Test::StructureS const & value) {
+    mutating.insertInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(),
+                            beforePosition, newPosition, Features::Codec::encode(value));
+}
+
+void updateF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position, Test::StructureS const & value) {
+    mutating.updateInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(),
+                            position, Features::Codec::encode(value));
+}
+
+void removeF_xarray_s(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::UUId const & position) {
+    mutating.removeInXArray(attachment(), encodeKey(key), Test::Fields::StructureU::f_xarray_sPath(), position);
+}
+
 
 void setF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_map_vsPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(),
                     Features::Codec::encode(value));
 }
+
+void unionF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
+void subtractF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::set<std::vector<Test::StructureS>> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void updateF_map_vs(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::map<std::vector<StructureS>, std::string> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureU::f_map_vsPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
 
 void setF_variant(Viper::AttachmentMutating & mutating, ConceptCKey const & key, std::variant<std::string, std::uint8_t, StructureS> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_variantPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_variantPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_any(Viper::AttachmentMutating & mutating, ConceptCKey const & key, Viper::Any const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_anyPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_anyPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_E(Viper::AttachmentMutating & mutating, ConceptCKey const & key, EnumerationE value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_EPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_EPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_S(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureS const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_SPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_SPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_T(Viper::AttachmentMutating & mutating, ConceptCKey const & key, StructureT const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_TPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_TPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_A(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptAKey const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_APath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_APath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_B(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptBKey const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_BPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_BPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_C(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptCKey const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_CPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_CPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_D(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ConceptDKey const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_DPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_DPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_Klub(Viper::AttachmentMutating & mutating, ConceptCKey const & key, KlubKey const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_KlubPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_KlubPath(),
                     Features::Codec::encode(value));
 }
 
+
 void setF_any_concept(Viper::AttachmentMutating & mutating, ConceptCKey const & key, ::Features::AnyConceptKey const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureU::f_any_conceptPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureU::f_any_conceptPath(),
                     Features::Codec::encode(value));
 }
 
@@ -1625,6 +1758,19 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, 
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
+
+void union_(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
+void subtract(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void update(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
 } // namespace Test::Attachments::ConceptCoverage::docMap
 
 namespace Test::Attachments::ConceptCoverage::docMat {
@@ -1772,6 +1918,15 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, 
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
+
+void union_(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void subtract(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.subtractInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
 } // namespace Test::Attachments::ConceptCoverage::docSet
 
 namespace Test::Attachments::ConceptCoverage::docString {
@@ -1872,8 +2027,7 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, 
 }
 
 void setF_single(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureW::f_singlePath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureW::f_singlePath(),
                     Features::Codec::encode(value));
 }
 
@@ -2367,6 +2521,20 @@ void diff(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, 
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
+
+void insert(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, std::uint8_t value) {
+    mutating.insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
+                            beforePosition, newPosition, Features::Codec::encode(value));
+}
+
+void update(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & position, std::uint8_t value) {
+    mutating.updateInXArray(attachment(), encodeKey(key), Viper::Path::make(), position, Features::Codec::encode(value));
+}
+
+void remove(Viper::AttachmentMutating & mutating, ConceptCoverageKey const & key, Viper::UUId const & position) {
+    mutating.removeInXArray(attachment(), encodeKey(key), Viper::Path::make(), position);
+}
+
 } // namespace Test::Attachments::ConceptCoverage::docXArray
 
 namespace Test::Attachments::Klub::propertiesD {
@@ -2418,140 +2586,159 @@ void diff(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureV 
 }
 
 void setF_bool(Viper::AttachmentMutating & mutating, KlubKey const & key, bool value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_boolPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_boolPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint8(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uint8Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint8Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint16(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint16_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uint16Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint16Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint32(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint32_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uint32Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint32Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uint64(Viper::AttachmentMutating & mutating, KlubKey const & key, std::uint64_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uint64Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uint64Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int8(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_int8Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int8Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int16(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int16_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_int16Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int16Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int32(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int32_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_int32Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int32Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_int64(Viper::AttachmentMutating & mutating, KlubKey const & key, std::int64_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_int64Path(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_int64Path(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_float(Viper::AttachmentMutating & mutating, KlubKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_floatPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_floatPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_double(Viper::AttachmentMutating & mutating, KlubKey const & key, double value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_doublePath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_doublePath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_uuid(Viper::AttachmentMutating & mutating, KlubKey const & key, Viper::UUId const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_uuidPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_uuidPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_string(Viper::AttachmentMutating & mutating, KlubKey const & key, std::string const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_stringPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_stringPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_vec(Viper::AttachmentMutating & mutating, KlubKey const & key, std::array<std::uint8_t, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_vecPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vecPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_mat(Viper::AttachmentMutating & mutating, KlubKey const & key, std::array<std::array<std::uint8_t, 3>, 2> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_matPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_matPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_tuple(Viper::AttachmentMutating & mutating, KlubKey const & key, std::tuple<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_tuplePath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_tuplePath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_optional(Viper::AttachmentMutating & mutating, KlubKey const & key, std::optional<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_optionalPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_optionalPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_vector(Viper::AttachmentMutating & mutating, KlubKey const & key, std::vector<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_vectorPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_vectorPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_setPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(),
                     Features::Codec::encode(value));
 }
+
+void unionF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.unionInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void subtractF_set(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.subtractInSet(attachment(), encodeKey(key), Test::Fields::StructureV::f_setPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
 
 void setF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_mapPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(),
                     Features::Codec::encode(value));
 }
+
+void unionF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
+void subtractF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::set<std::uint8_t> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueSet::cast(Features::Codec::encode(value)));
+}
+
+void updateF_map(Viper::AttachmentMutating & mutating, KlubKey const & key, std::map<std::uint8_t, std::string> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Test::Fields::StructureV::f_mapPath(), Viper::ValueMap::cast(Features::Codec::encode(value)));
+}
+
 
 void setF_E(Viper::AttachmentMutating & mutating, KlubKey const & key, EnumerationE value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_EPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_EPath(),
                     Features::Codec::encode(value));
 }
+
 
 void setF_S(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureS const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_SPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_SPath(),
                     Features::Codec::encode(value));
 }
 
+
 void setF_T(Viper::AttachmentMutating & mutating, KlubKey const & key, StructureT const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Test::Fields::StructureV::f_TPath(),
+    mutating.update(attachment(), encodeKey(key), Test::Fields::StructureV::f_TPath(),
                     Features::Codec::encode(value));
 }
 

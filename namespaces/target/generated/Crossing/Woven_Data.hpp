@@ -115,24 +115,6 @@ bool operator<(WeaveKey const &, WeaveKey const &) noexcept;
 void hash(Viper::Hash::Accumulator & h, WeaveKey const & value) noexcept;
 
 
-/** Chaque conteneur, avec des éléments des deux fournisseurs. */
-struct Composites final {
-    std::tuple<Core::Colour, Parts::Colour> f_tuple{};
-    std::optional<Core::ThingKey> f_optional{};
-    std::vector<Parts::Colour> f_vector{};
-    std::set<Core::ThingKey> f_set{};
-    std::map<Core::ThingKey, Parts::ThingKey> f_map_keys{};
-    std::map<Core::Grade, Parts::Colour> f_map_enum{};
-    Viper::XArray<Core::Colour> f_xarray{};
-    std::variant<Core::Colour, Parts::Colour, std::string> f_variant{};
-};
-
-bool operator==(Composites const &, Composites const &) noexcept;
-bool operator!=(Composites const &, Composites const &) noexcept;
-bool operator<(Composites const &, Composites const &) noexcept;
-
-void hash(Viper::Hash::Accumulator & h, Composites const & value) noexcept;
-
 /** Les entités des deux fournisseurs, nues, comme champs. */
 struct Entities final {
     Core::Grade f_core_grade{};
@@ -152,6 +134,24 @@ bool operator!=(Entities const &, Entities const &) noexcept;
 bool operator<(Entities const &, Entities const &) noexcept;
 
 void hash(Viper::Hash::Accumulator & h, Entities const & value) noexcept;
+
+/** Chaque conteneur, avec des éléments des deux fournisseurs. */
+struct Composites final {
+    std::tuple<Core::Colour, Parts::Colour> f_tuple{};
+    std::optional<Core::ThingKey> f_optional{};
+    std::vector<Parts::Colour> f_vector{};
+    std::set<Core::ThingKey> f_set{};
+    std::map<Core::ThingKey, Parts::ThingKey> f_map_keys{};
+    std::map<Core::Grade, Parts::Colour> f_map_enum{};
+    Viper::XArray<Core::Colour> f_xarray{};
+    std::variant<Core::Colour, Parts::Colour, std::string> f_variant{};
+};
+
+bool operator==(Composites const &, Composites const &) noexcept;
+bool operator!=(Composites const &, Composites const &) noexcept;
+bool operator<(Composites const &, Composites const &) noexcept;
+
+void hash(Viper::Hash::Accumulator & h, Composites const & value) noexcept;
 
 /** Une structure d'ici qui contient une structure d'ici : la profondeur reste locale. */
 struct Nested final {
@@ -176,11 +176,11 @@ template<> struct std::hash<Woven::DerivedKey> {
 template<> struct std::hash<Woven::WeaveKey> {
     std::size_t operator()(Woven::WeaveKey const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Woven::Composites> {
-    std::size_t operator()(Woven::Composites const & v) const noexcept { return Viper::Hash::of(v); }
-};
 template<> struct std::hash<Woven::Entities> {
     std::size_t operator()(Woven::Entities const & v) const noexcept { return Viper::Hash::of(v); }
+};
+template<> struct std::hash<Woven::Composites> {
+    std::size_t operator()(Woven::Composites const & v) const noexcept { return Viper::Hash::of(v); }
 };
 template<> struct std::hash<Woven::Nested> {
     std::size_t operator()(Woven::Nested const & v) const noexcept { return Viper::Hash::of(v); }

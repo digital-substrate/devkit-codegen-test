@@ -239,6 +239,17 @@ bool operator<(StructureS const &, StructureS const &) noexcept;
 void hash(Viper::Hash::Accumulator & h, StructureS const & value) noexcept;
 
 /**  */
+struct StructureW final {
+    std::uint8_t f_single{};
+};
+
+bool operator==(StructureW const &, StructureW const &) noexcept;
+bool operator!=(StructureW const &, StructureW const &) noexcept;
+bool operator<(StructureW const &, StructureW const &) noexcept;
+
+void hash(Viper::Hash::Accumulator & h, StructureW const & value) noexcept;
+
+/**  */
 struct StructureT final {
     std::string field_string{};
     StructureS field_structure_s{};
@@ -249,6 +260,39 @@ bool operator!=(StructureT const &, StructureT const &) noexcept;
 bool operator<(StructureT const &, StructureT const &) noexcept;
 
 void hash(Viper::Hash::Accumulator & h, StructureT const & value) noexcept;
+
+/**  */
+struct StructureV final {
+    bool f_bool{};
+    std::uint8_t f_uint8{};
+    std::uint16_t f_uint16{};
+    std::uint32_t f_uint32{};
+    std::uint64_t f_uint64{};
+    std::int8_t f_int8{};
+    std::int16_t f_int16{};
+    std::int32_t f_int32{};
+    std::int64_t f_int64{};
+    float f_float{};
+    double f_double{};
+    Viper::UUId f_uuid{};
+    std::string f_string{};
+    std::array<std::uint8_t, 2> f_vec{};
+    std::array<std::array<std::uint8_t, 3>, 2> f_mat{};
+    std::tuple<std::uint8_t, std::string> f_tuple{};
+    std::optional<std::uint8_t> f_optional{};
+    std::vector<std::uint8_t> f_vector{};
+    std::set<std::uint8_t> f_set{};
+    std::map<std::uint8_t, std::string> f_map{};
+    EnumerationE f_E{};
+    StructureS f_S{};
+    StructureT f_T{};
+};
+
+bool operator==(StructureV const &, StructureV const &) noexcept;
+bool operator!=(StructureV const &, StructureV const &) noexcept;
+bool operator<(StructureV const &, StructureV const &) noexcept;
+
+void hash(Viper::Hash::Accumulator & h, StructureV const & value) noexcept;
 
 /**  */
 struct StructureU final {
@@ -299,50 +343,6 @@ bool operator<(StructureU const &, StructureU const &) noexcept;
 
 void hash(Viper::Hash::Accumulator & h, StructureU const & value) noexcept;
 
-/**  */
-struct StructureV final {
-    bool f_bool{};
-    std::uint8_t f_uint8{};
-    std::uint16_t f_uint16{};
-    std::uint32_t f_uint32{};
-    std::uint64_t f_uint64{};
-    std::int8_t f_int8{};
-    std::int16_t f_int16{};
-    std::int32_t f_int32{};
-    std::int64_t f_int64{};
-    float f_float{};
-    double f_double{};
-    Viper::UUId f_uuid{};
-    std::string f_string{};
-    std::array<std::uint8_t, 2> f_vec{};
-    std::array<std::array<std::uint8_t, 3>, 2> f_mat{};
-    std::tuple<std::uint8_t, std::string> f_tuple{};
-    std::optional<std::uint8_t> f_optional{};
-    std::vector<std::uint8_t> f_vector{};
-    std::set<std::uint8_t> f_set{};
-    std::map<std::uint8_t, std::string> f_map{};
-    EnumerationE f_E{};
-    StructureS f_S{};
-    StructureT f_T{};
-};
-
-bool operator==(StructureV const &, StructureV const &) noexcept;
-bool operator!=(StructureV const &, StructureV const &) noexcept;
-bool operator<(StructureV const &, StructureV const &) noexcept;
-
-void hash(Viper::Hash::Accumulator & h, StructureV const & value) noexcept;
-
-/**  */
-struct StructureW final {
-    std::uint8_t f_single{};
-};
-
-bool operator==(StructureW const &, StructureW const &) noexcept;
-bool operator!=(StructureW const &, StructureW const &) noexcept;
-bool operator<(StructureW const &, StructureW const &) noexcept;
-
-void hash(Viper::Hash::Accumulator & h, StructureW const & value) noexcept;
-
 } // namespace Test
 
 template<> struct std::hash<Test::ConceptAKey> {
@@ -369,17 +369,17 @@ template<> struct std::hash<Test::KlubKey> {
 template<> struct std::hash<Test::StructureS> {
     std::size_t operator()(Test::StructureS const & v) const noexcept { return Viper::Hash::of(v); }
 };
+template<> struct std::hash<Test::StructureW> {
+    std::size_t operator()(Test::StructureW const & v) const noexcept { return Viper::Hash::of(v); }
+};
 template<> struct std::hash<Test::StructureT> {
     std::size_t operator()(Test::StructureT const & v) const noexcept { return Viper::Hash::of(v); }
-};
-template<> struct std::hash<Test::StructureU> {
-    std::size_t operator()(Test::StructureU const & v) const noexcept { return Viper::Hash::of(v); }
 };
 template<> struct std::hash<Test::StructureV> {
     std::size_t operator()(Test::StructureV const & v) const noexcept { return Viper::Hash::of(v); }
 };
-template<> struct std::hash<Test::StructureW> {
-    std::size_t operator()(Test::StructureW const & v) const noexcept { return Viper::Hash::of(v); }
+template<> struct std::hash<Test::StructureU> {
+    std::size_t operator()(Test::StructureU const & v) const noexcept { return Viper::Hash::of(v); }
 };
 
 #endif

@@ -20,6 +20,8 @@
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
+#include <map>
+
 #include <cstdint>
 #include <optional>
 #include <set>
@@ -41,6 +43,11 @@ void set(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<Mod
 
 void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value,
           bool recursive = false);
+
+void union_(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value);
+void subtract(Viper::AttachmentMutating & mutating, LinkKey const & key, std::set<ModelA::MaterialKey> const & value);
+void update(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value);
+
 } // namespace Projection::Attachments::Link::mapping
 
 /** The only reference to ModelC anywhere: an attachment document type. */
@@ -80,6 +87,7 @@ void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, Pair const 
           bool recursive = false);
 
 void setA(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelA::MaterialKey const & value);
+
 void setB(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelB::MaterialKey const & value);
 
 } // namespace Projection::Attachments::Link::pair

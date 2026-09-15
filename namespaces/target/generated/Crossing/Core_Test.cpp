@@ -19,6 +19,7 @@ void test() {
     Crossing::Test::roundTrip<SubThingKey>();
     Crossing::Test::roundTrip<KlubKey>();
     Crossing::Test::roundTrip<Grade>();
+    Crossing::Test::roundTrip<Bag>();
     Crossing::Test::roundTrip<Colour>();
     Crossing::Test::roundTrip<Defaults>();
     Crossing::Test::roundTrip<Scalars>();
@@ -26,8 +27,16 @@ void test() {
 }
 
 void testDatabase(std::shared_ptr<Viper::Database> const & db) {
+    Crossing::Test::roundTripAttachment<ThingKey, Bag>(
+        db, Attachments::Thing::bag::runtimeId);
     Crossing::Test::roundTripAttachment<ThingKey, Colour>(
         db, Attachments::Thing::colour::runtimeId);
+    Crossing::Test::roundTripAttachment<ThingKey, Viper::XArray<Colour>>(
+        db, Attachments::Thing::history::runtimeId);
+    Crossing::Test::roundTripAttachment<ThingKey, std::map<ThingKey, Colour>>(
+        db, Attachments::Thing::palette::runtimeId);
+    Crossing::Test::roundTripAttachment<ThingKey, std::set<ThingKey>>(
+        db, Attachments::Thing::related::runtimeId);
     Crossing::Test::roundTripAttachment<ThingKey, Scalars>(
         db, Attachments::Thing::scalars::runtimeId);
 }

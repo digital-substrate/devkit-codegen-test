@@ -177,6 +177,26 @@ void hash(Viper::Hash::Accumulator & h, Grade value) noexcept {
     hash(h, static_cast<std::uint8_t>(value));
 }
 
+// ── Bag ──
+
+bool operator==(Bag const & l, Bag const & r) noexcept {
+    return l.members == r.members
+        && l.tints == r.tints
+        && l.trail == r.trail;
+}
+bool operator!=(Bag const & l, Bag const & r) noexcept { return !(l == r); }
+bool operator<(Bag const & l, Bag const & r) noexcept {
+    if (l.members != r.members) return l.members < r.members;
+    if (l.tints != r.tints) return l.tints < r.tints;
+    return l.trail < r.trail;
+}
+
+void hash(Viper::Hash::Accumulator & h, Bag const & value) noexcept {
+    hash(h, value.members);
+    hash(h, value.tints);
+    hash(h, value.trail);
+}
+
 // ── Colour ──
 
 bool operator==(Colour const & l, Colour const & r) noexcept {

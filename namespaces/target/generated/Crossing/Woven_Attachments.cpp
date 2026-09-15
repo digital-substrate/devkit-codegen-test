@@ -70,20 +70,19 @@ void diff(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, Part
 }
 
 void setR(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Parts::Fields::Colour::rPath(),
+    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
+
 
 void setG(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Parts::Fields::Colour::gPath(),
+    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
+
 void setB(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Parts::Fields::Colour::bPath(),
+    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 
@@ -187,20 +186,19 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Colou
 }
 
 void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Core::Fields::Colour::rPath(),
+    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
+
 
 void setG(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Core::Fields::Colour::gPath(),
+    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
+
 void setB(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Core::Fields::Colour::bPath(),
+    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 
@@ -255,50 +253,95 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Composites 
 }
 
 void setF_tuple(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Woven::Fields::Composites::f_tuplePath(),
+    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_tuplePath(),
                     Crossing::Codec::encode(value));
 }
+
 
 void setF_optional(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Woven::Fields::Composites::f_optionalPath(),
+    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_optionalPath(),
                     Crossing::Codec::encode(value));
 }
+
 
 void setF_vector(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Woven::Fields::Composites::f_vectorPath(),
+    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_vectorPath(),
                     Crossing::Codec::encode(value));
 }
+
 
 void setF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Woven::Fields::Composites::f_setPath(),
+    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_setPath(),
                     Crossing::Codec::encode(value));
 }
+
+void unionF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating.unionInSet(attachment(), encodeKey(key), Woven::Fields::Composites::f_setPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+}
+
+void subtractF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating.subtractInSet(attachment(), encodeKey(key), Woven::Fields::Composites::f_setPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+}
+
 
 void setF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Woven::Fields::Composites::f_map_keysPath(),
+    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(),
                     Crossing::Codec::encode(value));
 }
+
+void unionF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+}
+
+void subtractF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+}
+
+void updateF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_keysPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+}
+
 
 void setF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Woven::Fields::Composites::f_map_enumPath(),
+    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(),
                     Crossing::Codec::encode(value));
 }
+
+void unionF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+}
+
+void subtractF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::Grade> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+}
+
+void updateF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Woven::Fields::Composites::f_map_enumPath(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+}
+
 
 void setF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Woven::Fields::Composites::f_xarrayPath(),
+    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(),
                     Crossing::Codec::encode(value));
 }
 
+void insertF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value) {
+    mutating.insertInXArray(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(),
+                            beforePosition, newPosition, Crossing::Codec::encode(value));
+}
+
+void updateF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value) {
+    mutating.updateInXArray(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(),
+                            position, Crossing::Codec::encode(value));
+}
+
+void removeF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position) {
+    mutating.removeInXArray(attachment(), encodeKey(key), Woven::Fields::Composites::f_xarrayPath(), position);
+}
+
+
 void setF_variant(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour, std::string> const & value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Woven::Fields::Composites::f_variantPath(),
+    mutating.update(attachment(), encodeKey(key), Woven::Fields::Composites::f_variantPath(),
                     Crossing::Codec::encode(value));
 }
 
@@ -449,6 +492,19 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Co
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
+
+void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+}
+
+void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::Grade> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+}
+
+void update(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+}
+
 } // namespace Woven::Attachments::Knot::docMapEnum
 
 namespace Woven::Attachments::Knot::docMapKeys {
@@ -498,6 +554,19 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Co
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
+
+void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+}
+
+void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating.subtractInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+}
+
+void update(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value) {
+    mutating.updateInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
+}
+
 } // namespace Woven::Attachments::Knot::docMapKeys
 
 namespace Woven::Attachments::Knot::docOptional {
@@ -598,20 +667,19 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Parts::Colo
 }
 
 void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Parts::Fields::Colour::rPath(),
+    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
+
 
 void setG(Viper::AttachmentMutating & mutating, KnotKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Parts::Fields::Colour::gPath(),
+    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
+
 void setB(Viper::AttachmentMutating & mutating, KnotKey const & key, float value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Parts::Fields::Colour::bPath(),
+    mutating.update(attachment(), encodeKey(key), Parts::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 
@@ -664,6 +732,15 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Co
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
+
+void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating.unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+}
+
+void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value) {
+    mutating.subtractInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
+}
+
 } // namespace Woven::Attachments::Knot::docSet
 
 namespace Woven::Attachments::Knot::docThingKey {
@@ -909,6 +986,20 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArr
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
+
+void insert(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value) {
+    mutating.insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
+                            beforePosition, newPosition, Crossing::Codec::encode(value));
+}
+
+void update(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value) {
+    mutating.updateInXArray(attachment(), encodeKey(key), Viper::Path::make(), position, Crossing::Codec::encode(value));
+}
+
+void remove(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position) {
+    mutating.removeInXArray(attachment(), encodeKey(key), Viper::Path::make(), position);
+}
+
 } // namespace Woven::Attachments::Knot::docXArray
 
 namespace Woven::Attachments::Parts_Thing::mark {
@@ -960,20 +1051,19 @@ void diff(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, Cor
 }
 
 void setR(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Core::Fields::Colour::rPath(),
+    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
 }
+
 
 void setG(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Core::Fields::Colour::gPath(),
+    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::gPath(),
                     Crossing::Codec::encode(value));
 }
 
+
 void setB(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    Core::Fields::Colour::bPath(),
+    mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::bPath(),
                     Crossing::Codec::encode(value));
 }
 

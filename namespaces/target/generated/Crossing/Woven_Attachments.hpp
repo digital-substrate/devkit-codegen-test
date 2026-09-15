@@ -19,6 +19,8 @@
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
+#include <map>
+
 #include <cstdint>
 #include <optional>
 #include <set>
@@ -41,7 +43,9 @@ void diff(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, Part
           bool recursive = false);
 
 void setR(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value);
+
 void setG(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value);
+
 void setB(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value);
 
 } // namespace Woven::Attachments::Core_Thing::mark
@@ -82,7 +86,9 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Colou
           bool recursive = false);
 
 void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value);
+
 void setG(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value);
+
 void setB(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value);
 
 } // namespace Woven::Attachments::Knot::docColour
@@ -105,12 +111,26 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Composites 
           bool recursive = false);
 
 void setF_tuple(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value);
+
 void setF_optional(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value);
+
 void setF_vector(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value);
+
 void setF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void unionF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void subtractF_set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
 void setF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+void unionF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+void subtractF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void updateF_map_keys(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
 void setF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+void unionF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+void subtractF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::Grade> const & value);
+void updateF_map_enum(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
 void setF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value);
+void insertF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value);
+void updateF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value);
+void removeF_xarray(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position);
 void setF_variant(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour, std::string> const & value);
 
 } // namespace Woven::Attachments::Knot::docComposites
@@ -167,6 +187,11 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Cor
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value,
           bool recursive = false);
+
+void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::Grade> const & value);
+void update(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+
 } // namespace Woven::Attachments::Knot::docMapEnum
 
 namespace Woven::Attachments::Knot::docMapKeys {
@@ -185,6 +210,11 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Cor
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value,
           bool recursive = false);
+
+void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void update(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+
 } // namespace Woven::Attachments::Knot::docMapKeys
 
 namespace Woven::Attachments::Knot::docOptional {
@@ -223,7 +253,9 @@ void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Parts::Colo
           bool recursive = false);
 
 void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, float value);
+
 void setG(Viper::AttachmentMutating & mutating, KnotKey const & key, float value);
+
 void setB(Viper::AttachmentMutating & mutating, KnotKey const & key, float value);
 
 } // namespace Woven::Attachments::Knot::docOtherColour
@@ -244,6 +276,10 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Cor
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value,
           bool recursive = false);
+
+void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
+
 } // namespace Woven::Attachments::Knot::docSet
 
 namespace Woven::Attachments::Knot::docThingKey {
@@ -334,6 +370,11 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArra
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value,
           bool recursive = false);
+
+void insert(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value);
+void update(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value);
+void remove(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position);
+
 } // namespace Woven::Attachments::Knot::docXArray
 
 namespace Woven::Attachments::Parts_Thing::mark {
@@ -354,7 +395,9 @@ void diff(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, Cor
           bool recursive = false);
 
 void setR(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value);
+
 void setG(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value);
+
 void setB(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value);
 
 } // namespace Woven::Attachments::Parts_Thing::mark

@@ -17,6 +17,8 @@
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
+#include <map>
+
 #include <cstdint>
 #include <optional>
 #include <set>
@@ -39,7 +41,9 @@ void diff(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour 
           bool recursive = false);
 
 void setR(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
+
 void setG(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
+
 void setB(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
 
 } // namespace ModelA::Attachments::Material::colour

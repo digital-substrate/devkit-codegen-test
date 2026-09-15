@@ -64,20 +64,19 @@ void diff(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour 
 }
 
 void setR(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    ModelA::Fields::Colour::rPath(),
+    mutating.update(attachment(), encodeKey(key), ModelA::Fields::Colour::rPath(),
                     Topology::Codec::encode(value));
 }
+
 
 void setG(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    ModelA::Fields::Colour::gPath(),
+    mutating.update(attachment(), encodeKey(key), ModelA::Fields::Colour::gPath(),
                     Topology::Codec::encode(value));
 }
 
+
 void setB(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value) {
-    mutating.update(attachment(), encodeKey(key),
-                    ModelA::Fields::Colour::bPath(),
+    mutating.update(attachment(), encodeKey(key), ModelA::Fields::Colour::bPath(),
                     Topology::Codec::encode(value));
 }
 
