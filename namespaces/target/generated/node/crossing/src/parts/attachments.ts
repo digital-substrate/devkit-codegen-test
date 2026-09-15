@@ -1,0 +1,17 @@
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
+
+/** Parts — les attachments que ce namespace déclare. */
+import dsviper from "@digitalsubstrate/dsviper";
+
+import { AttachmentProxy } from "../_codegen/attachment.js";
+import { Mapping, Ordered, Sequence } from "../_codegen/container.js";
+import { AnyConceptKey } from "../_codegen/registry.js";
+import { definitions } from "../index.js";
+import { ThingKey, Grade, Colour } from "./data.js";
+
+/** Les attachments portés par Parts::ThingKey. */
+export class Thing {
+    static readonly colour = new AttachmentProxy<ThingKey, Colour>(
+        dsviper.ValueUUId.create("2db4209c-05b7-fed3-e045-08819f852028"),
+        definitions, ThingKey, Colour);
+}

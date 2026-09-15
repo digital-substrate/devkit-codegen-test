@@ -11,7 +11,7 @@ import zlib
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent.parent.parent
+ROOT = HERE.parents[3]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from dsviper import DSMBuilder                                      # noqa: E402
@@ -56,6 +56,10 @@ for model, definitions in MODELS.items():
     # d'octets ; une roue Python embarque une chaîne, compressée puis encodée, parce que
     # c'est ce qu'un fichier source Python sait contenir sans se déformer.
     payload = base64.b64encode(zlib.compress(bytes(blob))).decode()
+
+    # NODE LIT LE BASE64 BRUT. `ValueBlob.base64Decode` fait le décodage lui-même, donc y
+    # ajouter une compression obligerait le code rendu à embarquer zlib pour rien.
+    plain = base64.b64encode(bytes(blob)).decode()
     chunks = "\n".join(f'    "{payload[i:i + 92]}"' for i in range(0, len(payload), 92))
     python = ROOT / "namespaces/target/cpp/link/resources" / f"{model}_resources.py"
     python.write_text(
@@ -64,6 +68,17 @@ for model, definitions in MODELS.items():
         "d'enregistrement de types : le document est embarqué et décodé au chargement.\n\n"
         'Produit par `link/resources.py`. Ce n\'est pas un texte écrit à la main.\n"""\n\n'
         f"B64_DEFINITIONS = (\n{chunks}\n)\n")
+
+    # Et la même chaîne pour Node, qui la lit comme Python : embarquée dans une source.
+    node = ROOT / "namespaces/target/cpp/link/resources" / f"{model}_resources.ts"
+    node.write_text(
+        f"// modèle {model} — le modèle, en octets.\n//\n"
+        "// LE .DSM EMBARQUÉ TEL QUEL, compressé et encodé. Le générateur ne produit aucun code\n"
+        "// d'enregistrement de types : le document est embarqué et décodé au chargement.\n//\n"
+        "// Produit par `cpp/link/resources.py`. Ce n'est pas un texte écrit à la main.\n\n"
+        "export const B64_DEFINITIONS =\n"
+        + "\n".join(f'    "{plain[i:i + 92]}" +' for i in range(0, len(plain), 92))[:-2]
+        + ";\n")
 
     print(f"  {model:10} {len(body.splitlines()):5} lignes d'octets, "
           f"{len(payload):6} caractères encodés")

@@ -49,6 +49,7 @@ STAGES = [
     ("Python — rend, importe, éprouve, type", HERE / "python/render.py", flags),
     ("Python — la référence écrite à la main", HERE / "python/check.py", []),
     ("Node   — compile en strict, et tourne", HERE / "node/check.py", []),
+    ("Node   — rend, compile, importe, éprouve", HERE / "node/render.py", flags),
 ]
 
 status = 0

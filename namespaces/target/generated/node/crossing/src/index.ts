@@ -1,0 +1,25 @@
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
+
+/**
+ * Crossing — le modèle, et ce qu'aucune unité ne peut revendiquer.
+ *
+ * UN NAMESPACE EST UN MODULE, ET C'EST GRATUIT. `ModelA::Colour` est `crossing/model_a` et
+ * `ModelB::Colour` est `crossing/model_b` : les deux coexistent sans qu'un nom bouge.
+ *
+ * CE QUI RESTE AU SOCLE EST PLUS PETIT QU'EN C++. Là-bas il portait `encode`/`decode` parce
+ * qu'une valeur C++ et une `Value` du runtime sont deux choses qu'il faut faire passer l'une
+ * dans l'autre ; ici une valeur générée *est* une Value. Il ne reste que les définitions.
+ */
+import dsviper from "@digitalsubstrate/dsviper";
+
+import { B64_DEFINITIONS } from "./resources.js";
+
+let cached: dsviper.DefinitionsConst | undefined;
+
+/** Le modèle, tel que le runtime le connaît — le document embarqué, décodé au chargement. */
+export function definitions(): dsviper.DefinitionsConst {
+    if (cached === undefined) {
+        cached = dsviper.Definitions.decode(dsviper.ValueBlob.base64Decode(B64_DEFINITIONS)).const();
+    }
+    return cached;
+}

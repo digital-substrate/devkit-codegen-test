@@ -1,0 +1,25 @@
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/service/Service.dsm.json by kibo-2.0.0.jar
+/** Tools — le pool, vu d'un client. */
+import dsviper from "@digitalsubstrate/dsviper";
+import { unwrap, wrap } from "../_codegen/registry.js";
+export const NAME = "Tools";
+export const UUID = dsviper.ValueUUId.create("7aa5aea2-c9de-4f91-8371-7995aca8c947");
+/** Le pool, vu d'un client. */
+export class Remote {
+    service;
+    constructor(service) {
+        this.service = service;
+    }
+    isAvailable() {
+        return this.service.functionPoolFuncs(NAME) !== undefined;
+    }
+    add(a, b) {
+        return wrap(this.service.functionPoolFunc(NAME, "add").call(unwrap(a), unwrap(b)));
+    }
+    addVector(a, b) {
+        return wrap(this.service.functionPoolFunc(NAME, "add_vector").call(unwrap(a), unwrap(b)));
+    }
+    randomString(size) {
+        return wrap(this.service.functionPoolFunc(NAME, "random_string").call(unwrap(size)));
+    }
+}

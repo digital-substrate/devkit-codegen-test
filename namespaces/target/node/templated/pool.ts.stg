@@ -1,0 +1,92 @@
+// Un pool, vu d'un client — et il n'y a que ce bord-là.
+//
+// LA LIAISON NODE N'EXPOSE AUCUNE CLASSE `FunctionPool`. Un pool n'y est atteignable que par un
+// `ServiceRemote`, donc à travers un fil. C++ construit le pool et l'expose ; Python le tient
+// en main et l'appelle ; Node ne peut que l'appeler à distance. Ce n'est pas une omission du
+// pack -- son dossier `typescript/` porte un `function_pool_remotes` et aucun `function_pools`.
+//
+// ET ÇA TRANCHE LA DÉCOUPE EN FONCTIONNALITÉS : `Service` et `ServiceClient` ne sont pas la
+// même chose, puisqu'une cible n'a que la seconde.
+//
+// UN ÉTAT TRAVERSE `call`, ET LES DÉCLARATIONS LE TYPENT TROP ÉTROIT. `call(...args:
+// InputValue[])` n'admet pas une `AttachmentMutating`, que le runtime accepte pourtant en
+// premier argument d'une fonction de pool d'attachments -- c'est ce que le pack écrit déjà.
+// La conversion est donc explicite ici, et l'écart est à signaler au `.d.ts`.
+//
+// LES MÉTHODES SONT ÉCRITES, PAS DÉDUITES. `functionPoolFunc(pool, "add").call(…)` marche sans
+// qu'on génère quoi que ce soit, et c'est pourquoi il faut les écrire : sans elles le nom
+// d'une fonction du modèle n'est qu'une chaîne, une faute de frappe n'est vue qu'à l'exécution,
+// et rien ne dit ce que l'appel prend ni ce qu'il rend.
+
+pool(p) ::= <<
+<preamble(p)>
+
+/** Le pool, vu d'un client. */
+export class Remote {
+    private readonly service: dsviper.ServiceRemote;
+
+    constructor(service: dsviper.ServiceRemote) {
+        this.service = service;
+    }
+
+    isAvailable(): boolean {
+        return this.service.functionPoolFuncs(NAME) !== undefined;
+    }
+
+<p.functions:remote_call();separator="\n\n">
+}
+>>
+
+// UN POOL D'ATTACHMENTS AGIT SUR DES DOCUMENTS, donc son appel emporte l'état sur lequel il
+// porte. C'est la seule différence, et elle est dans la signature.
+attachment_pool(p) ::= <<
+<preamble(p)>
+
+/** Le pool d'attachments, vu d'un client. */
+export class Remote {
+    private readonly service: dsviper.ServiceRemote;
+
+    constructor(service: dsviper.ServiceRemote) {
+        this.service = service;
+    }
+
+    isAvailable(): boolean {
+        return this.service.attachmentFunctionPoolFuncs(NAME) !== undefined;
+    }
+
+<p.functions:attachment_remote_call();separator="\n\n">
+}
+>>
+
+preamble(p) ::= <<
+// <p.model.generated>
+
+/** <p.name> — le pool, vu d'un client. */
+import dsviper from "@digitalsubstrate/dsviper";
+
+import { Mapping, Ordered, Sequence } from "../_codegen/container.js";
+import { AnyConceptKey, unwrap, wrap } from "../_codegen/registry.js";
+<p.dependencies.functions:{d|import * as <d.name;format="lsc"> from "../<d.name;format="lsc">/data.js";};separator="\n">
+
+export const NAME = "<p.name>";
+export const UUID = dsviper.ValueUUId.create("<p.uuid>");
+>>
+
+remote_call(f) ::= <<
+    <f.name;format="lf">(<f.parameters:parameter();separator=", ">): <ret(f)> {
+        <call(f)>
+    }
+>>
+
+attachment_remote_call(f) ::= <<
+    <f.name;format="lf">(state: dsviper.AttachmentMutating<if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>): <ret(f)> {
+        <attachment_call(f)>
+    }
+>>
+
+parameter(a) ::= <%<a.name;format="lf">: <a.bindingType.annotation>%>
+ret(f) ::= <%<if(f.isVoid)>void<else><f.returnBindingType.annotation><endif>%>
+argument(a) ::= <%unwrap(<a.name;format="lf">)%>
+
+call(f) ::= <%<if(f.isVoid)>this.service.functionPoolFunc(NAME, "<f.name;format="lsc">").call(<f.parameters:argument();separator=", ">);<else>return wrap(this.service.functionPoolFunc(NAME, "<f.name;format="lsc">").call(<f.parameters:argument();separator=", ">));<endif>%>
+attachment_call(f) ::= <%<if(f.isVoid)>this.service.attachmentFunctionPoolFunc(NAME, "<f.name;format="lsc">").call(state as unknown as dsviper.InputValue<if(f.parameters)>, <endif><f.parameters:argument();separator=", ">);<else>return wrap(this.service.attachmentFunctionPoolFunc(NAME, "<f.name;format="lsc">").call(state as unknown as dsviper.InputValue<if(f.parameters)>, <endif><f.parameters:argument();separator=", ">));<endif>%>

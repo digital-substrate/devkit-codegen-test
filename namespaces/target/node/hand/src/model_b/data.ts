@@ -114,4 +114,4 @@ export class Colour extends Proxy<dsviper.ValueStructure> {
 
 // Les classes de cette unité, par l'identifiant d'exécution de leur type : c'est ce qui permet
 // à `wrap` de rendre un élément de conteneur, ou un document d'attachment, avec son nom.
-register([[MATERIAL, MaterialKey], [COLOUR, Colour]]);
+register([MATERIAL, MaterialKey], [COLOUR, Colour]);

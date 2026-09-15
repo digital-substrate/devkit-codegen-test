@@ -1,0 +1,19 @@
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
+/** LinkModel — le pool, vu d'un client. */
+import dsviper from "@digitalsubstrate/dsviper";
+import { unwrap } from "../_codegen/registry.js";
+export const NAME = "LinkModel";
+export const UUID = dsviper.ValueUUId.create("a51019a2-790e-49ac-a164-6b150e0976d6");
+/** Le pool d'attachments, vu d'un client. */
+export class Remote {
+    service;
+    constructor(service) {
+        this.service = service;
+    }
+    isAvailable() {
+        return this.service.attachmentFunctionPoolFuncs(NAME) !== undefined;
+    }
+    clear(state, linkKey) {
+        this.service.attachmentFunctionPoolFunc(NAME, "clear").call(state, unwrap(linkKey));
+    }
+}

@@ -1,0 +1,19 @@
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
+/** Projector — le pool, vu d'un client. */
+import dsviper from "@digitalsubstrate/dsviper";
+import { unwrap } from "../_codegen/registry.js";
+export const NAME = "Projector";
+export const UUID = dsviper.ValueUUId.create("3f513cf9-c9b9-4c57-8ace-ac9a644be74c");
+/** Le pool, vu d'un client. */
+export class Remote {
+    service;
+    constructor(service) {
+        this.service = service;
+    }
+    isAvailable() {
+        return this.service.functionPoolFuncs(NAME) !== undefined;
+    }
+    link(a, b) {
+        this.service.functionPoolFunc(NAME, "link").call(unwrap(a), unwrap(b));
+    }
+}
