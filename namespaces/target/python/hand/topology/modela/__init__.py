@@ -18,6 +18,7 @@ import functools
 import dsviper
 
 from .. import definitions
+from .._proxy import Proxy
 
 
 # ── l'identité de cette unité dans le modèle ──
@@ -36,10 +37,10 @@ def _concept_type() -> dsviper.TypeConcept:
     return definitions().check_concept(MATERIAL)
 
 
-class MaterialKey:
+class MaterialKey(Proxy):
     """Une poignée sur une instance de Material, pas la chose elle-même."""
 
-    __slots__ = ("_value",)
+    __slots__ = ()
 
     @classmethod
     @functools.cache
@@ -58,9 +59,9 @@ class MaterialKey:
         if isinstance(identifier, dsviper.ValueKey):
             if identifier.type() != self.type():
                 raise TypeError("cette valeur n'est pas un ModelA::MaterialKey")
-            self._value = identifier
+            super().__init__(identifier)
         else:
-            self._value = dsviper.ValueKey.create(_concept_type(), identifier)
+            super().__init__(dsviper.ValueKey.create(_concept_type(), identifier))
 
     @classmethod
     def create(cls) -> MaterialKey:
@@ -68,25 +69,14 @@ class MaterialKey:
         return cls(dsviper.ValueUUId.create())
 
     @property
-    def value(self) -> dsviper.ValueKey:
-        """La valeur du runtime. C'est la donnée ; la classe n'en est que la lecture."""
-        return self._value
-
-    @property
     def instance_id(self) -> dsviper.ValueUUId:
         return self._value.instance_id
-
-    def __eq__(self, other) -> bool:
-        return isinstance(other, MaterialKey) and self._value == other._value
-
-    def __hash__(self) -> int:
-        return self._value.hash()
 
     def __repr__(self) -> str:
         return f"ModelA::MaterialKey({self._value.representation()})"
 
 
-class Colour:
+class Colour(Proxy):
     """Une couleur en canaux 8 bits.
 
     LES CHAMPS SONT DES PROPRIÉTÉS SUR LA VALUE, et c'est ce qui remplace toute la couche 2
@@ -95,7 +85,7 @@ class Colour:
     déjà un nom et un accès.
     """
 
-    __slots__ = ("_value",)
+    __slots__ = ()
 
     @classmethod
     @functools.cache
@@ -107,14 +97,10 @@ class Colour:
             value = dsviper.ValueStructure(self.type())
         elif value.type() != self.type():
             raise TypeError("cette valeur n'est pas un ModelA::Colour")
-        self._value = value
+        super().__init__(value)
 
         for name, field in fields.items():
             setattr(self, name, field)
-
-    @property
-    def value(self) -> dsviper.ValueStructure:
-        return self._value
 
     @property
     def r(self) -> int:
@@ -139,9 +125,6 @@ class Colour:
     @b.setter
     def b(self, value: int) -> None:
         self._value.set("b", value)
-
-    def __eq__(self, other) -> bool:
-        return isinstance(other, Colour) and self._value == other._value
 
     def __repr__(self) -> str:
         return f"ModelA::Colour(r={self.r}, g={self.g}, b={self.b})"

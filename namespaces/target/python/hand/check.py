@@ -10,8 +10,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from topology import definitions
+import dsviper
+
+from topology import definitions, tools
 from topology import modela, modelb
+from topology.modela import attachments as modela_attachments
 
 
 def check(label, condition):
@@ -49,8 +52,57 @@ ka, kb = modela.MaterialKey.create(), modelb.MaterialKey.create()
 ok &= check("les clés des deux unités ont des types distincts",
             ka.value.type() != kb.value.type())
 
+# ── un attachment, sur un état en mémoire ──
+#
+# C'est l'épreuve que la référence C++ passe par `CommitMutableState`, et elle se dit ici
+# dans les mêmes termes : le contexte est le premier argument, et c'est lui qui dit sur quoi
+# l'appel porte.
+colour = modela_attachments.material.colour
+state = dsviper.CommitState(definitions())
+mutable = dsviper.CommitMutableState(state)
+mutating = mutable.attachment_mutating()
+
+key = modela.MaterialKey.create()
+ok &= check("un attachment neuf ne connaît pas la clé", not colour.has(mutating, key))
+
+colour.set(mutating, key, modela.Colour(r=1, g=2, b=3))
+ok &= check("après écriture, la clé est connue", colour.has(mutating, key))
+ok &= check("et le document revient tel quel", colour.get(mutating, key) == modela.Colour(r=1, g=2, b=3))
+ok &= check("les clés de l'attachment sont typées", colour.keys(mutating) == {key})
+
+# Un champ seul, adressé par son nom -- ce que le pack appelle un chemin et met dans un
+# module à lui.
+colour.update(mutating, key, "r", 9)
+ok &= check("un seul champ s'écrit par son nom", colour.get(mutating, key).r == 9)
+
+ok &= check("une clé absente rend None", colour.get(mutating, modela.MaterialKey.create()) is None)
+
+# ── et le même attachment, sur une base ──
+#
+# LES MÊMES APPELS, SANS UNE LIGNE DE PLUS. La base porte `keys`, `has`, `get` et `set` ;
+# seul `delete` lui est propre. Le pack écrit un second module entier pour ce cas.
+database = dsviper.Database.create_in_memory()
+database.extend_definitions(definitions())
+database.begin_transaction()
+ok &= check("l'écriture sur base rend un statut",
+            colour.set(database, key, modela.Colour(r=4, g=5, b=6)) is True)
+ok &= check("et se relit par les mêmes appels", colour.get(database, key) == modela.Colour(r=4, g=5, b=6))
+ok &= check("le retrait est la seule opération que la base ajoute", colour.delete(database, key) is True)
+ok &= check("après retrait, la clé n'est plus connue", not colour.has(database, key))
+database.commit()
+database.close()
+
+# ── un pool ──
+#
+# Rien à éprouver de plus ici : `dsviper` n'offre pas de quoi construire un pool depuis
+# Python, donc la classe est le bord client et son identité est tout ce qu'elle affirme
+# hors connexion.
+ok &= check("un pool porte son identité du modèle",
+            tools.Pool.UUID.encoded() == "17e63428-03e1-41d7-ad9d-60c5665bbd66")
+
 print()
 print("definitions :", len(definitions().concepts()), "concepts,",
-      len(definitions().structures()), "structures")
+      len(definitions().structures()), "structures,",
+      len(definitions().attachments()), "attachments")
 
 raise SystemExit(0 if ok else 1)
