@@ -19,11 +19,19 @@ from render import jar                                    # noqa: E402
 TEMPLATES = HERE / "templated"
 RUNTIME = ROOT / "runtime"
 
-# The two models, and what each is for. Both are rendered because neither alone reaches
-# everything: one carries the namespace topology, the other the type system across it.
+# The three models, and what each is for. None alone reaches everything.
+#
+#   Topology   the namespace topology -- every kind of edge between units
+#   Crossing   the type system across it -- every shape, with elements from two units
+#   Features   ONE namespace, and every shape of the type system inside it
+#
+# The last is the common case and the one most easily forgotten. A generator organised
+# around namespaces has to degrade well when there is a single one, and nothing else here
+# would have shown that it does.
 MODELS = {
     "Topology": ROOT / "namespaces" / "Topology.dsm.json",
     "Crossing": ROOT / "crossing" / "Crossing.dsm.json",
+    "Features": ROOT / "features" / "Features.dsm.json",
 }
 
 # Hand-written and not generated: the model's own bytes, which a real build embeds from the

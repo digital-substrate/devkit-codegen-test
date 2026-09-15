@@ -75,7 +75,7 @@ void diff(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> cons
 // injecté, et le type du champ de la signature -- les trois liés en un seul endroit, ce
 // qu'une surcharge générique prenant (chemin, valeur) ne ferait pas.
 field(sf, a, u) ::= <<
-void set<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.type><sf.passBy> value) {
+void set<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace><sf.passBy> value) {
     mutating.update(attachment(), encodeKey(key),
                     <a.documentType.structure.namespace>::Fields::<a.documentType.structure.name>::<sf.name>Path(),
                     <u.model.namespace>::Codec::encode(value));

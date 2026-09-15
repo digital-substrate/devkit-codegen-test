@@ -79,3 +79,33 @@ needed them yet.
 No new shape appeared in the last three pieces. What appeared instead, three times, was the
 same finding: an artefact that looked generated turns out to vary only by the model's name,
 or by one argument.
+
+## The mono-namespace case, which is the common one
+
+A generator organised around namespaces has to degrade well when a model declares a single
+one, and most do. `features/all.dsm` is that case: one namespace, `Test`, inside the model
+`Features`, with every shape of the type system in it.
+
+```
+pack     59 fichiers   30 019 lignes
+here     24 fichiers    7 963 lignes
+```
+
+Fourteen files for the unit, nine for the base, one `AnyConcept`. **The base is justified
+with one unit exactly as with five**, because what is in it — the model's definitions, the
+stream, the generic encode, the untyped key's three operations, the attachment pool, the
+driver — has nothing to do with how many units there are. It is what no unit can claim, and
+that does not change when there is only one.
+
+The driver still enumerates the units; the list has one entry. The unit's `test()` still
+lists its own types. Nothing is emitted that would not be emitted for five namespaces, and
+nothing is missing.
+
+**And it found two defects the multi-namespace models could not.** `all.dsm` declares
+`attachment<any_concept, any>` and a structure field of type `key<any_concept>` — the only
+model that does — so it is the only one that reaches the untyped key as a *field* type and as
+an attachment *key*. Both came out as a bare `AnyConceptKey`: one because the per-field
+setter used the model-wide spelling rather than the in-namespace one, the other because the
+whole-model conversion had not been qualified when the in-namespace one was.
+
+It is now rendered alongside the other two, so neither can come back.

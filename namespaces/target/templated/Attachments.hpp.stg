@@ -64,7 +64,7 @@ void diff(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> cons
 >>
 
 /// Un setter par champ du document -- l'unique consommateur des chemins de la couche 2.
-field(sf, a) ::= <<void set<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.type><sf.passBy> value);>>
+field(sf, a) ::= <<void set<sf.name;format="uf">(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace><sf.passBy> value);>>
 
 
 // `<%…%>`, because a `>>` in the emitted text would close a `<<…>>` body. Every generic
