@@ -15,7 +15,7 @@ fonction template, donc les compter ferait dire au décompte le contraire de ce 
 import argparse, re, subprocess, sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 ROOT = HERE.parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 from render import jar, TEMPLATES                                    # noqa: E402

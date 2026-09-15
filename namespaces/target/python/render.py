@@ -16,7 +16,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 ROOT = HERE.parents[1]
 
 # IMPORTÉS PAR LEUR CHEMIN, ET NON PAR LEUR NOM. `tools/render.py` et le `render.py` d'à
@@ -37,14 +37,14 @@ jar = _module(ROOT / "tools" / "render.py", "kibo_tools_render").jar
 MODELS = _module(ROOT / "tools" / "models.py", "kibo_tools_models").MODELS
 
 TEMPLATES = HERE / "python" / "templated"
-RESOURCES = HERE / "link" / "resources"
+RESOURCES = HERE / "cpp" / "link" / "resources"
 
 # CE QUE LA LIAISON DEVRAIT PORTER ET NE PORTE PAS. Aucun de ces modules ne nomme un type
 # d'un modèle et aucun ne varie d'un modèle à l'autre : leur place est dans `dsviper`, sous
 # `dsviper.codegen`. En attendant, ils sont déposés dans chaque paquet rendu sous `_codegen`,
 # et le code généré écrit `from .._codegen import …`. Le jour où la liaison les portera, ce
 # sera `from dsviper.codegen import …` : une ligne dans chacun des trois templates.
-PROPOSED = ROOT / "runtime-proposed" / "dsviper_codegen"
+PROPOSED = HERE / "runtime-proposed" / "python"
 
 arguments = argparse.ArgumentParser(description=__doc__,
     formatter_class=argparse.RawDescriptionHelpFormatter)

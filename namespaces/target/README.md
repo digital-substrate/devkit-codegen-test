@@ -1,172 +1,93 @@
-# target — the C++ reference, and how far it has got
+# Le chantier : les namespaces comme élément structurant
 
-The success condition is **iso-functionality**: everything the existing templates produce
-must still be produced, in the idioms this work proposes. Not "most of it", and not "the
-interesting parts".
-
-`hand/` is the reference, written from the model and compiled. `templated/` reproduces it.
-**`generated/` is what it produces**, versioned, so that a change to a template is visible as
-a change to the output rather than as a change nobody can read.
+**Tout se lance d'ici, par une seule commande.**
 
 ```sh
-namespaces/target/render.py            # rend les deux modèles dans generated/, et compile
-namespaces/target/render.py --check    # échoue si generated/ n'est pas à jour
-```
-`../../crossing/target/hand/` holds the two shapes the topology model does not declare.
-
-**`PLAN.md` dit où en est le chantier et ce qui manque**, et il ne se tient pas à la main :
-`coverage.py` compare les opérations déclarées par les deux jeux de templates et sort
-non-zéro tant qu'il en manque.
-
-## Where it stands, measured
-
-The pack is **73 templates, 8 737 lines, 17 directories**. What is in `templated/` is
-**14 templates, 1 561 lines**, and it does not cover everything.
-
-The table below is not an estimate. Each row was checked by rendering two unrelated models
-and comparing the output with the model's namespace substituted — an artefact that comes out
-**byte-identical** for two different models is not generated code, whatever file it lives in.
-
-| pack directory | templates | lines | where it goes |
-|---|---:|---:|---|
-| `Data` | 4 | 944 | done — `Data.hpp/cpp.stg`, `AnyConcept.hpp.stg` |
-| `Stream` | 4 | 908 | done — `Codec.hpp/cpp.stg`, entry `unit` |
-| `ValueCodec` | 4 | 497 | done — one generic `encode`/`decode` |
-| `ValueType` | 2 | 373 | done — `Model.hpp/cpp.stg`, plus runtime templates |
-| `Attachments` | 2 | 340 | done — `Attachments.hpp/cpp.stg` |
-| `Model` | 6 | 216 | done — `Fields.hpp/cpp.stg`, entry `model` |
-| `FunctionPool`, `…Remote`, `AttachmentFunctionPool`, `…Remote` | 10 | 555 | done — `Pool.hpp/cpp.stg` |
-| `Database` — 11 of 13 | 11 | ~1 638 | **not generated at all** — the model appears at four places, as an argument |
-| `Database/DatabaseAttachments` | 2 | 156 | done — `Database.hpp/cpp.stg`, `Db.hpp.stg` |
-| `AttachmentFunctionPool_Attachments` | 2 | 787 | done — **nothing generated**, a walk over the model's attachments |
-| `Test` | 14 | 1 403 | done — `Test.hpp/cpp.stg`, five templates and a list per unit |
-| `TestApp` | 4 | 294 | done — `TestApp.cpp.stg`, one driver |
-| `Json` | 4 | 262 | a composition over `encode` — a few lines, not yet written |
-| `ValueHasher` | 2 | 287 | a composition over `encode` — a few lines, not yet written |
-| `Python` | 2 | 77 | the Python binding of this C++ — out of this pass |
-
-## What the measurement found
-
-**Eleven of the thirteen `Database` templates emit code that does not mention the model.**
-`Databasing`, `Database`, `DatabaseSQLite`, `DatabaseRemote`, `DatabaseRemoteRPCSideClient`
-and `DatabaseHelper` render byte-identical output for two unrelated models — 1 607 lines,
-zero difference, once the namespace name is substituted. They are runtime code wearing a
-template, and the only generated thing about them is the namespace they are wrapped in.
-
-Only `DatabaseAttachments` is genuinely per-model, and it is per-attachment, so it is a unit
-artefact like the others.
-
-**`Json` and `ValueHasher` are compositions, and their own source says so.**
-
-```
-encode_X(v)     = JsonValueEncoder::json_encode(ValueEncoder::encode_X(v))
-hexdigest_X(v)  = hexdigestValue(ValueEncoder::encode_X(v))
+namespaces/target/check.py            # rend tout, compile, lie, exécute, éprouve, type
+namespaces/target/check.py --check    # la même chose, et échoue si le rendu versionné est périmé
 ```
 
-Neither adds anything per type beyond the name. 549 lines of template for what is one
-function template each over the generic `encode` — which is the layer-3 claim, holding for a
-third and fourth domain.
+Elle enchaîne les quatre instruments et rend un verdict unique. Chacun reste lançable seul,
+mais il n'y a plus à savoir lesquels ni dans quel ordre.
 
-**`Test` is the one claim not yet checked.** `Test.hpp.stg` declares a `fuzz` per type and a
-`test()` and asserts that the pack's 1 403 lines collapse into that. **Nothing verifies it:**
-no test implementation has been written, which is the same gap that made the first four
-layers look finished when only their headers existed.
-
-## Où se trouve le code généré
-
-Une seule règle : **`generated/` est rangé par cible**, et rien d'autre n'y est rangé. Ce qui
-n'y est pas est soit une source, soit un artefact de construction.
+## Où est quoi
 
 ```
 namespaces/target/
-├── generated/
-│   ├── cpp/                  le rendu C++, un répertoire par modèle
-│   │   ├── Topology/         83 fichiers
-│   │   ├── Crossing/         47
-│   │   ├── Features/         23
-│   │   └── Service/          27
-│   └── python/               le rendu Python, un paquet par modèle
-│       ├── topology/         25 modules
-│       ├── crossing/         13
-│       ├── features/          7
-│       └── service/          11
-├── templated/                les templates C++
-├── hand/                     la référence C++, écrite à la main
-├── python/
-│   ├── templated/            les templates Python
-│   ├── hand/                 la référence Python, écrite à la main
-│   └── check.py              les assertions, qui tournent sur l'une ou sur l'autre
-├── link/                     ce qui ne sort pas des templates : les octets du modèle,
-│                             le code d'application, la migration du service existant
-├── build/                    objets et binaires — jamais versionné
-├── render.py                 rend le C++, compile, lie, exécute
-├── render-python.py          rend le Python, importe tout, rejoue les assertions
-└── coverage.py               ce que le pack déclare et que les nouveaux n'émettent pas
+├── check.py                    LA porte : tout, en une commande
+│
+├── cpp/                        la cible C++
+│   ├── templated/              ← LES TEMPLATES C++ (21 fichiers .stg)
+│   ├── hand/                   la référence écrite à la main, avant tout template
+│   ├── link/                   ce qui ne sort pas des templates : les octets du modèle,
+│   │                           le code d'application, le portage du service existant
+│   ├── render.py               rend, compile, lie contre libviper.a, exécute
+│   └── coverage.py             compare aux 162 opérations du pack existant
+│
+├── python/                     la cible Python
+│   ├── templated/              ← LES TEMPLATES PYTHON (4 fichiers .stg)
+│   ├── hand/                   la référence écrite à la main
+│   ├── render.py               rend, importe tout, éprouve, vérifie les types
+│   └── check.py                les assertions ; tournent sur la référence ou sur le rendu
+│
+├── generated/                  LE RENDU, rangé par cible et par modèle
+│   ├── cpp/{Topology,Crossing,Features,Service}/
+│   └── python/{topology,crossing,features,service}/
+│
+├── runtime-proposed/           ce que le runtime devrait porter et ne porte pas
+│   ├── cpp/                    Viper_TypedCodec, Viper_HashAccumulator
+│   └── python/                 le paquet destiné à devenir `dsviper.codegen`
+│
+└── build/                      objets et binaires — jamais versionné
 ```
 
-Deux commandes, et elles disent tout :
+Un template C++ est dans `cpp/templated/`, un template Python dans `python/templated/`. Les
+deux cibles ont la même forme : `templated/`, `hand/`, `render.py`. Ce qui diffère est ce que
+la cible réclame en plus — `link/` et `coverage.py` pour le C++, rien pour Python.
 
-```sh
-namespaces/target/render.py            # C++  : rend, compile, lie, exécute
-namespaces/target/render-python.py     # Python : rend, importe, éprouve
-```
+## Comment tout ce qui est généré est vérifié
 
-Chacune accepte `--check`, qui échoue si le rendu versionné n'est plus ce que les templates
-produisent.
+Chaque étape prouve une chose et pas la suivante ; c'est l'empilement qui vaut, et chacune
+a trouvé des défauts qu'aucune autre ne pouvait voir.
 
-## Where it stands now
+| étape | ce qu'elle prouve | ce qu'elle ne prouve pas |
+|---|---|---|
+| rendu C++ | les templates produisent un fichier par unité, sans diagnostic | que ça compile |
+| compilation | chaque fichier est du C++ valable contre les **vrais** en-têtes de viper | que ça se lie : une signature recopiée de travers passe |
+| lien | chaque symbole appelé existe dans `libviper.a` | que ça marche |
+| exécution | le programme d'épreuve tourne : tous les types, les métadonnées, les blobs, l'aller-retour de chaque attachment sur SQLite, le fuzz | |
+| service | un client et un serveur **existants**, portés par renommage seulement, parlent par une socket | |
+| couverture | les 162 opérations du pack sont émises, ou écartées avec une raison | elle ne voit que des **noms** : un déplacement de portée lui est invisible |
+| rendu Python | un paquet par modèle, et **chaque module s'importe** — syntaxe, dépendances, classes construites, descripteurs trouvés | |
+| assertions | les mêmes 23 sur la référence écrite à la main et sur le rendu | |
+| types | `pyright` ne trouve aucune erreur : les annotations tiennent | |
 
-Every directory of the pack has been opened and reproduced. Four models render, compile,
-link against `libviper.a` and run: **83 generated files for the topology model, 47 for the
-crossing one, 23 for features, 27 for the service.** `Json` and `ValueHasher` turned out to
-be compositions over the generic `encode`, a few lines each, and live in the codec.
+**Sept défauts n'étaient visibles qu'au lien, et aucun avant.** Deux références à un
+temporaire mort, un `auto` qui créait une conversion, un identifiant de blob inventé, une
+transaction absente, le modèle jamais donné à la base, et un défaut dans viper lui-même.
+C'est pourquoi `-fsyntax-only` ne suffit pas et pourquoi le lien est dans la chaîne.
 
-No new shape appeared in the last pieces. What appeared instead, repeatedly, was the same
-finding: an artefact that looked generated turns out to vary only by the model's name, or by
-one argument.
+**Et trois défauts n'étaient visibles que du consommateur** — le `Remote` d'un pool
+d'attachments qui n'existait pas, `description()` et `isKnown()` disparus des clés typées —
+alors que la couverture annonçait « absentes : 0 ». Elle ne tournait que sur un modèle sans
+pool. C'est corrigé, et c'est la raison d'être de l'épreuve du service.
 
-## The consumer's test
+## Ce qui reste à ranger, et où ça ira
 
-`service/` carries a client and a server that were written against the old pack, plus the
-two bridges a developer writes by hand. `link/service/migrate.py` ports them onto the new
-names **and nothing else**: every line of that script is one thing the new templates make a
-consumer rewrite, which makes the script itself the measure of the migration cost. Eighteen
-substitutions across four files, all mechanical — no call gains an argument, changes a type,
-or loses an operation.
+Tout vit sous `namespaces/`, qui est le nom d'un des quatre modèles. C'est un reste de la
+phase exploratoire et ce n'est pas tenable : le chantier n'appartient pas à ce modèle-là.
+**On reste ainsi pour l'instant**, le temps de voir à quoi le projet fini ressemble — il
+reste Node, et une cible qui n'existe pas peut encore déplacer une décision.
 
-It is the only test here that was not written to pass. It found three things the coverage
-count could not see: an attachment pool had no `Remote` at all, typed keys had lost
-`description()` and `isKnown()`, and the attachment surface took a reference where the
-runtime hands a `shared_ptr` everywhere. See `PLAN.md` for the table and the reasons.
+Les trois destinations sont connues, et elles ne sont pas ici :
 
-## The mono-namespace case, which is the common one
+| ce qui est ici | où ça ira | pourquoi pas encore |
+|---|---|---|
+| `cpp/templated/`, `python/templated/` | **`kibo-template-viper`** — c'est le pack, et ces templates sont le pack de demain | ils changent encore à chaque défaut trouvé ; les déplacer maintenant ferait porter à un dépôt publié le va-et-vient d'une exploration |
+| `generated/` | les répertoires de chaque projet, produits par son `generate.py` | le rendu est versionné ici parce que `--check` le compare à un rendu neuf : c'est ce qui rend une régression visible dans un diff. Ce rôle disparaît quand les templates sont figés |
+| `cpp/hand/`, `python/hand/` | rien — ce sont des références, pas des livrables | elles restent tant qu'elles trouvent des défauts que le rendu ne trouve pas |
+| `runtime-proposed/cpp`, `runtime-proposed/python` | **`viper`** et **`dsviper`** | l'ordre est viper d'abord, kibo ensuite, le pack en dernier ; rien ne part tant que les trois ne sont pas prêts ensemble |
 
-A generator organised around namespaces has to degrade well when a model declares a single
-one, and most do. `features/all.dsm` is that case: one namespace, `Demo`, inside the model
-`Features`, with every shape of the type system in it. It was called `Test` until the name
-collided with the test artefacts the generator emits — `Test_Test.hpp` read as a mistake
-rather than as a unit called `Test`, which is exactly the doubt a name should not create.
-
-```
-pack     59 fichiers   30 019 lignes
-here     24 fichiers    7 963 lignes
-```
-
-Fourteen files for the unit, nine for the base, one `AnyConcept`. **The base is justified
-with one unit exactly as with five**, because what is in it — the model's definitions, the
-stream, the generic encode, the untyped key's three operations, the attachment pool, the
-driver — has nothing to do with how many units there are. It is what no unit can claim, and
-that does not change when there is only one.
-
-The driver still enumerates the units; the list has one entry. The unit's `test()` still
-lists its own types. Nothing is emitted that would not be emitted for five namespaces, and
-nothing is missing.
-
-**And it found two defects the multi-namespace models could not.** `all.dsm` declares
-`attachment<any_concept, any>` and a structure field of type `key<any_concept>` — the only
-model that does — so it is the only one that reaches the untyped key as a *field* type and as
-an attachment *key*. Both came out as a bare `AnyConceptKey`: one because the per-field
-setter used the model-wide spelling rather than the in-namespace one, the other because the
-whole-model conversion had not been qualified when the in-namespace one was.
-
-It is now rendered alongside the other two, so neither can come back.
+Et le code d'épreuve devra être **généré en face** du code rendu, au lieu d'être écrit à
+côté : un `Test` par unité existe déjà côté C++, mais l'application qui l'appelle et le
+programme de service sont encore écrits à la main dans `cpp/link/`.

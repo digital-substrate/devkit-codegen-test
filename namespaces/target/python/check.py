@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
+TARGET = HERE.parent
 
 # LE PAQUET À ÉPROUVER EST DONNÉ, PARCE QU'IL Y EN A DEUX. La référence écrite à la main dit
 # ce qu'on veut ; le rendu des templates dit ce qu'on obtient. Les mêmes assertions doivent
@@ -20,7 +20,7 @@ package = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else HERE / "hand"
 # Ce que la liaison devrait porter, déposé dans le paquet comme il l'est dans un rendu.
 codegen = package / "topology" / "_codegen"
 if not codegen.exists():
-    shutil.copytree(ROOT / "runtime-proposed" / "dsviper_codegen", codegen,
+    shutil.copytree(TARGET / "runtime-proposed" / "python", codegen,
                     ignore=shutil.ignore_patterns("__pycache__", "README.md"))
 
 sys.path.insert(0, str(package))

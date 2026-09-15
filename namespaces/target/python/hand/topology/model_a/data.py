@@ -18,7 +18,7 @@ import functools
 import dsviper
 
 from .. import definitions
-from .._codegen import Proxy
+from .._codegen import Proxy, register
 
 
 # ── l'identité de cette unité dans le modèle ──
@@ -128,3 +128,8 @@ class Colour(Proxy):
 
     def __repr__(self) -> str:
         return f"ModelA::Colour(r={self.r}, g={self.g}, b={self.b})"
+
+
+# Les classes de cette unité, par l'identifiant d'exécution de leur type : c'est ce qui permet
+# à `wrap` de rendre un élément de conteneur, ou un document d'attachment, avec son nom.
+register({MATERIAL: MaterialKey, COLOUR: Colour})

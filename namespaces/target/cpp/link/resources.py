@@ -47,7 +47,7 @@ for model, definitions in MODELS.items():
     body = blob.embed("definitions").replace(
         "static unsigned char const definitions_data[]", "inline constexpr unsigned char definitions[]")
 
-    out = ROOT / "namespaces/target/link/resources" / f"{model}_Resources.hpp"
+    out = ROOT / "namespaces/target/cpp/link/resources" / f"{model}_Resources.hpp"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(HEAD.format(model=model) + f"namespace {model}::Resources {{\n\n{body}\n"
                    f"}} // namespace {model}::Resources\n\n#endif\n")
@@ -57,7 +57,7 @@ for model, definitions in MODELS.items():
     # c'est ce qu'un fichier source Python sait contenir sans se déformer.
     payload = base64.b64encode(zlib.compress(bytes(blob))).decode()
     chunks = "\n".join(f'    "{payload[i:i + 92]}"' for i in range(0, len(payload), 92))
-    python = ROOT / "namespaces/target/link/resources" / f"{model}_resources.py"
+    python = ROOT / "namespaces/target/cpp/link/resources" / f"{model}_resources.py"
     python.write_text(
         f'"""modèle {model} — le modèle, en octets.\n\n'
         "LE .DSM EMBARQUÉ TEL QUEL, compressé et encodé. Le générateur ne produit aucun code\n"

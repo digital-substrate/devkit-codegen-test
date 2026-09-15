@@ -11,17 +11,17 @@ change to a template is a change nobody can see.
 import argparse, shutil, subprocess, sys, time
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 ROOT = HERE.parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 from render import jar                                    # noqa: E402
 
-TEMPLATES = HERE / "templated"
+TEMPLATES = HERE / "cpp/templated"
 # LES VRAIS EN-TÊTES DU RUNTIME, et seulement ce qu'il ne porte pas encore à côté. Tant que
 # la vérification se faisait contre des signatures recopiées, une recopie de travers passait
 # inaperçue ; ici elles viennent de la source et le résultat se lie contre `libviper.a`.
 VIPER = ROOT.parent / "com.digitalsubstrate.viper"
-PROPOSED = ROOT / "runtime-proposed"
+PROPOSED = HERE / "runtime-proposed" / "cpp"
 
 INCLUDES = ["-I", str(PROPOSED),
             "-I", str(VIPER / "src/Viper"),
@@ -58,7 +58,7 @@ FROM_HAND = {
 }
 
 HAND = {
-    "Topology": ROOT / "namespaces/target/hand",
+    "Topology": HERE / "cpp/hand",
 }
 
 # LA RÉFÉRENCE DU MODÈLE CROISÉ EST PARTIELLE, ET DÉLIBÉRÉMENT. Elle ne couvre que les
@@ -81,7 +81,7 @@ def render(model, definitions, out):
 
 
 def compile_tree(model, out):
-    shutil.copy(HERE / "link/resources" / f"{model}_Resources.hpp", out)
+    shutil.copy(HERE / "cpp/link/resources" / f"{model}_Resources.hpp", out)
 
     for name in FROM_HAND.get(model, []):
         shutil.copy(HAND[model] / name, out / name)
@@ -144,17 +144,17 @@ for directory in STANDALONE:
 #
 # Ce qu'un modèle apporte en plus du rendu : ses octets, et les fonctions de ses pools. Le
 # premier est produit par `link/resources.py`, le second est ce qu'une application écrit.
-APPLICATION = {"Topology": HERE / "link/application.cpp"}
+APPLICATION = {"Topology": HERE / "cpp/link/application.cpp"}
 
 # LE SERVICE EST LA SEULE ÉPREUVE QUE JE N'AI PAS ÉCRITE. Un client et un serveur existants,
 # portés sur les nouveaux noms par `link/service/migrate.py` et pas autrement retouchés : ce
 # qu'ils demandent est ce qu'un consommateur demande, et non ce que j'ai pensé à offrir.
-CONSUMERS = {"Service": HERE / "link/service"}
+CONSUMERS = {"Service": HERE / "cpp/link/service"}
 LIBS = [ROOT / "build" / f"lib{n}.a" for n in ("viper", "sqlite", "hash", "antlr4", "pugixml")]
 
 
 def link_and_run(model, out):
-    resource = HERE / "link/resources" / f"{model}_Resources.hpp"
+    resource = HERE / "cpp/link/resources" / f"{model}_Resources.hpp"
     if not resource.exists() or not all(l.exists() for l in LIBS):
         print(f"  {model + ' lien':16} ignoré (ressource ou libviper.a absente)")
         return 0
