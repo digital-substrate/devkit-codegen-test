@@ -17,6 +17,7 @@ class Value {
 public:
     virtual ~Value() = default;
     virtual std::shared_ptr<Type> type() const = 0;
+    virtual bool equal(std::shared_ptr<Value const> const & other) const = 0;
 };
 
 class ValueKey final : public Value {

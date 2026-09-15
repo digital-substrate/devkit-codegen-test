@@ -1,45 +1,129 @@
+// Ce qu'il faut savoir d'une unité pour l'éprouver, et ce qu'il faut du modèle pour
+// éprouver quoi que ce soit.
+//
+// SEPT ARTEFACTS DU PACK TIENNENT DANS L'ENTRÉE `model`, et ce n'est pas une compression :
+// c'est ce que leur propre source dit. `TestFuzz::fuzz_X()` vaut
+// `decode_X(TestValueFuzz::fuzz_X())`, `TestValueFuzz::fuzz_X()` vaut
+// `fuzzer()->fuzzType(type_X())`, et chaque `test_X` des trois codecs est un aller-retour
+// dont seul le suffixe change. Écrits en templates au-dessus de `type(tag\<T>{})`, il n'en
+// reste rien par type.
+//
+// ET UNE UNITÉ NE FABRIQUE RIEN. Le premier jet déclarait ici un `fuzz` par type déclaré,
+// en supposant qu'une unité seule sait fabriquer un des siens. Elle ne le sait pas mieux
+// que le runtime, qui part du descripteur de type -- et ce descripteur, elle le fournit
+// déjà. Il ne lui reste qu'une chose que personne d'autre ne sait : sa liste.
+
 unit(u) ::= <<
-// <u.name> — what it must provide for its types to be exercised.
+// <u.name> — ce qu'il faut savoir de <u.name> pour l'éprouver.
 //
 // <u.model.generated>
-//
-// One declaration per type, and the entry a driver calls. A round trip is generic --
-// make a value, encode it, decode it, compare -- and the only part that is not generic
-// is making one, because only this namespace knows what its types are made of.
 
 #ifndef <u.name>_Test_hpp
 #define <u.name>_Test_hpp
 
-#include "<u.include.Data>"
-#include "<u.include.Codec>"
-<u.dependencies.types:{d|#include "<d.include.Test>"};separator="\n">
-
-#include "Viper_Codec.hpp"
-#include "Viper_Test.hpp"
-
 namespace <u.name> {
 
-<u.concepts:keyed();separator="\n">
-
-<u.clubs:keyed();separator="\n">
-
-<u.enumerations:plain();separator="\n">
-
-<u.structures:plain();separator="\n">
-
-/// Round-trip every type this namespace declares, through every codec.
-///
-/// Its body is a list of `roundTrip\<T>(rng)`, one per declared type. A container of
-/// this namespace's types needs no line: the generic fuzz builds one by calling this
-/// namespace's fuzz on the element, and argument-dependent lookup brings it back.
-void test(Viper::Test::Rng & rng);
+/// Éprouver chaque type déclaré ici, par chaque codec.
+void test();
 
 } // namespace <u.name>
 
 #endif
 >>
 
-// `<%…%>` and not `<<…>>`: a `>>` in the emitted text closes a `<<…>>` body, so
-// `tag\<Colour>` cannot be written there.
-keyed(e) ::= <%<e.name>Key fuzz(Viper::Test::Rng & rng, Viper::Codec::tag\<<e.name>Key>);%>
-plain(e) ::= <%<e.name> fuzz(Viper::Test::Rng & rng, Viper::Codec::tag\<<e.name>>);%>
+model(m) ::= <<
+// <m.namespace> — de quoi éprouver n'importe quel type du modèle, sans rien savoir d'aucun.
+//
+// SEPT ARTEFACTS DU PACK TIENNENT ICI, et ce n'est pas une compression : c'est ce que leur
+// propre source dit. `TestFuzz::fuzz_X()` vaut `decode_X(TestValueFuzz::fuzz_X())`,
+// `TestValueFuzz::fuzz_X()` vaut `fuzzer()->fuzzType(type_X())`, et chaque `test_X` des
+// trois codecs est un aller-retour dont seul le suffixe change. Une fois écrits en
+// fonctions template au-dessus de `type(tag\<T>{})`, il n'en reste rien par type.
+//
+// LE FUZZ N'EST PAS CELUI D'UNE UNITÉ, et c'est la correction que ce fichier apporte. Le
+// premier jet déclarait `fuzz(Rng&, tag\<T>)` dans chaque unité, en supposant qu'elle seule
+// sait comment fabriquer un de ses types. Elle ne le sait pas mieux que le runtime : celui-
+// ci part du descripteur de type, que l'unité fournit déjà. Une unité n'a donc rien à
+// implémenter pour être éprouvée.
+
+#ifndef <m.namespace>_Test_hpp
+#define <m.namespace>_Test_hpp
+
+#include "<m.namespace>_Codec.hpp"
+
+#include "Viper_Assert.hpp"
+#include "Viper_Fuzzer.hpp"
+#include "Viper_Json.hpp"
+
+#include \<memory>
+
+namespace <m.namespace>::Test {
+
+/// Le fabricant, construit une fois sur le modèle. Une graine le rend reproductible.
+std::shared_ptr\<Viper::Fuzzer> const & fuzzer();
+void seed(std::uint64_t value);
+
+/// Une valeur aléatoire de T, côté dynamique puis côté statique.
+template\<class T>
+std::shared_ptr\<Viper::Value> fuzzValue() {
+    return fuzzer()->fuzzType(type(Viper::Codec::tag\<T>{}));   // ADL : l'unité de T
+}
+
+template\<class T>
+T fuzz() {
+    return Codec::decode\<T>(fuzzValue\<T>());
+}
+
+// ── les trois allers-retours, un par codec ──
+//
+// Chacun est ce que le pack écrit une fois par type et par codec, avec le suffixe pour
+// seule variable. Écrits une fois ici, ils ne demandent plus qu'une liste de types.
+
+/// Fabriquer, écrire sur un flux, relire, comparer.
+template\<class T>
+void roundTripStream() {
+    auto const value{fuzz\<T>()};
+
+    auto const encoder{Codec::stream()->createEncoder()};
+    Viper::Codec::Writer writer{encoder};
+    write(writer, value);                                      // ADL : l'unité de T
+
+    auto const decoder{Codec::stream()->createDecoder(encoder->endEncoding())};
+    Viper::Codec::Reader reader{decoder, Codec::definitions()};
+
+    VIPER_ASSERT("<m.namespace>.Test", read(reader, Viper::Codec::tag\<T>{}) == value);
+}
+
+/// Fabriquer une Value, la décoder, la ré-encoder, comparer.
+template\<class T>
+void roundTripValue() {
+    auto const value{fuzzValue\<T>()};
+    auto const back{Codec::encode(Codec::decode\<T>(value))};
+
+    VIPER_ASSERT("<m.namespace>.Test", value->equal(back));
+}
+
+/// Fabriquer, passer par JSON, comparer.
+template\<class T>
+void roundTripJson() {
+    auto const value{fuzzValue\<T>()};
+    auto const json{Viper::JsonValueEncoder::json_encode(value)};
+    auto const back{Viper::JsonValueDecoder::json_decode(json, type(Viper::Codec::tag\<T>{}),
+                                                         Codec::definitions())};
+
+    VIPER_ASSERT("<m.namespace>.Test", value->equal(back));
+}
+
+/// Les trois d'un coup, ce qu'une unité appelle une fois par type qu'elle déclare.
+template\<class T>
+void roundTrip() {
+    roundTripStream\<T>();
+    roundTripValue\<T>();
+    roundTripJson\<T>();
+}
+
+} // namespace <m.namespace>::Test
+
+#endif
+
+>>

@@ -1,13 +1,20 @@
+// Ce que la couche 5 permet, vérifié par le compilateur.
 #include "ModelA_Test.hpp"
+#include "ModelA_Codec.hpp"
+#include "ModelA_Model.hpp"
+#include "Topology_Test.hpp"
 
-void use_l5(Viper::Test::Rng & rng, Viper::Codec::Writer & w, Viper::Codec::Reader & d) {
-    // le type de l'unité, fuzzé par l'unité
-    auto const c = ModelA::fuzz(rng, Viper::Codec::tag<ModelA::Colour>{});
+#include <set>
 
-    // un conteneur de ce type : générique, aucune ligne dans l'unité
-    auto const s = Viper::Test::fuzz(rng, Viper::Codec::tag<std::set<ModelA::Colour>>{});
+void use_l5() {
+    // l'unité s'éprouve elle-même : une liste, et rien d'autre
+    ModelA::test();
 
-    // et l'aller-retour, générique aussi
-    Viper::Test::roundTrip<ModelA::Colour>(rng, w, d);
-    (void)c; (void)s;
+    // et n'importe quelle forme au-dessus de ses types, sans qu'elle ait rien déclaré --
+    // le descripteur du conteneur se compose depuis celui de l'élément
+    Topology::Test::roundTrip<std::set<ModelA::Colour>>();
+    Topology::Test::roundTrip<std::map<ModelA::MaterialKey, ModelA::Colour>>();
+
+    // reproductible quand on le demande
+    Topology::Test::seed(42);
 }

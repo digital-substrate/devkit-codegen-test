@@ -1,0 +1,70 @@
+// L'épreuve d'une unité : la liste de ce qu'elle déclare, et rien d'autre.
+//
+// AUCUN CONTENEUR N'A DE LIGNE. Un ensemble des types d'une unité se fabrique depuis le
+// descripteur de l'ensemble, que le runtime compose depuis celui de l'élément -- donc le
+// fuzz d'un conteneur ne demande rien à l'unité qui possède l'élément, et la forme qui
+// enjambe deux unités ne demande rien non plus.
+
+unit(u) ::= <<
+// <u.name> — l'épreuve de ses types.
+//
+// <u.model.generated>
+
+#include "<u.include.Test>"
+
+#include "<u.include.Codec>"
+#include "<u.include.Model>"
+
+#include "<u.model.include.Test>"
+
+namespace <u.name> {
+
+void test() {
+<u.concepts:keyed(u);separator="\n">
+<u.clubs:keyed(u);separator="\n">
+<u.enumerations:plain(u);separator="\n">
+<u.structures:plain(u);separator="\n">
+}
+
+} // namespace <u.name>
+>>
+
+// `<%…%>` : `roundTrip\<<e.name>>()` met un `>` juste après l'expression, ce qui donne un
+// `>>` dans le texte brut et ferme le corps là. Le même piège qu'ailleurs, à sa dernière
+// occurrence.
+keyed(e, u) ::= <<
+    <keyed_body(e, u)>
+>>
+keyed_body(e, u) ::= <%<u.model.namespace>::Test::roundTrip\<<e.name>Key>();%>
+plain(e, u) ::= <<
+    <plain_body(e, u)>
+>>
+plain_body(e, u) ::= <%<u.model.namespace>::Test::roundTrip\<<e.name>>();%>
+
+model(m) ::= <<
+#include "<m.namespace>_Test.hpp"
+
+#include \<optional>
+
+namespace <m.namespace>::Test {
+
+namespace {
+std::optional\<std::uint64_t> g_seed;
+std::shared_ptr\<Viper::Fuzzer> g_fuzzer;
+}
+
+void seed(std::uint64_t value) {
+    g_seed = value;
+    g_fuzzer.reset();
+}
+
+std::shared_ptr\<Viper::Fuzzer> const & fuzzer() {
+    if (!g_fuzzer)
+        g_fuzzer = g_seed ? Viper::Fuzzer::make(Codec::definitions(), *g_seed)
+                          : Viper::Fuzzer::make(Codec::definitions());
+    return g_fuzzer;
+}
+
+} // namespace <m.namespace>::Test
+
+>>

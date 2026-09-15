@@ -388,3 +388,42 @@ shipping constraint. Each would define a `Viper::AnyConceptKey`; one definition 
 no such problem. The generated file is nonetheless, word for word, what the runtime's would
 be — nothing in it depends on the model — which is what makes the move a one-line change
 later and not a rewrite.
+
+## Layer 5, implemented — and the claim was too weak, not too strong
+
+`Topology_Test.hpp/.cpp` and `ModelA_Test.hpp/.cpp`, checked by `l5.cpp`.
+
+**A unit fabricates nothing, and the first draft said it did.** `ModelA_Test.hpp` declared a
+`fuzz` per declared type, on the assumption that only the unit knows how to build one of its
+own values. It does not know better than the runtime: `Viper::Fuzzer::fuzzType(type)` builds
+a random `Value` from a type descriptor, and the descriptor is what a unit already provides.
+
+So a unit's test header is **one line**:
+
+```cpp
+namespace ModelA { void test(); }
+```
+
+and its implementation is the list, which is the only thing nobody else knows.
+
+**Seven pack artefacts collapse, and their own source says why.**
+
+```
+TestFuzz::fuzz_X()        = decode_X(TestValueFuzz::fuzz_X())
+TestValueFuzz::fuzz_X()   = fuzzer()->fuzzType(type_X())
+TestCodecStream::test_X() = fuzz, write, read, compare
+TestCodecValue::test_X()  = fuzzValue, decode, encode, compare
+TestCodecJson::test_X()   = fuzzValue, json encode, json decode, compare
+```
+
+Every one is a fixed body with the suffix for its only variable. Written as function
+templates over `type(tag<T>{})`, nothing per type is left — 1 403 lines of template become
+five templates and one list per unit.
+
+**And no container needs a line anywhere.** `l5.cpp` round-trips a `std::set<ModelA::Colour>`
+and a `std::map<ModelA::MaterialKey, ModelA::Colour>` with no unit having declared anything
+for either: the container's type descriptor composes from its element's, so the fuzzer builds
+one without asking. The shape that spans two units asks nothing either.
+
+That is the layer-3 claim holding for a fifth and sixth domain, and this time it was checked
+by compiling the thing that depends on it rather than by reading the template.
