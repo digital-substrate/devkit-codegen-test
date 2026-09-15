@@ -49,11 +49,11 @@ std::shared_ptr<Viper::StreamCodecInstancing> const & stream() {
     return instance;
 }
 
-bool isKnown(Viper::AnyConceptKey const & key) {
+bool isKnown(Topology::AnyConceptKey const & key) {
     return definitions()->queryConcept(key.runtimeId()) != nullptr;
 }
 
-std::string description(Viper::AnyConceptKey const & key) {
+std::string description(Topology::AnyConceptKey const & key) {
     auto const concept_ = definitions()->queryConcept(key.runtimeId());
     if (!concept_)
         return key.instanceId().uuidString() + ":?(" + key.runtimeId().uuidString() + ")";
@@ -65,7 +65,7 @@ std::string description(Viper::AnyConceptKey const & key) {
 ///
 /// `concept_` est ici le descripteur d'un concept ou celui d'un club, et c'est lui qui
 /// porte la différence : dériver n'est pas adhérer. Le code est le même des deux côtés.
-bool isMember(Viper::AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & concept_) {
+bool isMember(Topology::AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & concept_) {
     auto const instance = definitions()->queryConcept(key.runtimeId());
     if (!instance)
         return false;                                  // un concept que ce modèle ignore

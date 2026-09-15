@@ -8,7 +8,7 @@
 #ifndef Core_Data_hpp
 #define Core_Data_hpp
 
-#include "Viper_AnyConceptKey.hpp"
+#include "Crossing_AnyConcept.hpp"
 #include "Viper_Hash.hpp"
 #include "Viper_UUId.hpp"
 
@@ -29,8 +29,8 @@ public:
     Viper::UUId const & runtimeId() const noexcept;
     bool isValid() const noexcept;
 
-    Viper::AnyConceptKey toAny() const noexcept;
-    static std::optional<ThingKey> from(Viper::AnyConceptKey const & key) noexcept;
+    Crossing::AnyConceptKey toAny() const noexcept;
+    static std::optional<ThingKey> from(Crossing::AnyConceptKey const & key) noexcept;
 
 private:
     Viper::UUId _instanceId{};
@@ -63,8 +63,8 @@ public:
     /// Élargir vers le parent. Implicite, parce que `is a` n'est pas une demande.
     operator ThingKey() const noexcept;
 
-    Viper::AnyConceptKey toAny() const noexcept;
-    static std::optional<SubThingKey> from(Viper::AnyConceptKey const & key) noexcept;
+    Crossing::AnyConceptKey toAny() const noexcept;
+    static std::optional<SubThingKey> from(Crossing::AnyConceptKey const & key) noexcept;
 
 private:
     Viper::UUId _instanceId{};
@@ -88,8 +88,8 @@ public:
     Viper::UUId const & runtimeId() const noexcept;
     bool isValid() const noexcept;
 
-    Viper::AnyConceptKey toAny() const noexcept;
-    static std::optional<OtherKey> from(Viper::AnyConceptKey const & key) noexcept;
+    Crossing::AnyConceptKey toAny() const noexcept;
+    static std::optional<OtherKey> from(Crossing::AnyConceptKey const & key) noexcept;
 
 private:
     Viper::UUId _instanceId{};
@@ -127,8 +127,8 @@ public:
     Viper::UUId const & runtimeId() const noexcept;
     bool isValid() const noexcept;
 
-    Viper::AnyConceptKey toAny() const noexcept;
-    static std::optional<KlubKey> from(Viper::AnyConceptKey const & key) noexcept;
+    Crossing::AnyConceptKey toAny() const noexcept;
+    static std::optional<KlubKey> from(Crossing::AnyConceptKey const & key) noexcept;
 
 private:
     Viper::UUId _instanceId{};

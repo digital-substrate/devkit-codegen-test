@@ -18,6 +18,7 @@ unit(u) ::= <<
 #include "<u.include.Model>"
 <u.dependencies.attachments:{d|#include "<d.include.Codec>"};separator="\n">
 <u.dependencies.attachments:{d|#include "<d.include.Model>"};separator="\n">
+<u.dependencies.attachments:{d|#include "<d.include.Fields>"};separator="\n">
 
 #include "<u.model.include.Codec>"
 

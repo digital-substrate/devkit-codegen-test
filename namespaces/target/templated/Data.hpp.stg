@@ -8,7 +8,8 @@ unit(u) ::= <<
 
 <u.dependencies.types:{d|#include "<d.include.Data>"};separator="\n">
 
-#include "Viper_AnyConceptKey.hpp"
+#include "<u.model.include.AnyConcept>"
+
 #include "Viper_Hash.hpp"
 #include "Viper_Scalars.hpp"
 #include "Viper_UUId.hpp"
@@ -59,8 +60,8 @@ public:
     /// Widen to the parent concept. Implicit, because `is a` is not a request.
     operator <c.parentNameInNamespace>Key() const noexcept;
 <endif>
-    Viper::AnyConceptKey toAny() const noexcept;
-    static std::optional\<<c.name>Key> from(Viper::AnyConceptKey const & key) noexcept;
+    <u.model.namespace>::AnyConceptKey toAny() const noexcept;
+    static std::optional\<<c.name>Key> from(<u.model.namespace>::AnyConceptKey const & key) noexcept;
 
 
 private:
@@ -95,7 +96,7 @@ public:
     Viper::UUId const & runtimeId() const noexcept;
     bool isValid() const noexcept;
 
-    Viper::AnyConceptKey toAny() const noexcept;
+    <u.model.namespace>::AnyConceptKey toAny() const noexcept;
     <club_from(c)>
 
 private:
@@ -124,7 +125,7 @@ club_getter(cm, c) ::= <<
 >>
 club_getter_body(cm) ::= <%std::optional\<<cm.nameInNamespace>Key> as<cm.asNameInNamespace>Key() const noexcept;%>
 
-club_from(c) ::= <%static std::optional\<<c.name>Key> from(Viper::AnyConceptKey const & key) noexcept;%>
+club_from(c) ::= <%static std::optional\<<c.name>Key> from(<u.model.namespace>::AnyConceptKey const & key) noexcept;%>
 
 structure(s) ::= <<
 <if(s.documentation)>/** <s.documentation> */

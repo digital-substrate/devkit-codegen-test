@@ -46,7 +46,7 @@ bool <c.name>Key::isValid() const noexcept { return _instanceId.isValid(); }
 <c.name>Key::operator <c.parentNameInNamespace>Key() const noexcept { return {_instanceId, _runtimeId}; }
 <endif>
 
-Viper::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }
+<u.model.namespace>::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 <narrowing_doc()>
 <from(c, u, "conceptType")>
@@ -74,7 +74,7 @@ Viper::UUId const & <c.name>Key::instanceId() const noexcept { return _instanceI
 Viper::UUId const & <c.name>Key::runtimeId() const noexcept { return _runtimeId; }
 bool <c.name>Key::isValid() const noexcept { return _instanceId.isValid(); }
 
-Viper::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }
+<u.model.namespace>::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 <narrowing_doc()>
 <from(c, u, "clubType")>
@@ -123,7 +123,7 @@ from(c, u, descriptor) ::= <<
 }
 >>
 
-from_head(c) ::= <%std::optional\<<c.name>Key> <c.name>Key::from(Viper::AnyConceptKey const & key) noexcept {%>
+from_head(c) ::= <%std::optional\<<c.name>Key> <c.name>Key::from(<u.model.namespace>::AnyConceptKey const & key) noexcept {%>
 
 comparisons(c) ::= <<
 bool operator==(<c.name>Key const & l, <c.name>Key const & r) noexcept {

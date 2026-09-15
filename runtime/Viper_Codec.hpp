@@ -24,7 +24,6 @@
 #include <string>
 #include <vector>
 namespace Viper {
-class AnyConceptKey;
 class Definitions;
 class Type;
 namespace Codec {
@@ -120,11 +119,6 @@ VIPER_PRIMITIVE_TYPE_OF(CommitId, CommitId)
 VIPER_PRIMITIVE_TYPE_OF(Blob, Blob)
 VIPER_PRIMITIVE_TYPE_OF(Any, Any)
 #undef VIPER_PRIMITIVE_TYPE_OF
-
-inline std::shared_ptr<Type> const & type(tag<AnyConceptKey>) {
-    static std::shared_ptr<Type> const instance{TypeAnyConcept::InstanceTypeKey()};
-    return instance;
-}
 
 template<class T> std::shared_ptr<Type> const & type(tag<std::vector<T>>) {
     static std::shared_ptr<Type> const instance{TypeVector::make(type(tag<T>{}))};

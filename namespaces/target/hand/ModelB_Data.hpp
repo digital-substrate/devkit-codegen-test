@@ -8,7 +8,7 @@
 #ifndef ModelB_Data_hpp
 #define ModelB_Data_hpp
 
-#include "Viper_AnyConceptKey.hpp"
+#include "Topology_AnyConcept.hpp"
 #include "Viper_UUId.hpp"
 
 #include <functional>
@@ -29,8 +29,8 @@ public:
 
     bool isValid() const noexcept;
 
-    Viper::AnyConceptKey toAny() const noexcept;
-    static std::optional<MaterialKey> from(Viper::AnyConceptKey const & key) noexcept;
+    Topology::AnyConceptKey toAny() const noexcept;
+    static std::optional<MaterialKey> from(Topology::AnyConceptKey const & key) noexcept;
 
     std::size_t hash() const noexcept;
 

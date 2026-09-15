@@ -9,7 +9,7 @@
 #include "ModelA_Data.hpp"          // DerivedMaterial's parent, and Pair's first field
 #include "ModelB_Data.hpp"          // Pair's second field
 
-#include "Viper_AnyConceptKey.hpp"
+#include "Topology_AnyConcept.hpp"
 #include "Viper_UUId.hpp"
 
 #include <functional>
@@ -30,8 +30,8 @@ public:
 
     bool isValid() const noexcept;
 
-    Viper::AnyConceptKey toAny() const noexcept;
-    static std::optional<LinkKey> from(Viper::AnyConceptKey const & key) noexcept;
+    Topology::AnyConceptKey toAny() const noexcept;
+    static std::optional<LinkKey> from(Topology::AnyConceptKey const & key) noexcept;
 
     std::size_t hash() const noexcept;
 
@@ -62,8 +62,8 @@ public:
     /// Widen to the parent concept. Implicit, because `is a` is not a request.
     operator ModelA::MaterialKey() const noexcept;
 
-    Viper::AnyConceptKey toAny() const noexcept;
-    static std::optional<DerivedMaterialKey> from(Viper::AnyConceptKey const & key) noexcept;
+    Topology::AnyConceptKey toAny() const noexcept;
+    static std::optional<DerivedMaterialKey> from(Topology::AnyConceptKey const & key) noexcept;
 
     std::size_t hash() const noexcept;
 

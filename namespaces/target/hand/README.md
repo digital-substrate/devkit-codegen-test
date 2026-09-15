@@ -366,3 +366,25 @@ The shape that forced a base into existence now produces no line anywhere.
 
 **The base is smaller than the argument that created it.** Each time something was traced
 rather than assumed, it left.
+
+## The untyped key — a file of its own, and why not the runtime's
+
+Under the constraint that the generator must work against the runtime as shipped, the class
+cannot move to `Viper`. It stays with the model, in `Topology_AnyConcept.hpp` — a file with
+no dependency beyond the runtime, included equally by the units and by the base.
+
+**A file, because there is a cycle without one.** A unit names the type in its structures,
+and the base names it in its three functions — but the base already depends on the units,
+since its `encode` calls their `write`. Declaring it in the base would close the loop. A file
+that depends only on the runtime leaves it open.
+
+**And its codec travels with it.** On the wire it is what a key is — two uuids, the instance
+then the real concept — and its descriptor is the one the runtime holds for "any concept".
+`write`, `read` and `type` sit in the same file, so the day the class moves into the runtime,
+argument-dependent lookup follows it there and no caller changes.
+
+**Two models in one program is the argument against the runtime's namespace**, more than the
+shipping constraint. Each would define a `Viper::AnyConceptKey`; one definition per model has
+no such problem. The generated file is nonetheless, word for word, what the runtime's would
+be — nothing in it depends on the model — which is what makes the move a one-line change
+later and not a rewrite.

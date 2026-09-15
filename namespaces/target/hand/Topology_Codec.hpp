@@ -21,7 +21,7 @@
 #ifndef Topology_Codec_hpp
 #define Topology_Codec_hpp
 
-#include "Viper_AnyConceptKey.hpp"
+#include "Topology_AnyConcept.hpp"
 #include "Viper_Codec.hpp"
 #include "Viper_Stream.hpp"
 #include "Viper_Values.hpp"
@@ -47,17 +47,17 @@ std::shared_ptr<Viper::StreamCodecInstancing> const & stream();
 // est aujourd'hui, pour ces deux lignes.
 
 /// Le nom du concept, tel que le modèle le connaît, ou une forme brute s'il l'ignore.
-std::string description(Viper::AnyConceptKey const & key);
+std::string description(Topology::AnyConceptKey const & key);
 
 /// Si ce modèle sait de quel concept il s'agit. Faux pour une instance venue d'un modèle
 /// plus récent, ce qui est un cas normal et non une erreur.
-bool isKnown(Viper::AnyConceptKey const & key);
+bool isKnown(Topology::AnyConceptKey const & key);
 
 /// Si l'instance relève de ce concept -- ou de ce club. Le descripteur porte la différence
 /// entre dériver et adhérer ; c'est l'unique opération dont un rétrécissement a besoin, et
 /// elle est ici parce que la réponse dépend de la hiérarchie du modèle, pas de l'unité qui
 /// pose la question.
-bool isMember(Viper::AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & concept_);
+bool isMember(Topology::AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & concept_);
 
 // ── le passage entre les deux mondes ──
 

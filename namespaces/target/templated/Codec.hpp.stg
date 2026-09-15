@@ -74,7 +74,7 @@ model(m) ::= <<
 #ifndef <m.namespace>_Codec_hpp
 #define <m.namespace>_Codec_hpp
 
-#include "Viper_AnyConceptKey.hpp"
+#include "<m.include.AnyConcept>"
 #include "Viper_Codec.hpp"
 #include "Viper_Stream.hpp"
 #include "Viper_Values.hpp"
@@ -99,15 +99,15 @@ std::shared_ptr\<Viper::StreamCodecInstancing> const & stream();
 // membres : un seul membre aurait obligé la classe entière à être générée.
 
 /// Le nom du concept, tel que le modèle le connaît, ou une forme brute s'il l'ignore.
-std::string description(Viper::AnyConceptKey const & key);
+std::string description(<m.namespace>::AnyConceptKey const & key);
 
 /// Si ce modèle sait de quel concept il s'agit. Faux pour une instance venue d'un modèle
 /// plus récent, ce qui est normal et non une erreur.
-bool isKnown(Viper::AnyConceptKey const & key);
+bool isKnown(<m.namespace>::AnyConceptKey const & key);
 
 /// Si l'instance relève de ce concept -- ou de ce club. Le descripteur porte la différence
 /// entre dériver et adhérer, et c'est l'unique opération dont un rétrécissement a besoin.
-bool isMember(Viper::AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_);
+bool isMember(<m.namespace>::AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_);
 
 // ── le passage entre les deux mondes ──
 //

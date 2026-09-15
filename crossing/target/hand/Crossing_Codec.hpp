@@ -6,7 +6,7 @@
 #ifndef Crossing_Codec_hpp
 #define Crossing_Codec_hpp
 
-#include "Viper_AnyConceptKey.hpp"
+#include "Crossing_AnyConcept.hpp"
 #include "Viper_Codec.hpp"
 #include "Viper_Stream.hpp"
 #include "Viper_Values.hpp"
@@ -37,11 +37,11 @@ std::shared_ptr<Viper::StreamCodecInstancing> const & stream();
 // aujourd'hui, pour ces deux lignes.
 
 /// Le nom du concept, tel que le modèle le connaît, ou une forme brute s'il l'ignore.
-std::string description(Viper::AnyConceptKey const & key);
+std::string description(Crossing::AnyConceptKey const & key);
 
 /// Si ce modèle sait de quel concept il s'agit. Faux pour une instance venue d'un modèle
 /// plus récent, ce qui est un cas normal et non une erreur.
-bool isKnown(Viper::AnyConceptKey const & key);
+bool isKnown(Crossing::AnyConceptKey const & key);
 
 /// Si l'instance relève de ce concept, ou d'un de ses dérivés.
 ///
@@ -49,7 +49,7 @@ bool isKnown(Viper::AnyConceptKey const & key);
 /// dans chaque unité pour une raison de sens : la réponse dépend de la hiérarchie des
 /// concepts du modèle, pas de l'unité qui pose la question. Un dérivé peut avoir été
 /// déclaré dans un namespace qui n'existait pas quand l'unité a été écrite.
-bool isMember(Viper::AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & concept_);
+bool isMember(Crossing::AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & concept_);
 
 template<class T>
 std::shared_ptr<Viper::Value> encode(T const & value);

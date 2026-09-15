@@ -164,11 +164,11 @@ std::shared_ptr\<Viper::StreamCodecInstancing> const & stream() {
 // apprend des concepts en cours d'exécution, d'un pair ou d'un document plus récent. Une
 // liste figée répond alors « inconnu » pour un concept que le runtime connaît -- ce que le
 // pack reconnaît lui-même dans un commentaire.
-bool isKnown(Viper::AnyConceptKey const & key) {
+bool isKnown(<m.namespace>::AnyConceptKey const & key) {
     return definitions()->queryConcept(key.runtimeId()) != nullptr;
 }
 
-std::string description(Viper::AnyConceptKey const & key) {
+std::string description(<m.namespace>::AnyConceptKey const & key) {
     auto const concept_ = definitions()->queryConcept(key.runtimeId());
     if (!concept_)
         return key.instanceId().uuidString() + ":?(" + key.runtimeId().uuidString() + ")";
@@ -178,7 +178,7 @@ std::string description(Viper::AnyConceptKey const & key) {
 
 // Le même corps des deux côtés : dériver n'est pas adhérer, et c'est le descripteur qui
 // porte la différence, pas le code.
-bool isMember(Viper::AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_) {
+bool isMember(<m.namespace>::AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_) {
     auto const instance = definitions()->queryConcept(key.runtimeId());
     if (!instance)
         return false;                                  // un concept que ce modèle ignore

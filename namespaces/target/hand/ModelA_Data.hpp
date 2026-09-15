@@ -6,7 +6,7 @@
 #ifndef ModelA_Data_hpp
 #define ModelA_Data_hpp
 
-#include "Viper_AnyConceptKey.hpp"
+#include "Topology_AnyConcept.hpp"
 #include "Viper_Hash.hpp"
 #include "Viper_UUId.hpp"
 
@@ -43,11 +43,11 @@ public:
     bool isValid() const noexcept;
 
     /// Widen to the untyped key, which keeps the runtime id alongside the instance id.
-    Viper::AnyConceptKey toAny() const noexcept;
+    Topology::AnyConceptKey toAny() const noexcept;
 
     /// Narrow back. Empty when the key names an instance of another concept — which is
     /// why this returns an optional and the widening above does not.
-    static std::optional<MaterialKey> from(Viper::AnyConceptKey const & key) noexcept;
+    static std::optional<MaterialKey> from(Topology::AnyConceptKey const & key) noexcept;
 
 
 private:

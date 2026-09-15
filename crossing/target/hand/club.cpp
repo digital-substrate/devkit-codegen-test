@@ -20,7 +20,7 @@ void use_club() {
     auto const wrong = fromSub.asOtherKey();
 
     // la clé non typée, et le retour
-    Viper::AnyConceptKey const any = sub.toAny();
+    Crossing::AnyConceptKey const any = sub.toAny();
     auto const narrowed = Core::SubThingKey::from(any);
 
     // un dérivé rétrécit aussi vers son parent, parce que l'identifiant réel a survécu
@@ -29,7 +29,7 @@ void use_club() {
     // utilisables en conteneur, ordonnés et hachés
     std::map<Core::KlubKey, Core::Colour> ordered;
     std::unordered_map<Core::ThingKey, int> hashed;
-    std::unordered_map<Viper::AnyConceptKey, int> anyHashed;
+    std::unordered_map<Crossing::AnyConceptKey, int> anyHashed;
 
     (void)widened; (void)fromOther; (void)back; (void)wrong;
     (void)narrowed; (void)asParent; (void)ordered; (void)hashed; (void)anyHashed;
