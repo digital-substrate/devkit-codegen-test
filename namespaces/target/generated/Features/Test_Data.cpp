@@ -296,7 +296,8 @@ bool operator==(StructureS const & l, StructureS const & r) noexcept {
 }
 bool operator!=(StructureS const & l, StructureS const & r) noexcept { return !(l == r); }
 bool operator<(StructureS const & l, StructureS const & r) noexcept {
-    if (l.f_float != r.f_float) return l.f_float < r.f_float;
+    if (l.f_float < r.f_float) return true;
+    if (r.f_float < l.f_float) return false;
     return l.f_string < r.f_string;
 }
 
@@ -313,7 +314,8 @@ bool operator==(StructureT const & l, StructureT const & r) noexcept {
 }
 bool operator!=(StructureT const & l, StructureT const & r) noexcept { return !(l == r); }
 bool operator<(StructureT const & l, StructureT const & r) noexcept {
-    if (l.field_string != r.field_string) return l.field_string < r.field_string;
+    if (l.field_string < r.field_string) return true;
+    if (r.field_string < l.field_string) return false;
     return l.field_structure_s < r.field_structure_s;
 }
 
@@ -367,44 +369,82 @@ bool operator==(StructureU const & l, StructureU const & r) noexcept {
 }
 bool operator!=(StructureU const & l, StructureU const & r) noexcept { return !(l == r); }
 bool operator<(StructureU const & l, StructureU const & r) noexcept {
-    if (l.f_bool != r.f_bool) return l.f_bool < r.f_bool;
-    if (l.f_uint8 != r.f_uint8) return l.f_uint8 < r.f_uint8;
-    if (l.f_uint16 != r.f_uint16) return l.f_uint16 < r.f_uint16;
-    if (l.f_uint32 != r.f_uint32) return l.f_uint32 < r.f_uint32;
-    if (l.f_uint64 != r.f_uint64) return l.f_uint64 < r.f_uint64;
-    if (l.f_int8 != r.f_int8) return l.f_int8 < r.f_int8;
-    if (l.f_int16 != r.f_int16) return l.f_int16 < r.f_int16;
-    if (l.f_int32 != r.f_int32) return l.f_int32 < r.f_int32;
-    if (l.f_int64 != r.f_int64) return l.f_int64 < r.f_int64;
-    if (l.f_float != r.f_float) return l.f_float < r.f_float;
-    if (l.f_double != r.f_double) return l.f_double < r.f_double;
-    if (l.f_blob_id != r.f_blob_id) return l.f_blob_id < r.f_blob_id;
-    if (l.f_commit_id != r.f_commit_id) return l.f_commit_id < r.f_commit_id;
-    if (l.f_uuid != r.f_uuid) return l.f_uuid < r.f_uuid;
-    if (l.f_string != r.f_string) return l.f_string < r.f_string;
-    if (l.f_blob != r.f_blob) return l.f_blob < r.f_blob;
-    if (l.f_vec != r.f_vec) return l.f_vec < r.f_vec;
-    if (l.f_mat != r.f_mat) return l.f_mat < r.f_mat;
-    if (l.f_tuple != r.f_tuple) return l.f_tuple < r.f_tuple;
-    if (l.f_optional != r.f_optional) return l.f_optional < r.f_optional;
-    if (l.f_vector != r.f_vector) return l.f_vector < r.f_vector;
-    if (l.f_set != r.f_set) return l.f_set < r.f_set;
-    if (l.f_set_s != r.f_set_s) return l.f_set_s < r.f_set_s;
-    if (l.f_map_s1 != r.f_map_s1) return l.f_map_s1 < r.f_map_s1;
-    if (l.f_map_s2 != r.f_map_s2) return l.f_map_s2 < r.f_map_s2;
-    if (l.f_xarray != r.f_xarray) return l.f_xarray < r.f_xarray;
-    if (l.f_xarray_s != r.f_xarray_s) return l.f_xarray_s < r.f_xarray_s;
-    if (l.f_map_vs != r.f_map_vs) return l.f_map_vs < r.f_map_vs;
-    if (l.f_variant != r.f_variant) return l.f_variant < r.f_variant;
-    if (l.f_any != r.f_any) return l.f_any < r.f_any;
-    if (l.f_E != r.f_E) return l.f_E < r.f_E;
-    if (l.f_S != r.f_S) return l.f_S < r.f_S;
-    if (l.f_T != r.f_T) return l.f_T < r.f_T;
-    if (l.f_A != r.f_A) return l.f_A < r.f_A;
-    if (l.f_B != r.f_B) return l.f_B < r.f_B;
-    if (l.f_C != r.f_C) return l.f_C < r.f_C;
-    if (l.f_D != r.f_D) return l.f_D < r.f_D;
-    if (l.f_Klub != r.f_Klub) return l.f_Klub < r.f_Klub;
+    if (l.f_bool < r.f_bool) return true;
+    if (r.f_bool < l.f_bool) return false;
+    if (l.f_uint8 < r.f_uint8) return true;
+    if (r.f_uint8 < l.f_uint8) return false;
+    if (l.f_uint16 < r.f_uint16) return true;
+    if (r.f_uint16 < l.f_uint16) return false;
+    if (l.f_uint32 < r.f_uint32) return true;
+    if (r.f_uint32 < l.f_uint32) return false;
+    if (l.f_uint64 < r.f_uint64) return true;
+    if (r.f_uint64 < l.f_uint64) return false;
+    if (l.f_int8 < r.f_int8) return true;
+    if (r.f_int8 < l.f_int8) return false;
+    if (l.f_int16 < r.f_int16) return true;
+    if (r.f_int16 < l.f_int16) return false;
+    if (l.f_int32 < r.f_int32) return true;
+    if (r.f_int32 < l.f_int32) return false;
+    if (l.f_int64 < r.f_int64) return true;
+    if (r.f_int64 < l.f_int64) return false;
+    if (l.f_float < r.f_float) return true;
+    if (r.f_float < l.f_float) return false;
+    if (l.f_double < r.f_double) return true;
+    if (r.f_double < l.f_double) return false;
+    if (l.f_blob_id < r.f_blob_id) return true;
+    if (r.f_blob_id < l.f_blob_id) return false;
+    if (l.f_commit_id < r.f_commit_id) return true;
+    if (r.f_commit_id < l.f_commit_id) return false;
+    if (l.f_uuid < r.f_uuid) return true;
+    if (r.f_uuid < l.f_uuid) return false;
+    if (l.f_string < r.f_string) return true;
+    if (r.f_string < l.f_string) return false;
+    if (l.f_blob < r.f_blob) return true;
+    if (r.f_blob < l.f_blob) return false;
+    if (l.f_vec < r.f_vec) return true;
+    if (r.f_vec < l.f_vec) return false;
+    if (l.f_mat < r.f_mat) return true;
+    if (r.f_mat < l.f_mat) return false;
+    if (l.f_tuple < r.f_tuple) return true;
+    if (r.f_tuple < l.f_tuple) return false;
+    if (l.f_optional < r.f_optional) return true;
+    if (r.f_optional < l.f_optional) return false;
+    if (l.f_vector < r.f_vector) return true;
+    if (r.f_vector < l.f_vector) return false;
+    if (l.f_set < r.f_set) return true;
+    if (r.f_set < l.f_set) return false;
+    if (l.f_set_s < r.f_set_s) return true;
+    if (r.f_set_s < l.f_set_s) return false;
+    if (l.f_map_s1 < r.f_map_s1) return true;
+    if (r.f_map_s1 < l.f_map_s1) return false;
+    if (l.f_map_s2 < r.f_map_s2) return true;
+    if (r.f_map_s2 < l.f_map_s2) return false;
+    if (l.f_xarray < r.f_xarray) return true;
+    if (r.f_xarray < l.f_xarray) return false;
+    if (l.f_xarray_s < r.f_xarray_s) return true;
+    if (r.f_xarray_s < l.f_xarray_s) return false;
+    if (l.f_map_vs < r.f_map_vs) return true;
+    if (r.f_map_vs < l.f_map_vs) return false;
+    if (l.f_variant < r.f_variant) return true;
+    if (r.f_variant < l.f_variant) return false;
+    if (l.f_any < r.f_any) return true;
+    if (r.f_any < l.f_any) return false;
+    if (l.f_E < r.f_E) return true;
+    if (r.f_E < l.f_E) return false;
+    if (l.f_S < r.f_S) return true;
+    if (r.f_S < l.f_S) return false;
+    if (l.f_T < r.f_T) return true;
+    if (r.f_T < l.f_T) return false;
+    if (l.f_A < r.f_A) return true;
+    if (r.f_A < l.f_A) return false;
+    if (l.f_B < r.f_B) return true;
+    if (r.f_B < l.f_B) return false;
+    if (l.f_C < r.f_C) return true;
+    if (r.f_C < l.f_C) return false;
+    if (l.f_D < r.f_D) return true;
+    if (r.f_D < l.f_D) return false;
+    if (l.f_Klub < r.f_Klub) return true;
+    if (r.f_Klub < l.f_Klub) return false;
     return l.f_any_concept < r.f_any_concept;
 }
 
@@ -479,28 +519,50 @@ bool operator==(StructureV const & l, StructureV const & r) noexcept {
 }
 bool operator!=(StructureV const & l, StructureV const & r) noexcept { return !(l == r); }
 bool operator<(StructureV const & l, StructureV const & r) noexcept {
-    if (l.f_bool != r.f_bool) return l.f_bool < r.f_bool;
-    if (l.f_uint8 != r.f_uint8) return l.f_uint8 < r.f_uint8;
-    if (l.f_uint16 != r.f_uint16) return l.f_uint16 < r.f_uint16;
-    if (l.f_uint32 != r.f_uint32) return l.f_uint32 < r.f_uint32;
-    if (l.f_uint64 != r.f_uint64) return l.f_uint64 < r.f_uint64;
-    if (l.f_int8 != r.f_int8) return l.f_int8 < r.f_int8;
-    if (l.f_int16 != r.f_int16) return l.f_int16 < r.f_int16;
-    if (l.f_int32 != r.f_int32) return l.f_int32 < r.f_int32;
-    if (l.f_int64 != r.f_int64) return l.f_int64 < r.f_int64;
-    if (l.f_float != r.f_float) return l.f_float < r.f_float;
-    if (l.f_double != r.f_double) return l.f_double < r.f_double;
-    if (l.f_uuid != r.f_uuid) return l.f_uuid < r.f_uuid;
-    if (l.f_string != r.f_string) return l.f_string < r.f_string;
-    if (l.f_vec != r.f_vec) return l.f_vec < r.f_vec;
-    if (l.f_mat != r.f_mat) return l.f_mat < r.f_mat;
-    if (l.f_tuple != r.f_tuple) return l.f_tuple < r.f_tuple;
-    if (l.f_optional != r.f_optional) return l.f_optional < r.f_optional;
-    if (l.f_vector != r.f_vector) return l.f_vector < r.f_vector;
-    if (l.f_set != r.f_set) return l.f_set < r.f_set;
-    if (l.f_map != r.f_map) return l.f_map < r.f_map;
-    if (l.f_E != r.f_E) return l.f_E < r.f_E;
-    if (l.f_S != r.f_S) return l.f_S < r.f_S;
+    if (l.f_bool < r.f_bool) return true;
+    if (r.f_bool < l.f_bool) return false;
+    if (l.f_uint8 < r.f_uint8) return true;
+    if (r.f_uint8 < l.f_uint8) return false;
+    if (l.f_uint16 < r.f_uint16) return true;
+    if (r.f_uint16 < l.f_uint16) return false;
+    if (l.f_uint32 < r.f_uint32) return true;
+    if (r.f_uint32 < l.f_uint32) return false;
+    if (l.f_uint64 < r.f_uint64) return true;
+    if (r.f_uint64 < l.f_uint64) return false;
+    if (l.f_int8 < r.f_int8) return true;
+    if (r.f_int8 < l.f_int8) return false;
+    if (l.f_int16 < r.f_int16) return true;
+    if (r.f_int16 < l.f_int16) return false;
+    if (l.f_int32 < r.f_int32) return true;
+    if (r.f_int32 < l.f_int32) return false;
+    if (l.f_int64 < r.f_int64) return true;
+    if (r.f_int64 < l.f_int64) return false;
+    if (l.f_float < r.f_float) return true;
+    if (r.f_float < l.f_float) return false;
+    if (l.f_double < r.f_double) return true;
+    if (r.f_double < l.f_double) return false;
+    if (l.f_uuid < r.f_uuid) return true;
+    if (r.f_uuid < l.f_uuid) return false;
+    if (l.f_string < r.f_string) return true;
+    if (r.f_string < l.f_string) return false;
+    if (l.f_vec < r.f_vec) return true;
+    if (r.f_vec < l.f_vec) return false;
+    if (l.f_mat < r.f_mat) return true;
+    if (r.f_mat < l.f_mat) return false;
+    if (l.f_tuple < r.f_tuple) return true;
+    if (r.f_tuple < l.f_tuple) return false;
+    if (l.f_optional < r.f_optional) return true;
+    if (r.f_optional < l.f_optional) return false;
+    if (l.f_vector < r.f_vector) return true;
+    if (r.f_vector < l.f_vector) return false;
+    if (l.f_set < r.f_set) return true;
+    if (r.f_set < l.f_set) return false;
+    if (l.f_map < r.f_map) return true;
+    if (r.f_map < l.f_map) return false;
+    if (l.f_E < r.f_E) return true;
+    if (r.f_E < l.f_E) return false;
+    if (l.f_S < r.f_S) return true;
+    if (r.f_S < l.f_S) return false;
     return l.f_T < r.f_T;
 }
 

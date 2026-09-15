@@ -9,23 +9,26 @@
 #include "Core_Model.hpp"
 
 #include "Crossing_Codec.hpp"
+#include "Crossing_Db.hpp"
 
 #include "Viper_Attachment.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Path.hpp"
 #include "Viper_Values.hpp"
+#include "Viper_ValueSetIter.hpp"
 
 namespace Core::Attachments::Thing::bag {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("e8422ebb-3f90-3554-115a-308eca6b75d5")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Crossing::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(ThingKey const & key) {
@@ -61,6 +64,14 @@ void set(Viper::AttachmentMutating & mutating, ThingKey const & key, Bag const &
 void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Bag const & value,
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+}
+
+bool set(std::shared_ptr<Viper::Database> const & db, ThingKey const & key, Bag const & value) {
+    return Crossing::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, ThingKey const & key) {
+    return Crossing::Db::del(db, attachment(), key);
 }
 
 void setMembers(Viper::AttachmentMutating & mutating, ThingKey const & key, std::set<ThingKey> const & value) {
@@ -120,13 +131,14 @@ namespace Core::Attachments::Thing::colour {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("1c970e1f-b2a9-80d7-f588-02c610b5f114")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Crossing::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(ThingKey const & key) {
@@ -164,6 +176,14 @@ void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour con
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
+bool set(std::shared_ptr<Viper::Database> const & db, ThingKey const & key, Colour const & value) {
+    return Crossing::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, ThingKey const & key) {
+    return Crossing::Db::del(db, attachment(), key);
+}
+
 void setR(Viper::AttachmentMutating & mutating, ThingKey const & key, std::uint8_t value) {
     mutating.update(attachment(), encodeKey(key), Core::Fields::Colour::rPath(),
                     Crossing::Codec::encode(value));
@@ -187,13 +207,14 @@ namespace Core::Attachments::Thing::history {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("44dff56f-9628-52e8-8b6d-74fcebd89beb")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Crossing::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(ThingKey const & key) {
@@ -231,6 +252,14 @@ void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Viper::XAr
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
+bool set(std::shared_ptr<Viper::Database> const & db, ThingKey const & key, Viper::XArray<Colour> const & value) {
+    return Crossing::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, ThingKey const & key) {
+    return Crossing::Db::del(db, attachment(), key);
+}
+
 void insert(Viper::AttachmentMutating & mutating, ThingKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value) {
     mutating.insertInXArray(attachment(), encodeKey(key), Viper::Path::make(),
                             beforePosition, newPosition, Crossing::Codec::encode(value));
@@ -250,13 +279,14 @@ namespace Core::Attachments::Thing::palette {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("07555083-c220-c293-7992-0b2d535a315e")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Crossing::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(ThingKey const & key) {
@@ -294,6 +324,14 @@ void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, std::map<T
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
+bool set(std::shared_ptr<Viper::Database> const & db, ThingKey const & key, std::map<ThingKey, Colour> const & value) {
+    return Crossing::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, ThingKey const & key) {
+    return Crossing::Db::del(db, attachment(), key);
+}
+
 void union_(Viper::AttachmentMutating & mutating, ThingKey const & key, std::map<ThingKey, Colour> const & value) {
     mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Crossing::Codec::encode(value)));
 }
@@ -312,13 +350,14 @@ namespace Core::Attachments::Thing::related {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("78dddddb-13c8-25ce-eb7a-83d42c72c86c")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Crossing::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(ThingKey const & key) {
@@ -356,6 +395,14 @@ void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, std::set<T
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
 }
 
+bool set(std::shared_ptr<Viper::Database> const & db, ThingKey const & key, std::set<ThingKey> const & value) {
+    return Crossing::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, ThingKey const & key) {
+    return Crossing::Db::del(db, attachment(), key);
+}
+
 void union_(Viper::AttachmentMutating & mutating, ThingKey const & key, std::set<ThingKey> const & value) {
     mutating.unionInSet(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueSet::cast(Crossing::Codec::encode(value)));
 }
@@ -370,13 +417,14 @@ namespace Core::Attachments::Thing::scalars {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("11386338-c74c-53da-8472-413ecd1a0cce")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Crossing::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(ThingKey const & key) {
@@ -412,6 +460,14 @@ void set(Viper::AttachmentMutating & mutating, ThingKey const & key, Scalars con
 void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Scalars const & value,
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+}
+
+bool set(std::shared_ptr<Viper::Database> const & db, ThingKey const & key, Scalars const & value) {
+    return Crossing::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, ThingKey const & key) {
+    return Crossing::Db::del(db, attachment(), key);
 }
 
 void setF_bool(Viper::AttachmentMutating & mutating, ThingKey const & key, bool value) {

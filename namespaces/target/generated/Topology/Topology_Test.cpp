@@ -1,6 +1,11 @@
 #include "Topology_Test.hpp"
 
-#include <cstddef>
+#include "Viper_Databasing.hpp"
+#include "Viper_BlobInfo.hpp"
+#include "Viper_BlobLayout.hpp"
+
+#include <cstdint>
+#include <vector>
 #include <iostream>
 #include <optional>
 
@@ -37,7 +42,7 @@ void testMetadata(std::shared_ptr<Viper::Database> const & db) {
 
 void testBlobCreate(std::shared_ptr<Viper::Database> const & db) {
     auto const name{"Topology.Test"};
-    Viper::Blob const written{{std::byte{1}, std::byte{2}, std::byte{3}, std::byte{4}}};
+    Viper::Blob const written{std::vector<std::uint8_t>{1, 2, 3, 4}};
 
     VIPER_ASSERT(name, db->blobIds().empty());
 
@@ -45,7 +50,7 @@ void testBlobCreate(std::shared_ptr<Viper::Database> const & db) {
     VIPER_ASSERT(name, db->blobIds().size() == 1);
 
     auto const info{db->blobInfo(blobId)};
-    VIPER_ASSERT(name, info.has_value());
+    VIPER_ASSERT(name, info != nullptr);
     VIPER_ASSERT(name, info->blobId == blobId);
     VIPER_ASSERT(name, info->size == 4);
 
@@ -59,21 +64,20 @@ void testBlobCreate(std::shared_ptr<Viper::Database> const & db) {
 
 void testBlobStream(std::shared_ptr<Viper::Database> const & db) {
     auto const name{"Topology.Test"};
-    Viper::Blob const written{{std::byte{1}, std::byte{2}, std::byte{3}, std::byte{4},
-                              std::byte{5}, std::byte{6}, std::byte{7}, std::byte{8}}};
+    Viper::Blob const written{std::vector<std::uint8_t>{1, 2, 3, 4, 5, 6, 7, 8}};
 
     auto const stream{db->blobStreamCreate(Viper::BlobLayout{}, written.size())};
     db->blobStreamAppend(stream, written.storage.data(), written.size());
     auto const blobId{db->blobStreamClose(stream)};
 
     auto const info{db->blobInfo(blobId)};
-    VIPER_ASSERT(name, info.has_value());
+    VIPER_ASSERT(name, info != nullptr);
     VIPER_ASSERT(name, info->size == 8);
 
     // Relu en deux fois, pour éprouver la position autant que le contenu.
     Viper::Blob read{info->size};
-    db->readBlob(blobId, &read.storage[0], 4, 0);
-    db->readBlob(blobId, &read.storage[4], 4, 4);
+    db->databasing()->readBlob(blobId, &read.storage[0], 4, 0);
+    db->databasing()->readBlob(blobId, &read.storage[4], 4, 4);
     VIPER_ASSERT(name, read.storage == written.storage);
 
     db->delBlob(blobId);
@@ -81,24 +85,25 @@ void testBlobStream(std::shared_ptr<Viper::Database> const & db) {
 
 void testBlobIO(std::shared_ptr<Viper::Database> const & db) {
     auto const name{"Topology.Test"};
-    Viper::Blob const written{{std::byte{1}, std::byte{2}, std::byte{3}, std::byte{4},
-                              std::byte{5}, std::byte{6}, std::byte{7}, std::byte{8}}};
+    Viper::Blob const written{std::vector<std::uint8_t>{1, 2, 3, 4, 5, 6, 7, 8}};
 
-    // Réserver la place, écrire dedans, puis figer : l'ordre est celui que la base impose.
-    Viper::BlobId const blobId{};
-    VIPER_ASSERT(name, db->createZeroBlob(blobId, Viper::BlobLayout{}, written.size()));
+    // UN IDENTIFIANT DE BLOB SE CALCULE DEPUIS LE CONTENU, il ne s'invente pas : c'est ce
+    // qui rend deux blobs identiques indiscernables, et c'est pourquoi on peut réserver la
+    // place avant d'écrire. Le pack l'écrit ainsi, et un identifiant vide est refusé.
+    Viper::BlobId const blobId{Viper::BlobLayout{}, written};
+    VIPER_ASSERT(name, db->databasing()->createZeroBlob(blobId, Viper::BlobLayout{}, written.size()));
 
-    db->writeBlob(blobId, &written.storage[0], 4, 0);
-    db->writeBlob(blobId, &written.storage[4], 4, 4);
-    db->freezeBlob(blobId);
+    db->databasing()->writeBlob(blobId, &written.storage[0], 4, 0);
+    db->databasing()->writeBlob(blobId, &written.storage[4], 4, 4);
+    db->databasing()->freezeBlob(blobId);
 
     auto const info{db->blobInfo(blobId)};
-    VIPER_ASSERT(name, info.has_value());
+    VIPER_ASSERT(name, info != nullptr);
     VIPER_ASSERT(name, info->size == 8);
 
     Viper::Blob read{info->size};
-    db->readBlob(blobId, &read.storage[0], 4, 0);
-    db->readBlob(blobId, &read.storage[4], 4, 4);
+    db->databasing()->readBlob(blobId, &read.storage[0], 4, 0);
+    db->databasing()->readBlob(blobId, &read.storage[4], 4, 4);
     VIPER_ASSERT(name, read.storage == written.storage);
 
     db->delBlob(blobId);

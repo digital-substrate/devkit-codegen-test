@@ -8,7 +8,10 @@
 #include "Topology_Codec.hpp"
 
 #include "Viper_FunctionPool.hpp"
+#include "Viper_FunctionPrototype.hpp"
 #include "Viper_ServiceRemote.hpp"
+#include "Viper_ValueVoid.hpp"
+#include "Viper_Function.hpp"
 
 namespace Tools {
 
@@ -34,7 +37,7 @@ protected:
     std::shared_ptr<Viper::Value> checkedCall(
             std::vector<std::shared_ptr<Viper::Value>> const & args) const override {
         reset();
-        return Viper::Void::Instance();
+        return Viper::ValueVoid::Instance();
     }
 };
 

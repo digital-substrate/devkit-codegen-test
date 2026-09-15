@@ -6,7 +6,6 @@
 
 #include "Core_Attachments.hpp"
 #include "Core_Codec.hpp"
-#include "Core_Database.hpp"
 #include "Core_Model.hpp"
 
 #include "Crossing_Test.hpp"
@@ -28,32 +27,32 @@ void test() {
 
 void testDatabase(std::shared_ptr<Viper::Database> const & db) {
     Crossing::Test::roundTripAttachment<ThingKey, Bag>(
-        db, Attachments::Thing::bag::runtimeId);
+        db, Attachments::Thing::bag::descriptor());
     Crossing::Test::roundTripAttachment<ThingKey, Colour>(
-        db, Attachments::Thing::colour::runtimeId);
+        db, Attachments::Thing::colour::descriptor());
     Crossing::Test::roundTripAttachment<ThingKey, Viper::XArray<Colour>>(
-        db, Attachments::Thing::history::runtimeId);
+        db, Attachments::Thing::history::descriptor());
     Crossing::Test::roundTripAttachment<ThingKey, std::map<ThingKey, Colour>>(
-        db, Attachments::Thing::palette::runtimeId);
+        db, Attachments::Thing::palette::descriptor());
     Crossing::Test::roundTripAttachment<ThingKey, std::set<ThingKey>>(
-        db, Attachments::Thing::related::runtimeId);
+        db, Attachments::Thing::related::descriptor());
     Crossing::Test::roundTripAttachment<ThingKey, Scalars>(
-        db, Attachments::Thing::scalars::runtimeId);
+        db, Attachments::Thing::scalars::descriptor());
 }
 
 void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
     Crossing::Test::fuzzAttachment<ThingKey, Bag>(
-        db, Attachments::Thing::bag::runtimeId, count);
+        db, Attachments::Thing::bag::descriptor(), count);
     Crossing::Test::fuzzAttachment<ThingKey, Colour>(
-        db, Attachments::Thing::colour::runtimeId, count);
+        db, Attachments::Thing::colour::descriptor(), count);
     Crossing::Test::fuzzAttachment<ThingKey, Viper::XArray<Colour>>(
-        db, Attachments::Thing::history::runtimeId, count);
+        db, Attachments::Thing::history::descriptor(), count);
     Crossing::Test::fuzzAttachment<ThingKey, std::map<ThingKey, Colour>>(
-        db, Attachments::Thing::palette::runtimeId, count);
+        db, Attachments::Thing::palette::descriptor(), count);
     Crossing::Test::fuzzAttachment<ThingKey, std::set<ThingKey>>(
-        db, Attachments::Thing::related::runtimeId, count);
+        db, Attachments::Thing::related::descriptor(), count);
     Crossing::Test::fuzzAttachment<ThingKey, Scalars>(
-        db, Attachments::Thing::scalars::runtimeId, count);
+        db, Attachments::Thing::scalars::descriptor(), count);
 }
 
 } // namespace Core

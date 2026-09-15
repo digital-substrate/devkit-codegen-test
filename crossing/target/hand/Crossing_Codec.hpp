@@ -7,8 +7,10 @@
 #define Crossing_Codec_hpp
 
 #include "Crossing_AnyConcept.hpp"
-#include "Viper_Codec.hpp"
-#include "Viper_Stream.hpp"
+#include "Viper_TypedCodec.hpp"
+#include "Viper_StreamCodecInstancing.hpp"
+#include "Viper_ValueDecoder.hpp"
+#include "Viper_ValueEncoder.hpp"
 #include "Viper_Values.hpp"
 
 #include <memory>

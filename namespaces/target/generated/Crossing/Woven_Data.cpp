@@ -152,13 +152,20 @@ bool operator==(Composites const & l, Composites const & r) noexcept {
 }
 bool operator!=(Composites const & l, Composites const & r) noexcept { return !(l == r); }
 bool operator<(Composites const & l, Composites const & r) noexcept {
-    if (l.f_tuple != r.f_tuple) return l.f_tuple < r.f_tuple;
-    if (l.f_optional != r.f_optional) return l.f_optional < r.f_optional;
-    if (l.f_vector != r.f_vector) return l.f_vector < r.f_vector;
-    if (l.f_set != r.f_set) return l.f_set < r.f_set;
-    if (l.f_map_keys != r.f_map_keys) return l.f_map_keys < r.f_map_keys;
-    if (l.f_map_enum != r.f_map_enum) return l.f_map_enum < r.f_map_enum;
-    if (l.f_xarray != r.f_xarray) return l.f_xarray < r.f_xarray;
+    if (l.f_tuple < r.f_tuple) return true;
+    if (r.f_tuple < l.f_tuple) return false;
+    if (l.f_optional < r.f_optional) return true;
+    if (r.f_optional < l.f_optional) return false;
+    if (l.f_vector < r.f_vector) return true;
+    if (r.f_vector < l.f_vector) return false;
+    if (l.f_set < r.f_set) return true;
+    if (r.f_set < l.f_set) return false;
+    if (l.f_map_keys < r.f_map_keys) return true;
+    if (r.f_map_keys < l.f_map_keys) return false;
+    if (l.f_map_enum < r.f_map_enum) return true;
+    if (r.f_map_enum < l.f_map_enum) return false;
+    if (l.f_xarray < r.f_xarray) return true;
+    if (r.f_xarray < l.f_xarray) return false;
     return l.f_variant < r.f_variant;
 }
 
@@ -189,15 +196,24 @@ bool operator==(Entities const & l, Entities const & r) noexcept {
 }
 bool operator!=(Entities const & l, Entities const & r) noexcept { return !(l == r); }
 bool operator<(Entities const & l, Entities const & r) noexcept {
-    if (l.f_core_grade != r.f_core_grade) return l.f_core_grade < r.f_core_grade;
-    if (l.f_parts_grade != r.f_parts_grade) return l.f_parts_grade < r.f_parts_grade;
-    if (l.f_core_colour != r.f_core_colour) return l.f_core_colour < r.f_core_colour;
-    if (l.f_parts_colour != r.f_parts_colour) return l.f_parts_colour < r.f_parts_colour;
-    if (l.f_single != r.f_single) return l.f_single < r.f_single;
-    if (l.f_thing != r.f_thing) return l.f_thing < r.f_thing;
-    if (l.f_sub_thing != r.f_sub_thing) return l.f_sub_thing < r.f_sub_thing;
-    if (l.f_other_thing != r.f_other_thing) return l.f_other_thing < r.f_other_thing;
-    if (l.f_klub != r.f_klub) return l.f_klub < r.f_klub;
+    if (l.f_core_grade < r.f_core_grade) return true;
+    if (r.f_core_grade < l.f_core_grade) return false;
+    if (l.f_parts_grade < r.f_parts_grade) return true;
+    if (r.f_parts_grade < l.f_parts_grade) return false;
+    if (l.f_core_colour < r.f_core_colour) return true;
+    if (r.f_core_colour < l.f_core_colour) return false;
+    if (l.f_parts_colour < r.f_parts_colour) return true;
+    if (r.f_parts_colour < l.f_parts_colour) return false;
+    if (l.f_single < r.f_single) return true;
+    if (r.f_single < l.f_single) return false;
+    if (l.f_thing < r.f_thing) return true;
+    if (r.f_thing < l.f_thing) return false;
+    if (l.f_sub_thing < r.f_sub_thing) return true;
+    if (r.f_sub_thing < l.f_sub_thing) return false;
+    if (l.f_other_thing < r.f_other_thing) return true;
+    if (r.f_other_thing < l.f_other_thing) return false;
+    if (l.f_klub < r.f_klub) return true;
+    if (r.f_klub < l.f_klub) return false;
     return l.f_any_concept < r.f_any_concept;
 }
 
@@ -222,7 +238,8 @@ bool operator==(Nested const & l, Nested const & r) noexcept {
 }
 bool operator!=(Nested const & l, Nested const & r) noexcept { return !(l == r); }
 bool operator<(Nested const & l, Nested const & r) noexcept {
-    if (l.f_composites != r.f_composites) return l.f_composites < r.f_composites;
+    if (l.f_composites < r.f_composites) return true;
+    if (r.f_composites < l.f_composites) return false;
     return l.f_entities < r.f_entities;
 }
 

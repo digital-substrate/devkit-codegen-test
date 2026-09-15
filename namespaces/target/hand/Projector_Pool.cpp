@@ -20,7 +20,10 @@
 #include "ModelB_Model.hpp"
 #include "Topology_Codec.hpp"
 
+#include "Viper_Function.hpp"
+#include "Viper_ValueVoid.hpp"
 #include "Viper_FunctionPool.hpp"
+#include "Viper_FunctionPrototype.hpp"
 
 namespace Projector {
 
@@ -48,7 +51,7 @@ protected:
         auto const b{Topology::Codec::decode<ModelB::MaterialKey>(args.at(1))};
 
         link(a, b);
-        return Viper::Void::Instance();
+        return Viper::ValueVoid::Instance();
     }
 };
 

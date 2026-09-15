@@ -6,7 +6,6 @@
 
 #include "Projection_Attachments.hpp"
 #include "Projection_Codec.hpp"
-#include "Projection_Database.hpp"
 #include "Projection_Model.hpp"
 #include "ModelB_Codec.hpp"
 #include "ModelC_Codec.hpp"
@@ -27,20 +26,20 @@ void test() {
 
 void testDatabase(std::shared_ptr<Viper::Database> const & db) {
     Topology::Test::roundTripAttachment<LinkKey, std::map<ModelA::MaterialKey, ModelB::MaterialKey>>(
-        db, Attachments::Link::mapping::runtimeId);
+        db, Attachments::Link::mapping::descriptor());
     Topology::Test::roundTripAttachment<LinkKey, ModelC::MarkerKey>(
-        db, Attachments::Link::marker::runtimeId);
+        db, Attachments::Link::marker::descriptor());
     Topology::Test::roundTripAttachment<LinkKey, Pair>(
-        db, Attachments::Link::pair::runtimeId);
+        db, Attachments::Link::pair::descriptor());
 }
 
 void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
     Topology::Test::fuzzAttachment<LinkKey, std::map<ModelA::MaterialKey, ModelB::MaterialKey>>(
-        db, Attachments::Link::mapping::runtimeId, count);
+        db, Attachments::Link::mapping::descriptor(), count);
     Topology::Test::fuzzAttachment<LinkKey, ModelC::MarkerKey>(
-        db, Attachments::Link::marker::runtimeId, count);
+        db, Attachments::Link::marker::descriptor(), count);
     Topology::Test::fuzzAttachment<LinkKey, Pair>(
-        db, Attachments::Link::pair::runtimeId, count);
+        db, Attachments::Link::pair::descriptor(), count);
 }
 
 } // namespace Projection

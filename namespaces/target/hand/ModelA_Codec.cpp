@@ -18,7 +18,9 @@
 #include "Topology_Codec.hpp"      // definitions() -- le modèle, que l'unité ne porte pas
 
 #include "Viper_Definitions.hpp"
-#include "Viper_Stream.hpp"
+#include "Viper_StreamCodecInstancing.hpp"
+#include "Viper_ValueDecoder.hpp"
+#include "Viper_ValueEncoder.hpp"
 #include "Viper_TypeErrors.hpp"
 #include "Viper_Types.hpp"
 

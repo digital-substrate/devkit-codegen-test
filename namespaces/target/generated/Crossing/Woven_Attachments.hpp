@@ -15,7 +15,9 @@
 #include "Parts_Data.hpp"
 #include "Core_Data.hpp"
 
+#include "Viper_Attachment.hpp"
 #include "Viper_AttachmentGetting.hpp"
+#include "Viper_Database.hpp"
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
@@ -31,6 +33,13 @@ namespace Woven::Attachments::Core_Thing::mark {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<Core::ThingKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, Core::ThingKey const & key);
@@ -41,6 +50,16 @@ void set(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, Parts
 
 void diff(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, Parts::Colour const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, Core::ThingKey const & key, Parts::Colour const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, Core::ThingKey const & key);
 
 void setR(Viper::AttachmentMutating & mutating, Core::ThingKey const & key, float value);
 
@@ -56,6 +75,13 @@ namespace Woven::Attachments::Knot::docAnyConceptKey {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
@@ -66,6 +92,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, ::Crossing::
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, ::Crossing::AnyConceptKey const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, ::Crossing::AnyConceptKey const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 } // namespace Woven::Attachments::Knot::docAnyConceptKey
 
 namespace Woven::Attachments::Knot::docColour {
@@ -73,6 +109,13 @@ namespace Woven::Attachments::Knot::docColour {
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
+
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
 
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
@@ -84,6 +127,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Colour
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Colour const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Core::Colour const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
 void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, std::uint8_t value);
 
@@ -99,6 +152,13 @@ namespace Woven::Attachments::Knot::docComposites {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
@@ -109,6 +169,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Composites c
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Composites const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Composites const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
 void setF_tuple(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value);
 
@@ -141,6 +211,13 @@ namespace Woven::Attachments::Knot::docGrade {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
@@ -151,6 +228,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Grade 
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::Grade const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Core::Grade const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 } // namespace Woven::Attachments::Knot::docGrade
 
 namespace Woven::Attachments::Knot::docKlubKey {
@@ -158,6 +245,13 @@ namespace Woven::Attachments::Knot::docKlubKey {
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
+
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
 
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
@@ -169,6 +263,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::KlubKe
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::KlubKey const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Core::KlubKey const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 } // namespace Woven::Attachments::Knot::docKlubKey
 
 namespace Woven::Attachments::Knot::docMapEnum {
@@ -176,6 +280,13 @@ namespace Woven::Attachments::Knot::docMapEnum {
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
+
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
 
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
@@ -187,6 +298,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Cor
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
 void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::Grade, Parts::Colour> const & value);
 void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::Grade> const & value);
@@ -200,6 +321,13 @@ namespace Woven::Attachments::Knot::docMapKeys {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
@@ -210,6 +338,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Cor
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
 void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::map<Core::ThingKey, Parts::ThingKey> const & value);
 void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
@@ -223,6 +361,13 @@ namespace Woven::Attachments::Knot::docOptional {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
@@ -233,6 +378,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optiona
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::optional<Core::ThingKey> const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::optional<Core::ThingKey> const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 } // namespace Woven::Attachments::Knot::docOptional
 
 namespace Woven::Attachments::Knot::docOtherColour {
@@ -240,6 +395,13 @@ namespace Woven::Attachments::Knot::docOtherColour {
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
+
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
 
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
@@ -251,6 +413,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Parts::Colou
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Parts::Colour const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Parts::Colour const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
 void setR(Viper::AttachmentMutating & mutating, KnotKey const & key, float value);
 
@@ -266,6 +438,13 @@ namespace Woven::Attachments::Knot::docSet {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
@@ -276,6 +455,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Cor
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::set<Core::ThingKey> const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
 void union_(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
 void subtract(Viper::AttachmentMutating & mutating, KnotKey const & key, std::set<Core::ThingKey> const & value);
@@ -288,6 +477,13 @@ namespace Woven::Attachments::Knot::docThingKey {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, KnotKey const & key);
@@ -298,6 +494,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::ThingK
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Core::ThingKey const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Core::ThingKey const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 } // namespace Woven::Attachments::Knot::docThingKey
 
 namespace Woven::Attachments::Knot::docTuple {
@@ -305,6 +511,13 @@ namespace Woven::Attachments::Knot::docTuple {
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
+
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
 
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
@@ -316,6 +529,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<C
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::tuple<Core::Colour, Parts::Colour> const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 } // namespace Woven::Attachments::Knot::docTuple
 
 namespace Woven::Attachments::Knot::docVariant {
@@ -323,6 +546,13 @@ namespace Woven::Attachments::Knot::docVariant {
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
+
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
 
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
@@ -334,6 +564,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::variant<Core::Colour, Parts::Colour> const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 } // namespace Woven::Attachments::Knot::docVariant
 
 namespace Woven::Attachments::Knot::docVector {
@@ -341,6 +581,13 @@ namespace Woven::Attachments::Knot::docVector {
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
+
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
 
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
@@ -352,6 +599,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, std::vector<Parts::Colour> const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, std::vector<Parts::Colour> const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 } // namespace Woven::Attachments::Knot::docVector
 
 namespace Woven::Attachments::Knot::docXArray {
@@ -359,6 +616,13 @@ namespace Woven::Attachments::Knot::docXArray {
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
+
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
 
 std::set<KnotKey> keys(Viper::AttachmentGetting const & getting);
 
@@ -370,6 +634,16 @@ void set(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArra
 
 void diff(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::XArray<Core::Colour> const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, KnotKey const & key, Viper::XArray<Core::Colour> const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, KnotKey const & key);
 
 void insert(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, Core::Colour const & value);
 void update(Viper::AttachmentMutating & mutating, KnotKey const & key, Viper::UUId const & position, Core::Colour const & value);
@@ -383,6 +657,13 @@ namespace Woven::Attachments::Parts_Thing::mark {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<Parts::ThingKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, Parts::ThingKey const & key);
@@ -393,6 +674,16 @@ void set(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, Core
 
 void diff(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, Core::Colour const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, Parts::ThingKey const & key, Core::Colour const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, Parts::ThingKey const & key);
 
 void setR(Viper::AttachmentMutating & mutating, Parts::ThingKey const & key, std::uint8_t value);
 

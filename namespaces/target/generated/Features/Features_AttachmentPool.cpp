@@ -16,10 +16,18 @@
 #include "Features_Codec.hpp"
 
 #include "Viper_Attachment.hpp"
+#include "Viper_AttachmentGetting.hpp"
+#include "Viper_AttachmentMutating.hpp"
+#include "Viper_AttachmentFunction.hpp"
+#include "Viper_AttachmentGettingFunction.hpp"
+#include "Viper_AttachmentMutatingFunction.hpp"
+#include "Viper_FunctionPrototype.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Path.hpp"
 #include "Viper_Types.hpp"
 #include "Viper_Values.hpp"
+#include "Viper_ValueVoid.hpp"
+#include "Viper_ValueSetIter.hpp"
 
 namespace Features {
 

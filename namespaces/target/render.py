@@ -17,7 +17,18 @@ sys.path.insert(0, str(ROOT / "tools"))
 from render import jar                                    # noqa: E402
 
 TEMPLATES = HERE / "templated"
-RUNTIME = ROOT / "runtime"
+# LES VRAIS EN-TÊTES DU RUNTIME, et seulement ce qu'il ne porte pas encore à côté. Tant que
+# la vérification se faisait contre des signatures recopiées, une recopie de travers passait
+# inaperçue ; ici elles viennent de la source et le résultat se lie contre `libviper.a`.
+VIPER = ROOT.parent / "com.digitalsubstrate.viper"
+PROPOSED = ROOT / "runtime-proposed"
+
+INCLUDES = ["-I", str(PROPOSED),
+            "-I", str(VIPER / "src/Viper"),
+            "-I", str(VIPER / "third_parties/hash"),
+            "-I", str(VIPER / "third_parties/json"),
+            "-I", str(VIPER / "third_parties/sqlite"),
+            "-I", str(VIPER / "third_parties/cli11")]
 
 # The three models, and what each is for. None alone reaches everything.
 #
@@ -76,8 +87,7 @@ def compile_tree(model, out):
 
     failed = []
     for source in sorted(out.glob("*.cpp")):
-        r = subprocess.run(["clang++", "-std=c++20", "-fsyntax-only", "-I", str(out),
-                            "-I", str(RUNTIME), str(source)], capture_output=True, text=True)
+        r = subprocess.run(["clang++", "-std=c++20", "-fsyntax-only", "-I", str(out), *INCLUDES, str(source)], capture_output=True, text=True)
         if r.returncode:
             failed.append(source.name)
             print(f"  !! {source.name}")
@@ -112,8 +122,7 @@ for model, definitions in MODELS.items():
 for directory in STANDALONE:
     failed = []
     for source in sorted(directory.glob("*.cpp")):
-        r = subprocess.run(["clang++", "-std=c++20", "-fsyntax-only", "-I", str(directory),
-                            "-I", str(RUNTIME), str(source)],
+        r = subprocess.run(["clang++", "-std=c++20", "-fsyntax-only", "-I", str(directory), *INCLUDES, str(source)],
                            capture_output=True, text=True)
         if r.returncode:
             failed.append(source.name)
@@ -124,6 +133,48 @@ for directory in STANDALONE:
           f"{len(list(directory.glob('*.cpp'))):3} .cpp"
           + (f", {len(failed)} ne compilent pas" if failed else ", tout compile"))
     status |= bool(failed)
+
+# ── et l'épreuve qui compte : lier, et exécuter ──
+#
+# TANT QUE C'ÉTAIT `-fsyntax-only`, UNE SIGNATURE RECOPIÉE DE TRAVERS PASSAIT. Sept défauts
+# ne se sont montrés qu'ici : deux références à un temporaire mort, un `auto` qui créait une
+# conversion, un identifiant de blob inventé, une transaction absente, un modèle jamais
+# donné à la base -- et un défaut dans le runtime lui-même.
+if not arguments.check:
+    link = target / "link"
+    link.mkdir(parents=True, exist_ok=True)
+    topology = target / "Topology"
+    shutil.copy(HERE / "hand/Topology_Resources.hpp", topology)
+    shutil.copy(HERE / "link/application.cpp", topology)
+
+    objects, failed = [], []
+    sources = sorted(topology.glob("*.cpp")) + sorted(PROPOSED.glob("*.cpp"))
+    for source in sources:
+        o = link / (source.stem + ".o")
+        r = subprocess.run(["clang++", "-std=c++20", "-c", "-I", str(topology),
+                            *INCLUDES, "-o", str(o), str(source)], capture_output=True, text=True)
+        (objects if not r.returncode else failed).append(source.name)
+
+    libs = [str(ROOT / "build" / f"lib{n}.a") for n in ("viper", "sqlite", "hash", "antlr4", "pugixml")]
+    if failed or not all(Path(l).exists() for l in libs):
+        print(f"  lien       ignoré ({len(failed)} objets manquants ou libviper.a absent)")
+    else:
+        binary = link / "testapp"
+        r = subprocess.run(["clang++", "-std=c++20", "-o", str(binary),
+                            *[str(link / (Path(n).stem + ".o")) for n in objects], *libs],
+                           capture_output=True, text=True)
+        if r.returncode:
+            print("  lien       échoue")
+            for l in r.stderr.splitlines()[:6]:
+                print(f"     {l}")
+            status = 1
+        else:
+            r = subprocess.run([str(binary)], capture_output=True, text=True)
+            print(f"  lien       {len(objects)} objets, et le programme "
+                  + ("tourne" if r.returncode == 0 else "ÉCHOUE"))
+            if r.returncode:
+                print("    " + r.stderr.strip().splitlines()[-1] if r.stderr.strip() else "")
+                status = 1
 
 if arguments.check:
     same = subprocess.run(["diff", "-r", str(HERE / "generated"), str(target)],

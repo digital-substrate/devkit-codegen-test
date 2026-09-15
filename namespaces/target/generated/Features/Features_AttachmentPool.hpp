@@ -1,4 +1,4 @@
-// modèle Features — les attachments, exposés au monde dynamique.
+// Features — les attachments du modèle, exposés au monde dynamique.
 //
 // LE PLUS GROS ARTEFACT DU PACK APRÈS LA BASE DE DONNÉES, ET IL N'A RIEN À GÉNÉRER. 764
 // lignes de template qui produisent 9 125 lignes pour un modèle réel, et pas une seule ne
@@ -15,7 +15,7 @@
 #ifndef Features_AttachmentPool_hpp
 #define Features_AttachmentPool_hpp
 
-#include "Viper_FunctionPool.hpp"
+#include "Viper_AttachmentFunctionPool.hpp"
 
 #include <memory>
 

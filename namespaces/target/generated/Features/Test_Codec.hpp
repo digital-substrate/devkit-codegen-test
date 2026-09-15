@@ -12,7 +12,7 @@
 
 #include "Test_Data.hpp"
 
-#include "Viper_Codec.hpp"
+#include "Viper_TypedCodec.hpp"
 
 #include <memory>
 

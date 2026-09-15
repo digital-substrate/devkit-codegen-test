@@ -13,7 +13,9 @@
 
 #include "ModelC_Data.hpp"
 
+#include "Viper_Attachment.hpp"
 #include "Viper_AttachmentGetting.hpp"
+#include "Viper_Database.hpp"
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 

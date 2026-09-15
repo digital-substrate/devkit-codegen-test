@@ -7,7 +7,7 @@
 
 #include "Woven_Data.hpp"
 
-#include "Viper_Codec.hpp"
+#include "Viper_TypedCodec.hpp"
 #include "Viper_Types.hpp"
 
 #include <memory>

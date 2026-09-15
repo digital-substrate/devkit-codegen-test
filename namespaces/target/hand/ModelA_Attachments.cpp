@@ -20,16 +20,23 @@
 #include "ModelA_Fields.hpp"       // les chemins, pour les setters de champ
 #include "ModelA_Model.hpp"       // les descripteurs de type, que le codec générique demande
 
-#include "Topology_Codec.hpp"      // encode, decode, definitions() -- le module injecté
+#include "Topology_Codec.hpp"
+#include "Topology_Db.hpp"      // encode, decode, definitions() -- le module injecté
 
 #include "Viper_Attachment.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Path.hpp"
 #include "Viper_Values.hpp"
+#include "Viper_ValueSetIter.hpp"
 
 namespace ModelA::Attachments::Material::colour {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("faf658ea-5586-890a-0c4a-5cd2c9209b28")};
+
+std::shared_ptr<Viper::Attachment> const & descriptor() {
+    static auto const instance = Topology::Codec::definitions()->checkAttachment(runtimeId);
+    return instance;
+}
 
 namespace {
 
@@ -38,10 +45,7 @@ namespace {
 /// Résolu une fois : `definitions()` est le modèle entier, enregistré au chargement, donc
 /// le descripteur ne change pas d'un appel à l'autre. Il est privé au fichier -- personne
 /// hors de ce scope n'a de raison de le nommer.
-std::shared_ptr<Viper::Attachment> const & attachment() {
-    static auto const instance = Topology::Codec::definitions()->checkAttachment(runtimeId);
-    return instance;
-}
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Trois lignes se la partagent, et le cast dit ce que le modèle sait
 /// déjà : la clé d'un attachment est une clé.
@@ -97,6 +101,14 @@ void setG(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::ui
 
 void setB(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value) {
     mutating.update(attachment(), encodeKey(key), Fields::Colour::bPath(), Topology::Codec::encode(value));
+}
+
+bool set(std::shared_ptr<Viper::Database> const & db, MaterialKey const & key, Colour const & value) {
+    return Topology::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, MaterialKey const & key) {
+    return Topology::Db::del(db, attachment(), key);
 }
 
 } // namespace ModelA::Attachments::Material::colour

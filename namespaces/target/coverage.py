@@ -47,7 +47,7 @@ ABSORBED = {
         connect databases getDatabase setDatabase make copy blob blobIds blobInfo blobInfos
         blobRead blobStatistics blobStreamAppend blobStreamClose blobStreamCreate
         blobStreamDelete blobStreamWrite createBlob createZeroBlob delBlob freezeBlob
-        readBlob writeBlob""",
+        readBlob writeBlob streamCodecInstancing""",
 
     # Les entrées/sorties en vrac d'un flux, que le runtime porte déjà.
     "le flux, en vrac": """read_uint8s read_uint16s read_uint32s read_uint64s read_int8s

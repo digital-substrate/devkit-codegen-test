@@ -10,7 +10,11 @@
 #include "Topology_Codec.hpp"
 
 #include "Viper_AttachmentFunctionPool.hpp"
+#include "Viper_FunctionPrototype.hpp"
 #include "Viper_ServiceRemote.hpp"
+#include "Viper_ValueVoid.hpp"
+#include "Viper_AttachmentGettingFunction.hpp"
+#include "Viper_AttachmentMutatingFunction.hpp"
 
 namespace LinkModel {
 
@@ -29,9 +33,7 @@ public:
     }
 
     explicit Clear(std::shared_ptr<Viper::FunctionPrototype> prototype)
-    : Viper::AttachmentMutatingFunction{std::move(prototype)} {}
-
-    std::string representation() const override { return "clear"; }
+    : Viper::AttachmentMutatingFunction{std::move(prototype), ""} {}
 
 protected:
     std::shared_ptr<Viper::Value> checkedCall(
@@ -40,7 +42,7 @@ protected:
         auto const linkKey{Topology::Codec::decode<Projection::LinkKey>(args.at(0))};
 
         clear(attachmentMutating, linkKey);
-        return Viper::Void::Instance();
+        return Viper::ValueVoid::Instance();
     }
 };
 

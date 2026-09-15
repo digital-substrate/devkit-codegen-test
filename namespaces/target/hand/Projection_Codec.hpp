@@ -20,7 +20,7 @@
 #include "ModelA_Codec.hpp"        // Pair's fields cross too
 #include "ModelB_Codec.hpp"
 
-#include "Viper_Codec.hpp"
+#include "Viper_TypedCodec.hpp"
 
 namespace Projection {
 

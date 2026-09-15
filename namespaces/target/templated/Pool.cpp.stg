@@ -19,6 +19,7 @@
 
 pool(p) ::= <<
 <preamble(p, "FunctionPool")>
+#include "Viper_Function.hpp"
 
 namespace <p.name;format="uf"> {
 
@@ -50,6 +51,8 @@ std::shared_ptr\<Viper::FunctionPool> pool() {
 // dans la signature -- assez pour que les deux entrées restent séparées.
 attachment_pool(p) ::= <<
 <preamble(p, "AttachmentFunctionPool")>
+#include "Viper_AttachmentGettingFunction.hpp"
+#include "Viper_AttachmentMutatingFunction.hpp"
 
 namespace <p.name;format="uf"> {
 
@@ -89,7 +92,9 @@ preamble(p, kind) ::= <<
 #include "<p.model.include.Codec>"
 
 #include "Viper_<kind>.hpp"
+#include "Viper_FunctionPrototype.hpp"
 #include "Viper_ServiceRemote.hpp"
+#include "Viper_ValueVoid.hpp"
 >>
 
 function(f, p) ::= <<
@@ -109,7 +114,7 @@ protected:
 <endif>
 <if(f.isVoid)>
         <f.name;format="lsc">(<f.parameters:{a|<a.name>};separator=", ">);
-        return Viper::Void::Instance();
+        return Viper::ValueVoid::Instance();
 <else>
         return <p.model.namespace>::Codec::encode(<f.name;format="lsc">(<f.parameters:{a|<a.name>};separator=", ">));
 <endif>
@@ -124,9 +129,7 @@ public:
     <make(f)>
 
     explicit <f.name;format="uf">(std::shared_ptr\<Viper::FunctionPrototype> prototype)
-    : Viper::Attachment<f.interfaceType>Function{std::move(prototype)} {}
-
-    std::string representation() const override { return "<f.name;format="lsc">"; }
+    : Viper::Attachment<f.interfaceType>Function{std::move(prototype), ""} {}
 
 protected:
     <attachment_checked_call(f)>
@@ -136,7 +139,7 @@ protected:
 <endif>
 <if(f.isVoid)>
         <f.name;format="lsc">(attachment<f.interfaceType><if(f.parameters)>, <f.parameters:{a|<a.name>};separator=", "><endif>);
-        return Viper::Void::Instance();
+        return Viper::ValueVoid::Instance();
 <else>
         return <p.model.namespace>::Codec::encode(<f.name;format="lsc">(attachment<f.interfaceType><if(f.parameters)>, <f.parameters:{a|<a.name>};separator=", "><endif>));
 <endif>
@@ -217,3 +220,4 @@ remote_call(f, p) ::= <<
 remote_decode(f, p) ::= <%return <p.model.namespace>::Codec::decode\<<f.type>>(%>
 remote_head(f) ::= <%<if(f.isVoid)>void<else><f.type><endif> Remote::<f.name;format="lsc">(<f.parameters:remote_param();separator=", ">) const {%>
 remote_param(a) ::= <%<a.type><a.passBy> <a.name>%>
+

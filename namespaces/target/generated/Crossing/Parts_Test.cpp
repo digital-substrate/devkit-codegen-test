@@ -6,7 +6,6 @@
 
 #include "Parts_Attachments.hpp"
 #include "Parts_Codec.hpp"
-#include "Parts_Database.hpp"
 #include "Parts_Model.hpp"
 
 #include "Crossing_Test.hpp"
@@ -21,12 +20,12 @@ void test() {
 
 void testDatabase(std::shared_ptr<Viper::Database> const & db) {
     Crossing::Test::roundTripAttachment<ThingKey, Colour>(
-        db, Attachments::Thing::colour::runtimeId);
+        db, Attachments::Thing::colour::descriptor());
 }
 
 void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
     Crossing::Test::fuzzAttachment<ThingKey, Colour>(
-        db, Attachments::Thing::colour::runtimeId, count);
+        db, Attachments::Thing::colour::descriptor(), count);
 }
 
 } // namespace Parts

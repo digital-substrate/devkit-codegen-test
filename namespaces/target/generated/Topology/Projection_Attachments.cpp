@@ -18,23 +18,26 @@
 #include "ModelA_Fields.hpp"
 
 #include "Topology_Codec.hpp"
+#include "Topology_Db.hpp"
 
 #include "Viper_Attachment.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Path.hpp"
 #include "Viper_Values.hpp"
+#include "Viper_ValueSetIter.hpp"
 
 namespace Projection::Attachments::Link::mapping {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("e44613ce-ada0-c8a2-a9d1-20b04ae443c0")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Topology::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(LinkKey const & key) {
@@ -72,6 +75,14 @@ void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<Mo
     mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
 
+bool set(std::shared_ptr<Viper::Database> const & db, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
+    return Topology::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, LinkKey const & key) {
+    return Topology::Db::del(db, attachment(), key);
+}
+
 void union_(Viper::AttachmentMutating & mutating, LinkKey const & key, std::map<ModelA::MaterialKey, ModelB::MaterialKey> const & value) {
     mutating.unionInMap(attachment(), encodeKey(key), Viper::Path::make(), Viper::ValueMap::cast(Topology::Codec::encode(value)));
 }
@@ -90,13 +101,14 @@ namespace Projection::Attachments::Link::marker {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("5b7db20d-fe60-2c96-206c-ec6686b46822")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Topology::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(LinkKey const & key) {
@@ -133,19 +145,28 @@ void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelC::Mar
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
+
+bool set(std::shared_ptr<Viper::Database> const & db, LinkKey const & key, ModelC::MarkerKey const & value) {
+    return Topology::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, LinkKey const & key) {
+    return Topology::Db::del(db, attachment(), key);
+}
 } // namespace Projection::Attachments::Link::marker
 
 namespace Projection::Attachments::Link::pair {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("2b04b57b-9677-e209-6000-91c489d81323")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Topology::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(LinkKey const & key) {
@@ -181,6 +202,14 @@ void set(Viper::AttachmentMutating & mutating, LinkKey const & key, Pair const &
 void diff(Viper::AttachmentMutating & mutating, LinkKey const & key, Pair const & value,
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
+}
+
+bool set(std::shared_ptr<Viper::Database> const & db, LinkKey const & key, Pair const & value) {
+    return Topology::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, LinkKey const & key) {
+    return Topology::Db::del(db, attachment(), key);
 }
 
 void setA(Viper::AttachmentMutating & mutating, LinkKey const & key, ModelA::MaterialKey const & value) {

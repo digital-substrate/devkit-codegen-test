@@ -16,8 +16,8 @@
 // c'est ce qui rend le déplacement possible, et c'est aussi pourquoi il n'est pas urgent.
 #ifndef Features_AnyConcept_hpp
 #define Features_AnyConcept_hpp
-#include "Viper_Codec.hpp"
-#include "Viper_Hash.hpp"
+#include "Viper_TypedCodec.hpp"
+#include "Viper_HashAccumulator.hpp"
 #include "Viper_Types.hpp"
 #include "Viper_UUId.hpp"
 #include <cstddef>

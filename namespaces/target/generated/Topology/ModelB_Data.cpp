@@ -56,8 +56,10 @@ bool operator==(Colour const & l, Colour const & r) noexcept {
 }
 bool operator!=(Colour const & l, Colour const & r) noexcept { return !(l == r); }
 bool operator<(Colour const & l, Colour const & r) noexcept {
-    if (l.r != r.r) return l.r < r.r;
-    if (l.g != r.g) return l.g < r.g;
+    if (l.r < r.r) return true;
+    if (r.r < l.r) return false;
+    if (l.g < r.g) return true;
+    if (r.g < l.g) return false;
     return l.b < r.b;
 }
 

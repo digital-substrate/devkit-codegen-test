@@ -6,79 +6,48 @@
 // n'apparaît qu'aux quatre endroits où les définitions sont écrites ou vérifiées.
 
 model(m) ::= <<
-// modèle <m.namespace> — les cinq opérations d'un attachment stocké, une fois pour toutes.
+// modèle <m.namespace> — les deux opérations qu'une base ajoute à un attachment.
 //
-// LA MÊME SURFACE QU'UN ATTACHMENT EN MÉMOIRE, SUR UN AUTRE SUPPORT. `keys`, `has`, `get`,
-// `set`, `del` -- et rien de ce qu'elles font ne dépend d'un attachment en particulier :
-// convertir la clé, encoder ou décoder le document, appeler la base. Le pack écrit les cinq
-// une fois par attachment ; écrites en templates sur la clé et le document, elles ne
-// demandent plus qu'un identifiant.
+// DEUX, ET NON CINQ. C'est ce que le vrai en-tête du runtime dit et que j'avais inventé
+// autrement : `Viper::Database` **est** une `AttachmentGetting`. Ses `keys`, `has` et `get`
+// sont les mêmes fonctions virtuelles que celles d'un attachment en mémoire, donc les
+// opérations de lecture d'une unité marchent déjà sur une base sans qu'on écrive rien.
 //
-// ET ELLES PRENNENT LA BASE DU RUNTIME. La classe `Database` que le pack génère n'ajoute
-// rien : sur ses 1 638 lignes, le modèle n'apparaît qu'aux quatre endroits où les
-// définitions sont écrites dans une base neuve ou vérifiées sur une base ouverte. C'est un
-// argument, et le prendre comme tel laisse deux modèles partager une poignée.
+// Ce qu'une base ajoute, c'est d'écrire en rendant un statut -- `set` et `del` rendent un
+// booléen là où l'interface mutante ne rend rien, parce qu'un enregistrement peut échouer
+// et qu'un changement en mémoire non.
+//
+// J'AVAIS ÉCRIT CINQ TEMPLATES SUR UN IDENTIFIANT D'ATTACHMENT. Le runtime prend un
+// descripteur, comme partout ailleurs, et les anciens templates le montraient ligne pour
+// ligne. C'est la moitié de cette couche qui disparaît pour avoir lu ce qui existait.
 
 #ifndef <m.namespace>_Db_hpp
 #define <m.namespace>_Db_hpp
 
 #include "<m.namespace>_Codec.hpp"
 
+#include "Viper_Attachment.hpp"
 #include "Viper_Database.hpp"
+#include "Viper_Values.hpp"
 
-#include \<optional>
-#include \<set>
+#include \<memory>
 
 namespace <m.namespace>::Db {
 
-/// La clé, telle que le stockage la connaît.
-template\<class Key>
-Viper::Key stored(Key const & key) {
-    return {key.instanceId(), key.runtimeId()};
-}
-
-template\<class Key>
-std::set\<Key> keys(std::shared_ptr\<Viper::Database const> const & db, Viper::UUId const & attachment) {
-    std::set\<Key> result;
-    for (auto const & k : db->keys(attachment))
-        result.insert(Key{k.instanceId, k.runtimeId});
-
-    return result;
-}
-
-template\<class Key>
-bool has(std::shared_ptr\<Viper::Database const> const & db, Viper::UUId const & attachment, Key const & key) {
-    return db->has(attachment, stored(key));
-}
-
-/// LE DOCUMENT EST STOCKÉ ENCODÉ, donc il traverse le même flux que partout ailleurs -- et
-/// le contrat de format est celui du ValueWriter, comme pour le pont statique/dynamique.
+/// Écrire le document, et dire si la base l'a pris.
 template\<class Document, class Key>
-std::optional\<Document> get(std::shared_ptr\<Viper::Database const> const & db,
-                            Viper::UUId const & attachment, Key const & key) {
-    auto const encoded = db->get(attachment, stored(key));
-    if (!encoded)
-        return std::nullopt;
-
-    auto const decoder = db->streamCodecInstancing()->createDecoder(*encoded);
-    Viper::Codec::Reader reader{decoder, db->definitions()};
-
-    return read(reader, Viper::Codec::tag\<Document>{});     // ADL : l'unité du document
-}
-
-template\<class Document, class Key>
-bool set(std::shared_ptr\<Viper::Database> const & db, Viper::UUId const & attachment,
+bool set(std::shared_ptr\<Viper::Database> const & db,
+         std::shared_ptr\<Viper::Attachment> const & attachment,
          Key const & key, Document const & document) {
-    auto const encoder = db->streamCodecInstancing()->createEncoder();
-    Viper::Codec::Writer writer{encoder};
-    write(writer, document);                                // ADL : l'unité du document
-
-    return db->set(attachment, stored(key), encoder->endEncoding());
+    return db->set(attachment,
+                   Viper::ValueKey::cast(Codec::encode(key)),
+                   Codec::encode(document));
 }
 
 template\<class Key>
-bool del(std::shared_ptr\<Viper::Database> const & db, Viper::UUId const & attachment, Key const & key) {
-    return db->del(attachment, stored(key));
+bool del(std::shared_ptr\<Viper::Database> const & db,
+         std::shared_ptr\<Viper::Attachment> const & attachment, Key const & key) {
+    return db->del(attachment, Viper::ValueKey::cast(Codec::encode(key)));
 }
 
 } // namespace <m.namespace>::Db

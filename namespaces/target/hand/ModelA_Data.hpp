@@ -7,7 +7,7 @@
 #define ModelA_Data_hpp
 
 #include "Topology_AnyConcept.hpp"
-#include "Viper_Hash.hpp"
+#include "Viper_HashAccumulator.hpp"
 #include "Viper_UUId.hpp"
 
 #include <cstdint>

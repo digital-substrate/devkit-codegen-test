@@ -15,23 +15,26 @@
 #include "ModelA_Fields.hpp"
 
 #include "Topology_Codec.hpp"
+#include "Topology_Db.hpp"
 
 #include "Viper_Attachment.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Path.hpp"
 #include "Viper_Values.hpp"
+#include "Viper_ValueSetIter.hpp"
 
 namespace Annotations::Attachments::ModelA_Material::note {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("a9fc61a4-cc9b-1867-2997-e3e58e3ee6c3")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Topology::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(ModelA::MaterialKey const & key) {
@@ -68,19 +71,28 @@ void diff(Viper::AttachmentMutating & mutating, ModelA::MaterialKey const & key,
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
 }
+
+bool set(std::shared_ptr<Viper::Database> const & db, ModelA::MaterialKey const & key, std::string const & value) {
+    return Topology::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, ModelA::MaterialKey const & key) {
+    return Topology::Db::del(db, attachment(), key);
+}
 } // namespace Annotations::Attachments::ModelA_Material::note
 
 namespace Annotations::Attachments::ModelB_Material::note {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("a032a823-77a9-3b78-6d34-c83670697fd9")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Topology::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(ModelB::MaterialKey const & key) {
@@ -116,5 +128,13 @@ void set(Viper::AttachmentMutating & mutating, ModelB::MaterialKey const & key, 
 void diff(Viper::AttachmentMutating & mutating, ModelB::MaterialKey const & key, std::string const & value,
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Topology::Codec::encode(value), recursive);
+}
+
+bool set(std::shared_ptr<Viper::Database> const & db, ModelB::MaterialKey const & key, std::string const & value) {
+    return Topology::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, ModelB::MaterialKey const & key) {
+    return Topology::Db::del(db, attachment(), key);
 }
 } // namespace Annotations::Attachments::ModelB_Material::note

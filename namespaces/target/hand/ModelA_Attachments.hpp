@@ -18,6 +18,8 @@
 #include "ModelA_Data.hpp"
 
 #include "Viper_AttachmentGetting.hpp"
+#include "Viper_Attachment.hpp"
+#include "Viper_Database.hpp"
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
@@ -42,6 +44,13 @@ namespace colour {
 /// portée nomme déjà l'attachment, et il ne reste que `runtimeId`.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. Il était privé au fichier tant que seules les
+/// cinq opérations s'en servaient ; l'épreuve sur base et le pont dynamique le veulent
+/// aussi, et chacun le re-résoudrait depuis l'identifiant. Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<MaterialKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, MaterialKey const & key);
@@ -61,6 +70,19 @@ void diff(Viper::AttachmentMutating & mutating, MaterialKey const & key, Colour 
 void setR(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
 void setG(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
 void setB(Viper::AttachmentMutating & mutating, MaterialKey const & key, std::uint8_t value);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+//
+// Surcharges sur le premier argument, dans la même portée : c'est le même attachment, sur
+// un autre support, et le lecteur le cherche là.
+
+bool set(std::shared_ptr<Viper::Database> const & db, MaterialKey const & key, Colour const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, MaterialKey const & key);
 
 } // namespace colour
 

@@ -9,23 +9,26 @@
 #include "Parts_Model.hpp"
 
 #include "Crossing_Codec.hpp"
+#include "Crossing_Db.hpp"
 
 #include "Viper_Attachment.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Path.hpp"
 #include "Viper_Values.hpp"
+#include "Viper_ValueSetIter.hpp"
 
 namespace Parts::Attachments::Thing::colour {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("2db4209c-05b7-fed3-e045-08819f852028")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr<Viper::Attachment> const & attachment() {
+std::shared_ptr<Viper::Attachment> const & descriptor() {
     static auto const instance = Crossing::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr<Viper::Attachment> const & attachment() { return descriptor(); }
 
 /// La clé, encodée. Le cast dit ce que le modèle sait déjà : la clé d'un attachment en est une.
 std::shared_ptr<Viper::ValueKey> encodeKey(ThingKey const & key) {
@@ -61,6 +64,14 @@ void set(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour cons
 void diff(Viper::AttachmentMutating & mutating, ThingKey const & key, Colour const & value,
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Crossing::Codec::encode(value), recursive);
+}
+
+bool set(std::shared_ptr<Viper::Database> const & db, ThingKey const & key, Colour const & value) {
+    return Crossing::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr<Viper::Database> const & db, ThingKey const & key) {
+    return Crossing::Db::del(db, attachment(), key);
 }
 
 void setR(Viper::AttachmentMutating & mutating, ThingKey const & key, float value) {

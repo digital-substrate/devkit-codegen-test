@@ -9,9 +9,11 @@
 #include "ModelC_Model.hpp"
 
 #include "Topology_Codec.hpp"
+#include "Topology_Db.hpp"
 
 #include "Viper_Attachment.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Path.hpp"
 #include "Viper_Values.hpp"
+#include "Viper_ValueSetIter.hpp"
 

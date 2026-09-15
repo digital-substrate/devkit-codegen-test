@@ -14,7 +14,7 @@
 
 #include "ModelA_Data.hpp"
 
-#include "Viper_Codec.hpp"          // Writer, Reader, tag<T>, and the generic layer
+#include "Viper_TypedCodec.hpp"          // Writer, Reader, tag<T>, and the generic layer
 
 namespace ModelA {
 

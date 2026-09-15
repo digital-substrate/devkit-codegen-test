@@ -10,8 +10,8 @@
 
 #include "Topology_AnyConcept.hpp"
 
-#include "Viper_Hash.hpp"
-#include "Viper_Scalars.hpp"
+#include "Viper_HashAccumulator.hpp"
+#include "Viper_Blob.hpp"
 #include "Viper_UUId.hpp"
 
 #include <array>

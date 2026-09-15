@@ -9,10 +9,10 @@
 #define Core_Data_hpp
 
 #include "Crossing_AnyConcept.hpp"
-#include "Viper_Hash.hpp"
+#include "Viper_HashAccumulator.hpp"
 #include "Viper_UUId.hpp"
 
-#include "Viper_Scalars.hpp"
+#include "Viper_Blob.hpp"
 
 #include <cstdint>
 #include <map>

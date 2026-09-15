@@ -6,7 +6,6 @@
 
 #include "Annotations_Attachments.hpp"
 #include "Annotations_Codec.hpp"
-#include "Annotations_Database.hpp"
 #include "Annotations_Model.hpp"
 #include "ModelB_Codec.hpp"
 #include "ModelA_Codec.hpp"
@@ -22,16 +21,16 @@ void test() {
 
 void testDatabase(std::shared_ptr<Viper::Database> const & db) {
     Topology::Test::roundTripAttachment<ModelA::MaterialKey, std::string>(
-        db, Attachments::ModelA_Material::note::runtimeId);
+        db, Attachments::ModelA_Material::note::descriptor());
     Topology::Test::roundTripAttachment<ModelB::MaterialKey, std::string>(
-        db, Attachments::ModelB_Material::note::runtimeId);
+        db, Attachments::ModelB_Material::note::descriptor());
 }
 
 void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
     Topology::Test::fuzzAttachment<ModelA::MaterialKey, std::string>(
-        db, Attachments::ModelA_Material::note::runtimeId, count);
+        db, Attachments::ModelA_Material::note::descriptor(), count);
     Topology::Test::fuzzAttachment<ModelB::MaterialKey, std::string>(
-        db, Attachments::ModelB_Material::note::runtimeId, count);
+        db, Attachments::ModelB_Material::note::descriptor(), count);
 }
 
 } // namespace Annotations

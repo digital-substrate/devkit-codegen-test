@@ -6,7 +6,6 @@
 
 #include "ModelB_Attachments.hpp"
 #include "ModelB_Codec.hpp"
-#include "ModelB_Database.hpp"
 #include "ModelB_Model.hpp"
 
 #include "Topology_Test.hpp"
@@ -20,12 +19,12 @@ void test() {
 
 void testDatabase(std::shared_ptr<Viper::Database> const & db) {
     Topology::Test::roundTripAttachment<MaterialKey, Colour>(
-        db, Attachments::Material::colour::runtimeId);
+        db, Attachments::Material::colour::descriptor());
 }
 
 void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
     Topology::Test::fuzzAttachment<MaterialKey, Colour>(
-        db, Attachments::Material::colour::runtimeId, count);
+        db, Attachments::Material::colour::descriptor(), count);
 }
 
 } // namespace ModelB

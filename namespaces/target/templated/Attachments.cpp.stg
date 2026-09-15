@@ -21,11 +21,13 @@ unit(u) ::= <<
 <u.dependencies.attachments:{d|#include "<d.include.Fields>"};separator="\n">
 
 #include "<u.model.include.Codec>"
+#include "<u.model.include.Db>"
 
 #include "Viper_Attachment.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Path.hpp"
 #include "Viper_Values.hpp"
+#include "Viper_ValueSetIter.hpp"
 
 <u.attachments:attachment(u);separator="\n\n">
 >>
@@ -35,13 +37,14 @@ namespace <u.name>::Attachments::<a.conceptScope>::<a.name> {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("<a.runtimeId>")};
 
-namespace {
-
-/// L'attachment tel que le runtime le connaît, résolu une fois.
-std::shared_ptr\<Viper::Attachment> const & attachment() {
+std::shared_ptr\<Viper::Attachment> const & descriptor() {
     static auto const instance = <u.model.namespace>::Codec::definitions()->checkAttachment(runtimeId);
     return instance;
 }
+
+namespace {
+
+std::shared_ptr\<Viper::Attachment> const & attachment() { return descriptor(); }
 
 <encode_key(a, u)>
 
@@ -62,6 +65,14 @@ void set(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const
 void diff(Viper::AttachmentMutating & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value,
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), <u.model.namespace>::Codec::encode(value), recursive);
+}
+
+bool set(std::shared_ptr\<Viper::Database> const & db, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value) {
+    return <u.model.namespace>::Db::set(db, attachment(), key, value);
+}
+
+bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.typeInNamespace> const & key) {
+    return <u.model.namespace>::Db::del(db, attachment(), key);
 }
 <if(a.documentType.isStructure)>
 

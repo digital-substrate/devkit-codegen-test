@@ -188,8 +188,10 @@ bool operator==(Bag const & l, Bag const & r) noexcept {
 }
 bool operator!=(Bag const & l, Bag const & r) noexcept { return !(l == r); }
 bool operator<(Bag const & l, Bag const & r) noexcept {
-    if (l.members != r.members) return l.members < r.members;
-    if (l.tints != r.tints) return l.tints < r.tints;
+    if (l.members < r.members) return true;
+    if (r.members < l.members) return false;
+    if (l.tints < r.tints) return true;
+    if (r.tints < l.tints) return false;
     return l.trail < r.trail;
 }
 
@@ -208,8 +210,10 @@ bool operator==(Colour const & l, Colour const & r) noexcept {
 }
 bool operator!=(Colour const & l, Colour const & r) noexcept { return !(l == r); }
 bool operator<(Colour const & l, Colour const & r) noexcept {
-    if (l.r != r.r) return l.r < r.r;
-    if (l.g != r.g) return l.g < r.g;
+    if (l.r < r.r) return true;
+    if (r.r < l.r) return false;
+    if (l.g < r.g) return true;
+    if (r.g < l.g) return false;
     return l.b < r.b;
 }
 
@@ -232,12 +236,18 @@ bool operator==(Defaults const & l, Defaults const & r) noexcept {
 }
 bool operator!=(Defaults const & l, Defaults const & r) noexcept { return !(l == r); }
 bool operator<(Defaults const & l, Defaults const & r) noexcept {
-    if (l.f_uint8 != r.f_uint8) return l.f_uint8 < r.f_uint8;
-    if (l.f_float != r.f_float) return l.f_float < r.f_float;
-    if (l.f_string != r.f_string) return l.f_string < r.f_string;
-    if (l.f_uuid != r.f_uuid) return l.f_uuid < r.f_uuid;
-    if (l.f_vec != r.f_vec) return l.f_vec < r.f_vec;
-    if (l.f_grade != r.f_grade) return l.f_grade < r.f_grade;
+    if (l.f_uint8 < r.f_uint8) return true;
+    if (r.f_uint8 < l.f_uint8) return false;
+    if (l.f_float < r.f_float) return true;
+    if (r.f_float < l.f_float) return false;
+    if (l.f_string < r.f_string) return true;
+    if (r.f_string < l.f_string) return false;
+    if (l.f_uuid < r.f_uuid) return true;
+    if (r.f_uuid < l.f_uuid) return false;
+    if (l.f_vec < r.f_vec) return true;
+    if (r.f_vec < l.f_vec) return false;
+    if (l.f_grade < r.f_grade) return true;
+    if (r.f_grade < l.f_grade) return false;
     return l.f_colour < r.f_colour;
 }
 
@@ -276,24 +286,42 @@ bool operator==(Scalars const & l, Scalars const & r) noexcept {
 }
 bool operator!=(Scalars const & l, Scalars const & r) noexcept { return !(l == r); }
 bool operator<(Scalars const & l, Scalars const & r) noexcept {
-    if (l.f_bool != r.f_bool) return l.f_bool < r.f_bool;
-    if (l.f_uint8 != r.f_uint8) return l.f_uint8 < r.f_uint8;
-    if (l.f_uint16 != r.f_uint16) return l.f_uint16 < r.f_uint16;
-    if (l.f_uint32 != r.f_uint32) return l.f_uint32 < r.f_uint32;
-    if (l.f_uint64 != r.f_uint64) return l.f_uint64 < r.f_uint64;
-    if (l.f_int8 != r.f_int8) return l.f_int8 < r.f_int8;
-    if (l.f_int16 != r.f_int16) return l.f_int16 < r.f_int16;
-    if (l.f_int32 != r.f_int32) return l.f_int32 < r.f_int32;
-    if (l.f_int64 != r.f_int64) return l.f_int64 < r.f_int64;
-    if (l.f_float != r.f_float) return l.f_float < r.f_float;
-    if (l.f_double != r.f_double) return l.f_double < r.f_double;
-    if (l.f_blob_id != r.f_blob_id) return l.f_blob_id < r.f_blob_id;
-    if (l.f_commit_id != r.f_commit_id) return l.f_commit_id < r.f_commit_id;
-    if (l.f_uuid != r.f_uuid) return l.f_uuid < r.f_uuid;
-    if (l.f_string != r.f_string) return l.f_string < r.f_string;
-    if (l.f_blob != r.f_blob) return l.f_blob < r.f_blob;
-    if (l.f_any != r.f_any) return l.f_any < r.f_any;
-    if (l.f_vec != r.f_vec) return l.f_vec < r.f_vec;
+    if (l.f_bool < r.f_bool) return true;
+    if (r.f_bool < l.f_bool) return false;
+    if (l.f_uint8 < r.f_uint8) return true;
+    if (r.f_uint8 < l.f_uint8) return false;
+    if (l.f_uint16 < r.f_uint16) return true;
+    if (r.f_uint16 < l.f_uint16) return false;
+    if (l.f_uint32 < r.f_uint32) return true;
+    if (r.f_uint32 < l.f_uint32) return false;
+    if (l.f_uint64 < r.f_uint64) return true;
+    if (r.f_uint64 < l.f_uint64) return false;
+    if (l.f_int8 < r.f_int8) return true;
+    if (r.f_int8 < l.f_int8) return false;
+    if (l.f_int16 < r.f_int16) return true;
+    if (r.f_int16 < l.f_int16) return false;
+    if (l.f_int32 < r.f_int32) return true;
+    if (r.f_int32 < l.f_int32) return false;
+    if (l.f_int64 < r.f_int64) return true;
+    if (r.f_int64 < l.f_int64) return false;
+    if (l.f_float < r.f_float) return true;
+    if (r.f_float < l.f_float) return false;
+    if (l.f_double < r.f_double) return true;
+    if (r.f_double < l.f_double) return false;
+    if (l.f_blob_id < r.f_blob_id) return true;
+    if (r.f_blob_id < l.f_blob_id) return false;
+    if (l.f_commit_id < r.f_commit_id) return true;
+    if (r.f_commit_id < l.f_commit_id) return false;
+    if (l.f_uuid < r.f_uuid) return true;
+    if (r.f_uuid < l.f_uuid) return false;
+    if (l.f_string < r.f_string) return true;
+    if (r.f_string < l.f_string) return false;
+    if (l.f_blob < r.f_blob) return true;
+    if (r.f_blob < l.f_blob) return false;
+    if (l.f_any < r.f_any) return true;
+    if (r.f_any < l.f_any) return false;
+    if (l.f_vec < r.f_vec) return true;
+    if (r.f_vec < l.f_vec) return false;
     return l.f_mat < r.f_mat;
 }
 

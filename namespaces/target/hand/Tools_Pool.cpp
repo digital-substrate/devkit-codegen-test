@@ -20,7 +20,10 @@
 
 #include "Topology_Codec.hpp"      // encode, decode -- les deux bords du pont
 
+#include "Viper_Function.hpp"
+#include "Viper_ValueVoid.hpp"
 #include "Viper_FunctionPool.hpp"
+#include "Viper_FunctionPrototype.hpp"
 #include "Viper_Types.hpp"
 
 namespace Tools {
@@ -45,7 +48,7 @@ protected:
     std::shared_ptr<Viper::Value> checkedCall(
         std::vector<std::shared_ptr<Viper::Value>> const &) const override {
         reset();
-        return Viper::Void::Instance();
+        return Viper::ValueVoid::Instance();
     }
 };
 

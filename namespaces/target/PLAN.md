@@ -89,3 +89,59 @@ Le Python, lui, tourne contre le vrai `dsviper` — et il est à peine commencé
 Les trois modèles ne se recouvrent pas : `Topology` porte la topologie des namespaces,
 `Crossing` le système de types qui la traverse, `Features` un seul namespace avec tout le
 système de types dedans. Chacun a trouvé des défauts que les autres ne pouvaient pas voir.
+
+## Le lien contre le vrai runtime — fait
+
+C'était la limite principale, et elle est levée. `render.py` compile les trois modèles
+contre les **vrais en-têtes** de `viper`, lie le modèle topologique contre `libviper.a`, et
+**exécute le programme d'épreuve** : cinq unités, trois codecs, tous les types déclarés, les
+métadonnées, les trois épreuves de blob, l'aller-retour de chaque attachment sur une base
+SQLite, et le fuzz.
+
+```
+  Topology    43 .cpp,  39 .hpp, tout compile
+  Crossing    22 .cpp,  24 .hpp, tout compile
+  Features    10 .cpp,  12 .hpp, tout compile
+  crossing/hand   4 .cpp, tout compile
+  lien       46 objets, et le programme tourne
+```
+
+**Les stubs ont disparu.** Il ne reste que deux fichiers dans `runtime-proposed/`, avec leur
+implémentation, et ils sont ce que `viper` devrait porter :
+
+| | pourquoi |
+|---|---|
+| `Viper_TypedCodec` | viper a le codec *non typé* — Value ↔ flux. Il manque l'autre côté. |
+| `Viper_HashAccumulator` | `Hash::combine_acc` existe ; un accumulateur en premier argument manque |
+
+Sur quatre ajouts annoncés, **deux existaient déjà** : `VIPER_ASSERT` est dans
+`Viper_GeneralErrors.hpp`, avec une meilleure implémentation que la mienne, et le fuzz est
+`Viper::Fuzzer`.
+
+### Ce que seule l'exécution a montré
+
+Sept défauts, dont aucun n'était visible en compilant contre des signatures recopiées :
+
+1. **deux références à un temporaire mort** — `createDecoder` garde ce qu'on lui donne, et un
+   blob non nommé meurt à la fin de l'expression. Le même défaut, à deux endroits, et le pack
+   nomme le blob aux deux ;
+2. **un `auto` qui créait une conversion** — `stream()` rendait une référence sur un
+   temporaire, ce que le compilateur signale et que le stub ne pouvait pas produire ;
+3. **un identifiant de blob inventé** — il se calcule depuis le contenu, il ne s'invente pas ;
+4. **une transaction absente** — la base refuse d'écrire sans, et le pack l'ouvre ;
+5. **le modèle jamais donné à la base** — `extendDefinitions` est le seul appel que la classe
+   `Database` générée faisait de plus, et l'écrire ici lui retire sa dernière raison d'être ;
+6. **`Viper::Database` est une `AttachmentGetting`** — la lecture d'une unité marche déjà sur
+   une base, donc cinq gabarits deviennent deux ;
+7. **un défaut dans le runtime** : `XArray::operator!=` s'écrit `!(this == other)` — un
+   pointeur comparé à un objet. Il ne compile que tant que personne ne l'instancie, et un
+   ordre qui ne demande que `<` ne le rencontre pas.
+
+### Et la leçon de méthode
+
+Chacune de ces corrections était **écrite dans les anciens templates**. `db->databasing()->readBlob`,
+le blob nommé, la transaction, l'identifiant calculé : tout cela s'y trouve, en clair, depuis
+des années. Je les avais lus pour ce qu'ils *produisent*, jamais pour ce qu'ils *appellent* —
+et le stub que j'écrivais me donnait raison par construction.
+
+Le stub était le mécanisme qui permettait de ne pas aller voir. Il n'y en a plus.

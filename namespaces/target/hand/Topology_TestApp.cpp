@@ -53,7 +53,7 @@ int main(int argc, char * argv[]) {
     try {
         testTypes();
 
-        auto const db = Viper::Database::createInMemory(Topology::Codec::definitions());
+        auto const db = Viper::Database::createInMemory();
         testDatabase(db);
         db->close();
     } catch (std::exception const & e) {

@@ -12,7 +12,7 @@
 // le runtime livré ne le porte pas encore -- et il migrera de la même façon.
 
 model(m) ::= <<
-// modèle <m.namespace> — les attachments, exposés au monde dynamique.
+// <m.namespace> — les attachments du modèle, exposés au monde dynamique.
 //
 // LE PLUS GROS ARTEFACT DU PACK APRÈS LA BASE DE DONNÉES, ET IL N'A RIEN À GÉNÉRER. 764
 // lignes de template qui produisent 9 125 lignes pour un modèle réel, et pas une seule ne
@@ -29,7 +29,7 @@ model(m) ::= <<
 #ifndef <m.namespace>_AttachmentPool_hpp
 #define <m.namespace>_AttachmentPool_hpp
 
-#include "Viper_FunctionPool.hpp"
+#include "Viper_AttachmentFunctionPool.hpp"
 
 #include \<memory>
 

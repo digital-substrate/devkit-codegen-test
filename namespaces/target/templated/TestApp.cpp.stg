@@ -18,6 +18,7 @@ model(m) ::= <<
 <m.nameSpaces:{u|#include "<u.include.Test>"};separator="\n">
 
 #include "Viper_Database.hpp"
+#include "Viper_DatabaseTransactionMode.hpp"
 
 #include \<cstddef>
 #include \<cstdlib>
@@ -51,7 +52,19 @@ int main(int argc, char * argv[]) {
     try {
         testTypes();
 
-        auto const db = Viper::Database::createInMemory(<m.namespace>::Codec::definitions());
+        auto const db = Viper::Database::createInMemory();
+
+        // LE MODÈLE EST DONNÉ À LA BASE, ET C'EST TOUT CE QUE LA CLASSE GÉNÉRÉE FAISAIT DE
+        // PLUS. `Database::create` du pack étendait les définitions du fichier avec celles
+        // du modèle, et `open` vérifiait qu'elles s'y trouvaient. Rien d'autre dans ses
+        // 1 638 lignes ne nommait le modèle -- et une fois cet appel écrit ici, la classe
+        // par modèle n'a plus de raison d'être.
+        db->extendDefinitions(<m.namespace>::Codec::definitions());
+
+        // UNE TRANSACTION AUTOUR DE TOUT, parce que la base refuse d'écrire sans. Le pack
+        // l'ouvre au même endroit, et c'est le genre de chose qu'aucune lecture ne dit :
+        // elle se découvre en exécutant.
+        db->beginTransaction(Viper::DatabaseTransactionMode::Exclusive);
 
         // Ce que la base offre hors du modèle : elle ne nomme aucun type, donc elle
         // s'éprouve sans rien demander aux unités.
@@ -67,6 +80,7 @@ int main(int argc, char * argv[]) {
         fuzzDatabase(db, 32);
         <m.namespace>::Test::withoutBlob(db);
 
+        db->commit();
         db->close();
     } catch (std::exception const & e) {
         std::cerr \<\< "échec : " \<\< e.what() \<\< std::endl;

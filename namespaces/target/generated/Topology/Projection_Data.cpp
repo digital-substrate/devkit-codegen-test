@@ -98,7 +98,8 @@ bool operator==(Pair const & l, Pair const & r) noexcept {
 }
 bool operator!=(Pair const & l, Pair const & r) noexcept { return !(l == r); }
 bool operator<(Pair const & l, Pair const & r) noexcept {
-    if (l.a != r.a) return l.a < r.a;
+    if (l.a < r.a) return true;
+    if (r.a < l.a) return false;
     return l.b < r.b;
 }
 

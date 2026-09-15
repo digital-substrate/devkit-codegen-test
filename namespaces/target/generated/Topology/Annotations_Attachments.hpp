@@ -15,7 +15,9 @@
 #include "ModelB_Data.hpp"
 #include "ModelA_Data.hpp"
 
+#include "Viper_Attachment.hpp"
 #include "Viper_AttachmentGetting.hpp"
+#include "Viper_Database.hpp"
 #include "Viper_AttachmentMutating.hpp"
 #include "Viper_UUId.hpp"
 
@@ -32,6 +34,13 @@ namespace Annotations::Attachments::ModelA_Material::note {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<ModelA::MaterialKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, ModelA::MaterialKey const & key);
@@ -42,6 +51,16 @@ void set(Viper::AttachmentMutating & mutating, ModelA::MaterialKey const & key, 
 
 void diff(Viper::AttachmentMutating & mutating, ModelA::MaterialKey const & key, std::string const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, ModelA::MaterialKey const & key, std::string const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, ModelA::MaterialKey const & key);
 } // namespace Annotations::Attachments::ModelA_Material::note
 
 /** The same attachment name, on the same-named concept of another namespace. The
@@ -53,6 +72,13 @@ namespace Annotations::Attachments::ModelB_Material::note {
 /// il ne reste que le nom.
 extern Viper::UUId const runtimeId;
 
+/// Et le descripteur que le runtime en tire, résolu une fois.
+///
+/// PUBLIC PARCE QUE TOUT LE MONDE LE DEMANDE. L'épreuve sur base et le pont dynamique le
+/// veulent autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant.
+/// Une identité, un endroit.
+std::shared_ptr<Viper::Attachment> const & descriptor();
+
 std::set<ModelB::MaterialKey> keys(Viper::AttachmentGetting const & getting);
 
 bool has(Viper::AttachmentGetting const & getting, ModelB::MaterialKey const & key);
@@ -63,6 +89,16 @@ void set(Viper::AttachmentMutating & mutating, ModelB::MaterialKey const & key, 
 
 void diff(Viper::AttachmentMutating & mutating, ModelB::MaterialKey const & key, std::string const & value,
           bool recursive = false);
+
+// ── et les mêmes, sur une base de données ──
+//
+// DEUX OPÉRATIONS, ET NON CINQ. `Viper::Database` hérite d'`AttachmentGetting`, donc les
+// `keys`, `has` et `get` ci-dessus marchent déjà sur une base : ce sont les mêmes fonctions
+// virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut, parce qu'un
+// enregistrement peut échouer là où un changement en mémoire ne le peut pas.
+
+bool set(std::shared_ptr<Viper::Database> const & db, ModelB::MaterialKey const & key, std::string const & value);
+bool del(std::shared_ptr<Viper::Database> const & db, ModelB::MaterialKey const & key);
 } // namespace Annotations::Attachments::ModelB_Material::note
 
 #endif

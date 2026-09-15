@@ -178,5 +178,13 @@ void hash(Viper::Hash::Accumulator & h, <e.name> value) noexcept {
 >>
 
 field_equal(f) ::= <%l.<f.name> == r.<f.name>%>
-field_less(f) ::= <<    if (l.<f.name> != r.<f.name>) return l.<f.name> \< r.<f.name>;>>
+// DEUX COMPARAISONS PAR `\<`, ET NON UNE PAR `!=`. C'est la forme du pack, et elle a une
+// raison qu'on ne voit qu'en instanciant : `Viper::XArray::operator!=` s'écrit
+// `!(this == other)` -- un pointeur comparé à un objet -- et ne compile que tant que
+// personne ne l'appelle. Un ordre qui ne demande que `\<` ne rencontre pas le défaut, et ne
+// demande au type que ce dont il a besoin.
+field_less(f) ::= <<
+    if (l.<f.name> \< r.<f.name>) return true;
+    if (r.<f.name> \< l.<f.name>) return false;
+>>
 field_hash(f) ::= <<    hash(h, value.<f.name>);>>

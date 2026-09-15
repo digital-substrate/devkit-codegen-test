@@ -22,12 +22,17 @@
 #define Topology_Codec_hpp
 
 #include "Topology_AnyConcept.hpp"
-#include "Viper_Codec.hpp"
-#include "Viper_Hasher.hpp"
-#include "Viper_Json.hpp"
+#include "Viper_TypedCodec.hpp"
+#include "Viper_HashSHA1.hpp"
+#include "Viper_ValueHasher.hpp"
+#include "Viper_JsonValueEncoder.hpp"
+#include "Viper_JsonValueDecoder.hpp"
 #include "Viper_Definitions.hpp"
-#include "Viper_Stream.hpp"
+#include "Viper_StreamCodecInstancing.hpp"
+#include "Viper_ValueDecoder.hpp"
+#include "Viper_ValueEncoder.hpp"
 #include "Viper_Values.hpp"
+#include "Viper_ValueSetIter.hpp"
 
 #include <memory>
 #include <string>
@@ -103,7 +108,12 @@ std::shared_ptr<Viper::Value> encode(T const & value) {
 /// Et le retour.
 template<class T>
 T decode(std::shared_ptr<Viper::Value const> const & value) {
-    auto const decoder = stream()->createDecoder(Viper::ValueEncoder::encode(value, stream()));
+    // LE BLOB EST NOMMÉ, ET IL LE DOIT. `createDecoder` prend une référence et la garde ;
+    // passer le résultat de l'encodage directement laisse mourir le temporaire à la fin de
+    // l'expression, et le décodeur lit dans le vide. Le pack le nomme aussi, et c'est la
+    // seule différence entre un aller-retour qui marche et un qui rend « fin de flux ».
+    auto const blob{Viper::ValueEncoder::encode(value, stream())};
+    auto const decoder{stream()->createDecoder(blob)};
     Viper::Codec::Reader reader{decoder, definitions()};
 
     return read(reader, tag<T>{});                          // ADL : l'unité de T

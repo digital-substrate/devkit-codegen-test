@@ -23,8 +23,15 @@
 #include "Features_Resources.hpp"      // le modèle, en octets
 
 #include "Viper_Definitions.hpp"
+#include "Viper_StreamBinaryCodec.hpp"
+#include "Viper_StreamTokenBinaryCodec.hpp"
+#include "Viper_TypeClub.hpp"
+#include "Viper_TypeConcept.hpp"
+#include "Viper_DefinitionsToDSMDefinitions.hpp"
+#include "Viper_JsonDSMDefinitionsEncoder.hpp"
 #include "Viper_DefinitionsDecoder.hpp"
-#include "Viper_Hasher.hpp"
+#include "Viper_HashSHA1.hpp"
+#include "Viper_ValueHasher.hpp"
 #include "Viper_Types.hpp"
 
 #include <cstring>
@@ -45,8 +52,14 @@ std::shared_ptr<Viper::Definitions const> const & definitions() {
     return instance;
 }
 
+/// LE TYPE DU STATIQUE EST CELUI DU RETOUR, ET NON `auto`. `Instance()` rend un
+/// `shared_ptr` sur la classe concrète ; avec `auto`, le retour par référence construit une
+/// conversion temporaire et rend une référence dessus, qui meurt à la sortie. Le
+/// compilateur le dit -- `returning reference to local temporary` -- et seul le vrai type
+/// le fait apparaître.
 std::shared_ptr<Viper::StreamCodecInstancing> const & stream() {
-    static auto const instance = Viper::StreamBinaryCodec::Instance();
+    static std::shared_ptr<Viper::StreamCodecInstancing> const instance{
+        Viper::StreamBinaryCodec::Instance()};
     return instance;
 }
 
@@ -78,7 +91,7 @@ bool isMember(AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & co
         return instance->isMember(target);
 
     if (auto const club = std::dynamic_pointer_cast<Viper::TypeClub>(concept_))
-        return club->hasMember(instance);
+        return club->isMemberDescendant(instance);
 
     return false;
 }
@@ -93,8 +106,11 @@ std::string hexdigestValue(std::shared_ptr<Viper::Value const> const & value) {
     return hasher->hexDigest();
 }
 
+/// LE JSON DU MODÈLE PASSE PAR SA FORME DSM, et c'est ce que le vrai encodeur prend : les
+/// `Definitions` sont ce que le runtime manipule, le `DSMDefinitions` ce qu'un document
+/// décrit. Le pack fait la même conversion.
 std::string jsonDefinitions() {
-    return Viper::JsonValueEncoder::json_encode_definitions(definitions());
+    return Viper::JsonDSMDefinitionsEncoder::json_encode(Viper::DefinitionsToDSMDefinitions::convert(definitions()));
 }
 
 } // namespace Features::Codec

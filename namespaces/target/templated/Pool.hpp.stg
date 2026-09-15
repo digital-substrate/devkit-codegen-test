@@ -74,3 +74,4 @@ private:
 remote_call(f) ::= <<    <ret(f)> <f.name;format="lsc">(<f.parameters:param();separator=", ">) const;>>
 ret(f) ::= <%<if(f.isVoid)>void<else><f.type><endif>%>
 param(p) ::= <%<p.type><p.passBy> <p.name>%>
+

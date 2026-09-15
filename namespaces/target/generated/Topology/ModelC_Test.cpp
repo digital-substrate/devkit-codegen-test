@@ -6,7 +6,6 @@
 
 #include "ModelC_Attachments.hpp"
 #include "ModelC_Codec.hpp"
-#include "ModelC_Database.hpp"
 #include "ModelC_Model.hpp"
 
 #include "Topology_Test.hpp"

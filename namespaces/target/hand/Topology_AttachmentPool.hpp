@@ -15,7 +15,7 @@
 #ifndef Topology_AttachmentPool_hpp
 #define Topology_AttachmentPool_hpp
 
-#include "Viper_FunctionPool.hpp"
+#include "Viper_AttachmentFunctionPool.hpp"
 
 #include <memory>
 
