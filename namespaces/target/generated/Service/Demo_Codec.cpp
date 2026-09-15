@@ -1,0 +1,81 @@
+// unité Demo — l'implémentation du pont.
+//
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/service/Service.dsm.json by kibo-2.0.0.jar
+
+#include "Demo_Codec.hpp"
+
+#include "Demo_Model.hpp"
+
+#include "Service_Codec.hpp"
+
+#include "Viper_Definitions.hpp"
+#include "Viper_StreamCodecInstancing.hpp"
+#include "Viper_ValueDecoder.hpp"
+#include "Viper_ValueEncoder.hpp"
+#include "Viper_TypeErrors.hpp"
+#include "Viper_Types.hpp"
+
+namespace Demo {
+
+
+void write(Viper::Codec::Writer & w, PlayerKey const & value) {
+    write(w, value.instanceId());
+    write(w, value.runtimeId());
+}
+
+PlayerKey read(Viper::Codec::Reader & r, Viper::Codec::tag<PlayerKey>) {
+    auto const instanceId{read(r, Viper::Codec::tag<Viper::UUId>{})};
+    auto const runtimeId{read(r, Viper::Codec::tag<Viper::UUId>{})};
+
+    return {instanceId, runtimeId};
+}
+
+
+
+void write(Viper::Codec::Writer & w, Level value) {
+    switch (value) {
+        case Level::Beginner: w.streamWriting->writeUInt8(0); break;
+        case Level::Intermediate: w.streamWriting->writeUInt8(1); break;
+        case Level::Expert: w.streamWriting->writeUInt8(2); break;
+        default:
+            throw Viper::TypeErrors::invalidEnumerationIndex(
+                "Demo", "Level", __FUNCTION__, static_cast<std::uint8_t>(value));
+    }
+}
+
+Level read(Viper::Codec::Reader & r, Viper::Codec::tag<Level>) {
+    switch (auto const index{r.streamReading->readUInt8()}) {
+        case 0: return Level::Beginner;
+        case 1: return Level::Intermediate;
+        case 2: return Level::Expert;
+        default:
+            throw Viper::TypeErrors::invalidEnumerationIndex("Demo", "Level", __FUNCTION__, index);
+    }
+}
+
+
+void write(Viper::Codec::Writer & w, PlayerProperty const & value) {
+    write(w, value.nickname);
+    write(w, value.level);
+}
+
+PlayerProperty read(Viper::Codec::Reader & r, Viper::Codec::tag<PlayerProperty>) {
+    return {read(r, Viper::Codec::tag<std::string>{}),
+            read(r, Viper::Codec::tag<Level>{})};
+}
+
+
+void write(Viper::Codec::Writer & w, Vector3 const & value) {
+    write(w, value.x);
+    write(w, value.y);
+    write(w, value.z);
+}
+
+Vector3 read(Viper::Codec::Reader & r, Viper::Codec::tag<Vector3>) {
+    return {read(r, Viper::Codec::tag<float>{}),
+            read(r, Viper::Codec::tag<float>{}),
+            read(r, Viper::Codec::tag<float>{})};
+}
+
+
+} // namespace Demo

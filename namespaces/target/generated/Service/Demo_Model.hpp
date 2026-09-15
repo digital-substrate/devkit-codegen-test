@@ -1,0 +1,39 @@
+// unité Demo — son identité dans le modèle.
+//
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/service/Service.dsm.json by kibo-2.0.0.jar
+
+#ifndef Demo_Model_hpp
+#define Demo_Model_hpp
+
+#include "Demo_Data.hpp"
+
+#include "Viper_TypedCodec.hpp"
+#include "Viper_Types.hpp"
+
+#include <memory>
+
+namespace Demo {
+
+/// L'identité de chaque type déclaré ici.
+namespace RuntimeIds {
+extern Viper::UUId const Player;
+extern Viper::UUId const Level;
+extern Viper::UUId const PlayerProperty;
+extern Viper::UUId const Vector3;
+} // namespace RuntimeIds
+
+/// Le concept dont une clé relève -- ce qu'un rétrécissement compare.
+std::shared_ptr<Viper::Type> const & conceptType(Viper::Codec::tag<PlayerKey>);
+
+/// Le club dont une clé relève. Distinct du précédent : une adhésion n'est pas un
+/// héritage, et c'est le descripteur qui porte la différence, pas le code.
+
+/// Le type lui-même, tel que le runtime le manipule -- ce que le codec générique demande.
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<PlayerKey>);
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Level>);
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<PlayerProperty>);
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Vector3>);
+
+} // namespace Demo
+
+#endif

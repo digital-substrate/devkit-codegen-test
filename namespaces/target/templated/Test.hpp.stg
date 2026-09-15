@@ -72,6 +72,9 @@ model(m) ::= <<
 #include "<m.namespace>_Db.hpp"
 
 #include "Viper_Attachment.hpp"
+#include "Viper_AttachmentFunctionPool.hpp"
+#include "Viper_AttachmentMutating.hpp"
+#include "Viper_FunctionPool.hpp"
 #include "Viper_ValueSetIter.hpp"
 #include "Viper_ValueOptional.hpp"
 #include "Viper_Key.hpp"
@@ -243,6 +246,27 @@ void testBlobIO(std::shared_ptr\<Viper::Database> const & db);
 /// blob absent. Le pack en crée un autour de l'épreuve pour la même raison.
 std::shared_ptr\<Viper::Database> withBlob(std::shared_ptr\<Viper::Database> const & db);
 void withoutBlob(std::shared_ptr\<Viper::Database> const & db);
+
+// ── et le pont, appelé ──
+//
+// C'EST LA SEULE ÉPREUVE QUI TRAVERSE LA FRONTIÈRE. Tout le reste éprouve un côté ou
+// l'autre ; celle-ci part d'une valeur dynamique, la fait passer par le pont, appelle la
+// fonction statique que le développeur a écrite, et récupère une valeur dynamique.
+//
+// ET ELLE NE NOMME AUCUNE FONCTION. Le prototype dit quels types une fonction prend ; le
+// fuzzer en fabrique un jeu ; l'appel se fait. Aucune ligne par fonction, et un pool qui
+// gagne une fonction est éprouvé sans que rien ne change.
+void testPool(std::shared_ptr\<Viper::FunctionPool> const & pool);
+
+/// Le même, sur un pool d'attachments -- qui reçoit en plus l'interface sur laquelle agir.
+///
+/// UNE BASE N'EST PAS UNE INTERFACE MUTANTE, et c'est une distinction du runtime qu'on ne
+/// voit qu'en essayant : `Viper::Database` hérite d'`AttachmentGetting` et pas
+/// d'`AttachmentMutating`, que seul un état de commit implémente. La moitié lecture d'un
+/// pool s'éprouve donc avec une base, la moitié écriture demande un état -- et celle-là
+/// reste à écrire.
+void testPool(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool,
+              std::shared_ptr\<Viper::AttachmentGetting> const & getting);
 
 } // namespace <m.namespace>::Test
 

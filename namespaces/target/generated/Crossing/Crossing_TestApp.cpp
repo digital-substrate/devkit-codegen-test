@@ -76,7 +76,6 @@ int main(int argc, char * argv[]) {
         testDatabase(db);
         fuzzDatabase(db, 32);
         Crossing::Test::withoutBlob(db);
-
         db->commit();
         db->close();
     } catch (std::exception const & e) {

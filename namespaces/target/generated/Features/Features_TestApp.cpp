@@ -68,7 +68,6 @@ int main(int argc, char * argv[]) {
         testDatabase(db);
         fuzzDatabase(db, 32);
         Features::Test::withoutBlob(db);
-
         db->commit();
         db->close();
     } catch (std::exception const & e) {

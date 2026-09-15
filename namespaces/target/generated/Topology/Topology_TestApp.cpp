@@ -9,6 +9,9 @@
 #include "ModelB_Test.hpp"
 #include "Projection_Test.hpp"
 #include "Annotations_Test.hpp"
+#include "Projector_Pool.hpp"
+#include "Tools_Pool.hpp"
+#include "LinkModel_Pool.hpp"
 
 #include "Viper_Database.hpp"
 #include "Viper_DatabaseTransactionMode.hpp"
@@ -84,6 +87,13 @@ int main(int argc, char * argv[]) {
         testDatabase(db);
         fuzzDatabase(db, 32);
         Topology::Test::withoutBlob(db);
+
+        // LE PONT, APPELÉ. Chaque fonction de chaque pool, avec des arguments fuzzés depuis
+        // son prototype : la valeur dynamique traverse, la fonction statique s'exécute, le
+        // retour revient encodé. C'est la seule épreuve qui franchit la frontière.
+        Topology::Test::testPool(Projector::pool());
+        Topology::Test::testPool(Tools::pool());
+        Topology::Test::testPool(LinkModel::pool(), db);
 
         db->commit();
         db->close();

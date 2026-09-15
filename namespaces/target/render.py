@@ -35,6 +35,7 @@ INCLUDES = ["-I", str(PROPOSED),
 #   Topology   the namespace topology -- every kind of edge between units
 #   Crossing   the type system across it -- every shape, with elements from two units
 #   Features   ONE namespace, and every shape of the type system inside it
+#   Service    des pools et un remote -- le seul qui exerce le pont statique/dynamique
 #
 # The last is the common case and the one most easily forgotten. A generator organised
 # around namespaces has to degrade well when there is a single one, and nothing else here
@@ -43,6 +44,7 @@ MODELS = {
     "Topology": ROOT / "namespaces" / "Topology.dsm.json",
     "Crossing": ROOT / "crossing" / "Crossing.dsm.json",
     "Features": ROOT / "features" / "Features.dsm.json",
+    "Service": ROOT / "service" / "Service.dsm.json",
 }
 
 # Écrit à la main et non généré : les octets du modèle, qu'une vraie construction embarque
@@ -142,7 +144,8 @@ for directory in STANDALONE:
 #
 # Ce qu'un modèle apporte en plus du rendu : ses octets, et les fonctions de ses pools. Le
 # premier est produit par `link/resources.py`, le second est ce qu'une application écrit.
-APPLICATION = {"Topology": HERE / "link/application.cpp"}
+APPLICATION = {"Topology": HERE / "link/application.cpp",
+               "Service": HERE / "link/service/application.cpp"}
 LIBS = [ROOT / "build" / f"lib{n}.a" for n in ("viper", "sqlite", "hash", "antlr4", "pugixml")]
 
 

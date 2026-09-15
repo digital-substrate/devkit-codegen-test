@@ -33,6 +33,7 @@ MODELS = {
     "Topology": ROOT / "namespaces" / "definitions",
     "Crossing": ROOT / "crossing" / "definitions",
     "Features": ROOT / "features" / "all.dsm",
+    "Service": ROOT / "service" / "definitions" / "Service",
 }
 
 for model, definitions in MODELS.items():

@@ -9,6 +9,11 @@
 #include "Viper_FunctionPool.hpp"
 #include "Viper_ServiceRemote.hpp"
 
+// LE CONTEXTE SUR LEQUEL AGIT UNE FONCTION D'ATTACHMENT. Un pool ordinaire n'en prend pas ;
+// celui-ci le prend en premier argument, donc il en a besoin dans ses signatures.
+#include "Viper_AttachmentGetting.hpp"
+#include "Viper_AttachmentMutating.hpp"
+
 #include <cstdint>
 #include <memory>
 

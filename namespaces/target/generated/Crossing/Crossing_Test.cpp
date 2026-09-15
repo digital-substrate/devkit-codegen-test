@@ -1,6 +1,9 @@
 #include "Crossing_Test.hpp"
 
+#include "Viper_AttachmentGettingFunction.hpp"
 #include "Viper_Databasing.hpp"
+#include "Viper_Function.hpp"
+#include "Viper_FunctionPrototype.hpp"
 #include "Viper_BlobId.hpp"
 #include "Viper_BlobInfo.hpp"
 #include "Viper_BlobLayout.hpp"
@@ -126,6 +129,44 @@ void withoutBlob(std::shared_ptr<Viper::Database> const & db) {
     if (g_blob) {
         db->delBlob(*g_blob);
         g_blob.reset();
+    }
+}
+
+namespace {
+
+/// Un jeu d'arguments pour un prototype : le type de chaque paramètre, fuzzé.
+using ValuePtr = std::shared_ptr<Viper::Value>;
+using Arguments = std::vector<ValuePtr>;
+
+/// Les deux alias ne sont pas cosmétiques. Un vecteur de pointeurs partagés finit par
+/// deux chevrons fermants collés, et cette séquence ferme un corps de template
+/// StringTemplate au milieu d'une déclaration. Les dénouer supprime le piège -- qui
+/// vaut aussi pour les commentaires, ce que la phrase précédente a appris à ses dépens.
+Arguments arguments(
+        std::shared_ptr<Viper::FunctionPrototype> const & prototype) {
+    Arguments result;
+    result.reserve(prototype->parameters.size());
+    for (auto const & parameter : prototype->parameters)
+        result.push_back(fuzzer()->fuzzType(parameter.type));
+
+    return result;
+}
+
+} // namespace
+
+void testPool(std::shared_ptr<Viper::FunctionPool> const & pool) {
+    for (auto const & function : pool->functions())
+        (void)function->call(arguments(function->prototype));
+}
+
+void testPool(std::shared_ptr<Viper::AttachmentFunctionPool> const & pool,
+              std::shared_ptr<Viper::AttachmentGetting> const & getting) {
+    for (auto const & function : pool->functions()) {
+        // Seules les fonctions de lecture sont appelées ici : les autres demandent une
+        // interface mutante, qu'une base n'est pas. Le `dynamic_cast` est la seule fois où
+        // ce code demande de quelle sorte il s'agit.
+        if (auto const g = std::dynamic_pointer_cast<Viper::AttachmentGettingFunction>(function))
+            (void)g->call(getting, arguments(function->prototype));
     }
 }
 

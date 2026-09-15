@@ -1,0 +1,40 @@
+// unité Demo — comment nommer et adresser les champs de ses structures.
+//
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/service/Service.dsm.json by kibo-2.0.0.jar
+//
+// No cross-unit include, whatever this namespace's structures hold: a path names a
+// position, not a type. Its types header includes the units it reaches; this one reaches
+// none.
+
+#ifndef Demo_Fields_hpp
+#define Demo_Fields_hpp
+
+#include "Viper_Path.hpp"
+
+#include <memory>
+#include <string>
+#include <string_view>
+
+namespace Demo::Fields::PlayerProperty {
+
+inline constexpr std::string_view nickname{"nickname"};
+inline constexpr std::string_view level{"level"};
+
+std::shared_ptr<Viper::Path const> const & nicknamePath();
+std::shared_ptr<Viper::Path const> const & levelPath();
+
+} // namespace Demo::Fields::PlayerProperty
+
+namespace Demo::Fields::Vector3 {
+
+inline constexpr std::string_view x{"x"};
+inline constexpr std::string_view y{"y"};
+inline constexpr std::string_view z{"z"};
+
+std::shared_ptr<Viper::Path const> const & xPath();
+std::shared_ptr<Viper::Path const> const & yPath();
+std::shared_ptr<Viper::Path const> const & zPath();
+
+} // namespace Demo::Fields::Vector3
+
+#endif

@@ -16,6 +16,8 @@ model(m) ::= <<
 #include "<m.include.Test>"
 
 <m.nameSpaces:{u|#include "<u.include.Test>"};separator="\n">
+<m.functionPools:{p|#include "<p.include.Pool>"};separator="\n">
+<m.attachmentFunctionPools:{p|#include "<p.include.Pool>"};separator="\n">
 
 #include "Viper_Database.hpp"
 #include "Viper_DatabaseTransactionMode.hpp"
@@ -79,6 +81,16 @@ int main(int argc, char * argv[]) {
         testDatabase(db);
         fuzzDatabase(db, 32);
         <m.namespace>::Test::withoutBlob(db);
+<if(m.functionPools)>
+
+        // LE PONT, APPELÉ. Chaque fonction de chaque pool, avec des arguments fuzzés depuis
+        // son prototype : la valeur dynamique traverse, la fonction statique s'exécute, le
+        // retour revient encodé. C'est la seule épreuve qui franchit la frontière.
+<m.functionPools:call_pool();separator="\n">
+<endif>
+<if(m.attachmentFunctionPools)>
+<m.attachmentFunctionPools:call_attachment_pool();separator="\n">
+<endif>
 
         db->commit();
         db->close();
@@ -105,3 +117,13 @@ call_database(u) ::= <<
 call_fuzz(u) ::= <<
     <u.name>::fuzzDatabase(db, count);
 >>
+
+call_pool(p) ::= <<
+        <m_test(p)>::testPool(<p.name;format="uf">::pool());
+>>
+
+call_attachment_pool(p) ::= <<
+        <m_test(p)>::testPool(<p.name;format="uf">::pool(), db);
+>>
+
+m_test(p) ::= <%<p.model.namespace>::Test%>
