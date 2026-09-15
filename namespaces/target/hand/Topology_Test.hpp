@@ -18,6 +18,8 @@
 #include "Topology_Codec.hpp"
 #include "Topology_Db.hpp"
 
+#include "Viper_Database.hpp"
+
 #include "Viper_Assert.hpp"
 #include "Viper_Fuzzer.hpp"
 #include "Viper_Json.hpp"
@@ -128,6 +130,31 @@ void fuzzAttachment(std::shared_ptr<Viper::Database> const & db, Viper::UUId con
     for (auto const & key : Db::keys<Key>(db, attachment))
         (void)Db::get<Document>(db, attachment, key);
 }
+
+// ── ce qu'une base offre hors du modèle ──
+//
+// AUCUNE DE CES ÉPREUVES NE NOMME UN TYPE DU MODÈLE, et c'est pourquoi elles sont ici et
+// non par unité. Le pack les écrit dans un artefact par modèle parce que tout y est par
+// modèle ; une fois qu'une unité existe, la question devient « qu'est-ce qui n'est à aucune
+// unité ? », et les métadonnées d'un fichier et son magasin de blobs n'y sont pas.
+
+/// Ce que la base dit d'elle-même.
+void testMetadata(std::shared_ptr<Viper::Database> const & db);
+
+/// Créer un blob, le relire, l'effacer -- et vérifier qu'il ne reste rien.
+void testBlobCreate(std::shared_ptr<Viper::Database> const & db);
+
+/// Le même, écrit par morceaux plutôt qu'en une fois.
+void testBlobStream(std::shared_ptr<Viper::Database> const & db);
+
+/// Et relu par morceaux, à une position donnée.
+void testBlobIO(std::shared_ptr<Viper::Database> const & db);
+
+/// UN BLOB EXISTE PENDANT L'ÉPREUVE DES ATTACHMENTS, et ce n'est pas une précaution :
+/// un document peut tenir un identifiant de blob, et le modèle refuse une référence vers
+/// un blob absent. Le pack en crée un autour de l'épreuve pour la même raison.
+std::shared_ptr<Viper::Database> withBlob(std::shared_ptr<Viper::Database> const & db);
+void withoutBlob(std::shared_ptr<Viper::Database> const & db);
 
 } // namespace Topology::Test
 

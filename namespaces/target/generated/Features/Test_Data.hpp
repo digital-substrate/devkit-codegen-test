@@ -144,8 +144,14 @@ public:
     Viper::UUId const & runtimeId() const noexcept;
 
     bool isValid() const noexcept;
-    /// Widen to the parent concept. Implicit, because `is a` is not a request.
+    /// Élargir vers le parent. Implicite, parce que `is a` n'est pas une demande : partout
+    /// où le parent est attendu, le dérivé passe.
     operator ConceptBKey() const noexcept;
+
+    /// Et la même, nommée. DEUX FORMES DE LA MÊME CHOSE, ET LES DEUX SERVENT : l'implicite
+    /// pour l'appelant qui passe la clé, la nommée pour celui qui la range ou l'écrit dans
+    /// une expression où la conversion ne se déclencherait pas.
+    ConceptBKey toParentKey() const noexcept;
     Features::AnyConceptKey toAny() const noexcept;
     static std::optional<ConceptCKey> from(Features::AnyConceptKey const & key) noexcept;
 

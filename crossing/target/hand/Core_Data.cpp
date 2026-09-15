@@ -77,6 +77,8 @@ bool SubThingKey::isValid() const noexcept { return _instanceId.isValid(); }
 /// celui du concept réel, et c'est pourquoi le retour vers SubThing est possible ensuite.
 SubThingKey::operator ThingKey() const noexcept { return {_instanceId, _runtimeId}; }
 
+ThingKey SubThingKey::toParentKey() const noexcept { return {_instanceId, _runtimeId}; }
+
 Crossing::AnyConceptKey SubThingKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 std::optional<SubThingKey> SubThingKey::from(Crossing::AnyConceptKey const & key) noexcept {

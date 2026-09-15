@@ -8,6 +8,7 @@
 
 #include "Viper_Database.hpp"
 
+#include <cstddef>
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -24,6 +25,10 @@ void testDatabase(std::shared_ptr<Viper::Database> const & db) {
     Test::testDatabase(db);
 }
 
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
+    Test::fuzzDatabase(db, count);
+}
+
 } // namespace
 
 int main(int argc, char * argv[]) {
@@ -36,7 +41,21 @@ int main(int argc, char * argv[]) {
         testTypes();
 
         auto const db = Viper::Database::createInMemory(Features::Codec::definitions());
+
+        // Ce que la base offre hors du modèle : elle ne nomme aucun type, donc elle
+        // s'éprouve sans rien demander aux unités.
+        Features::Test::testMetadata(db);
+        Features::Test::testBlobCreate(db);
+        Features::Test::testBlobStream(db);
+        Features::Test::testBlobIO(db);
+
+        // Un blob existe pendant l'épreuve des attachments : un document peut en tenir
+        // l'identifiant, et le modèle refuse une référence vers un blob absent.
+        Features::Test::withBlob(db);
         testDatabase(db);
+        fuzzDatabase(db, 32);
+        Features::Test::withoutBlob(db);
+
         db->close();
     } catch (std::exception const & e) {
         std::cerr << "échec : " << e.what() << std::endl;

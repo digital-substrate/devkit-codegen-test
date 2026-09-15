@@ -34,10 +34,26 @@ MODELS = {
     "Features": ROOT / "features" / "Features.dsm.json",
 }
 
-# Hand-written and not generated: the model's own bytes, which a real build embeds from the
-# .dsm, and the checkers that compile against the output.
-FROM_HAND = ["Topology_Resources.hpp", "use.cpp", "bridge.cpp", "l4.cpp", "l5.cpp",
-             "f.cpp", "json.cpp"]
+# Écrit à la main et non généré : les octets du modèle, qu'une vraie construction embarque
+# depuis le `.dsm`, et les fichiers de contrôle qui compilent contre la sortie.
+#
+# LA RÉFÉRENCE D'UN MODÈLE SE COMPILE AVEC SON RENDU. Elle ne redéclare pas ce que le
+# générateur produit déjà -- ce serait une seconde vérité à tenir -- donc elle est copiée
+# dans l'arbre rendu et compilée là.
+FROM_HAND = {
+    "Topology": ["use.cpp", "bridge.cpp", "l4.cpp", "l5.cpp", "f.cpp", "json.cpp"],
+}
+
+HAND = {
+    "Topology": ROOT / "namespaces/target/hand",
+}
+
+# LA RÉFÉRENCE DU MODÈLE CROISÉ EST PARTIELLE, ET DÉLIBÉRÉMENT. Elle ne couvre que les
+# formes que le modèle topologique ne déclare pas -- un club, la clé non typée, les
+# mutations d'agrégat -- et ses fichiers portent le nom des artefacts qu'ils reproduisent.
+# Les copier dans l'arbre rendu masquerait donc ce qu'ils ne redisent pas : elle se compile
+# chez elle, contre son propre jeu minimal.
+STANDALONE = [ROOT / "crossing/target/hand"]
 
 
 def render(model, definitions, out):
@@ -55,9 +71,8 @@ def compile_tree(model, out):
     resources = (ROOT / "namespaces/target/hand/Topology_Resources.hpp").read_text()
     (out / f"{model}_Resources.hpp").write_text(resources.replace("Topology", model))
 
-    if model == "Topology":
-        for name in FROM_HAND[1:]:
-            shutil.copy(ROOT / "namespaces/target/hand" / name, out / name)
+    for name in FROM_HAND.get(model, []):
+        shutil.copy(HAND[model] / name, out / name)
 
     failed = []
     for source in sorted(out.glob("*.cpp")):
@@ -91,6 +106,22 @@ for model, definitions in MODELS.items():
     failed = compile_tree(model, out)
     print(f"  {model:10} {len(list(out.glob('*.cpp'))):3} .cpp, "
           f"{len(list(out.glob('*.hpp'))):3} .hpp"
+          + (f", {len(failed)} ne compilent pas" if failed else ", tout compile"))
+    status |= bool(failed)
+
+for directory in STANDALONE:
+    failed = []
+    for source in sorted(directory.glob("*.cpp")):
+        r = subprocess.run(["clang++", "-std=c++20", "-fsyntax-only", "-I", str(directory),
+                            "-I", str(RUNTIME), str(source)],
+                           capture_output=True, text=True)
+        if r.returncode:
+            failed.append(source.name)
+            print(f"  !! {source.name}")
+            for l in r.stderr.splitlines()[:4]:
+                print(f"     {l}")
+    print(f"  {directory.parent.parent.name + '/hand':10} "
+          f"{len(list(directory.glob('*.cpp'))):3} .cpp"
           + (f", {len(failed)} ne compilent pas" if failed else ", tout compile"))
     status |= bool(failed)
 

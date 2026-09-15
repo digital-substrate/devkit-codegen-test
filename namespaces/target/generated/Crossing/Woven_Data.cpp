@@ -60,6 +60,8 @@ bool DerivedKey::isValid() const noexcept { return _instanceId.isValid(); }
 /// celui du concept réel, et c'est pourquoi le retour est possible ensuite.
 DerivedKey::operator Core::ThingKey() const noexcept { return {_instanceId, _runtimeId}; }
 
+Core::ThingKey DerivedKey::toParentKey() const noexcept { return {_instanceId, _runtimeId}; }
+
 Crossing::AnyConceptKey DerivedKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la

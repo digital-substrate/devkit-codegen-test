@@ -6,7 +6,10 @@
 #include <string>
 namespace Viper {
 class Definitions;
-namespace JsonValueEncoder { std::string json_encode(std::shared_ptr<Value const> const & value); }
+namespace JsonValueEncoder {
+std::string json_encode(std::shared_ptr<Value const> const & value);
+std::string json_encode_definitions(std::shared_ptr<Definitions const> const & definitions);
+}
 namespace JsonValueDecoder {
 std::shared_ptr<Value> json_decode(std::string const & json,
                                    std::shared_ptr<Type> const & type,

@@ -34,4 +34,13 @@ void testDatabase(std::shared_ptr<Viper::Database> const & db) {
         db, Attachments::Link::pair::runtimeId);
 }
 
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
+    Topology::Test::fuzzAttachment<LinkKey, std::map<ModelA::MaterialKey, ModelB::MaterialKey>>(
+        db, Attachments::Link::mapping::runtimeId, count);
+    Topology::Test::fuzzAttachment<LinkKey, ModelC::MarkerKey>(
+        db, Attachments::Link::marker::runtimeId, count);
+    Topology::Test::fuzzAttachment<LinkKey, Pair>(
+        db, Attachments::Link::pair::runtimeId, count);
+}
+
 } // namespace Projection

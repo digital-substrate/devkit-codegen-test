@@ -60,6 +60,8 @@ bool DerivedMaterialKey::isValid() const noexcept { return _instanceId.isValid()
 /// celui du concept réel, et c'est pourquoi le retour est possible ensuite.
 DerivedMaterialKey::operator ModelA::MaterialKey() const noexcept { return {_instanceId, _runtimeId}; }
 
+ModelA::MaterialKey DerivedMaterialKey::toParentKey() const noexcept { return {_instanceId, _runtimeId}; }
+
 Topology::AnyConceptKey DerivedMaterialKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la

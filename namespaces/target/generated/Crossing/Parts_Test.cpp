@@ -24,4 +24,9 @@ void testDatabase(std::shared_ptr<Viper::Database> const & db) {
         db, Attachments::Thing::colour::runtimeId);
 }
 
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
+    Crossing::Test::fuzzAttachment<ThingKey, Colour>(
+        db, Attachments::Thing::colour::runtimeId, count);
+}
+
 } // namespace Parts

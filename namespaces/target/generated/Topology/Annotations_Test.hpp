@@ -7,6 +7,7 @@
 
 #include "Viper_Database.hpp"
 
+#include <cstddef>
 #include <memory>
 
 namespace Annotations {
@@ -20,6 +21,13 @@ void test();
 /// le modèle ne porte ; une base est un support qu'il faut ouvrir, et l'appelant décide
 /// lequel.
 void testDatabase(std::shared_ptr<Viper::Database> const & db);
+
+/// Remplir chaque attachment déclaré ici, puis tout relire.
+///
+/// SÉPARÉ PARCE QU'IL NE VÉRIFIE PAS LA MÊME CHOSE. L'aller-retour dit qu'une écriture se
+/// relit ; celui-ci dit que mille tiennent, et il n'assert rien d'autre que l'absence de
+/// casse.
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count);
 
 } // namespace Annotations
 

@@ -12,8 +12,11 @@ struct Blob {
     std::vector<std::byte> storage;
     Blob() = default;
     explicit Blob(std::size_t size) : storage(size) {}
+    Blob(std::vector<std::byte> bytes) : storage(std::move(bytes)) {}
     std::size_t size() const { return storage.size(); }
-    std::vector<std::byte> bytes; bool operator==(Blob const &) const = default; bool operator<(Blob const & o) const { return bytes < o.bytes; } };
+    bool operator==(Blob const &) const = default;
+    bool operator<(Blob const & o) const { return storage < o.storage; }
+};
 /// Une séquence ordonnée dont les positions sont stables : le conteneur propre au runtime.
 class StreamWriting;
 class StreamReading;

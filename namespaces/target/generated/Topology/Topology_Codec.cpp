@@ -1,4 +1,4 @@
-// modèle Topology — ce que la clé non typée ne peut pas porter elle-même.
+// Topology — ce que la clé non typée ne peut pas porter elle-même.
 //
 // LES DEUX SEULS MEMBRES DE L'AnyConceptKey GÉNÉRÉE QUI AVAIENT BESOIN DU MODÈLE, et la
 // question qu'ils posent : quelqu'un doit bien fournir l'ensemble des concepts connus.
@@ -91,6 +91,10 @@ std::string hexdigestValue(std::shared_ptr<Viper::Value const> const & value) {
     Viper::ValueHasher::hash(value, hasher);
 
     return hasher->hexDigest();
+}
+
+std::string jsonDefinitions() {
+    return Viper::JsonValueEncoder::json_encode_definitions(definitions());
 }
 
 } // namespace Topology::Codec

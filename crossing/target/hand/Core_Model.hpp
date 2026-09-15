@@ -34,6 +34,7 @@ extern Viper::UUId const Other;
 extern Viper::UUId const Klub;
 extern Viper::UUId const Grade;
 extern Viper::UUId const Colour;
+extern Viper::UUId const Bag;
 } // namespace RuntimeIds
 
 /// Le concept dont une clé relève -- ce qu'un rétrécissement compare.
@@ -52,6 +53,7 @@ std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<OtherKey>);
 std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<KlubKey>);
 std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Grade>);
 std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Colour>);
+std::shared_ptr<Viper::Type> const & type(Viper::Codec::tag<Bag>);
 
 } // namespace Core
 

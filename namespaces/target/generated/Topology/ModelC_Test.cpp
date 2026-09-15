@@ -20,4 +20,7 @@ void test() {
 void testDatabase(std::shared_ptr<Viper::Database> const & db) {
 }
 
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
+}
+
 } // namespace ModelC

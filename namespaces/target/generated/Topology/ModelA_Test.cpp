@@ -24,4 +24,9 @@ void testDatabase(std::shared_ptr<Viper::Database> const & db) {
         db, Attachments::Material::colour::runtimeId);
 }
 
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
+    Topology::Test::fuzzAttachment<MaterialKey, Colour>(
+        db, Attachments::Material::colour::runtimeId, count);
+}
+
 } // namespace ModelA

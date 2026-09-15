@@ -21,56 +21,29 @@ template compterait comme une perte.
 ## L'état, au dernier passage
 
 ```
-le pack déclare 141 opérations, les nouveaux templates 108
-absentes : 9
+le pack déclare 141 opérations, les nouveaux templates 117
+absentes : 0
 ```
 
-Les 42 de différence ne sont pas des manques : ce sont les familles par type qui
-s'effondrent en une fonction, plus ce que `coverage.py` écarte avec sa raison — le runtime
-enveloppé dans un template, les entrées/sorties en vrac d'un flux, un nom de champ devenu
-constante, un élargissement devenu conversion implicite.
+**Toute la surface du pack C++ est reproduite.** Les 24 de différence sont les familles par
+type qui s'effondrent en une fonction, plus ce que `coverage.py` écarte avec sa raison.
 
-**Ce qui manque vraiment tient en quatre familles.**
+Deux sortes d'écart, et la distinction compte :
 
-### 1. ~~Les mutations d'un champ agrégé~~ — fait
+- **absorbé** — l'opération n'a pas de contrepartie et c'est voulu : le runtime enveloppé
+  dans un template, les entrées/sorties en vrac d'un flux, un nom de champ devenu constante,
+  un descripteur passé à l'unité ou au runtime. La raison est le nom du groupe.
+- **renommé** — l'opération est là sous un autre mot, et **le script vérifie que ce mot est
+  dans la sortie**. Un renommage annoncé dont le nouveau nom manque fait échouer l'outil,
+  sans quoi l'écart serait un oubli déguisé.
 
-`unionF`, `subtractF`, `updateF`, `insertF`, `removeF`, `union_`, `subtract`, `update`
+C'est ce garde-fou qui a rattrapé la dernière affirmation faible : `toParentKey` était donné
+pour « remplacé par une conversion implicite », ce que l'outil ne pouvait pas voir. Plutôt
+que rendre l'exception invérifiable, l'opération a été écrite sous son nom — les deux formes
+servent, l'implicite pour l'appelant qui passe la clé, la nommée pour l'expression où la
+conversion ne se déclencherait pas.
 
-Un attachment dont le document est un agrégat, ou en contient un, reçoit des opérations qui
-ne l'écrasent pas mais le modifient. `set` remplace le document, `update` remplace ce qui est
-à une adresse ; celles-ci ajoutent, retirent ou déplacent à l'intérieur — et deux écritures
-concurrentes sur le même ensemble se fondent là où deux remplacements s'écrasent.
-
-Écrites aux deux niveaux : quand le document **est** l'agrégat, l'adresse est la racine ;
-quand c'est un champ, l'adresse est celle du champ. Rien d'autre ne change, et les huit corps
-sont identiques par ailleurs.
-
-**Le fixture ne les couvrait pas** — aucun modèle ne déclarait d'attachment agrégé — donc
-`crossing` gagne un ensemble, une map, un xarray et une structure qui contient les trois.
-
-**Et le rendu a trouvé un troisième cas d'un défaut déjà vu deux fois** : les structures
-étaient émises dans l'ordre de leurs noms et non de leurs dépendances, donc `Bag`, qui
-contient une `Colour`, sortait avant elle. Le parent d'un concept, puis les membres d'un
-club, maintenant les champs d'une structure — une unité émet dans un seul fichier, et l'ordre
-de déclaration compte à chaque fois.
-
-### 2. Les épreuves de base au-delà des attachments — 7 opérations
-
-`test_Metadata`, `test_Blob_Create`, `test_Blob_Stream`, `test_Blob_IO`, `test_Create_Blob`,
-`test_Attachments`, `test_Attachments_get`, `test_get`
-
-L'aller-retour d'un attachment sur une base est écrit ; les épreuves des métadonnées et de
-l'API blob ne le sont pas. Elles ne nomment aucun type du modèle, donc elles suivront la
-forme du reste de la base de données — du code de runtime — mais cela reste à montrer plutôt
-qu'à supposer.
-
-### 3. Le JSON des définitions elles-mêmes — 1 opération
-
-`encode_dsm_definitions`
-
-Le modèle sait s'encoder en JSON. Une ligne, au-dessus de ce qui existe déjà.
-
-### 4. Ce que le runtime livré ne porte pas
+## Ce que le runtime livré ne porte pas
 
 Hors décompte, parce que ce n'est pas un template à écrire. Les nouveaux idiomes s'appuient
 sur des choses que `viper` 1.2 n'a pas sous cette forme :
@@ -84,16 +57,30 @@ sur des choses que `viper` 1.2 n'a pas sous cette forme :
 
 Chacun porte dans son fichier la raison de sa forme. **Rien de tout cela n'est lié ni
 exécuté** : la vérification C++ est `-fsyntax-only` contre ces stubs, dont les signatures
-sont recopiées du vrai runtime. C'est la limite principale de ce qui a été fait.
+sont recopiées du vrai runtime. C'est la limite principale de ce qui a été fait, et elle ne
+se lèvera qu'en liant contre le vrai `viper`.
 
-Le Python, lui, tourne contre le vrai `dsviper`.
+Le Python, lui, tourne contre le vrai `dsviper` — et il est à peine commencé.
+
+## Ce qui reste
+
+1. **Lier contre le vrai runtime.** Tant que c'est `-fsyntax-only`, une signature recopiée de
+   travers passe inaperçue.
+2. **Les quatre ajouts au runtime**, dans l'ordre : viper d'abord, kibo ensuite, le pack en
+   dernier.
+3. **Python**, dérivé du modèle et de Python. Les types et les namespaces sont écrits et
+   tournent ; les attachments, les pools et la base ne le sont pas.
+4. **Node, puis Swift** — dont les modules serviraient de point d'appui là où il n'y a pas
+   de namespace.
+5. **Puis seulement** une analyse de similarité, et les outils réutilisables qu'elle
+   justifierait.
 
 ## Où regarder
 
 | pour voir | lire |
 |---|---|
 | ce qui est attendu | `hand/` — la référence C++, écrite depuis le modèle |
-| ce qui produit | `templated/` — 18 templates |
+| ce qui produit | `templated/` — les templates |
 | ce que ça donne | `generated/Topology/`, `generated/Crossing/`, `generated/Features/` |
 | pourquoi chaque décision | `hand/README.md`, `templated/README.md` |
 | ce qui manque | `coverage.py` |

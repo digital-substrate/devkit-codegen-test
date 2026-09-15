@@ -44,6 +44,8 @@ bool <c.name>Key::isValid() const noexcept { return _instanceId.isValid(); }
 /// L'élargissement ne perd rien et ne peut pas échouer : l'identifiant d'exécution reste
 /// celui du concept réel, et c'est pourquoi le retour est possible ensuite.
 <c.name>Key::operator <c.parentNameInNamespace>Key() const noexcept { return {_instanceId, _runtimeId}; }
+
+<c.parentNameInNamespace>Key <c.name>Key::toParentKey() const noexcept { return {_instanceId, _runtimeId}; }
 <endif>
 
 <u.model.namespace>::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }

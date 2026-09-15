@@ -63,4 +63,41 @@ void testDatabase(std::shared_ptr<Viper::Database> const & db) {
         db, Attachments::Parts_Thing::mark::runtimeId);
 }
 
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
+    Crossing::Test::fuzzAttachment<Core::ThingKey, Parts::Colour>(
+        db, Attachments::Core_Thing::mark::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, ::Crossing::AnyConceptKey>(
+        db, Attachments::Knot::docAnyConceptKey::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, Core::Colour>(
+        db, Attachments::Knot::docColour::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, Composites>(
+        db, Attachments::Knot::docComposites::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, Core::Grade>(
+        db, Attachments::Knot::docGrade::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, Core::KlubKey>(
+        db, Attachments::Knot::docKlubKey::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, std::map<Core::Grade, Parts::Colour>>(
+        db, Attachments::Knot::docMapEnum::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, std::map<Core::ThingKey, Parts::ThingKey>>(
+        db, Attachments::Knot::docMapKeys::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, std::optional<Core::ThingKey>>(
+        db, Attachments::Knot::docOptional::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, Parts::Colour>(
+        db, Attachments::Knot::docOtherColour::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, std::set<Core::ThingKey>>(
+        db, Attachments::Knot::docSet::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, Core::ThingKey>(
+        db, Attachments::Knot::docThingKey::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, std::tuple<Core::Colour, Parts::Colour>>(
+        db, Attachments::Knot::docTuple::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, std::variant<Core::Colour, Parts::Colour>>(
+        db, Attachments::Knot::docVariant::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, std::vector<Parts::Colour>>(
+        db, Attachments::Knot::docVector::runtimeId, count);
+    Crossing::Test::fuzzAttachment<KnotKey, Viper::XArray<Core::Colour>>(
+        db, Attachments::Knot::docXArray::runtimeId, count);
+    Crossing::Test::fuzzAttachment<Parts::ThingKey, Core::Colour>(
+        db, Attachments::Parts_Thing::mark::runtimeId, count);
+}
+
 } // namespace Woven

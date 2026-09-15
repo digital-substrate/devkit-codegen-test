@@ -96,6 +96,8 @@ bool SubThingKey::isValid() const noexcept { return _instanceId.isValid(); }
 /// celui du concept réel, et c'est pourquoi le retour est possible ensuite.
 SubThingKey::operator ThingKey() const noexcept { return {_instanceId, _runtimeId}; }
 
+ThingKey SubThingKey::toParentKey() const noexcept { return {_instanceId, _runtimeId}; }
+
 Crossing::AnyConceptKey SubThingKey::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 /// Rétrécir depuis la clé non typée : le modèle répond, parce que lui seul connaît la

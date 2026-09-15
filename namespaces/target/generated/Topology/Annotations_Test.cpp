@@ -27,4 +27,11 @@ void testDatabase(std::shared_ptr<Viper::Database> const & db) {
         db, Attachments::ModelB_Material::note::runtimeId);
 }
 
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
+    Topology::Test::fuzzAttachment<ModelA::MaterialKey, std::string>(
+        db, Attachments::ModelA_Material::note::runtimeId, count);
+    Topology::Test::fuzzAttachment<ModelB::MaterialKey, std::string>(
+        db, Attachments::ModelB_Material::note::runtimeId, count);
+}
+
 } // namespace Annotations

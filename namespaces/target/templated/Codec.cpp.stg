@@ -124,7 +124,7 @@ plain_read_head(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::t
 
 // ── et le socle ──
 model(m) ::= <<
-// modèle <m.namespace> — ce que la clé non typée ne peut pas porter elle-même.
+// <m.namespace> — ce que la clé non typée ne peut pas porter elle-même.
 //
 // LES DEUX SEULS MEMBRES DE L'AnyConceptKey GÉNÉRÉE QUI AVAIENT BESOIN DU MODÈLE, et la
 // question qu'ils posent : quelqu'un doit bien fournir l'ensemble des concepts connus.
@@ -217,6 +217,10 @@ std::string hexdigestValue(std::shared_ptr\<Viper::Value const> const & value) {
     Viper::ValueHasher::hash(value, hasher);
 
     return hasher->hexDigest();
+}
+
+std::string jsonDefinitions() {
+    return Viper::JsonValueEncoder::json_encode_definitions(definitions());
 }
 
 } // namespace <m.namespace>::Codec

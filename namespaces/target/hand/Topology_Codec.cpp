@@ -93,4 +93,8 @@ std::string hexdigestValue(std::shared_ptr<Viper::Value const> const & value) {
     return hasher->hexDigest();
 }
 
+std::string jsonDefinitions() {
+    return Viper::JsonValueEncoder::json_encode_definitions(definitions());
+}
+
 } // namespace Topology::Codec

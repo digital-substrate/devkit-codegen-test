@@ -114,4 +114,89 @@ void testDatabase(std::shared_ptr<Viper::Database> const & db) {
         db, Attachments::Klub::propertiesD::runtimeId);
 }
 
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
+    Features::Test::fuzzAttachment<::Features::AnyConceptKey, Viper::Any>(
+        db, Attachments::AnyConcept::propertiesAnyConceptAny::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptAKey, StructureV>(
+        db, Attachments::ConceptA::properties::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptAKey, std::int8_t>(
+        db, Attachments::ConceptA::propertiesInt8::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptAKey, std::map<std::int8_t, std::string>>(
+        db, Attachments::ConceptA::propertiesMapInt8String::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptAKey, std::set<std::int8_t>>(
+        db, Attachments::ConceptA::propertiesSeInt8::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptAKey, Viper::XArray<std::int8_t>>(
+        db, Attachments::ConceptA::propertiesXArray::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptBKey, StructureT>(
+        db, Attachments::ConceptB::propertiesB::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCKey, StructureU>(
+        db, Attachments::ConceptC::propertiesC::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, Viper::Any>(
+        db, Attachments::ConceptCoverage::docAny::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, ::Features::AnyConceptKey>(
+        db, Attachments::ConceptCoverage::docAnyConceptKey::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, Viper::Blob>(
+        db, Attachments::ConceptCoverage::docBlob::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, Viper::BlobId>(
+        db, Attachments::ConceptCoverage::docBlobId::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, bool>(
+        db, Attachments::ConceptCoverage::docBool::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, KlubKey>(
+        db, Attachments::ConceptCoverage::docClubKey::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, Viper::CommitId>(
+        db, Attachments::ConceptCoverage::docCommitId::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, ConceptAKey>(
+        db, Attachments::ConceptCoverage::docConceptKey::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, ConceptBKey>(
+        db, Attachments::ConceptCoverage::docConceptKeyB::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, double>(
+        db, Attachments::ConceptCoverage::docDouble::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, EnumerationE>(
+        db, Attachments::ConceptCoverage::docEnumeration::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, float>(
+        db, Attachments::ConceptCoverage::docFloat::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::int16_t>(
+        db, Attachments::ConceptCoverage::docInt16::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::int32_t>(
+        db, Attachments::ConceptCoverage::docInt32::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::int64_t>(
+        db, Attachments::ConceptCoverage::docInt64::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::int8_t>(
+        db, Attachments::ConceptCoverage::docInt8::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::map<std::uint8_t, std::string>>(
+        db, Attachments::ConceptCoverage::docMap::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::array<std::array<std::uint8_t, 2>, 2>>(
+        db, Attachments::ConceptCoverage::docMat::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::optional<std::uint8_t>>(
+        db, Attachments::ConceptCoverage::docOptional::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::set<std::uint8_t>>(
+        db, Attachments::ConceptCoverage::docSet::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::string>(
+        db, Attachments::ConceptCoverage::docString::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, StructureW>(
+        db, Attachments::ConceptCoverage::docStructureSingleField::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::tuple<std::uint8_t, std::string>>(
+        db, Attachments::ConceptCoverage::docTuple::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::uint16_t>(
+        db, Attachments::ConceptCoverage::docUInt16::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::uint32_t>(
+        db, Attachments::ConceptCoverage::docUInt32::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::uint64_t>(
+        db, Attachments::ConceptCoverage::docUInt64::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::uint8_t>(
+        db, Attachments::ConceptCoverage::docUInt8::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, Viper::UUId>(
+        db, Attachments::ConceptCoverage::docUUId::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::variant<std::string, std::uint8_t>>(
+        db, Attachments::ConceptCoverage::docVariant::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::array<std::uint8_t, 2>>(
+        db, Attachments::ConceptCoverage::docVec::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, std::vector<std::uint8_t>>(
+        db, Attachments::ConceptCoverage::docVector::runtimeId, count);
+    Features::Test::fuzzAttachment<ConceptCoverageKey, Viper::XArray<std::uint8_t>>(
+        db, Attachments::ConceptCoverage::docXArray::runtimeId, count);
+    Features::Test::fuzzAttachment<KlubKey, StructureV>(
+        db, Attachments::Klub::propertiesD::runtimeId, count);
+}
+
 } // namespace Test

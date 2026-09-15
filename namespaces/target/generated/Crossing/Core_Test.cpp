@@ -41,4 +41,19 @@ void testDatabase(std::shared_ptr<Viper::Database> const & db) {
         db, Attachments::Thing::scalars::runtimeId);
 }
 
+void fuzzDatabase(std::shared_ptr<Viper::Database> const & db, std::size_t count) {
+    Crossing::Test::fuzzAttachment<ThingKey, Bag>(
+        db, Attachments::Thing::bag::runtimeId, count);
+    Crossing::Test::fuzzAttachment<ThingKey, Colour>(
+        db, Attachments::Thing::colour::runtimeId, count);
+    Crossing::Test::fuzzAttachment<ThingKey, Viper::XArray<Colour>>(
+        db, Attachments::Thing::history::runtimeId, count);
+    Crossing::Test::fuzzAttachment<ThingKey, std::map<ThingKey, Colour>>(
+        db, Attachments::Thing::palette::runtimeId, count);
+    Crossing::Test::fuzzAttachment<ThingKey, std::set<ThingKey>>(
+        db, Attachments::Thing::related::runtimeId, count);
+    Crossing::Test::fuzzAttachment<ThingKey, Scalars>(
+        db, Attachments::Thing::scalars::runtimeId, count);
+}
+
 } // namespace Core

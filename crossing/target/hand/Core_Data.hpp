@@ -12,8 +12,12 @@
 #include "Viper_Hash.hpp"
 #include "Viper_UUId.hpp"
 
+#include "Viper_Scalars.hpp"
+
 #include <cstdint>
+#include <map>
 #include <optional>
+#include <set>
 
 namespace Core {
 
@@ -62,6 +66,9 @@ public:
 
     /// Élargir vers le parent. Implicite, parce que `is a` n'est pas une demande.
     operator ThingKey() const noexcept;
+
+    /// Et la même, nommée, pour l'expression où la conversion ne se déclencherait pas.
+    ThingKey toParentKey() const noexcept;
 
     Crossing::AnyConceptKey toAny() const noexcept;
     static std::optional<SubThingKey> from(Crossing::AnyConceptKey const & key) noexcept;
@@ -159,6 +166,23 @@ bool operator!=(Colour const &, Colour const &) noexcept;
 bool operator<(Colour const &, Colour const &) noexcept;
 
 void hash(Hash::Accumulator & h, Colour const & value) noexcept;
+
+/// Un document ordinaire dont les champs sont des agrégats.
+///
+/// DÉCLARÉ APRÈS `Colour`, ET C'EST LA TROISIÈME FOIS QUE L'ORDRE COMPTE. Il en contient
+/// une, et une unité émet dans un seul fichier -- après le parent d'un concept et les
+/// membres d'un club, les champs d'une structure.
+struct Bag final {
+    std::set<ThingKey> members{};
+    std::map<ThingKey, Colour> tints{};
+    Viper::XArray<Colour> trail{};
+};
+
+bool operator==(Bag const &, Bag const &) noexcept;
+bool operator!=(Bag const &, Bag const &) noexcept;
+bool operator<(Bag const &, Bag const &) noexcept;
+
+void hash(Hash::Accumulator & h, Bag const & value) noexcept;
 
 } // namespace Core
 

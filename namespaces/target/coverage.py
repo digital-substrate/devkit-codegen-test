@@ -32,38 +32,55 @@ SUFFIX = re.compile(
 NOISE = {"if", "for", "while", "switch", "return", "sizeof", "static_cast", "throw",
          "catch", "operator", "make_shared", "move", "parse", "of"}
 
-# Ce que les nouveaux templates n'émettent pas, et ne doivent pas émettre. Chaque entrée
-# porte la raison, parce qu'une exception sans raison est un oubli qui a trouvé un abri.
-DELIBERATE = {
+# Ce que les nouveaux templates n'émettent pas sous le même nom, et pourquoi. Deux sortes,
+# et la distinction compte : un écart sans raison est un oubli qui a trouvé un abri.
+
+# ABSORBÉ : l'opération n'a pas de contrepartie, et c'est voulu. La raison est le nom du
+# groupe, et elle doit tenir sans qu'on regarde ailleurs.
+ABSORBED = {
     # Mesuré : ces artefacts sortent octet pour octet identiques pour deux modèles sans
-    # rapport, donc ce sont du code de runtime enveloppé dans un namespace.
-    "database": """beginTransaction commit rollback inTransaction close isClosed codecName
-        dataVersion documentation path uuid databasing extendDefinitions definitionsHexDigest
-        isCompatible createInMemory open connect databases getDatabase setDatabase make copy
-        blob blobIds blobInfo blobInfos blobRead blobStatistics blobStreamAppend
-        blobStreamClose blobStreamCreate blobStreamDelete blobStreamWrite createBlob
-        createZeroBlob delBlob freezeBlob readBlob writeBlob""",
+    # rapport, donc ce sont du code de runtime enveloppé dans un namespace. Le nouveau
+    # monde appelle Viper::Database, dont runtime/Viper_Database.hpp dit la surface.
+    "le runtime, enveloppé dans un template": """beginTransaction commit rollback
+        inTransaction close isClosed codecName dataVersion documentation path uuid
+        databasing extendDefinitions definitionsHexDigest isCompatible createInMemory open
+        connect databases getDatabase setDatabase make copy blob blobIds blobInfo blobInfos
+        blobRead blobStatistics blobStreamAppend blobStreamClose blobStreamCreate
+        blobStreamDelete blobStreamWrite createBlob createZeroBlob delBlob freezeBlob
+        readBlob writeBlob""",
 
     # Les entrées/sorties en vrac d'un flux, que le runtime porte déjà.
-    "flux": """read_uint8s read_uint16s read_uint32s read_uint64s read_int8s read_int16s
-        read_int32s read_int64s read_floats read_doubles write_uint8s write_uint16s
-        write_uint32s write_uint64s write_int8s write_int16s write_int32s write_int64s
-        write_floats write_doubles""",
+    "le flux, en vrac": """read_uint8s read_uint16s read_uint32s read_uint64s read_int8s
+        read_int16s read_int32s read_int64s read_floats read_doubles write_uint8s
+        write_uint16s write_uint32s write_uint64s write_int8s write_int16s write_int32s
+        write_int64s write_floats write_doubles""",
 
-    # Renommés, et le nouveau nom est dans la sortie : la comparaison les verrait comme
-    # manquants alors qu'ils sont là sous un autre mot.
-    "renommés": """toAnyConceptKey type_check set_seed attachment field type_void
-        type_def_any_concept remove""",
+    # Le nom d'un champ. Le pack en fait une fonction -- `Field::StructureU::f_A()` -- là où
+    # ici c'est une constante `inline constexpr std::string_view`, utilisable en expression
+    # constante. Présent, sous une forme qu'une comparaison de noms ne voit pas.
+    "un nom de champ, devenu constante": """f_A f_B f_C f_D f_E f_Klub f_S f_T
+        f_any_concept f_single field_structure_s field""",
 
-    # Le nom d'un champ. Le pack en fait une fonction -- `Field::StructureU::f_A()` --
-    # là où ici c'est une constante `inline constexpr std::string_view`, utilisable en
-    # expression constante. Présent, sous une forme que la comparaison ne voit pas.
-    "champs": """f_A f_B f_C f_D f_E f_Klub f_S f_T f_any_concept f_single
-        field_structure_s""",
+    # Le descripteur d'un type, que l'unité porte maintenant dans son identité de modèle, et
+    # celui d'une primitive ou d'un conteneur, qui est du runtime.
+    "un descripteur de type": "attachment type_void type_def_any_concept",
+}
 
-    # Remplacé par une conversion implicite vers la clé du parent : `is a` n'est pas une
-    # demande, donc l'élargissement n'a pas à être appelé. L'opération est là, sans nom.
-    "élargissement": "toParentKey",
+# RENOMMÉ : l'opération est là, sous un autre mot. Chaque entrée dit lequel, et le script
+# vérifie que ce mot est bien dans la sortie -- sans quoi l'écart serait un oubli déguisé.
+RENAMED = {
+    "toAnyConceptKey": "toAny",
+    "type_check": "conceptType",
+    "set_seed": "seed",
+    "encode_dsm_definitions": "jsonDefinitions",
+    "test_Metadata": "testMetadata",
+    "test_Blob_Create": "testBlobCreate",
+    "test_Blob_Stream": "testBlobStream",
+    "test_Blob_IO": "testBlobIO",
+    "test_Create_Blob": "withBlob",
+    "test_Attachments": "testDatabase",
+    "test_Attachments_get": "fuzzDatabase",
+    "test_get": "fuzzDatabase",
 }
 
 
@@ -106,9 +123,16 @@ with tempfile.TemporaryDirectory() as scratch:
 mine = operations(sorted((HERE / "generated" / "Features").glob("*.hpp")))
 missing = pack - mine
 
+broken = []
 if not arguments.all:
-    for reason, names in DELIBERATE.items():
+    for reason, names in ABSORBED.items():
         missing -= set(names.split())
+
+    for old, new in RENAMED.items():
+        if new in mine:
+            missing.discard(old)
+        else:
+            broken.append(f"{old} -> {new}")
 
 print(f"le pack déclare {len(pack)} opérations, les nouveaux templates {len(mine)}")
 print(f"absentes : {len(missing)}")
@@ -116,4 +140,10 @@ print()
 for name in sorted(missing):
     print("   ", name)
 
-raise SystemExit(1 if missing else 0)
+if broken:
+    print()
+    print("renommages annoncés dont le nouveau nom est absent de la sortie :")
+    for line in broken:
+        print("   ", line)
+
+raise SystemExit(1 if missing or broken else 0)

@@ -130,6 +130,12 @@ T jsonDecode(std::string const & json) {
     return decode<T>(Viper::JsonValueDecoder::json_decode(json, type(tag<T>{}), definitions()));
 }
 
+/// Le JSON du modèle lui-même -- ses définitions, pas une de ses valeurs.
+///
+/// Le pack l'écrit à côté des encodeurs par type, ce qui le fait passer pour l'un d'eux.
+/// Il n'en est pas un : c'est le modèle qui se décrit, et il n'a pas de type.
+std::string jsonDefinitions();
+
 /// L'empreinte d'une Value -- ce que les deux familles avaient en commun sans le dire.
 ///
 /// DEUX NOMS, ET LE PACK AVAIT RAISON DE LE FAIRE. Appeler les deux `hexdigest` ne marche
