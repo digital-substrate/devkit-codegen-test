@@ -1,6 +1,7 @@
 #include "Topology_Test.hpp"
 
 #include "Viper_Databasing.hpp"
+#include "Viper_BlobId.hpp"
 #include "Viper_BlobInfo.hpp"
 #include "Viper_BlobLayout.hpp"
 
@@ -22,9 +23,16 @@ void seed(std::uint64_t value) {
 }
 
 std::shared_ptr<Viper::Fuzzer> const & fuzzer() {
-    if (!g_fuzzer)
+    if (!g_fuzzer) {
         g_fuzzer = g_seed ? Viper::Fuzzer::make(Codec::definitions(), *g_seed)
                           : Viper::Fuzzer::make(Codec::definitions());
+
+        // L'IDENTIFIANT DE BLOB EST ÉPINGLÉ, ET IL LE DOIT. Un document peut tenir un
+        // `blob_id`, et la base refuse une référence vers un blob absent -- un identifiant
+        // tiré au hasard n'en désigne aucun. Épinglé sur le blob vide, que l'épreuve crée
+        // autour d'elle. Le pack fait la même chose, à la même ligne.
+        g_fuzzer->blobId = Viper::BlobId{Viper::BlobLayout{}, Viper::Blob{}};
+    }
     return g_fuzzer;
 }
 

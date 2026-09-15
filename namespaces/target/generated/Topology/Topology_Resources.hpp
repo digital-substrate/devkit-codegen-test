@@ -1,12 +1,11 @@
 // modèle Topology — le modèle, en octets.
 //
-// LE .DSM EMBARQUÉ TEL QUEL. Le pack ne génère aucun code d'enregistrement de types : il
-// embarque le document et le décode au chargement. Il n'y a donc pas d'artefact
-// d'enregistrement à découper par namespace -- et la liste des concepts connus, celle que
-// `isKnown` interroge, est cette donnée-là.
+// LE .DSM EMBARQUÉ TEL QUEL. Le générateur ne produit aucun code d'enregistrement de types :
+// le document est embarqué et décodé au chargement. C'est aussi la réponse à « qui tient la
+// liste des concepts connus » -- cette donnée-là.
 //
-// Produit par `link/resources.py`, qui encode les définitions du modèle comme le fait la
-// chaîne de production. Ce n'est pas un texte écrit à la main : ce sont les octets.
+// Produit par `link/resources.py`, qui encode les définitions comme la chaîne de production
+// le fait. Ce n'est pas un texte écrit à la main : ce sont les octets.
 #ifndef Topology_Resources_hpp
 #define Topology_Resources_hpp
 

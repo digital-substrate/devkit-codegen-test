@@ -151,8 +151,18 @@ template<class K, class V> std::shared_ptr<Type> const & type(tag<std::map<K,V>>
     static std::shared_ptr<Type> const instance{TypeMap::make(type(tag<K>{}), type(tag<V>{}))};
     return instance;
 }
+/// UN VEC EST UN TABLEAU DE NOMBRES ; UNE MAT EST UN TABLEAU DE VEC. Le runtime refuse un
+/// `TypeVec` dont l'élément n'est pas numérique, et le générateur écrit une mat
+/// `std::array<std::array<T,N>,M>` -- deux surcharges, distinguées par la forme du type,
+/// et c'est C++ qui fait le tri.
 template<class T, std::size_t N> std::shared_ptr<Type> const & type(tag<std::array<T,N>>) {
     static std::shared_ptr<Type> const instance{TypeVec::make(type(tag<T>{}), N)};
+    return instance;
+}
+
+template<class T, std::size_t N, std::size_t M>
+std::shared_ptr<Type> const & type(tag<std::array<std::array<T,N>,M>>) {
+    static std::shared_ptr<Type> const instance{TypeMat::make(type(tag<T>{}), N, M)};
     return instance;
 }
 template<class... T> std::shared_ptr<Type> const & type(tag<std::tuple<T...>>) {
@@ -279,8 +289,24 @@ template<class T, std::size_t N> std::array<T,N> read(Reader & r, tag<std::array
 template<class... T> std::tuple<T...> read(Reader & r, tag<std::tuple<T...>>) {
     return std::tuple<T...>{read(r, tag<T>{})...};
 }
-template<class First, class... Rest> std::variant<First, Rest...> read(Reader & r, tag<std::variant<First, Rest...>>) {
-    return read(r, tag<First>{});
+/// LIRE UN VARIANT, C'EST LIRE SON INDEX PUIS L'ALTERNATIVE QU'IL DÉSIGNE. La première
+/// version lisait toujours la première alternative -- ce qui marche tant qu'on n'éprouve
+/// que des variants dont la valeur est la première, et se voit dès qu'on exécute.
+///
+/// Le pli n'évalue que la branche dont l'index correspond : `read` est dans le vrai du
+/// ternaire, donc une seule alternative est lue, et elle est la bonne.
+template<class V, class... T, std::size_t... I>
+V readAlternative(Reader & r, std::size_t index, std::index_sequence<I...>) {
+    V result;
+    ((I == index ? (void)(result = V{std::in_place_index<I>, read(r, tag<T>{})}) : void()), ...);
+
+    return result;
+}
+
+template<class... T> std::variant<T...> read(Reader & r, tag<std::variant<T...>>) {
+    auto const index{r.streamReading->readUInt8()};
+
+    return readAlternative<std::variant<T...>, T...>(r, index, std::index_sequence_for<T...>{});
 }
 template<class K, class V> std::map<K,V> read(Reader & r, tag<std::map<K,V>>) {
     std::map<K,V> result;

@@ -14,7 +14,26 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from dsviper import DSMBuilder                                      # noqa: E402
 
-MODELS = {"Topology": ROOT / "namespaces" / "definitions"}
+HEAD = """// modèle {model} — le modèle, en octets.
+//
+// LE .DSM EMBARQUÉ TEL QUEL. Le générateur ne produit aucun code d'enregistrement de types :
+// le document est embarqué et décodé au chargement. C'est aussi la réponse à « qui tient la
+// liste des concepts connus » -- cette donnée-là.
+//
+// Produit par `link/resources.py`, qui encode les définitions comme la chaîne de production
+// le fait. Ce n'est pas un texte écrit à la main : ce sont les octets.
+#ifndef {model}_Resources_hpp
+#define {model}_Resources_hpp
+
+#include <cstddef>
+
+"""
+
+MODELS = {
+    "Topology": ROOT / "namespaces" / "definitions",
+    "Crossing": ROOT / "crossing" / "definitions",
+    "Features": ROOT / "features" / "all.dsm",
+}
 
 for model, definitions in MODELS.items():
     report, dsm, _ = DSMBuilder.assemble(str(definitions)).parse()
@@ -25,7 +44,8 @@ for model, definitions in MODELS.items():
     body = blob.embed("definitions").replace(
         "static unsigned char const definitions_data[]", "inline constexpr unsigned char definitions[]")
 
-    out = ROOT / "namespaces/target/hand" / f"{model}_Resources.hpp"
-    head = out.read_text().split("namespace")[0]
-    out.write_text(f"{head}namespace {model}::Resources {{\n\n{body}\n}} // namespace {model}::Resources\n\n#endif\n")
+    out = ROOT / "namespaces/target/link/resources" / f"{model}_Resources.hpp"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(HEAD.format(model=model) + f"namespace {model}::Resources {{\n\n{body}\n"
+                   f"}} // namespace {model}::Resources\n\n#endif\n")
     print(f"  {model:10} {len(body.splitlines()):5} lignes d'octets")

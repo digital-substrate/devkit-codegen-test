@@ -10,7 +10,11 @@
 #include "Viper_StreamReading.hpp"
 #include "Viper_StreamWriting.hpp"
 #include "Viper_TypeAnyConcept.hpp"
+#include "Viper_TypeAny.hpp"
 #include "Viper_Types.hpp"
+#include "Viper_ValueReader.hpp"
+#include "Viper_ValueWriter.hpp"
+#include "Viper_Values.hpp"
 
 namespace Viper::Codec {
 
@@ -38,6 +42,11 @@ void write(Writer & w, BlobId const & value) { w.streamWriting->writeBlobId(valu
 void write(Writer & w, CommitId const & value) { w.streamWriting->writeCommitId(value); }
 void write(Writer & w, Blob const & value) { w.streamWriting->writeBlob(value); }
 
+/// UN `any` PORTE SA PROPRE VALUE, DONC IL PASSE PAR LE CODEC NON TYPÉ. C'est le seul type
+/// dont la forme n'est pas connue à l'écriture : le runtime écrit son type puis son
+/// contenu, et c'est exactement ce que `ValueWriter` fait. Le pack écrit la même ligne.
+void write(Writer & w, Any const & value) { ValueWriter::write(value.value(), w.streamWriting); }
+
 bool          read(Reader & r, tag<bool>) { return r.streamReading->readBool(); }
 std::uint8_t  read(Reader & r, tag<std::uint8_t>) { return r.streamReading->readUInt8(); }
 std::uint16_t read(Reader & r, tag<std::uint16_t>) { return r.streamReading->readUInt16(); }
@@ -54,5 +63,9 @@ UUId          read(Reader & r, tag<UUId>) { return r.streamReading->readUUId(); 
 BlobId        read(Reader & r, tag<BlobId>) { return r.streamReading->readBlobId(); }
 CommitId      read(Reader & r, tag<CommitId>) { return r.streamReading->readCommitId(); }
 Blob          read(Reader & r, tag<Blob>) { return r.streamReading->readBlob(); }
+
+Any read(Reader & r, tag<Any>) {
+    return Any{ValueAny::cast(ValueReader::read(TypeAny::Instance(), r.streamReading, r.definitions))};
+}
 
 } // namespace Viper::Codec

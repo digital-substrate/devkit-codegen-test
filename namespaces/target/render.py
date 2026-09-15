@@ -79,8 +79,7 @@ def render(model, definitions, out):
 
 
 def compile_tree(model, out):
-    resources = (ROOT / "namespaces/target/hand/Topology_Resources.hpp").read_text()
-    (out / f"{model}_Resources.hpp").write_text(resources.replace("Topology", model))
+    shutil.copy(HERE / "link/resources" / f"{model}_Resources.hpp", out)
 
     for name in FROM_HAND.get(model, []):
         shutil.copy(HAND[model] / name, out / name)
@@ -138,43 +137,62 @@ for directory in STANDALONE:
 #
 # TANT QUE C'ÉTAIT `-fsyntax-only`, UNE SIGNATURE RECOPIÉE DE TRAVERS PASSAIT. Sept défauts
 # ne se sont montrés qu'ici : deux références à un temporaire mort, un `auto` qui créait une
-# conversion, un identifiant de blob inventé, une transaction absente, un modèle jamais
-# donné à la base -- et un défaut dans le runtime lui-même.
-if not arguments.check:
-    link = target / "link"
-    link.mkdir(parents=True, exist_ok=True)
-    topology = target / "Topology"
-    shutil.copy(HERE / "hand/Topology_Resources.hpp", topology)
-    shutil.copy(HERE / "link/application.cpp", topology)
+# conversion, un identifiant de blob inventé, une transaction absente, un modèle jamais donné
+# à la base -- et un défaut dans le runtime lui-même.
+#
+# Ce qu'un modèle apporte en plus du rendu : ses octets, et les fonctions de ses pools. Le
+# premier est produit par `link/resources.py`, le second est ce qu'une application écrit.
+APPLICATION = {"Topology": HERE / "link/application.cpp"}
+LIBS = [ROOT / "build" / f"lib{n}.a" for n in ("viper", "sqlite", "hash", "antlr4", "pugixml")]
 
-    objects, failed = [], []
-    sources = sorted(topology.glob("*.cpp")) + sorted(PROPOSED.glob("*.cpp"))
-    for source in sources:
+
+def link_and_run(model, out):
+    resource = HERE / "link/resources" / f"{model}_Resources.hpp"
+    if not resource.exists() or not all(l.exists() for l in LIBS):
+        print(f"  {model + ' lien':16} ignoré (ressource ou libviper.a absente)")
+        return 0
+
+    shutil.copy(resource, out)
+    if model in APPLICATION:
+        shutil.copy(APPLICATION[model], out)
+
+    link = target / "link" / model
+    if link.exists():
+        shutil.rmtree(link)
+    link.mkdir(parents=True)
+
+    objects = []
+    for source in sorted(out.glob("*.cpp")) + sorted(PROPOSED.glob("*.cpp")):
         o = link / (source.stem + ".o")
-        r = subprocess.run(["clang++", "-std=c++20", "-c", "-I", str(topology),
-                            *INCLUDES, "-o", str(o), str(source)], capture_output=True, text=True)
-        (objects if not r.returncode else failed).append(source.name)
-
-    libs = [str(ROOT / "build" / f"lib{n}.a") for n in ("viper", "sqlite", "hash", "antlr4", "pugixml")]
-    if failed or not all(Path(l).exists() for l in libs):
-        print(f"  lien       ignoré ({len(failed)} objets manquants ou libviper.a absent)")
-    else:
-        binary = link / "testapp"
-        r = subprocess.run(["clang++", "-std=c++20", "-o", str(binary),
-                            *[str(link / (Path(n).stem + ".o")) for n in objects], *libs],
-                           capture_output=True, text=True)
+        r = subprocess.run(["clang++", "-std=c++20", "-c", "-I", str(out), *INCLUDES,
+                            "-o", str(o), str(source)], capture_output=True, text=True)
         if r.returncode:
-            print("  lien       échoue")
-            for l in r.stderr.splitlines()[:6]:
+            print(f"  !! {source.name}")
+            for l in r.stderr.splitlines()[:4]:
                 print(f"     {l}")
-            status = 1
-        else:
-            r = subprocess.run([str(binary)], capture_output=True, text=True)
-            print(f"  lien       {len(objects)} objets, et le programme "
-                  + ("tourne" if r.returncode == 0 else "ÉCHOUE"))
-            if r.returncode:
-                print("    " + r.stderr.strip().splitlines()[-1] if r.stderr.strip() else "")
-                status = 1
+            return 1
+        objects.append(str(o))
+
+    binary = link / "testapp"
+    r = subprocess.run(["clang++", "-std=c++20", "-o", str(binary), *objects,
+                        *[str(l) for l in LIBS]], capture_output=True, text=True)
+    if r.returncode:
+        print(f"  {model + ' lien':16} échoue")
+        for l in r.stderr.splitlines()[:6]:
+            print(f"     {l}")
+        return 1
+
+    r = subprocess.run([str(binary)], capture_output=True, text=True)
+    print(f"  {model + ' lien':16} {len(objects):3} objets, et le programme "
+          + ("tourne" if r.returncode == 0 else "ÉCHOUE"))
+    if r.returncode and r.stderr.strip():
+        print("     " + r.stderr.strip().splitlines()[-1])
+    return r.returncode
+
+
+if not arguments.check:
+    for model in MODELS:
+        status |= link_and_run(model, target / model)
 
 if arguments.check:
     same = subprocess.run(["diff", "-r", str(HERE / "generated"), str(target)],

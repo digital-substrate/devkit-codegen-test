@@ -32,6 +32,8 @@
 #include "Viper_JsonValueDecoder.hpp"
 
 #include <memory>
+#include <string>
+#include <typeinfo>
 
 namespace Features::Test {
 
@@ -56,6 +58,15 @@ T fuzz() {
 // seule variable. Écrits une fois ici, ils ne demandent plus qu'une liste de types.
 
 /// Fabriquer, écrire sur un flux, relire, comparer.
+/// LE NOM DU TYPE DANS L'ÉCHEC, et ce n'est pas un confort de mise au point : une épreuve
+/// qui dit « un aller-retour a échoué » sur soixante types oblige à les reprendre un par un.
+/// `typeid` le donne sans que le modèle ait à le porter.
+template<class T>
+std::string const & named() {
+    static std::string const instance{std::string{"Test."} + typeid(T).name()};
+    return instance;
+}
+
 template<class T>
 void roundTripStream() {
     auto const value{fuzz<T>()};
@@ -72,7 +83,7 @@ void roundTripStream() {
     auto const decoder{Codec::stream()->createDecoder(blob)};
     Viper::Codec::Reader reader{decoder, Codec::definitions()};
 
-    VIPER_ASSERT("Features.Test", read(reader, Viper::Codec::tag<T>{}) == value);
+    VIPER_ASSERT(named<T>(), read(reader, Viper::Codec::tag<T>{}) == value);
 }
 
 /// Fabriquer une Value, la décoder, la ré-encoder, comparer.
@@ -81,7 +92,7 @@ void roundTripValue() {
     auto const value{fuzzValue<T>()};
     auto const back{Codec::encode(Codec::decode<T>(value))};
 
-    VIPER_ASSERT("Features.Test", value->equal(back));
+    VIPER_ASSERT(named<T>(), value->equal(back));
 }
 
 /// Fabriquer, passer par JSON, comparer.
@@ -92,7 +103,7 @@ void roundTripJson() {
     auto const back{Viper::JsonValueDecoder::json_decode(json, type(Viper::Codec::tag<T>{}),
                                                          Codec::definitions())};
 
-    VIPER_ASSERT("Features.Test", value->equal(back));
+    VIPER_ASSERT(named<T>(), value->equal(back));
 }
 
 /// Les trois d'un coup, ce qu'une unité appelle une fois par type qu'elle déclare.
