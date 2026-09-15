@@ -73,6 +73,27 @@ Chacun porte dans son fichier la raison de sa forme.
 
 Le Python, lui, tourne contre le vrai `dsviper` — et il est à peine commencé.
 
+## Une dette ouverte, datée du 2026-09-15
+
+**Le renommage du namespace de `all.dsm` (`Test` → `Demo`) a cassé la suite d'épreuves
+Python du projet `features`.** Elle est écrite à la main — 16 fichiers, 4 068 lignes, 474
+tests — et elle nomme les types générés : `Test_ConceptAKey` est devenu `Demo_ConceptAKey`.
+Mesuré : 474 tests passaient, 69 s'exécutaient encore après régénération du paquet.
+
+Un `Test_` → `Demo_` mécanique ne suffit pas : il en reste 3 échecs et 35 erreurs, donc
+d'autres formes de noms portent le namespace. La suite TypeScript est probablement dans le
+même cas ; elle n'a pas été mesurée.
+
+**Reporté après Node, et délibérément.** Ces tests éprouvent le paquet de l'ancien pack ;
+les porter maintenant serait les porter deux fois, puisque le vrai but est de les faire
+tourner contre le rendu des nouveaux templates — et ça, c'est l'équivalent Python de ce que
+`ServiceClient.cpp` a été pour le C++ : 4 068 lignes d'épreuves que personne ici n'a
+écrites. Cette épreuve-là vaut, et elle vaudra mieux quand les quatre cibles auront une
+forme arrêtée.
+
+Rien dans le chantier ne dépend de cette suite : `check.py` ne la lance pas et n'en dit
+rien. Elle est notée ici pour ne pas être oubliée, pas pour être contournée.
+
 ## Ce qui reste
 
 1. **Les deux ajouts au runtime**, dans l'ordre : viper d'abord, kibo ensuite, le pack en
