@@ -305,13 +305,33 @@ bool isKnown(Viper::AnyConceptKey const & key) {
 }
 ```
 
-**And it is the right answer, not merely the shortest.** The pack freezes the list at
-generation: `isKnown()` compares against a set closed on the day the code was written. But
-`Viper::Definitions::extendConcepts` exists — a model learns concepts at run time, from a
-peer or from a newer document. A frozen list then answers "unknown" for a concept the runtime
-knows, which the pack acknowledges in its own comment on `description`.
+**That answer was half of one, and the missing half is which definitions.** Asking
+`definitions()` — the model's own, embedded when kibo ran — gives *exactly* what the pack's
+enumerated list gives: the same set, closed at the same instant, consulted differently.
+Replacing a list with a query over that list gains nothing.
 
-Asking the model gives today's answer. Enumerating gives the generation day's.
+The set opens somewhere else. `Database::open` loads the file's definitions and checks only
+that they **contain** the model's:
+
+```cpp
+definitions->extend(Viper::SQLiteHelper::definitions(sqlite));
+if (!definitions->contains(Topology::definitions()))
+    throw …
+```
+
+So `db->definitions()` may be strictly larger — written by a newer build, or by another model
+sharing the file. A peer over RPC is the same case, and `extendConcepts` exists for it.
+
+A key arriving from there can name a concept the embedded model does not have, and the only
+useful answer is the one given by **the definitions in hand**. So the set is an argument:
+
+```cpp
+bool isKnown(AnyConceptKey const &, std::shared_ptr<Viper::Definitions const> const &);
+```
+
+with a one-argument form against the embedded model for a caller who has nothing else — and
+that form is the generation-day answer, which is what it is worth. What changes the answer is
+not how you ask, but who you ask.
 
 `isMember` is the same call with one difference carried by the descriptor rather than by the
 code: a concept descriptor asks whether the instance derives from it, a club descriptor asks

@@ -67,15 +67,32 @@ plain_read(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<
 // QUATRE DÉCLARATIONS, ET LE CRITÈRE EST LE MÊME POUR LES QUATRE : elles ont besoin du
 // modèle entier, donc aucun namespace ne peut en répondre. C'est tout ce que le socle est.
 model(m) ::= <<
-// <m.namespace> — les fonctions injectées, qu'aucun namespace ne peut revendiquer.
+// <m.namespace> — les fonctions que kibo injecte, et qu'aucun namespace ne peut revendiquer.
 //
-// <m.generated>
+// LE SOCLE, ET IL TIENT EN QUATRE DÉCLARATIONS. Chacune a besoin du modèle entier, ce qui
+// est le seul critère : ce dont aucun namespace ne peut répondre.
+//
+//   definitions()   le modèle tel que le runtime le connaît
+//   stream()        le codec de flux par lequel passe l'aller-retour
+//   encode/decode   le passage entre une valeur C++ et une Viper::Value
+//   la clé non typée -- description, isKnown, isMember
+//
+// ENCODE ET DECODE SONT GÉNÉRIQUES. Le pack écrit le même corps de dix lignes une fois par
+// type, dont seul le suffixe change -- et ce qui change est exactement ce qu'une unité
+// implémente : `write`/`read` pour la valeur, `type` pour son descripteur, trouvés par ADL
+// sur l'argument ou sur le tag. Un template remplace toute la famille encode_X / decode_X.
+//
+// CE QUI N'EST PAS ICI, ET Y ÉTAIT IL Y A UNE HEURE. Les descripteurs des primitives et des
+// conteneurs. Ils semblaient avoir besoin du modèle ; ils n'en ont pas besoin : le type
+// d'une primitive est un singleton du runtime, celui d'un conteneur se compose à partir de
+// ceux de ses éléments. Ils sont donc entièrement du runtime, et le socle rétrécit d'autant.
 
 #ifndef <m.namespace>_Codec_hpp
 #define <m.namespace>_Codec_hpp
 
-#include "<m.include.AnyConcept>"
+#include "<m.namespace>_AnyConcept.hpp"
 #include "Viper_Codec.hpp"
+#include "Viper_Definitions.hpp"
 #include "Viper_Stream.hpp"
 #include "Viper_Values.hpp"
 
@@ -95,26 +112,48 @@ std::shared_ptr\<Viper::StreamCodecInstancing> const & stream();
 // ── ce que la clé non typée ne peut pas porter elle-même ──
 //
 // LES DEUX SEULS MEMBRES DE L'AnyConceptKey GÉNÉRÉE QUI AVAIENT BESOIN DU MODÈLE. Les sept
-// autres sont deux uuid, leurs comparaisons et leur hachage. Fonctions libres et non
-// membres : un seul membre aurait obligé la classe entière à être générée.
+// autres sont deux uuid, leurs comparaisons et leur hachage. Fonctions libres, et non
+// membres : un seul membre aurait obligé la classe entière à être générée -- ce qu'elle
+// est aujourd'hui, pour ces deux lignes.
 
-/// Le nom du concept, tel que le modèle le connaît, ou une forme brute s'il l'ignore.
-std::string description(<m.namespace>::AnyConceptKey const & key);
+// L'ENSEMBLE DES CONCEPTS CONNUS EST UN ARGUMENT, ET C'EST TOUT L'INTÉRÊT DE CES TROIS
+// FONCTIONS. Les poser sur `definitions()` -- les définitions du modèle, embarquées quand
+// kibo a tourné -- reviendrait exactement à l'énumération que le pack écrit : le même
+// ensemble, clos au même instant, interrogé autrement. Remplacer une liste par une requête
+// sur cette liste ne gagne rien.
+//
+// L'ensemble s'ouvre ailleurs. `Database::open` charge les définitions du fichier et vérifie
+// seulement qu'elles *contiennent* celles du modèle : ce que la base rend peut être
+// strictement plus large -- écrit par une version plus récente, ou par un autre modèle
+// partageant le fichier. Un pair en RPC est dans le même cas, et `extendConcepts` existe
+// pour cela.
+//
+// Une clé qui vient de là peut nommer un concept que le modèle embarqué ignore, et la seule
+// réponse utile est celle des définitions qu'on a en main.
 
-/// Si ce modèle sait de quel concept il s'agit. Faux pour une instance venue d'un modèle
-/// plus récent, ce qui est normal et non une erreur.
-bool isKnown(<m.namespace>::AnyConceptKey const & key);
+/// Le nom du concept selon ces définitions, ou une forme brute si elles l'ignorent.
+std::string description(AnyConceptKey const & key,
+                        std::shared_ptr\<Viper::Definitions const> const & definitions);
+
+/// Si ces définitions savent de quel concept il s'agit.
+bool isKnown(AnyConceptKey const & key,
+             std::shared_ptr\<Viper::Definitions const> const & definitions);
 
 /// Si l'instance relève de ce concept -- ou de ce club. Le descripteur porte la différence
-/// entre dériver et adhérer, et c'est l'unique opération dont un rétrécissement a besoin.
-bool isMember(<m.namespace>::AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_);
+/// entre dériver et adhérer.
+bool isMember(AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_,
+              std::shared_ptr\<Viper::Definitions const> const & definitions);
+
+// Les mêmes contre le modèle embarqué, pour l'appelant qui n'a rien d'autre en main. Ce sont
+// les réponses du jour de la génération, et c'est ce qu'elles valent.
+
+inline std::string description(AnyConceptKey const & key) { return description(key, definitions()); }
+inline bool isKnown(AnyConceptKey const & key) { return isKnown(key, definitions()); }
+inline bool isMember(AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_) {
+    return isMember(key, concept_, definitions());
+}
 
 // ── le passage entre les deux mondes ──
-//
-// GÉNÉRIQUES, ET C'EST LE RÉSULTAT DE TOUT CE QUI PRÉCÈDE. Le pack écrit le même corps de
-// dix lignes une fois par type, dont seul le suffixe change ; ce qui change est exactement
-// ce qu'une unité implémente -- `write`/`read` pour la valeur, `type` pour son descripteur
-// -- et les deux sont trouvés par ADL. Un template remplace la famille encode_X/decode_X.
 
 /// Une valeur C++ vers une Viper::Value.
 template\<class T>
@@ -140,4 +179,5 @@ T decode(std::shared_ptr\<Viper::Value const> const & value) {
 } // namespace <m.namespace>::Codec
 
 #endif
+
 >>

@@ -23,6 +23,7 @@
 
 #include "Topology_AnyConcept.hpp"
 #include "Viper_Codec.hpp"
+#include "Viper_Definitions.hpp"
 #include "Viper_Stream.hpp"
 #include "Viper_Values.hpp"
 
@@ -46,18 +47,42 @@ std::shared_ptr<Viper::StreamCodecInstancing> const & stream();
 // membres : un seul membre aurait obligé la classe entière à être générée -- ce qu'elle
 // est aujourd'hui, pour ces deux lignes.
 
-/// Le nom du concept, tel que le modèle le connaît, ou une forme brute s'il l'ignore.
-std::string description(Topology::AnyConceptKey const & key);
+// L'ENSEMBLE DES CONCEPTS CONNUS EST UN ARGUMENT, ET C'EST TOUT L'INTÉRÊT DE CES TROIS
+// FONCTIONS. Les poser sur `definitions()` -- les définitions du modèle, embarquées quand
+// kibo a tourné -- reviendrait exactement à l'énumération que le pack écrit : le même
+// ensemble, clos au même instant, interrogé autrement. Remplacer une liste par une requête
+// sur cette liste ne gagne rien.
+//
+// L'ensemble s'ouvre ailleurs. `Database::open` charge les définitions du fichier et vérifie
+// seulement qu'elles *contiennent* celles du modèle : ce que la base rend peut être
+// strictement plus large -- écrit par une version plus récente, ou par un autre modèle
+// partageant le fichier. Un pair en RPC est dans le même cas, et `extendConcepts` existe
+// pour cela.
+//
+// Une clé qui vient de là peut nommer un concept que le modèle embarqué ignore, et la seule
+// réponse utile est celle des définitions qu'on a en main.
 
-/// Si ce modèle sait de quel concept il s'agit. Faux pour une instance venue d'un modèle
-/// plus récent, ce qui est un cas normal et non une erreur.
-bool isKnown(Topology::AnyConceptKey const & key);
+/// Le nom du concept selon ces définitions, ou une forme brute si elles l'ignorent.
+std::string description(AnyConceptKey const & key,
+                        std::shared_ptr<Viper::Definitions const> const & definitions);
+
+/// Si ces définitions savent de quel concept il s'agit.
+bool isKnown(AnyConceptKey const & key,
+             std::shared_ptr<Viper::Definitions const> const & definitions);
 
 /// Si l'instance relève de ce concept -- ou de ce club. Le descripteur porte la différence
-/// entre dériver et adhérer ; c'est l'unique opération dont un rétrécissement a besoin, et
-/// elle est ici parce que la réponse dépend de la hiérarchie du modèle, pas de l'unité qui
-/// pose la question.
-bool isMember(Topology::AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & concept_);
+/// entre dériver et adhérer.
+bool isMember(AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & concept_,
+              std::shared_ptr<Viper::Definitions const> const & definitions);
+
+// Les mêmes contre le modèle embarqué, pour l'appelant qui n'a rien d'autre en main. Ce sont
+// les réponses du jour de la génération, et c'est ce qu'elles valent.
+
+inline std::string description(AnyConceptKey const & key) { return description(key, definitions()); }
+inline bool isKnown(AnyConceptKey const & key) { return isKnown(key, definitions()); }
+inline bool isMember(AnyConceptKey const & key, std::shared_ptr<Viper::Type> const & concept_) {
+    return isMember(key, concept_, definitions());
+}
 
 // ── le passage entre les deux mondes ──
 
