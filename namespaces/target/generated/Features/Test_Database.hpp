@@ -12,7 +12,7 @@
 #include <optional>
 #include <set>
 
-namespace Test::Database::Any_concept::propertiesAnyConceptAny {
+namespace Test::Database::AnyConcept::propertiesAnyConceptAny {
 
 std::set<::Features::AnyConceptKey> keys(std::shared_ptr<Viper::Database const> const & db);
 bool has(std::shared_ptr<Viper::Database const> const & db, ::Features::AnyConceptKey const & key);
@@ -20,7 +20,7 @@ std::optional<Viper::Any> get(std::shared_ptr<Viper::Database const> const & db,
 bool set(std::shared_ptr<Viper::Database> const & db, ::Features::AnyConceptKey const & key, Viper::Any const & document);
 bool del(std::shared_ptr<Viper::Database> const & db, ::Features::AnyConceptKey const & key);
 
-} // namespace Test::Database::Any_concept::propertiesAnyConceptAny
+} // namespace Test::Database::AnyConcept::propertiesAnyConceptAny
 
 namespace Test::Database::ConceptA::properties {
 

@@ -21,7 +21,7 @@
 #include <optional>
 #include <set>
 
-namespace Test::Attachments::Any_concept::propertiesAnyConceptAny {
+namespace Test::Attachments::AnyConcept::propertiesAnyConceptAny {
 
 /// L'identité de cet attachment dans le modèle. La portée nomme déjà l'attachment, donc
 /// il ne reste que le nom.
@@ -37,7 +37,7 @@ void set(Viper::AttachmentMutating & mutating, ::Features::AnyConceptKey const &
 
 void diff(Viper::AttachmentMutating & mutating, ::Features::AnyConceptKey const & key, Viper::Any const & value,
           bool recursive = false);
-} // namespace Test::Attachments::Any_concept::propertiesAnyConceptAny
+} // namespace Test::Attachments::AnyConcept::propertiesAnyConceptAny
 
 namespace Test::Attachments::ConceptA::properties {
 

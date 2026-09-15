@@ -9,10 +9,10 @@
 
 #include "Features_Db.hpp"
 
-namespace Test::Database::Any_concept::propertiesAnyConceptAny {
+namespace Test::Database::AnyConcept::propertiesAnyConceptAny {
 
 namespace {
-auto const & attachment() { return Test::Attachments::Any_concept::propertiesAnyConceptAny::runtimeId; }
+auto const & attachment() { return Test::Attachments::AnyConcept::propertiesAnyConceptAny::runtimeId; }
 }
 
 std::set<::Features::AnyConceptKey> keys(std::shared_ptr<Viper::Database const> const & db) {
@@ -35,7 +35,7 @@ bool del(std::shared_ptr<Viper::Database> const & db, ::Features::AnyConceptKey 
     return Features::Db::del(db, attachment(), key);
 }
 
-} // namespace Test::Database::Any_concept::propertiesAnyConceptAny
+} // namespace Test::Database::AnyConcept::propertiesAnyConceptAny
 
 namespace Test::Database::ConceptA::properties {
 

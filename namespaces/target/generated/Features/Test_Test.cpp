@@ -31,7 +31,7 @@ void test() {
 
 void testDatabase(std::shared_ptr<Viper::Database> const & db) {
     Features::Test::roundTripAttachment<::Features::AnyConceptKey, Viper::Any>(
-        db, Attachments::Any_concept::propertiesAnyConceptAny::runtimeId);
+        db, Attachments::AnyConcept::propertiesAnyConceptAny::runtimeId);
     Features::Test::roundTripAttachment<ConceptAKey, StructureV>(
         db, Attachments::ConceptA::properties::runtimeId);
     Features::Test::roundTripAttachment<ConceptAKey, std::int8_t>(

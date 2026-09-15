@@ -15,7 +15,7 @@
 #include "Viper_Path.hpp"
 #include "Viper_Values.hpp"
 
-namespace Test::Attachments::Any_concept::propertiesAnyConceptAny {
+namespace Test::Attachments::AnyConcept::propertiesAnyConceptAny {
 
 Viper::UUId const runtimeId{Viper::UUId::parse("8de8e47b-58e8-5699-59a7-5a3193aef7f1")};
 
@@ -62,7 +62,7 @@ void diff(Viper::AttachmentMutating & mutating, ::Features::AnyConceptKey const 
           bool recursive) {
     mutating.diff(attachment(), encodeKey(key), Features::Codec::encode(value), recursive);
 }
-} // namespace Test::Attachments::Any_concept::propertiesAnyConceptAny
+} // namespace Test::Attachments::AnyConcept::propertiesAnyConceptAny
 
 namespace Test::Attachments::ConceptA::properties {
 
