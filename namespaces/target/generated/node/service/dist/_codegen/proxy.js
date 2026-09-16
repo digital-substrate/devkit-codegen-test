@@ -40,6 +40,28 @@ export class Proxy {
     toJSON() {
         return this.value.toJSON();
     }
+    /** Ce qui vient de la valeur et ne dépend d'aucun type : l'encodage, la copie, l'empreinte.
+     *
+     * DEUX BASES, LA MÊME SURFACE. `Proxy` enveloppe une valeur nommée — une structure, une
+     * clé — et `View` un conteneur ; elles diffèrent par ce qu'elles offrent en propre et pas
+     * par ce qu'elles transmettent. Une structure qui ne sait pas s'encoder alors qu'un
+     * vecteur le sait serait une asymétrie que rien ne justifie.
+     */
+    encode(streamCodecInstancing) {
+        return dsviper.Value.encode(this.value, streamCodecInstancing);
+    }
+    hexdigest() {
+        return dsviper.Value.hexdigest(this.value);
+    }
+    copy() {
+        return new this.constructor(this.value.copy());
+    }
+    type() {
+        return this.value.type();
+    }
+    hash() {
+        return this.value.hash();
+    }
     toString() {
         return this.value.toString();
     }
@@ -59,20 +81,24 @@ export class AnyConceptKey extends Proxy {
     static wrap(value) {
         return new AnyConceptKey(dsviper.ValueKey.cast(value));
     }
-    get instanceId() {
+    instanceId() {
         return this.value.instanceId();
     }
-    get runtimeId() {
+    runtimeId() {
         return this.value.typeConcept().runtimeId();
     }
     isValid() {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+    description() {
+        return `${this.value.instanceId().encoded()}:AnyConceptKey`
+            + `(${this.value.typeConcept().representation()}Key)`;
     }
     /** La clé vue comme celle d'un concept donné, ou `undefined` si elle n'en est pas une. */
     as(concept) {
         return this.value.type().equals(concept.type()) ? concept.wrap(this.value) : undefined;
     }
     toString() {
-        return `AnyConceptKey(${this.value.representation()})`;
+        return this.description();
     }
 }

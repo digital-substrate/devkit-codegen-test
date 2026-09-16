@@ -1,0 +1,44 @@
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/service/Service.dsm.json by kibo-2.0.0.jar
+/** Service — les conteneurs que le modèle mentionne, nommés et constructibles. */
+import dsviper from "@digitalsubstrate/dsviper";
+import { optionalOf, sequenceOf } from "./_codegen/container.js";
+import * as demo from "./demo/data.js";
+// ── les descripteurs de type, chaînés par forme ──
+//
+// Chaque forme compose celui de ses éléments, donc la chaîne s'arrête sur un primitif ou sur un
+// type qu'une unité déclare. Mémoïsés : le runtime rend un objet neuf à chaque appel, et deux
+// descripteurs égaux mais distincts feraient échouer la comparaison d'une construction.
+// LES NOMS SUIVENT LE SUFFIXE DE TYPE, tel que le modèle le compose : `_uint8`,
+// `_Demo_ConceptAKey`. Les mettre en casse de TypeScript obligerait à refaire cette
+// composition ici, et à la refaire juste.
+const type_bool = () => dsviper.Type.BOOL;
+const type_uint8 = () => dsviper.Type.UINT8;
+const type_uint16 = () => dsviper.Type.UINT16;
+const type_uint32 = () => dsviper.Type.UINT32;
+const type_uint64 = () => dsviper.Type.UINT64;
+const type_int8 = () => dsviper.Type.INT8;
+const type_int16 = () => dsviper.Type.INT16;
+const type_int32 = () => dsviper.Type.INT32;
+const type_int64 = () => dsviper.Type.INT64;
+const type_float = () => dsviper.Type.FLOAT;
+const type_double = () => dsviper.Type.DOUBLE;
+const type_string = () => dsviper.Type.STRING;
+const type_blob = () => dsviper.Type.BLOB;
+const type_blob_id = () => dsviper.Type.BLOB_ID;
+const type_commit_id = () => dsviper.Type.COMMIT_ID;
+const type_uuid = () => dsviper.Type.UUID;
+const type_any = () => dsviper.Type.ANY;
+const type_AnyConceptKey = () => new dsviper.TypeKey(dsviper.Type.ANY_CONCEPT);
+const type_Demo_PlayerKey = () => demo.PlayerKey.type();
+const type_Demo_Level = () => demo.Level.type();
+const type_Demo_PlayerProperty = () => demo.PlayerProperty.type();
+const type_Demo_Vector3 = () => demo.Vector3.type();
+const type_optional_AnyConceptKey = () => new dsviper.TypeOptional(type_AnyConceptKey());
+const type_optional_Demo_PlayerKey = () => new dsviper.TypeOptional(type_Demo_PlayerKey());
+const type_optional_Demo_PlayerProperty = () => new dsviper.TypeOptional(type_Demo_PlayerProperty());
+const type_set_Demo_PlayerKey = () => new dsviper.TypeSet(type_Demo_PlayerKey());
+// ── et le nom de chaque forme ──
+export const Optional_AnyConceptKey = optionalOf(type_optional_AnyConceptKey);
+export const Optional_Demo_PlayerKey = optionalOf(type_optional_Demo_PlayerKey);
+export const Optional_Demo_PlayerProperty = optionalOf(type_optional_Demo_PlayerProperty);
+export const Set_Demo_PlayerKey = sequenceOf(type_set_Demo_PlayerKey);

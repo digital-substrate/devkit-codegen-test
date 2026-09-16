@@ -12,6 +12,7 @@
  */
 import dsviper from "@digitalsubstrate/dsviper";
 
+import { setDefinitions } from "./_codegen/registry.js";
 import { B64_DEFINITIONS } from "./resources.js";
 
 let cached: dsviper.DefinitionsConst | undefined;
@@ -23,3 +24,7 @@ export function definitions(): dsviper.DefinitionsConst {
     }
     return cached;
 }
+
+setDefinitions(definitions);
+
+export * from "./containers.js";

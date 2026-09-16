@@ -46,6 +46,34 @@ export abstract class Proxy<V extends dsviper.Value> {
         return this.value.toJSON();
     }
 
+    /** Ce qui vient de la valeur et ne dépend d'aucun type : l'encodage, la copie, l'empreinte.
+     *
+     * DEUX BASES, LA MÊME SURFACE. `Proxy` enveloppe une valeur nommée — une structure, une
+     * clé — et `View` un conteneur ; elles diffèrent par ce qu'elles offrent en propre et pas
+     * par ce qu'elles transmettent. Une structure qui ne sait pas s'encoder alors qu'un
+     * vecteur le sait serait une asymétrie que rien ne justifie.
+     */
+    encode(streamCodecInstancing?: dsviper.StreamCodecInstancing): dsviper.ValueBlob {
+        return dsviper.Value.encode(this.value, streamCodecInstancing);
+    }
+
+    hexdigest(): string {
+        return dsviper.Value.hexdigest(this.value);
+    }
+
+    copy(): this {
+        return new (this.constructor as new (value: V) => this)(
+            (this.value as unknown as { copy(): V }).copy());
+    }
+
+    type(): dsviper.Type {
+        return this.value.type();
+    }
+
+    hash(): bigint {
+        return this.value.hash();
+    }
+
     toString(): string {
         return this.value.toString();
     }
@@ -68,16 +96,21 @@ export class AnyConceptKey extends Proxy<dsviper.ValueKey> {
         return new AnyConceptKey(dsviper.ValueKey.cast(value));
     }
 
-    get instanceId(): dsviper.ValueUUId {
+    instanceId(): dsviper.ValueUUId {
         return this.value.instanceId();
     }
 
-    get runtimeId(): dsviper.ValueUUId {
+    runtimeId(): dsviper.ValueUUId {
         return this.value.typeConcept().runtimeId();
     }
 
     isValid(): boolean {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+
+    description(): string {
+        return `${this.value.instanceId().encoded()}:AnyConceptKey`
+             + `(${this.value.typeConcept().representation()}Key)`;
     }
 
     /** La clé vue comme celle d'un concept donné, ou `undefined` si elle n'en est pas une. */
@@ -86,6 +119,6 @@ export class AnyConceptKey extends Proxy<dsviper.ValueKey> {
     }
 
     override toString(): string {
-        return `AnyConceptKey(${this.value.representation()})`;
+        return this.description();
     }
 }

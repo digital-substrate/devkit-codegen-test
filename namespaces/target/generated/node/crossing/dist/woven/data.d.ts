@@ -30,10 +30,21 @@ export declare class KnotKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): KnotKey;
     static wrap(value: dsviper.Value): KnotKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): KnotKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): KnotKey | undefined;
     toString(): string;
 }
 /**
@@ -55,10 +66,21 @@ export declare class DerivedKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): DerivedKey;
     static wrap(value: dsviper.Value): DerivedKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): DerivedKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): DerivedKey | undefined;
     toString(): string;
 }
 /** Une poignée sur une instance d'un membre de Woven::Weave. */
@@ -67,7 +89,12 @@ export declare class WeaveKey extends Proxy<dsviper.ValueKey> {
     static type(): dsviper.TypeKey;
     constructor(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey);
     static wrap(value: dsviper.Value): WeaveKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): WeaveKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
+    isValid(): boolean;
+    description(): string;
+    isKnown(): boolean;
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
     as<K>(member: {
         concept(): dsviper.TypeConcept;
@@ -80,6 +107,7 @@ export declare class Entities extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Entities;
+    static decode(blob: dsviper.ValueBlob): Entities;
     get f_core_grade(): core.Grade;
     set f_core_grade(value: core.Grade);
     get f_parts_grade(): parts.Grade;
@@ -106,6 +134,7 @@ export declare class Composites extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Composites;
+    static decode(blob: dsviper.ValueBlob): Composites;
     get f_tuple(): Sequence<core.Colour | parts.Colour>;
     set f_tuple(value: Sequence<core.Colour | parts.Colour>);
     get f_optional(): core.ThingKey | undefined;
@@ -128,6 +157,7 @@ export declare class Nested extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Nested;
+    static decode(blob: dsviper.ValueBlob): Nested;
     get f_composites(): Composites;
     set f_composites(value: Composites);
     get f_entities(): Entities;

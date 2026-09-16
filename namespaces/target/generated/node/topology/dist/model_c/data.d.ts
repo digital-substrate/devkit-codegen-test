@@ -22,9 +22,20 @@ export declare class MarkerKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): MarkerKey;
     static wrap(value: dsviper.Value): MarkerKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): MarkerKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): MarkerKey | undefined;
     toString(): string;
 }

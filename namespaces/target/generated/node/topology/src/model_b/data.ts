@@ -5,7 +5,7 @@ import dsviper from "@digitalsubstrate/dsviper";
 
 import { Mapping, Ordered, Sequence } from "../_codegen/container.js";
 import { Proxy } from "../_codegen/proxy.js";
-import { AnyConceptKey, register, setField, wrap } from "../_codegen/registry.js";
+import { AnyConceptKey, isKnown, register, setField, wrap } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
 
 // ── l'identité de cette unité dans le modèle ──
@@ -60,21 +60,50 @@ export class MaterialKey extends Proxy<dsviper.ValueKey> {
         return new MaterialKey(dsviper.ValueKey.cast(value));
     }
 
-    get instanceId(): dsviper.ValueUUId {
+    static decode(blob: dsviper.ValueBlob): MaterialKey {
+        return new MaterialKey(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, MaterialKey.type(), definitions())));
+    }
+
+    instanceId(): dsviper.ValueUUId {
         return this.value.instanceId();
     }
 
+    runtimeId(): dsviper.ValueUUId {
+        return this.value.typeConcept().runtimeId();
+    }
+
     isValid(): boolean {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string {
+        return `${this.value.instanceId().encoded()}:ModelB::MaterialKey`;
+    }
+
+    isKnown(): boolean {
+        return isKnown(this.value);
     }
 
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey {
+    toAnyConceptKey(): AnyConceptKey {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
 
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): MaterialKey | undefined {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(MATERIAL)
+            ? new MaterialKey(value) : undefined;
+    }
+
     override toString(): string {
-        return `ModelB::MaterialKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 
@@ -99,6 +128,11 @@ export class Colour extends Proxy<dsviper.ValueStructure> {
 
     static wrap(value: dsviper.Value): Colour {
         return new Colour(dsviper.ValueStructure.cast(value));
+    }
+
+    static decode(blob: dsviper.ValueBlob): Colour {
+        return new Colour(dsviper.ValueStructure.cast(
+            dsviper.Value.decode(blob, Colour.type(), definitions())));
     }
 
     get r(): number {

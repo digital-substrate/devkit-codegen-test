@@ -5,7 +5,7 @@ import dsviper from "@digitalsubstrate/dsviper";
 
 import { Mapping, Ordered, Sequence } from "../_codegen/container.js";
 import { Proxy } from "../_codegen/proxy.js";
-import { AnyConceptKey, register, setField, wrap } from "../_codegen/registry.js";
+import { AnyConceptKey, isKnown, register, setField, wrap } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
 
 // ── l'identité de cette unité dans le modèle ──
@@ -66,21 +66,50 @@ export class OtherKey extends Proxy<dsviper.ValueKey> {
         return new OtherKey(dsviper.ValueKey.cast(value));
     }
 
-    get instanceId(): dsviper.ValueUUId {
+    static decode(blob: dsviper.ValueBlob): OtherKey {
+        return new OtherKey(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, OtherKey.type(), definitions())));
+    }
+
+    instanceId(): dsviper.ValueUUId {
         return this.value.instanceId();
     }
 
+    runtimeId(): dsviper.ValueUUId {
+        return this.value.typeConcept().runtimeId();
+    }
+
     isValid(): boolean {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string {
+        return `${this.value.instanceId().encoded()}:Core::OtherKey`;
+    }
+
+    isKnown(): boolean {
+        return isKnown(this.value);
     }
 
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey {
+    toAnyConceptKey(): AnyConceptKey {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
 
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): OtherKey | undefined {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(OTHER)
+            ? new OtherKey(value) : undefined;
+    }
+
     override toString(): string {
-        return `Core::OtherKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 
@@ -128,21 +157,50 @@ export class ThingKey extends Proxy<dsviper.ValueKey> {
         return new ThingKey(dsviper.ValueKey.cast(value));
     }
 
-    get instanceId(): dsviper.ValueUUId {
+    static decode(blob: dsviper.ValueBlob): ThingKey {
+        return new ThingKey(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, ThingKey.type(), definitions())));
+    }
+
+    instanceId(): dsviper.ValueUUId {
         return this.value.instanceId();
     }
 
+    runtimeId(): dsviper.ValueUUId {
+        return this.value.typeConcept().runtimeId();
+    }
+
     isValid(): boolean {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string {
+        return `${this.value.instanceId().encoded()}:Core::ThingKey`;
+    }
+
+    isKnown(): boolean {
+        return isKnown(this.value);
     }
 
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey {
+    toAnyConceptKey(): AnyConceptKey {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
 
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): ThingKey | undefined {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(THING)
+            ? new ThingKey(value) : undefined;
+    }
+
     override toString(): string {
-        return `Core::ThingKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 
@@ -190,21 +248,50 @@ export class SubThingKey extends Proxy<dsviper.ValueKey> {
         return new SubThingKey(dsviper.ValueKey.cast(value));
     }
 
-    get instanceId(): dsviper.ValueUUId {
+    static decode(blob: dsviper.ValueBlob): SubThingKey {
+        return new SubThingKey(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, SubThingKey.type(), definitions())));
+    }
+
+    instanceId(): dsviper.ValueUUId {
         return this.value.instanceId();
     }
 
+    runtimeId(): dsviper.ValueUUId {
+        return this.value.typeConcept().runtimeId();
+    }
+
     isValid(): boolean {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string {
+        return `${this.value.instanceId().encoded()}:Core::SubThingKey`;
+    }
+
+    isKnown(): boolean {
+        return isKnown(this.value);
     }
 
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey {
+    toAnyConceptKey(): AnyConceptKey {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
 
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): SubThingKey | undefined {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(SUB_THING)
+            ? new SubThingKey(value) : undefined;
+    }
+
     override toString(): string {
-        return `Core::SubThingKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 
@@ -233,8 +320,29 @@ export class KlubKey extends Proxy<dsviper.ValueKey> {
         return new KlubKey(dsviper.ValueKey.cast(value));
     }
 
-    get instanceId(): dsviper.ValueUUId {
+    static decode(blob: dsviper.ValueBlob): KlubKey {
+        return new KlubKey(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, KlubKey.type(), definitions())));
+    }
+
+    instanceId(): dsviper.ValueUUId {
         return this.value.instanceId();
+    }
+
+    runtimeId(): dsviper.ValueUUId {
+        return this.value.typeConcept().runtimeId();
+    }
+
+    isValid(): boolean {
+        return this.value.instanceId().isValid();
+    }
+
+    description(): string {
+        return `${this.value.instanceId().encoded()}:Core::KlubKey`;
+    }
+
+    isKnown(): boolean {
+        return isKnown(this.value);
     }
 
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
@@ -244,7 +352,7 @@ export class KlubKey extends Proxy<dsviper.ValueKey> {
     }
 
     override toString(): string {
-        return `Core::KlubKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 
@@ -270,6 +378,41 @@ export const Grade = {
     wrap(value: dsviper.Value): Grade {
         return dsviper.ValueEnumeration.cast(value).name() as Grade;
     },
+
+    /** Depuis le nom d'un cas, et depuis rien d'autre. */
+    fromStr(name: string): Grade {
+        if (typeof name !== "string") {
+            throw new TypeError(`${name} n'est pas un nom de cas`);
+        }
+        return Grade.wrap(new dsviper.ValueEnumeration(Grade.type(), name));
+    },
+
+    /** Le nom d'un cas — qui *est* le cas, puisqu'un littéral porte son propre nom. */
+    name(held: Grade): string {
+        return held;
+    },
+
+    /** Le rang d'un cas, tel que le modèle les numérote. */
+    index(held: Grade): number {
+        return Grade.type().cases().findIndex((c) => c.name() === held);
+    },
+
+    /** La valeur du runtime derrière un cas — ce qui porte l'encodage et l'empreinte. */
+    value(held: Grade): dsviper.ValueEnumeration {
+        return new dsviper.ValueEnumeration(Grade.type(), held);
+    },
+
+    encode(held: Grade): dsviper.ValueBlob {
+        return dsviper.Value.encode(Grade.value(held));
+    },
+
+    decode(blob: dsviper.ValueBlob): Grade {
+        return Grade.wrap(dsviper.Value.decode(blob, Grade.type(), definitions()));
+    },
+
+    hexdigest(held: Grade): string {
+        return dsviper.Value.hexdigest(Grade.value(held));
+    },
 };
 
 let colourType: dsviper.TypeStructure | undefined;
@@ -293,6 +436,11 @@ export class Colour extends Proxy<dsviper.ValueStructure> {
 
     static wrap(value: dsviper.Value): Colour {
         return new Colour(dsviper.ValueStructure.cast(value));
+    }
+
+    static decode(blob: dsviper.ValueBlob): Colour {
+        return new Colour(dsviper.ValueStructure.cast(
+            dsviper.Value.decode(blob, Colour.type(), definitions())));
     }
 
     get r(): number {
@@ -342,6 +490,11 @@ export class Scalars extends Proxy<dsviper.ValueStructure> {
 
     static wrap(value: dsviper.Value): Scalars {
         return new Scalars(dsviper.ValueStructure.cast(value));
+    }
+
+    static decode(blob: dsviper.ValueBlob): Scalars {
+        return new Scalars(dsviper.ValueStructure.cast(
+            dsviper.Value.decode(blob, Scalars.type(), definitions())));
     }
 
     get f_bool(): boolean {
@@ -520,6 +673,11 @@ export class Single extends Proxy<dsviper.ValueStructure> {
         return new Single(dsviper.ValueStructure.cast(value));
     }
 
+    static decode(blob: dsviper.ValueBlob): Single {
+        return new Single(dsviper.ValueStructure.cast(
+            dsviper.Value.decode(blob, Single.type(), definitions())));
+    }
+
     get f_single(): number {
         return this.value.at("f_single") as number;
     }
@@ -551,6 +709,11 @@ export class Bag extends Proxy<dsviper.ValueStructure> {
 
     static wrap(value: dsviper.Value): Bag {
         return new Bag(dsviper.ValueStructure.cast(value));
+    }
+
+    static decode(blob: dsviper.ValueBlob): Bag {
+        return new Bag(dsviper.ValueStructure.cast(
+            dsviper.Value.decode(blob, Bag.type(), definitions())));
     }
 
     get members(): Sequence<ThingKey> {
@@ -599,6 +762,11 @@ export class Defaults extends Proxy<dsviper.ValueStructure> {
 
     static wrap(value: dsviper.Value): Defaults {
         return new Defaults(dsviper.ValueStructure.cast(value));
+    }
+
+    static decode(blob: dsviper.ValueBlob): Defaults {
+        return new Defaults(dsviper.ValueStructure.cast(
+            dsviper.Value.decode(blob, Defaults.type(), definitions())));
     }
 
     get f_uint8(): number {

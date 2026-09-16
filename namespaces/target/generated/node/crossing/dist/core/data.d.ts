@@ -30,10 +30,21 @@ export declare class OtherKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): OtherKey;
     static wrap(value: dsviper.Value): OtherKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): OtherKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): OtherKey | undefined;
     toString(): string;
 }
 /**
@@ -55,10 +66,21 @@ export declare class ThingKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ThingKey;
     static wrap(value: dsviper.Value): ThingKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): ThingKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): ThingKey | undefined;
     toString(): string;
 }
 /**
@@ -80,10 +102,21 @@ export declare class SubThingKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): SubThingKey;
     static wrap(value: dsviper.Value): SubThingKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): SubThingKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): SubThingKey | undefined;
     toString(): string;
 }
 /** Une poignée sur une instance d'un membre de Core::Klub. */
@@ -92,7 +125,12 @@ export declare class KlubKey extends Proxy<dsviper.ValueKey> {
     static type(): dsviper.TypeKey;
     constructor(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey);
     static wrap(value: dsviper.Value): KlubKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): KlubKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
+    isValid(): boolean;
+    description(): string;
+    isKnown(): boolean;
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
     as<K>(member: {
         concept(): dsviper.TypeConcept;
@@ -113,12 +151,24 @@ export declare const Grade: {
     HIGH: string;
     type(): dsviper.TypeEnumeration;
     wrap(value: dsviper.Value): Grade;
+    /** Depuis le nom d'un cas, et depuis rien d'autre. */
+    fromStr(name: string): Grade;
+    /** Le nom d'un cas — qui *est* le cas, puisqu'un littéral porte son propre nom. */
+    name(held: Grade): string;
+    /** Le rang d'un cas, tel que le modèle les numérote. */
+    index(held: Grade): number;
+    /** La valeur du runtime derrière un cas — ce qui porte l'encodage et l'empreinte. */
+    value(held: Grade): dsviper.ValueEnumeration;
+    encode(held: Grade): dsviper.ValueBlob;
+    decode(blob: dsviper.ValueBlob): Grade;
+    hexdigest(held: Grade): string;
 };
 /** Core::Colour. Le même nom que Parts::Colour, un type différent -- la collision de re-export. */
 export declare class Colour extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Colour;
+    static decode(blob: dsviper.ValueBlob): Colour;
     get r(): number;
     set r(value: number);
     get g(): number;
@@ -132,6 +182,7 @@ export declare class Scalars extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Scalars;
+    static decode(blob: dsviper.ValueBlob): Scalars;
     get f_bool(): boolean;
     set f_bool(value: boolean);
     get f_uint8(): number;
@@ -176,6 +227,7 @@ export declare class Single extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Single;
+    static decode(blob: dsviper.ValueBlob): Single;
     get f_single(): number;
     set f_single(value: number);
 }
@@ -185,6 +237,7 @@ export declare class Bag extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Bag;
+    static decode(blob: dsviper.ValueBlob): Bag;
     get members(): Sequence<ThingKey>;
     set members(value: Sequence<ThingKey>);
     get tints(): Mapping<ThingKey, Colour>;
@@ -197,6 +250,7 @@ export declare class Defaults extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Defaults;
+    static decode(blob: dsviper.ValueBlob): Defaults;
     get f_uint8(): number;
     set f_uint8(value: number);
     get f_float(): number;

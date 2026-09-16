@@ -2,7 +2,7 @@
 /** Demo — les types que ce namespace déclare. */
 import dsviper from "@digitalsubstrate/dsviper";
 import { Proxy } from "../_codegen/proxy.js";
-import { AnyConceptKey, register, setField, wrap } from "../_codegen/registry.js";
+import { AnyConceptKey, isKnown, register, setField, wrap } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
 // ── l'identité de cette unité dans le modèle ──
 //
@@ -49,18 +49,41 @@ export class PlayerKey extends Proxy {
     static wrap(value) {
         return new PlayerKey(dsviper.ValueKey.cast(value));
     }
-    get instanceId() {
+    static decode(blob) {
+        return new PlayerKey(dsviper.ValueKey.cast(dsviper.Value.decode(blob, PlayerKey.type(), definitions())));
+    }
+    instanceId() {
         return this.value.instanceId();
     }
+    runtimeId() {
+        return this.value.typeConcept().runtimeId();
+    }
     isValid() {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description() {
+        return `${this.value.instanceId().encoded()}:Demo::PlayerKey`;
+    }
+    isKnown() {
+        return isKnown(this.value);
     }
     /** La clé, vue sans son type. */
-    toAny() {
+    toAnyConceptKey() {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key) {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(PLAYER)
+            ? new PlayerKey(value) : undefined;
+    }
     toString() {
-        return `Demo::PlayerKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 let levelType;
@@ -79,6 +102,34 @@ export const Level = {
     },
     wrap(value) {
         return dsviper.ValueEnumeration.cast(value).name();
+    },
+    /** Depuis le nom d'un cas, et depuis rien d'autre. */
+    fromStr(name) {
+        if (typeof name !== "string") {
+            throw new TypeError(`${name} n'est pas un nom de cas`);
+        }
+        return Level.wrap(new dsviper.ValueEnumeration(Level.type(), name));
+    },
+    /** Le nom d'un cas — qui *est* le cas, puisqu'un littéral porte son propre nom. */
+    name(held) {
+        return held;
+    },
+    /** Le rang d'un cas, tel que le modèle les numérote. */
+    index(held) {
+        return Level.type().cases().findIndex((c) => c.name() === held);
+    },
+    /** La valeur du runtime derrière un cas — ce qui porte l'encodage et l'empreinte. */
+    value(held) {
+        return new dsviper.ValueEnumeration(Level.type(), held);
+    },
+    encode(held) {
+        return dsviper.Value.encode(Level.value(held));
+    },
+    decode(blob) {
+        return Level.wrap(dsviper.Value.decode(blob, Level.type(), definitions()));
+    },
+    hexdigest(held) {
+        return dsviper.Value.hexdigest(Level.value(held));
     },
 };
 let player_propertyType;
@@ -100,6 +151,9 @@ export class PlayerProperty extends Proxy {
     }
     static wrap(value) {
         return new PlayerProperty(dsviper.ValueStructure.cast(value));
+    }
+    static decode(blob) {
+        return new PlayerProperty(dsviper.ValueStructure.cast(dsviper.Value.decode(blob, PlayerProperty.type(), definitions())));
     }
     get nickname() {
         return this.value.at("nickname");
@@ -133,6 +187,9 @@ export class Vector3 extends Proxy {
     }
     static wrap(value) {
         return new Vector3(dsviper.ValueStructure.cast(value));
+    }
+    static decode(blob) {
+        return new Vector3(dsviper.ValueStructure.cast(dsviper.Value.decode(blob, Vector3.type(), definitions())));
     }
     get x() {
         return this.value.at("x");

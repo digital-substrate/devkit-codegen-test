@@ -23,10 +23,21 @@ export declare class MaterialKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): MaterialKey;
     static wrap(value: dsviper.Value): MaterialKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): MaterialKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): MaterialKey | undefined;
     toString(): string;
 }
 /** ModelB::Colour. Colour in floating point -- the same name as ModelA::Colour, a different type. */
@@ -34,6 +45,7 @@ export declare class Colour extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Colour;
+    static decode(blob: dsviper.ValueBlob): Colour;
     get r(): number;
     set r(value: number);
     get g(): number;

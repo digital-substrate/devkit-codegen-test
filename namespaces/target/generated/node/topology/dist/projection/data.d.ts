@@ -26,10 +26,21 @@ export declare class LinkKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): LinkKey;
     static wrap(value: dsviper.Value): LinkKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): LinkKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): LinkKey | undefined;
     toString(): string;
 }
 /**
@@ -51,10 +62,21 @@ export declare class DerivedMaterialKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): DerivedMaterialKey;
     static wrap(value: dsviper.Value): DerivedMaterialKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): DerivedMaterialKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): DerivedMaterialKey | undefined;
     toString(): string;
 }
 /** Projection::Pair. Two keys from two namespaces in one structure -- the key<NS::C> edge. */
@@ -62,6 +84,7 @@ export declare class Pair extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Pair;
+    static decode(blob: dsviper.ValueBlob): Pair;
     get a(): model_a.MaterialKey;
     set a(value: model_a.MaterialKey);
     get b(): model_b.MaterialKey;

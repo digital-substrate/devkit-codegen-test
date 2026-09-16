@@ -8,7 +8,7 @@
  */
 import dsviper from "@digitalsubstrate/dsviper";
 
-import { Mapping, Ordered, Sequence } from "./container.js";
+import { Mapping, Optional, Ordered, Sequence, Variant, View } from "./container.js";
 import { AnyConceptKey, Proxy } from "./proxy.js";
 
 export { AnyConceptKey } from "./proxy.js";
@@ -19,6 +19,22 @@ export interface Wrapping {
 }
 
 const classes = new Map<string, Wrapping>();
+
+// LES DÉFINITIONS DU MODÈLE, POSÉES PAR LE PAQUET. Décoder demande de savoir quel modèle lire,
+// et une vue générique ne peut pas le deviner — c'est la seule chose que le socle emprunte au
+// paquet qui l'accueille, et il la reçoit au chargement.
+let definitions: (() => dsviper.DefinitionsConst) | undefined;
+
+export function setDefinitions(accessor: () => dsviper.DefinitionsConst): void {
+    definitions = accessor;
+}
+
+export function definitionsOf(): dsviper.DefinitionsConst {
+    if (definitions === undefined) {
+        throw new Error("le paquet n'a pas déclaré ses définitions");
+    }
+    return definitions();
+}
 
 /** Déclarer les classes d'une unité, par l'identifiant d'exécution de leur type.
  *
@@ -72,6 +88,17 @@ export function wrap(value: dsviper.OutputValue): any {
         case "mat":
         case "tuple":
             return new Sequence(value);
+        // CE QUI A UNE REPRÉSENTATION NATIVE SORT NATIF, ET RIEN D'AUTRE. C'est le principe du
+        // passage, et sa limite : un `uuid` se *dit* comme une chaîne mais n'en est pas une —
+        // le rendre ainsi ferait perdre son type, et la position qu'il désigne cesserait
+        // d'être acceptée là où on la repasse. Les quelques types qui n'ont pas d'équivalent
+        // gardent donc le leur.
+        case "bool":
+        case "uint8": case "uint16": case "uint32": case "uint64":
+        case "int8": case "int16": case "int32": case "int64":
+        case "float": case "double":
+        case "string":
+            return dsviper.Value.dumps(value);
         default:
             return value;
     }
@@ -102,11 +129,18 @@ function named(type: dsviper.Type): Wrapping {
  * convertir un objet JavaScript depuis le descripteur de type. Un tableau est déplié élément
  * par élément, parce qu'il peut en contenir qui, eux, ont une classe.
  */
+/** Le modèle connaît-il le concept que cette clé désigne ?
+ *
+ * LA TABLE RÉPOND, ET C'EST LA MÊME QUESTION. Un identifiant absent est celui d'un concept
+ * qu'aucune unité chargée ne porte. Le pack compare à une liste figée à la génération ; ici la
+ * réponse suit ce qui est réellement chargé.
+ */
+export function isKnown(value: dsviper.ValueKey): boolean {
+    return classes.has(value.typeConcept().runtimeId().encoded());
+}
+
 export function unwrap(value: unknown): dsviper.InputValue {
-    if (value instanceof Proxy) {
-        return value.value;
-    }
-    if (value instanceof Sequence || value instanceof Ordered || value instanceof Mapping) {
+    if (value instanceof Proxy || value instanceof View) {
         return value.value;
     }
     if (Array.isArray(value)) {

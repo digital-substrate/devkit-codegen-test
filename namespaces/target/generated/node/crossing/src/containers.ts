@@ -1,0 +1,138 @@
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/crossing/Crossing.dsm.json by kibo-2.0.0.jar
+
+/** Crossing — les conteneurs que le modèle mentionne, nommés et constructibles. */
+import dsviper from "@digitalsubstrate/dsviper";
+
+import { mappingOf, optionalOf, orderedOf, sequenceOf, variantOf } from "./_codegen/container.js";
+import * as core from "./core/data.js";
+import * as parts from "./parts/data.js";
+import * as woven from "./woven/data.js";
+
+// ── les descripteurs de type, chaînés par forme ──
+//
+// Chaque forme compose celui de ses éléments, donc la chaîne s'arrête sur un primitif ou sur un
+// type qu'une unité déclare. Mémoïsés : le runtime rend un objet neuf à chaque appel, et deux
+// descripteurs égaux mais distincts feraient échouer la comparaison d'une construction.
+
+// LES NOMS SUIVENT LE SUFFIXE DE TYPE, tel que le modèle le compose : `_uint8`,
+// `_Demo_ConceptAKey`. Les mettre en casse de TypeScript obligerait à refaire cette
+// composition ici, et à la refaire juste.
+const type_bool = () => dsviper.Type.BOOL;
+const type_uint8 = () => dsviper.Type.UINT8;
+const type_uint16 = () => dsviper.Type.UINT16;
+const type_uint32 = () => dsviper.Type.UINT32;
+const type_uint64 = () => dsviper.Type.UINT64;
+const type_int8 = () => dsviper.Type.INT8;
+const type_int16 = () => dsviper.Type.INT16;
+const type_int32 = () => dsviper.Type.INT32;
+const type_int64 = () => dsviper.Type.INT64;
+const type_float = () => dsviper.Type.FLOAT;
+const type_double = () => dsviper.Type.DOUBLE;
+const type_string = () => dsviper.Type.STRING;
+const type_blob = () => dsviper.Type.BLOB;
+const type_blob_id = () => dsviper.Type.BLOB_ID;
+const type_commit_id = () => dsviper.Type.COMMIT_ID;
+const type_uuid = () => dsviper.Type.UUID;
+const type_any = () => dsviper.Type.ANY;
+const type_AnyConceptKey = () => new dsviper.TypeKey(dsviper.Type.ANY_CONCEPT);
+const type_Core_OtherKey = () => core.OtherKey.type();
+const type_Core_ThingKey = () => core.ThingKey.type();
+const type_Core_SubThingKey = () => core.SubThingKey.type();
+const type_Core_KlubKey = () => core.KlubKey.type();
+const type_Core_Grade = () => core.Grade.type();
+const type_Core_Bag = () => core.Bag.type();
+const type_Core_Colour = () => core.Colour.type();
+const type_Core_Defaults = () => core.Defaults.type();
+const type_Core_Scalars = () => core.Scalars.type();
+const type_Core_Single = () => core.Single.type();
+const type_Parts_ThingKey = () => parts.ThingKey.type();
+const type_Parts_Grade = () => parts.Grade.type();
+const type_Parts_Colour = () => parts.Colour.type();
+const type_Woven_KnotKey = () => woven.KnotKey.type();
+const type_Woven_DerivedKey = () => woven.DerivedKey.type();
+const type_Woven_WeaveKey = () => woven.WeaveKey.type();
+const type_Woven_Composites = () => woven.Composites.type();
+const type_Woven_Entities = () => woven.Entities.type();
+const type_Woven_Nested = () => woven.Nested.type();
+
+const type_vec2_uint8 = () => new dsviper.TypeVec(type_uint8(), 2);
+const type_mat2x2_uint8 = () => new dsviper.TypeMat(type_uint8(), 2, 2);
+const type_tuple_Core_Colour_Parts_Colour = () => new dsviper.TypeTuple([type_Core_Colour(), type_Parts_Colour()]);
+const type_optional_AnyConceptKey = () => new dsviper.TypeOptional(type_AnyConceptKey());
+const type_optional_Core_Bag = () => new dsviper.TypeOptional(type_Core_Bag());
+const type_optional_Core_Colour = () => new dsviper.TypeOptional(type_Core_Colour());
+const type_optional_Core_Grade = () => new dsviper.TypeOptional(type_Core_Grade());
+const type_optional_Core_KlubKey = () => new dsviper.TypeOptional(type_Core_KlubKey());
+const type_optional_Core_OtherKey = () => new dsviper.TypeOptional(type_Core_OtherKey());
+const type_optional_Core_Scalars = () => new dsviper.TypeOptional(type_Core_Scalars());
+const type_optional_Core_SubThingKey = () => new dsviper.TypeOptional(type_Core_SubThingKey());
+const type_optional_Core_ThingKey = () => new dsviper.TypeOptional(type_Core_ThingKey());
+const type_optional_Parts_Colour = () => new dsviper.TypeOptional(type_Parts_Colour());
+const type_optional_Parts_ThingKey = () => new dsviper.TypeOptional(type_Parts_ThingKey());
+const type_optional_xarray_Core_Colour = () => new dsviper.TypeOptional(type_xarray_Core_Colour());
+const type_optional_Woven_Composites = () => new dsviper.TypeOptional(type_Woven_Composites());
+const type_optional_Woven_DerivedKey = () => new dsviper.TypeOptional(type_Woven_DerivedKey());
+const type_optional_Woven_KnotKey = () => new dsviper.TypeOptional(type_Woven_KnotKey());
+const type_optional_Woven_WeaveKey = () => new dsviper.TypeOptional(type_Woven_WeaveKey());
+const type_optional_map_Core_Grade_to_Parts_Colour = () => new dsviper.TypeOptional(type_map_Core_Grade_to_Parts_Colour());
+const type_optional_map_Core_ThingKey_to_Core_Colour = () => new dsviper.TypeOptional(type_map_Core_ThingKey_to_Core_Colour());
+const type_optional_map_Core_ThingKey_to_Parts_ThingKey = () => new dsviper.TypeOptional(type_map_Core_ThingKey_to_Parts_ThingKey());
+const type_optional_optional_Core_ThingKey = () => new dsviper.TypeOptional(type_optional_Core_ThingKey());
+const type_optional_set_Core_ThingKey = () => new dsviper.TypeOptional(type_set_Core_ThingKey());
+const type_optional_tuple_Core_Colour_Parts_Colour = () => new dsviper.TypeOptional(type_tuple_Core_Colour_Parts_Colour());
+const type_optional_variant_Core_Colour_Parts_Colour = () => new dsviper.TypeOptional(type_variant_Core_Colour_Parts_Colour());
+const type_optional_vector_Parts_Colour = () => new dsviper.TypeOptional(type_vector_Parts_Colour());
+const type_vector_Core_Colour = () => new dsviper.TypeVector(type_Core_Colour());
+const type_vector_Parts_Colour = () => new dsviper.TypeVector(type_Parts_Colour());
+const type_set_Core_Grade = () => new dsviper.TypeSet(type_Core_Grade());
+const type_set_Core_ThingKey = () => new dsviper.TypeSet(type_Core_ThingKey());
+const type_set_Parts_ThingKey = () => new dsviper.TypeSet(type_Parts_ThingKey());
+const type_set_Woven_KnotKey = () => new dsviper.TypeSet(type_Woven_KnotKey());
+const type_map_Core_Grade_to_Parts_Colour = () => new dsviper.TypeMap(type_Core_Grade(), type_Parts_Colour());
+const type_map_Core_ThingKey_to_Core_Colour = () => new dsviper.TypeMap(type_Core_ThingKey(), type_Core_Colour());
+const type_map_Core_ThingKey_to_Parts_ThingKey = () => new dsviper.TypeMap(type_Core_ThingKey(), type_Parts_ThingKey());
+const type_xarray_Core_Colour = () => new dsviper.TypeXArray(type_Core_Colour());
+const type_variant_Core_Colour_Parts_Colour_string = () => new dsviper.TypeVariant([type_Core_Colour(), type_Parts_Colour(), type_string()]);
+const type_variant_Core_Colour_Parts_Colour = () => new dsviper.TypeVariant([type_Core_Colour(), type_Parts_Colour()]);
+
+// ── et le nom de chaque forme ──
+
+export const Vec_uint8_2 = sequenceOf(type_vec2_uint8);
+export const Mat_uint8_2_2 = sequenceOf(type_mat2x2_uint8);
+export const Tuple_Core_Colour_Parts_Colour = sequenceOf(type_tuple_Core_Colour_Parts_Colour);
+export const Optional_AnyConceptKey = optionalOf(type_optional_AnyConceptKey);
+export const Optional_Core_Bag = optionalOf(type_optional_Core_Bag);
+export const Optional_Core_Colour = optionalOf(type_optional_Core_Colour);
+export const Optional_Core_Grade = optionalOf(type_optional_Core_Grade);
+export const Optional_Core_KlubKey = optionalOf(type_optional_Core_KlubKey);
+export const Optional_Core_OtherKey = optionalOf(type_optional_Core_OtherKey);
+export const Optional_Core_Scalars = optionalOf(type_optional_Core_Scalars);
+export const Optional_Core_SubThingKey = optionalOf(type_optional_Core_SubThingKey);
+export const Optional_Core_ThingKey = optionalOf(type_optional_Core_ThingKey);
+export const Optional_Parts_Colour = optionalOf(type_optional_Parts_Colour);
+export const Optional_Parts_ThingKey = optionalOf(type_optional_Parts_ThingKey);
+export const Optional_XArray_Core_Colour = optionalOf(type_optional_xarray_Core_Colour);
+export const Optional_Woven_Composites = optionalOf(type_optional_Woven_Composites);
+export const Optional_Woven_DerivedKey = optionalOf(type_optional_Woven_DerivedKey);
+export const Optional_Woven_KnotKey = optionalOf(type_optional_Woven_KnotKey);
+export const Optional_Woven_WeaveKey = optionalOf(type_optional_Woven_WeaveKey);
+export const Optional_Map_Core_Grade_to_Parts_Colour = optionalOf(type_optional_map_Core_Grade_to_Parts_Colour);
+export const Optional_Map_Core_ThingKey_to_Core_Colour = optionalOf(type_optional_map_Core_ThingKey_to_Core_Colour);
+export const Optional_Map_Core_ThingKey_to_Parts_ThingKey = optionalOf(type_optional_map_Core_ThingKey_to_Parts_ThingKey);
+export const Optional_Optional_Core_ThingKey = optionalOf(type_optional_optional_Core_ThingKey);
+export const Optional_Set_Core_ThingKey = optionalOf(type_optional_set_Core_ThingKey);
+export const Optional_Tuple_Core_Colour_Parts_Colour = optionalOf(type_optional_tuple_Core_Colour_Parts_Colour);
+export const Optional_Variant_Core_Colour_Parts_Colour = optionalOf(type_optional_variant_Core_Colour_Parts_Colour);
+export const Optional_Vector_Parts_Colour = optionalOf(type_optional_vector_Parts_Colour);
+export const Vector_Core_Colour = sequenceOf(type_vector_Core_Colour);
+export const Vector_Parts_Colour = sequenceOf(type_vector_Parts_Colour);
+export const Set_Core_Grade = sequenceOf(type_set_Core_Grade);
+export const Set_Core_ThingKey = sequenceOf(type_set_Core_ThingKey);
+export const Set_Parts_ThingKey = sequenceOf(type_set_Parts_ThingKey);
+export const Set_Woven_KnotKey = sequenceOf(type_set_Woven_KnotKey);
+export const Map_Core_Grade_to_Parts_Colour = mappingOf(type_map_Core_Grade_to_Parts_Colour);
+export const Map_Core_ThingKey_to_Core_Colour = mappingOf(type_map_Core_ThingKey_to_Core_Colour);
+export const Map_Core_ThingKey_to_Parts_ThingKey = mappingOf(type_map_Core_ThingKey_to_Parts_ThingKey);
+export const XArray_Core_Colour = orderedOf(type_xarray_Core_Colour);
+export const Variant_Core_Colour_Parts_Colour_string = variantOf(type_variant_Core_Colour_Parts_Colour_string);
+export const Variant_Core_Colour_Parts_Colour = variantOf(type_variant_Core_Colour_Parts_Colour);

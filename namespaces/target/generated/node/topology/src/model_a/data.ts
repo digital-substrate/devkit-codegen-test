@@ -5,7 +5,7 @@ import dsviper from "@digitalsubstrate/dsviper";
 
 import { Mapping, Ordered, Sequence } from "../_codegen/container.js";
 import { Proxy } from "../_codegen/proxy.js";
-import { AnyConceptKey, register, setField, wrap } from "../_codegen/registry.js";
+import { AnyConceptKey, isKnown, register, setField, wrap } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
 
 // ── l'identité de cette unité dans le modèle ──
@@ -61,21 +61,50 @@ export class MaterialKey extends Proxy<dsviper.ValueKey> {
         return new MaterialKey(dsviper.ValueKey.cast(value));
     }
 
-    get instanceId(): dsviper.ValueUUId {
+    static decode(blob: dsviper.ValueBlob): MaterialKey {
+        return new MaterialKey(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, MaterialKey.type(), definitions())));
+    }
+
+    instanceId(): dsviper.ValueUUId {
         return this.value.instanceId();
     }
 
+    runtimeId(): dsviper.ValueUUId {
+        return this.value.typeConcept().runtimeId();
+    }
+
     isValid(): boolean {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string {
+        return `${this.value.instanceId().encoded()}:ModelA::MaterialKey`;
+    }
+
+    isKnown(): boolean {
+        return isKnown(this.value);
     }
 
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey {
+    toAnyConceptKey(): AnyConceptKey {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
 
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): MaterialKey | undefined {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(MATERIAL)
+            ? new MaterialKey(value) : undefined;
+    }
+
     override toString(): string {
-        return `ModelA::MaterialKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 
@@ -103,6 +132,41 @@ export const Finish = {
     wrap(value: dsviper.Value): Finish {
         return dsviper.ValueEnumeration.cast(value).name() as Finish;
     },
+
+    /** Depuis le nom d'un cas, et depuis rien d'autre. */
+    fromStr(name: string): Finish {
+        if (typeof name !== "string") {
+            throw new TypeError(`${name} n'est pas un nom de cas`);
+        }
+        return Finish.wrap(new dsviper.ValueEnumeration(Finish.type(), name));
+    },
+
+    /** Le nom d'un cas — qui *est* le cas, puisqu'un littéral porte son propre nom. */
+    name(held: Finish): string {
+        return held;
+    },
+
+    /** Le rang d'un cas, tel que le modèle les numérote. */
+    index(held: Finish): number {
+        return Finish.type().cases().findIndex((c) => c.name() === held);
+    },
+
+    /** La valeur du runtime derrière un cas — ce qui porte l'encodage et l'empreinte. */
+    value(held: Finish): dsviper.ValueEnumeration {
+        return new dsviper.ValueEnumeration(Finish.type(), held);
+    },
+
+    encode(held: Finish): dsviper.ValueBlob {
+        return dsviper.Value.encode(Finish.value(held));
+    },
+
+    decode(blob: dsviper.ValueBlob): Finish {
+        return Finish.wrap(dsviper.Value.decode(blob, Finish.type(), definitions()));
+    },
+
+    hexdigest(held: Finish): string {
+        return dsviper.Value.hexdigest(Finish.value(held));
+    },
 };
 
 let colourType: dsviper.TypeStructure | undefined;
@@ -126,6 +190,11 @@ export class Colour extends Proxy<dsviper.ValueStructure> {
 
     static wrap(value: dsviper.Value): Colour {
         return new Colour(dsviper.ValueStructure.cast(value));
+    }
+
+    static decode(blob: dsviper.ValueBlob): Colour {
+        return new Colour(dsviper.ValueStructure.cast(
+            dsviper.Value.decode(blob, Colour.type(), definitions())));
     }
 
     get r(): number {

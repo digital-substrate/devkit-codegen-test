@@ -2,7 +2,7 @@
 /** ModelB — les types que ce namespace déclare. */
 import dsviper from "@digitalsubstrate/dsviper";
 import { Proxy } from "../_codegen/proxy.js";
-import { AnyConceptKey, register, setField } from "../_codegen/registry.js";
+import { AnyConceptKey, isKnown, register, setField } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
 // ── l'identité de cette unité dans le modèle ──
 //
@@ -49,18 +49,41 @@ export class MaterialKey extends Proxy {
     static wrap(value) {
         return new MaterialKey(dsviper.ValueKey.cast(value));
     }
-    get instanceId() {
+    static decode(blob) {
+        return new MaterialKey(dsviper.ValueKey.cast(dsviper.Value.decode(blob, MaterialKey.type(), definitions())));
+    }
+    instanceId() {
         return this.value.instanceId();
     }
+    runtimeId() {
+        return this.value.typeConcept().runtimeId();
+    }
     isValid() {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description() {
+        return `${this.value.instanceId().encoded()}:ModelB::MaterialKey`;
+    }
+    isKnown() {
+        return isKnown(this.value);
     }
     /** La clé, vue sans son type. */
-    toAny() {
+    toAnyConceptKey() {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key) {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(MATERIAL)
+            ? new MaterialKey(value) : undefined;
+    }
     toString() {
-        return `ModelB::MaterialKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 let colourType;
@@ -82,6 +105,9 @@ export class Colour extends Proxy {
     }
     static wrap(value) {
         return new Colour(dsviper.ValueStructure.cast(value));
+    }
+    static decode(blob) {
+        return new Colour(dsviper.ValueStructure.cast(dsviper.Value.decode(blob, Colour.type(), definitions())));
     }
     get r() {
         return this.value.at("r");

@@ -10,6 +10,7 @@
  * dans l'autre ; ici une valeur générée *est* une Value. Il ne reste que les définitions.
  */
 import dsviper from "@digitalsubstrate/dsviper";
+import { setDefinitions } from "./_codegen/registry.js";
 import { B64_DEFINITIONS } from "./resources.js";
 let cached;
 /** Le modèle, tel que le runtime le connaît — le document embarqué, décodé au chargement. */
@@ -19,3 +20,5 @@ export function definitions() {
     }
     return cached;
 }
+setDefinitions(definitions);
+export * from "./containers.js";

@@ -2,7 +2,7 @@
 /** Projection — les types que ce namespace déclare. */
 import dsviper from "@digitalsubstrate/dsviper";
 import { Proxy } from "../_codegen/proxy.js";
-import { AnyConceptKey, register, setField, wrap } from "../_codegen/registry.js";
+import { AnyConceptKey, isKnown, register, setField, wrap } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
 // ── l'identité de cette unité dans le modèle ──
 //
@@ -50,18 +50,41 @@ export class LinkKey extends Proxy {
     static wrap(value) {
         return new LinkKey(dsviper.ValueKey.cast(value));
     }
-    get instanceId() {
+    static decode(blob) {
+        return new LinkKey(dsviper.ValueKey.cast(dsviper.Value.decode(blob, LinkKey.type(), definitions())));
+    }
+    instanceId() {
         return this.value.instanceId();
     }
+    runtimeId() {
+        return this.value.typeConcept().runtimeId();
+    }
     isValid() {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description() {
+        return `${this.value.instanceId().encoded()}:Projection::LinkKey`;
+    }
+    isKnown() {
+        return isKnown(this.value);
     }
     /** La clé, vue sans son type. */
-    toAny() {
+    toAnyConceptKey() {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key) {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(LINK)
+            ? new LinkKey(value) : undefined;
+    }
     toString() {
-        return `Projection::LinkKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 let derived_materialConcept;
@@ -103,18 +126,41 @@ export class DerivedMaterialKey extends Proxy {
     static wrap(value) {
         return new DerivedMaterialKey(dsviper.ValueKey.cast(value));
     }
-    get instanceId() {
+    static decode(blob) {
+        return new DerivedMaterialKey(dsviper.ValueKey.cast(dsviper.Value.decode(blob, DerivedMaterialKey.type(), definitions())));
+    }
+    instanceId() {
         return this.value.instanceId();
     }
+    runtimeId() {
+        return this.value.typeConcept().runtimeId();
+    }
     isValid() {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description() {
+        return `${this.value.instanceId().encoded()}:Projection::DerivedMaterialKey`;
+    }
+    isKnown() {
+        return isKnown(this.value);
     }
     /** La clé, vue sans son type. */
-    toAny() {
+    toAnyConceptKey() {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key) {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(DERIVED_MATERIAL)
+            ? new DerivedMaterialKey(value) : undefined;
+    }
     toString() {
-        return `Projection::DerivedMaterialKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 let pairType;
@@ -136,6 +182,9 @@ export class Pair extends Proxy {
     }
     static wrap(value) {
         return new Pair(dsviper.ValueStructure.cast(value));
+    }
+    static decode(blob) {
+        return new Pair(dsviper.ValueStructure.cast(dsviper.Value.decode(blob, Pair.type(), definitions())));
     }
     get a() {
         return wrap(this.value.at("a", false));

@@ -23,10 +23,21 @@ export declare class PlayerKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): PlayerKey;
     static wrap(value: dsviper.Value): PlayerKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): PlayerKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): PlayerKey | undefined;
     toString(): string;
 }
 /** Demo::Level. */
@@ -43,12 +54,24 @@ export declare const Level: {
     EXPERT: string;
     type(): dsviper.TypeEnumeration;
     wrap(value: dsviper.Value): Level;
+    /** Depuis le nom d'un cas, et depuis rien d'autre. */
+    fromStr(name: string): Level;
+    /** Le nom d'un cas — qui *est* le cas, puisqu'un littéral porte son propre nom. */
+    name(held: Level): string;
+    /** Le rang d'un cas, tel que le modèle les numérote. */
+    index(held: Level): number;
+    /** La valeur du runtime derrière un cas — ce qui porte l'encodage et l'empreinte. */
+    value(held: Level): dsviper.ValueEnumeration;
+    encode(held: Level): dsviper.ValueBlob;
+    decode(blob: dsviper.ValueBlob): Level;
+    hexdigest(held: Level): string;
 };
 /** Demo::PlayerProperty. */
 export declare class PlayerProperty extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): PlayerProperty;
+    static decode(blob: dsviper.ValueBlob): PlayerProperty;
     get nickname(): string;
     set nickname(value: string);
     get level(): Level;
@@ -59,6 +82,7 @@ export declare class Vector3 extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Vector3;
+    static decode(blob: dsviper.ValueBlob): Vector3;
     get x(): number;
     set x(value: number);
     get y(): number;

@@ -2,7 +2,7 @@
 /** Woven — les types que ce namespace déclare. */
 import dsviper from "@digitalsubstrate/dsviper";
 import { Proxy } from "../_codegen/proxy.js";
-import { AnyConceptKey, register, setField, wrap } from "../_codegen/registry.js";
+import { AnyConceptKey, isKnown, register, setField, wrap } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
 // ── l'identité de cette unité dans le modèle ──
 //
@@ -53,18 +53,41 @@ export class KnotKey extends Proxy {
     static wrap(value) {
         return new KnotKey(dsviper.ValueKey.cast(value));
     }
-    get instanceId() {
+    static decode(blob) {
+        return new KnotKey(dsviper.ValueKey.cast(dsviper.Value.decode(blob, KnotKey.type(), definitions())));
+    }
+    instanceId() {
         return this.value.instanceId();
     }
+    runtimeId() {
+        return this.value.typeConcept().runtimeId();
+    }
     isValid() {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description() {
+        return `${this.value.instanceId().encoded()}:Woven::KnotKey`;
+    }
+    isKnown() {
+        return isKnown(this.value);
     }
     /** La clé, vue sans son type. */
-    toAny() {
+    toAnyConceptKey() {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key) {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(KNOT)
+            ? new KnotKey(value) : undefined;
+    }
     toString() {
-        return `Woven::KnotKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 let derivedConcept;
@@ -106,18 +129,41 @@ export class DerivedKey extends Proxy {
     static wrap(value) {
         return new DerivedKey(dsviper.ValueKey.cast(value));
     }
-    get instanceId() {
+    static decode(blob) {
+        return new DerivedKey(dsviper.ValueKey.cast(dsviper.Value.decode(blob, DerivedKey.type(), definitions())));
+    }
+    instanceId() {
         return this.value.instanceId();
     }
+    runtimeId() {
+        return this.value.typeConcept().runtimeId();
+    }
     isValid() {
-        return this.instanceId.isValid();
+        return this.value.instanceId().isValid();
+    }
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description() {
+        return `${this.value.instanceId().encoded()}:Woven::DerivedKey`;
+    }
+    isKnown() {
+        return isKnown(this.value);
     }
     /** La clé, vue sans son type. */
-    toAny() {
+    toAnyConceptKey() {
         return new AnyConceptKey(this.value.toAnyConceptKey());
     }
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key) {
+        const value = key instanceof AnyConceptKey ? key.value : key;
+        return value.typeConcept().runtimeId().equals(DERIVED)
+            ? new DerivedKey(value) : undefined;
+    }
     toString() {
-        return `Woven::DerivedKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 let weaveClub;
@@ -140,8 +186,23 @@ export class WeaveKey extends Proxy {
     static wrap(value) {
         return new WeaveKey(dsviper.ValueKey.cast(value));
     }
-    get instanceId() {
+    static decode(blob) {
+        return new WeaveKey(dsviper.ValueKey.cast(dsviper.Value.decode(blob, WeaveKey.type(), definitions())));
+    }
+    instanceId() {
         return this.value.instanceId();
+    }
+    runtimeId() {
+        return this.value.typeConcept().runtimeId();
+    }
+    isValid() {
+        return this.value.instanceId().isValid();
+    }
+    description() {
+        return `${this.value.instanceId().encoded()}:Woven::WeaveKey`;
+    }
+    isKnown() {
+        return isKnown(this.value);
     }
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
     as(member) {
@@ -149,7 +210,7 @@ export class WeaveKey extends Proxy {
         return this.value.isMember(concept) ? member.wrap(this.value.toMemberKey(concept)) : undefined;
     }
     toString() {
-        return `Woven::WeaveKey(${this.value.representation()})`;
+        return this.description();
     }
 }
 let entitiesType;
@@ -171,6 +232,9 @@ export class Entities extends Proxy {
     }
     static wrap(value) {
         return new Entities(dsviper.ValueStructure.cast(value));
+    }
+    static decode(blob) {
+        return new Entities(dsviper.ValueStructure.cast(dsviper.Value.decode(blob, Entities.type(), definitions())));
     }
     get f_core_grade() {
         return wrap(this.value.at("f_core_grade", false));
@@ -253,6 +317,9 @@ export class Composites extends Proxy {
     static wrap(value) {
         return new Composites(dsviper.ValueStructure.cast(value));
     }
+    static decode(blob) {
+        return new Composites(dsviper.ValueStructure.cast(dsviper.Value.decode(blob, Composites.type(), definitions())));
+    }
     get f_tuple() {
         return wrap(this.value.at("f_tuple", false));
     }
@@ -321,6 +388,9 @@ export class Nested extends Proxy {
     }
     static wrap(value) {
         return new Nested(dsviper.ValueStructure.cast(value));
+    }
+    static decode(blob) {
+        return new Nested(dsviper.ValueStructure.cast(dsviper.Value.decode(blob, Nested.type(), definitions())));
     }
     get f_composites() {
         return wrap(this.value.at("f_composites", false));

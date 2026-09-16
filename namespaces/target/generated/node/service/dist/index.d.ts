@@ -11,3 +11,4 @@
 import dsviper from "@digitalsubstrate/dsviper";
 /** Le modèle, tel que le runtime le connaît — le document embarqué, décodé au chargement. */
 export declare function definitions(): dsviper.DefinitionsConst;
+export * from "./containers.js";

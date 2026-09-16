@@ -49,6 +49,34 @@ arguments.add_argument("--check", action="store_true",
                        help="échouer si generated/node/ n'est pas à jour")
 arguments = arguments.parse_args()
 
+# ET LA SUITE QUE LE PROJET A ÉCRITE, PORTÉE SUR LE RENDU. 15 fichiers, 4 000 lignes, contre
+# le paquet de l'ancien pack. `node/link/migrate.py` ne contient que des renommages.
+def suite(target):
+    source = ROOT / "features" / "typescript" / "test"
+    package = target / "features"
+    if not source.exists() or not package.exists():
+        return 0
+
+    sys.path.insert(0, str(HERE / "node" / "link"))
+    import migrate
+    scratch = HERE / "build" / "node-suite"
+    shutil.rmtree(scratch, ignore_errors=True)
+    scratch.mkdir(parents=True, exist_ok=True)
+    substitutions = sum(migrate.migrate(scratch / "test", package).values())
+    (scratch / "features").symlink_to(package)
+    (scratch / "node_modules").symlink_to(package / "node_modules")
+    sys.path.pop(0)
+
+    r = subprocess.run(["node", "--test", *[str(p) for p in sorted((scratch / "test").glob("*.mjs"))]],
+                       cwd=scratch, capture_output=True, text=True)
+    passed = sum(1 for l in r.stdout.splitlines() if l.startswith("\u2714"))
+    failed = sum(1 for l in r.stdout.splitlines() if l.startswith("\u2716"))
+    print(f"  {'la suite':11} {passed:3} / {passed + failed} tests du projet, "
+          f"{substitutions} substitutions de portage")
+    return 0
+
+
+
 target = HERE / (".check-node" if arguments.check else "generated/node")
 if target.exists():
     shutil.rmtree(target)
@@ -119,6 +147,9 @@ for model, spec in MODELS.items():
         for line in r.stderr.strip().splitlines()[-3:]:
             print(f"     {line}")
         continue
+
+    if model == "features":
+        suite(target)
 
     # ET L'ÉPREUVE QUE CE MODÈLE-LÀ PERMET. `Crossing` porte toutes les formes de conteneurs
     # traversant deux unités ; aucune unité de la référence n'en a, et lui en ajouter

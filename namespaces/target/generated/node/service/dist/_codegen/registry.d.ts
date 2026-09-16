@@ -12,6 +12,8 @@ export { AnyConceptKey } from "./proxy.js";
 export interface Wrapping {
     wrap(value: dsviper.Value): unknown;
 }
+export declare function setDefinitions(accessor: () => dsviper.DefinitionsConst): void;
+export declare function definitionsOf(): dsviper.DefinitionsConst;
 /** Déclarer les classes d'une unité, par l'identifiant d'exécution de leur type.
  *
  * VARIADIQUE, ET CE N'EST PAS UN DÉTAIL. Un tableau littéral de paires est inféré comme un
@@ -35,6 +37,13 @@ export declare function wrap(value: dsviper.OutputValue): any;
  * convertir un objet JavaScript depuis le descripteur de type. Un tableau est déplié élément
  * par élément, parce qu'il peut en contenir qui, eux, ont une classe.
  */
+/** Le modèle connaît-il le concept que cette clé désigne ?
+ *
+ * LA TABLE RÉPOND, ET C'EST LA MÊME QUESTION. Un identifiant absent est celui d'un concept
+ * qu'aucune unité chargée ne porte. Le pack compare à une liste figée à la génération ; ici la
+ * réponse suit ce qui est réellement chargé.
+ */
+export declare function isKnown(value: dsviper.ValueKey): boolean;
 export declare function unwrap(value: unknown): dsviper.InputValue;
 /** Écrire un champ d'une structure, en construisant ce que le runtime attend.
  *

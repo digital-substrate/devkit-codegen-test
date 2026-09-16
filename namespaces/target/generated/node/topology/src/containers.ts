@@ -1,0 +1,85 @@
+// Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/namespaces/Topology.dsm.json by kibo-2.0.0.jar
+
+/** Topology — les conteneurs que le modèle mentionne, nommés et constructibles. */
+import dsviper from "@digitalsubstrate/dsviper";
+
+import { mappingOf, optionalOf, orderedOf, sequenceOf, variantOf } from "./_codegen/container.js";
+import * as model_a from "./model_a/data.js";
+import * as model_c from "./model_c/data.js";
+import * as model_b from "./model_b/data.js";
+import * as projection from "./projection/data.js";
+import * as annotations from "./annotations/data.js";
+
+// ── les descripteurs de type, chaînés par forme ──
+//
+// Chaque forme compose celui de ses éléments, donc la chaîne s'arrête sur un primitif ou sur un
+// type qu'une unité déclare. Mémoïsés : le runtime rend un objet neuf à chaque appel, et deux
+// descripteurs égaux mais distincts feraient échouer la comparaison d'une construction.
+
+// LES NOMS SUIVENT LE SUFFIXE DE TYPE, tel que le modèle le compose : `_uint8`,
+// `_Demo_ConceptAKey`. Les mettre en casse de TypeScript obligerait à refaire cette
+// composition ici, et à la refaire juste.
+const type_bool = () => dsviper.Type.BOOL;
+const type_uint8 = () => dsviper.Type.UINT8;
+const type_uint16 = () => dsviper.Type.UINT16;
+const type_uint32 = () => dsviper.Type.UINT32;
+const type_uint64 = () => dsviper.Type.UINT64;
+const type_int8 = () => dsviper.Type.INT8;
+const type_int16 = () => dsviper.Type.INT16;
+const type_int32 = () => dsviper.Type.INT32;
+const type_int64 = () => dsviper.Type.INT64;
+const type_float = () => dsviper.Type.FLOAT;
+const type_double = () => dsviper.Type.DOUBLE;
+const type_string = () => dsviper.Type.STRING;
+const type_blob = () => dsviper.Type.BLOB;
+const type_blob_id = () => dsviper.Type.BLOB_ID;
+const type_commit_id = () => dsviper.Type.COMMIT_ID;
+const type_uuid = () => dsviper.Type.UUID;
+const type_any = () => dsviper.Type.ANY;
+const type_AnyConceptKey = () => new dsviper.TypeKey(dsviper.Type.ANY_CONCEPT);
+const type_ModelA_MaterialKey = () => model_a.MaterialKey.type();
+const type_ModelA_Finish = () => model_a.Finish.type();
+const type_ModelA_Colour = () => model_a.Colour.type();
+const type_ModelC_MarkerKey = () => model_c.MarkerKey.type();
+
+const type_ModelB_MaterialKey = () => model_b.MaterialKey.type();
+const type_ModelB_Colour = () => model_b.Colour.type();
+const type_Projection_LinkKey = () => projection.LinkKey.type();
+const type_Projection_DerivedMaterialKey = () => projection.DerivedMaterialKey.type();
+const type_Projection_Pair = () => projection.Pair.type();
+
+
+
+const type_optional_AnyConceptKey = () => new dsviper.TypeOptional(type_AnyConceptKey());
+const type_optional_ModelA_Colour = () => new dsviper.TypeOptional(type_ModelA_Colour());
+const type_optional_ModelA_MaterialKey = () => new dsviper.TypeOptional(type_ModelA_MaterialKey());
+const type_optional_ModelB_Colour = () => new dsviper.TypeOptional(type_ModelB_Colour());
+const type_optional_ModelB_MaterialKey = () => new dsviper.TypeOptional(type_ModelB_MaterialKey());
+const type_optional_ModelC_MarkerKey = () => new dsviper.TypeOptional(type_ModelC_MarkerKey());
+const type_optional_Projection_DerivedMaterialKey = () => new dsviper.TypeOptional(type_Projection_DerivedMaterialKey());
+const type_optional_Projection_LinkKey = () => new dsviper.TypeOptional(type_Projection_LinkKey());
+const type_optional_Projection_Pair = () => new dsviper.TypeOptional(type_Projection_Pair());
+const type_optional_map_ModelA_MaterialKey_to_ModelB_MaterialKey = () => new dsviper.TypeOptional(type_map_ModelA_MaterialKey_to_ModelB_MaterialKey());
+const type_optional_string = () => new dsviper.TypeOptional(type_string());
+const type_set_ModelA_MaterialKey = () => new dsviper.TypeSet(type_ModelA_MaterialKey());
+const type_set_ModelB_MaterialKey = () => new dsviper.TypeSet(type_ModelB_MaterialKey());
+const type_set_Projection_LinkKey = () => new dsviper.TypeSet(type_Projection_LinkKey());
+const type_map_ModelA_MaterialKey_to_ModelB_MaterialKey = () => new dsviper.TypeMap(type_ModelA_MaterialKey(), type_ModelB_MaterialKey());
+
+// ── et le nom de chaque forme ──
+
+export const Optional_AnyConceptKey = optionalOf(type_optional_AnyConceptKey);
+export const Optional_ModelA_Colour = optionalOf(type_optional_ModelA_Colour);
+export const Optional_ModelA_MaterialKey = optionalOf(type_optional_ModelA_MaterialKey);
+export const Optional_ModelB_Colour = optionalOf(type_optional_ModelB_Colour);
+export const Optional_ModelB_MaterialKey = optionalOf(type_optional_ModelB_MaterialKey);
+export const Optional_ModelC_MarkerKey = optionalOf(type_optional_ModelC_MarkerKey);
+export const Optional_Projection_DerivedMaterialKey = optionalOf(type_optional_Projection_DerivedMaterialKey);
+export const Optional_Projection_LinkKey = optionalOf(type_optional_Projection_LinkKey);
+export const Optional_Projection_Pair = optionalOf(type_optional_Projection_Pair);
+export const Optional_Map_ModelA_MaterialKey_to_ModelB_MaterialKey = optionalOf(type_optional_map_ModelA_MaterialKey_to_ModelB_MaterialKey);
+export const Optional_string = optionalOf(type_optional_string);
+export const Set_ModelA_MaterialKey = sequenceOf(type_set_ModelA_MaterialKey);
+export const Set_ModelB_MaterialKey = sequenceOf(type_set_ModelB_MaterialKey);
+export const Set_Projection_LinkKey = sequenceOf(type_set_Projection_LinkKey);
+export const Map_ModelA_MaterialKey_to_ModelB_MaterialKey = mappingOf(type_map_ModelA_MaterialKey_to_ModelB_MaterialKey);

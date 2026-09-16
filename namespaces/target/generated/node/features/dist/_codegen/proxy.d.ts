@@ -30,6 +30,18 @@ export declare abstract class Proxy<V extends dsviper.Value> {
      */
     hashKey(): bigint;
     toJSON(): dsviper.NativeValue;
+    /** Ce qui vient de la valeur et ne dépend d'aucun type : l'encodage, la copie, l'empreinte.
+     *
+     * DEUX BASES, LA MÊME SURFACE. `Proxy` enveloppe une valeur nommée — une structure, une
+     * clé — et `View` un conteneur ; elles diffèrent par ce qu'elles offrent en propre et pas
+     * par ce qu'elles transmettent. Une structure qui ne sait pas s'encoder alors qu'un
+     * vecteur le sait serait une asymétrie que rien ne justifie.
+     */
+    encode(streamCodecInstancing?: dsviper.StreamCodecInstancing): dsviper.ValueBlob;
+    hexdigest(): string;
+    copy(): this;
+    type(): dsviper.Type;
+    hash(): bigint;
     toString(): string;
 }
 /** Une clé sur une instance de n'importe quel concept.
@@ -43,9 +55,10 @@ export declare abstract class Proxy<V extends dsviper.Value> {
 export declare class AnyConceptKey extends Proxy<dsviper.ValueKey> {
     constructor(value: dsviper.ValueKey);
     static wrap(value: dsviper.Value): AnyConceptKey;
-    get instanceId(): dsviper.ValueUUId;
-    get runtimeId(): dsviper.ValueUUId;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    description(): string;
     /** La clé vue comme celle d'un concept donné, ou `undefined` si elle n'en est pas une. */
     as<K>(concept: {
         type(): dsviper.TypeKey;

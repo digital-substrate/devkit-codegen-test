@@ -24,10 +24,21 @@ export declare class MaterialKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): MaterialKey;
     static wrap(value: dsviper.Value): MaterialKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): MaterialKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): MaterialKey | undefined;
     toString(): string;
 }
 /** ModelA::Finish. Un type énuméré, pour que les templates en rencontrent un. Aucun autre namespace
@@ -45,12 +56,24 @@ export declare const Finish: {
     GLOSS: string;
     type(): dsviper.TypeEnumeration;
     wrap(value: dsviper.Value): Finish;
+    /** Depuis le nom d'un cas, et depuis rien d'autre. */
+    fromStr(name: string): Finish;
+    /** Le nom d'un cas — qui *est* le cas, puisqu'un littéral porte son propre nom. */
+    name(held: Finish): string;
+    /** Le rang d'un cas, tel que le modèle les numérote. */
+    index(held: Finish): number;
+    /** La valeur du runtime derrière un cas — ce qui porte l'encodage et l'empreinte. */
+    value(held: Finish): dsviper.ValueEnumeration;
+    encode(held: Finish): dsviper.ValueBlob;
+    decode(blob: dsviper.ValueBlob): Finish;
+    hexdigest(held: Finish): string;
 };
 /** ModelA::Colour. Colour in 8-bit channels -- the same name as ModelB::Colour, a different type. */
 export declare class Colour extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): Colour;
+    static decode(blob: dsviper.ValueBlob): Colour;
     get r(): number;
     set r(value: number);
     get g(): number;

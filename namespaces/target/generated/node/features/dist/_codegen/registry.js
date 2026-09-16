@@ -7,10 +7,23 @@
  * pack en émet une par combinaison rencontrée, ici il n'y en a aucune.
  */
 import dsviper from "@digitalsubstrate/dsviper";
-import { Mapping, Ordered, Sequence } from "./container.js";
+import { Mapping, Ordered, Sequence, View } from "./container.js";
 import { Proxy } from "./proxy.js";
 export { AnyConceptKey } from "./proxy.js";
 const classes = new Map();
+// LES DÉFINITIONS DU MODÈLE, POSÉES PAR LE PAQUET. Décoder demande de savoir quel modèle lire,
+// et une vue générique ne peut pas le deviner — c'est la seule chose que le socle emprunte au
+// paquet qui l'accueille, et il la reçoit au chargement.
+let definitions;
+export function setDefinitions(accessor) {
+    definitions = accessor;
+}
+export function definitionsOf() {
+    if (definitions === undefined) {
+        throw new Error("le paquet n'a pas déclaré ses définitions");
+    }
+    return definitions();
+}
 /** Déclarer les classes d'une unité, par l'identifiant d'exécution de leur type.
  *
  * VARIADIQUE, ET CE N'EST PAS UN DÉTAIL. Un tableau littéral de paires est inféré comme un
@@ -61,6 +74,24 @@ export function wrap(value) {
         case "mat":
         case "tuple":
             return new Sequence(value);
+        // CE QUI A UNE REPRÉSENTATION NATIVE SORT NATIF, ET RIEN D'AUTRE. C'est le principe du
+        // passage, et sa limite : un `uuid` se *dit* comme une chaîne mais n'en est pas une —
+        // le rendre ainsi ferait perdre son type, et la position qu'il désigne cesserait
+        // d'être acceptée là où on la repasse. Les quelques types qui n'ont pas d'équivalent
+        // gardent donc le leur.
+        case "bool":
+        case "uint8":
+        case "uint16":
+        case "uint32":
+        case "uint64":
+        case "int8":
+        case "int16":
+        case "int32":
+        case "int64":
+        case "float":
+        case "double":
+        case "string":
+            return dsviper.Value.dumps(value);
         default:
             return value;
     }
@@ -89,11 +120,17 @@ function named(type) {
  * convertir un objet JavaScript depuis le descripteur de type. Un tableau est déplié élément
  * par élément, parce qu'il peut en contenir qui, eux, ont une classe.
  */
+/** Le modèle connaît-il le concept que cette clé désigne ?
+ *
+ * LA TABLE RÉPOND, ET C'EST LA MÊME QUESTION. Un identifiant absent est celui d'un concept
+ * qu'aucune unité chargée ne porte. Le pack compare à une liste figée à la génération ; ici la
+ * réponse suit ce qui est réellement chargé.
+ */
+export function isKnown(value) {
+    return classes.has(value.typeConcept().runtimeId().encoded());
+}
 export function unwrap(value) {
-    if (value instanceof Proxy) {
-        return value.value;
-    }
-    if (value instanceof Sequence || value instanceof Ordered || value instanceof Mapping) {
+    if (value instanceof Proxy || value instanceof View) {
         return value.value;
     }
     if (Array.isArray(value)) {

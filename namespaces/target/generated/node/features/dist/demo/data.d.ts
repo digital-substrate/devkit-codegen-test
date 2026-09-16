@@ -35,10 +35,21 @@ export declare class ConceptAKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptAKey;
     static wrap(value: dsviper.Value): ConceptAKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): ConceptAKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): ConceptAKey | undefined;
     toString(): string;
 }
 /**
@@ -58,10 +69,21 @@ export declare class ConceptBKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptBKey;
     static wrap(value: dsviper.Value): ConceptBKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): ConceptBKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): ConceptBKey | undefined;
     toString(): string;
 }
 /**
@@ -81,10 +103,21 @@ export declare class ConceptCoverageKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptCoverageKey;
     static wrap(value: dsviper.Value): ConceptCoverageKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): ConceptCoverageKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): ConceptCoverageKey | undefined;
     toString(): string;
 }
 /**
@@ -104,10 +137,21 @@ export declare class ConceptDKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptDKey;
     static wrap(value: dsviper.Value): ConceptDKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): ConceptDKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): ConceptDKey | undefined;
     toString(): string;
 }
 /**
@@ -127,10 +171,21 @@ export declare class ConceptCKey extends Proxy<dsviper.ValueKey> {
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptCKey;
     static wrap(value: dsviper.Value): ConceptCKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): ConceptCKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** L'instance et son type, dits comme le modèle les nomme. */
+    description(): string;
+    isKnown(): boolean;
     /** La clé, vue sans son type. */
-    toAny(): AnyConceptKey;
+    toAnyConceptKey(): AnyConceptKey;
+    /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
+     *
+     * LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+     * question dont la réponse est dans l'identifiant que la valeur porte.
+     */
+    static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): ConceptCKey | undefined;
     toString(): string;
 }
 /** Une poignée sur une instance d'un membre de Demo::EmptyKlub. */
@@ -139,7 +194,12 @@ export declare class EmptyKlubKey extends Proxy<dsviper.ValueKey> {
     static type(): dsviper.TypeKey;
     constructor(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey);
     static wrap(value: dsviper.Value): EmptyKlubKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): EmptyKlubKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
+    isValid(): boolean;
+    description(): string;
+    isKnown(): boolean;
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
     as<K>(member: {
         concept(): dsviper.TypeConcept;
@@ -153,7 +213,12 @@ export declare class KlubKey extends Proxy<dsviper.ValueKey> {
     static type(): dsviper.TypeKey;
     constructor(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey);
     static wrap(value: dsviper.Value): KlubKey;
-    get instanceId(): dsviper.ValueUUId;
+    static decode(blob: dsviper.ValueBlob): KlubKey;
+    instanceId(): dsviper.ValueUUId;
+    runtimeId(): dsviper.ValueUUId;
+    isValid(): boolean;
+    description(): string;
+    isKnown(): boolean;
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
     as<K>(member: {
         concept(): dsviper.TypeConcept;
@@ -175,12 +240,24 @@ export declare const EnumerationE: {
     C: string;
     type(): dsviper.TypeEnumeration;
     wrap(value: dsviper.Value): EnumerationE;
+    /** Depuis le nom d'un cas, et depuis rien d'autre. */
+    fromStr(name: string): EnumerationE;
+    /** Le nom d'un cas — qui *est* le cas, puisqu'un littéral porte son propre nom. */
+    name(held: EnumerationE): string;
+    /** Le rang d'un cas, tel que le modèle les numérote. */
+    index(held: EnumerationE): number;
+    /** La valeur du runtime derrière un cas — ce qui porte l'encodage et l'empreinte. */
+    value(held: EnumerationE): dsviper.ValueEnumeration;
+    encode(held: EnumerationE): dsviper.ValueBlob;
+    decode(blob: dsviper.ValueBlob): EnumerationE;
+    hexdigest(held: EnumerationE): string;
 };
 /** Demo::StructureS. This is the documentation for the struct S */
 export declare class StructureS extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): StructureS;
+    static decode(blob: dsviper.ValueBlob): StructureS;
     get f_float(): number;
     set f_float(value: number);
     get f_string(): string;
@@ -191,6 +268,7 @@ export declare class StructureW extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): StructureW;
+    static decode(blob: dsviper.ValueBlob): StructureW;
     get f_single(): number;
     set f_single(value: number);
 }
@@ -199,6 +277,7 @@ export declare class StructureT extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): StructureT;
+    static decode(blob: dsviper.ValueBlob): StructureT;
     get field_string(): string;
     set field_string(value: string);
     get field_structure_s(): StructureS;
@@ -209,6 +288,7 @@ export declare class StructureV extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): StructureV;
+    static decode(blob: dsviper.ValueBlob): StructureV;
     get f_bool(): boolean;
     set f_bool(value: boolean);
     get f_uint8(): number;
@@ -261,6 +341,7 @@ export declare class StructureU extends Proxy<dsviper.ValueStructure> {
     static type(): dsviper.TypeStructure;
     constructor(value?: dsviper.ValueStructure | Record<string, dsviper.InputValue>);
     static wrap(value: dsviper.Value): StructureU;
+    static decode(blob: dsviper.ValueBlob): StructureU;
     get f_bool(): boolean;
     set f_bool(value: boolean);
     get f_uint8(): number;
