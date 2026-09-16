@@ -11,8 +11,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._codegen import (AnyConceptKey, Mapping, Ordered, Proxy, Sequence, is_known,
-                        register, unwrap, wrap)
+from .._codegen import (NEUF as _NEUF, AnyConceptKey, Mapping, Ordered, Proxy, Sequence,
+                        is_known, register, unwrap, wrap)
 from .. import parts
 from .. import core
 
@@ -54,13 +54,26 @@ class KnotKey(Proxy):
         """
         return dsviper.TypeKey(cls.concept())
 
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+    def __init__(self, identifier: typing.Any = _NEUF):
+        # `None` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `KnotKey()` demande une clé
+        # neuve ; `KnotKey(None)` passe quelque chose, et ce quelque chose n'est pas un
+        # identifiant. Un témoin distingue les deux là où `None` ne le peut pas.
+        if identifier is _NEUF:
+            identifier = None
+        elif identifier is None:
+            raise TypeError("None n'est pas un identifiant d'instance")
+
         if isinstance(identifier, dsviper.ValueKey):
             if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Woven::KnotKey")
             super().__init__(identifier)
-        else:
+        elif identifier is None or isinstance(identifier, (dsviper.ValueUUId, str)):
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+        else:
+            # UN IDENTIFIANT EST UNE CHAÎNE OU UN UUId, ET RIEN D'AUTRE. Laisser passer un
+            # entier ou une liste ferait lever le runtime -- ce qui est juste, mais par une
+            # erreur qui parle de décodage plutôt que du type qu'on lui a donné.
+            raise TypeError(f"{identifier!r} n'est pas un identifiant d'instance")
 
     @classmethod
     def decode(cls, blob, **kwargs) -> KnotKey:
@@ -97,13 +110,20 @@ class KnotKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == KNOT else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:Woven::KnotKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
 
     def __repr__(self) -> str:
-        return f"Woven::KnotKey({self.value.representation()})"
+        return self.description()
+
 
 
 class DerivedKey(Proxy):
@@ -131,13 +151,26 @@ class DerivedKey(Proxy):
         """
         return dsviper.TypeKey(cls.concept())
 
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+    def __init__(self, identifier: typing.Any = _NEUF):
+        # `None` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `DerivedKey()` demande une clé
+        # neuve ; `DerivedKey(None)` passe quelque chose, et ce quelque chose n'est pas un
+        # identifiant. Un témoin distingue les deux là où `None` ne le peut pas.
+        if identifier is _NEUF:
+            identifier = None
+        elif identifier is None:
+            raise TypeError("None n'est pas un identifiant d'instance")
+
         if isinstance(identifier, dsviper.ValueKey):
             if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Woven::DerivedKey")
             super().__init__(identifier)
-        else:
+        elif identifier is None or isinstance(identifier, (dsviper.ValueUUId, str)):
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+        else:
+            # UN IDENTIFIANT EST UNE CHAÎNE OU UN UUId, ET RIEN D'AUTRE. Laisser passer un
+            # entier ou une liste ferait lever le runtime -- ce qui est juste, mais par une
+            # erreur qui parle de décodage plutôt que du type qu'on lui a donné.
+            raise TypeError(f"{identifier!r} n'est pas un identifiant d'instance")
 
     @classmethod
     def decode(cls, blob, **kwargs) -> DerivedKey:
@@ -174,13 +207,28 @@ class DerivedKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == DERIVED else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:Woven::DerivedKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
 
     def __repr__(self) -> str:
-        return f"Woven::DerivedKey({self.value.representation()})"
+        return self.description()
+
+    def to_parent_key(self):
+        """Élargir vers le parent.
+
+        NE PERD RIEN ET NE PEUT PAS ÉCHOUER : l'identifiant d'exécution reste celui du concept
+        réel, et c'est ce qui permet d'en revenir ensuite.
+        """
+        return core.ThingKey(self.value)
+
 
 class WeaveKey(Proxy):
     """Une poignée sur une instance d'un membre de Woven::Weave.
@@ -240,7 +288,13 @@ class WeaveKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == WEAVE else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:Woven::WeaveKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
@@ -255,13 +309,21 @@ class WeaveKey(Proxy):
         """La clé d'un membre, vue comme celle du club."""
         return cls(key.value if isinstance(key, Proxy) else key)
 
+    def to_core_thing_key(self):
+        """La clé vue comme celle de ce membre, ou `None` si l'instance n'en est pas un."""
+        return self.as_(core.ThingKey)
+
+    def to_parts_thing_key(self):
+        """La clé vue comme celle de ce membre, ou `None` si l'instance n'en est pas un."""
+        return self.as_(parts.ThingKey)
+
     def as_(self, cls):
         """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
         concept = cls.concept()
         return cls(self.value.to_member_key(concept)) if self.value.is_member(concept) else None
 
     def __repr__(self) -> str:
-        return f"Woven::WeaveKey({self.value.representation()})"
+        return self.description()
 
 class Entities(Proxy):
     """Woven::Entities.

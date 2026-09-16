@@ -11,6 +11,7 @@ C'est moins qu'un compilateur et beaucoup plus qu'une lecture.
 """
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -130,6 +131,34 @@ def typecheck(package):
     return 1 if errors else 0
 
 
+# ET LA SUITE QUE LE PROJET A ÉCRITE, PORTÉE SUR LE RENDU. C'est la seule épreuve qui n'a pas
+# été écrite ici : 474 tests, 4 068 lignes, contre le paquet de l'ancien pack.
+# `python/link/migrate.py` ne contient que des renommages -- sa longueur est le coût de
+# migration, et un portage à la main ne mesurerait rien.
+def suite(package):
+    if not (ROOT / "features" / "python" / "tests").exists():
+        return 0
+
+    sys.path.insert(0, str(HERE / "python" / "link"))
+    import migrate
+    scratch = HERE / "build" / "suite"
+    shutil.rmtree(scratch, ignore_errors=True)
+    (scratch / "features").parent.mkdir(parents=True, exist_ok=True)
+    substitutions = sum(migrate.migrate(scratch / "tests", package / "features").values())
+    (scratch / "features").symlink_to(package / "features")
+    sys.path.pop(0)
+
+    r = subprocess.run([sys.executable, "-m", "unittest", "discover", "tests"],
+                       cwd=scratch, capture_output=True, text=True,
+                       env={**os.environ, "PYTHONPATH": str(scratch)})
+    ran = next((l for l in r.stderr.splitlines() if l.startswith("Ran ")), "")
+    total = int(ran.split()[1]) if ran else 0
+    failed = sum(1 for l in r.stderr.splitlines() if l.startswith(("ERROR:", "FAIL:")))
+    print(f"  {'la suite':11} {total - failed:3} / {total} tests du projet, "
+          + f"{substitutions} substitutions de portage")
+    return 1 if failed else 0
+
+
 # Et les épreuves qu'un modèle donné permet : le fail-fast demande des types qui se
 # ressemblent dans deux unités, ce que seul `Crossing` porte.
 if not arguments.check and status == 0:
@@ -162,6 +191,7 @@ if not arguments.check and status == 0:
         status = 1
 
     status |= typecheck(target)
+    status |= suite(target)
 
 if arguments.check:
     # LES BYTECODES NE SONT PAS DU RENDU. Importer un paquet en écrit un à côté de chaque

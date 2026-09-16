@@ -72,7 +72,24 @@ class View:
         return dsviper.Value.hexdigest(self._value)
 
     def __eq__(self, other) -> bool:
-        return self._value == (other.value if isinstance(other, View) else other)
+        """COMPARER À N'IMPORTE QUOI EST LÉGITIME, et la réponse est « non ».
+
+        `x in [1, 2, "trois"]` compare à chaque élément ; laisser le runtime lever sur un type
+        qu'il ne connaît pas transformerait une question en erreur, et `in` deviendrait
+        impraticable.
+        """
+        other_value = other.value if isinstance(other, View) else other
+        if not hasattr(other_value, "type_code") and not isinstance(
+                other_value, (list, tuple, set, dict)):
+            # NE PAS DEMANDER AU RUNTIME CE QU'IL NE PEUT PAS RÉPONDRE. Comparer une suite à un
+            # entier le fait lever, et une exception posée au niveau C survit à un `except` :
+            # l'interpréteur rend alors « un résultat avec une exception en attente », et `in`
+            # devient impraticable. Écarter avant l'appel est le seul endroit sûr.
+            return NotImplemented
+        try:
+            return bool(self._value == other_value)
+        except (TypeError, ValueError, dsviper.ViperError):
+            return False
 
     def __hash__(self) -> int:
         return self._value.hash()
@@ -182,14 +199,17 @@ class Sequence(View, typing.Generic[E]):
         return self
 
     def __getattr__(self, name: str):
-        """`get_0`, `get_1` — l'accès positionnel d'un tuple, nommé.
+        """`get_0` pour un tuple, et tout ce que la valeur porte sans que la vue le nomme.
 
-        Le pack en émet un par membre de chaque tuple du modèle ; ici le rang est dans le nom
-        et la vue le lit.
+        LA VUE NE CHOISIT PAS CE QUI PASSE. Un ensemble a `isdisjoint`, `issubset`, `min`,
+        `max`, `intersection_update` ; un vecteur en a d'autres ; les nommer un par un
+        reviendrait à recopier le runtime et à se périmer au premier ajout. Ce qui est
+        transmis est enveloppé au retour, ce qui est passé est déballé -- c'est tout ce que la
+        vue ajoute.
         """
         if name.startswith("get_") and name[4:].isdigit():
             return lambda _i=int(name[4:]): self[_i]
-        raise AttributeError(name)
+        return _forward(self, name)
 
     # Les opérations d'ensemble, transmises telles que la valeur les porte.
     def union(self, other):
@@ -300,6 +320,9 @@ class Mapping(View, typing.Generic[K, E]):
     def size(self) -> int:
         return len(self._value)
 
+    def __getattr__(self, name: str):
+        return _forward(self, name)
+
     def keys(self) -> list[K]:
         return list(self)
 
@@ -322,7 +345,11 @@ class Ordered(View, typing.Generic[E]):
     __slots__ = ()
 
     END = dsviper.ValueXArray.END
-    end = dsviper.ValueXArray.END
+
+    @staticmethod
+    def end() -> dsviper.ValueUUId:
+        """La position d'après le dernier, là où insérer pour ajouter à la fin."""
+        return dsviper.ValueXArray.END
 
     def __len__(self) -> int:
         return len(self._value)
@@ -355,8 +382,16 @@ class Ordered(View, typing.Generic[E]):
     def index(self, position: dsviper.ValueUUId):
         return self._value.index(position)
 
-    def position_of(self, index: int):
-        return self._value.position(index)
+    def position_of(self, element):
+        """La position du premier élément égal, ou `None`.
+
+        `position` prend un rang, celle-ci prend une valeur. Le pack les distingue par le nom,
+        et c'est le bon choix : un rang et un élément ne se confondent pas.
+        """
+        for position in self.positions():
+            if self.at(position) == element:
+                return position
+        return None
 
     def has_position(self, position: dsviper.ValueUUId) -> bool:
         return self._value.has_position(position)
@@ -387,10 +422,21 @@ class Ordered(View, typing.Generic[E]):
         LA POSITION EST CE QUI FAIT UN XARRAY, donc la lire séparément de l'élément oblige à
         deux parcours et à supposer qu'ils s'alignent. Une seule liste le dit.
         """
-        return [(position, self.at(position)) for position in self.positions()]
+        # LA FIN N'EST PAS UNE PLACE. `positions()` la rend parce qu'on y insère ; la compter
+        # comme une paire ferait un élément de plus à chaque parcours.
+        return [(position, self.at(position)) for position in self.positions()
+                if position != dsviper.ValueXArray.END]
 
-    def to_vector(self) -> Sequence[E]:
-        return Sequence(self._value.to_vector())
+    def __getattr__(self, name: str):
+        return _forward(self, name)
+
+    def to_vector(self):
+        """Le xarray à plat, comme un vecteur — et du type que le modèle lui donne.
+
+        `Sequence` nue perdrait le lien au type : un appelant qui compare à `Vector_int8`
+        cherche la classe liée, pas la vue générique.
+        """
+        return sequence_of(self._value.to_vector().type)(self._value.to_vector())
 
     def empty(self) -> bool:
         return len(self._value) == 0
@@ -467,7 +513,15 @@ class Variant(View, typing.Generic[E]):
                 if prefix == "set_":
                     return lambda value, _t=alternative: self._value.wrap(unwrap(value), _t)
                 if prefix == "get_":
-                    return lambda: self.unwrap()
+                    def taken(_t=alternative):
+                        held = self._value.unwrap(encoded=False)
+                        if held.type() != _t:
+                            raise ValueError(
+                                f"le variant tient un {held.type().representation()}, "
+                                f"pas un {_t.representation()}")
+                        return wrap(held)
+
+                    return taken
                 return lambda _t=alternative: self._value.unwrap(encoded=False).type() == _t
 
         known = ", ".join(_alternative_name(t) for t in self._value.type().types())
@@ -486,8 +540,19 @@ class Variant(View, typing.Generic[E]):
 # de la vue générique, et l'unité en déclare une ligne par forme.
 
 
+_BOUND: dict[tuple, type] = {}
+
+
 def _bind(view, type_fn, cast):
-    """Une vue liée à un type : nommable, constructible, et qui refuse ce qui n'est pas d'elle."""
+    """Une vue liée à un type : nommable, constructible, et qui refuse ce qui n'est pas d'elle.
+
+    MÉMOÏSÉE PAR FORME. Deux appels pour le même type rendraient deux classes distinctes, et
+    `isinstance` deviendrait faux entre deux valeurs pourtant de la même forme -- y compris
+    entre ce qu'une unité déclare et ce qu'une conversion rend. Une forme, une classe.
+    """
+    cached = _BOUND.get((view, type_fn().representation()))
+    if cached is not None:
+        return cached
 
     class Bound(view):
         __slots__ = ()
@@ -506,19 +571,32 @@ def _bind(view, type_fn, cast):
             """
             return cls(dsviper.Value.decode(blob, type_fn(), _definitions(), **kwargs))
 
-        def __init__(self, value=None):
-            if isinstance(value, View):
-                value = value.value
-            if isinstance(value, dsviper.Value):
-                # LE CONTRAT DE FAIL-FAST DU PACK : une valeur du mauvais type est rejetée à la
-                # construction, par un `raise` et non un `assert`, pour que ça tienne aussi
-                # sous `python -O` où les assertions disparaissent.
-                if value.type() != type_fn():
-                    raise TypeError(f"cette valeur n'est pas un {type_fn().representation()}")
+        def __init__(self, value: typing.Any = None):
+            value = unwrap(value) if hasattr(value, "_unwrap") else value
+            # `isinstance(v, dsviper.Value)` EST TOUJOURS FAUX. La liaison Python déclare une
+            # hiérarchie dans son `.pyi` et ne la tient pas à l'exécution : le `__mro__` d'une
+            # valeur concrète est `(ValueStructure, object)`. Le contrôle ci-dessous ne se
+            # déclenchait donc jamais, et une valeur du mauvais type filait jusqu'au runtime —
+            # qui la refusait, mais par une `ViperError` et non par le `TypeError` que le
+            # contrat annonce. Reconnaître par une méthode est le seul test qui tienne.
+            if hasattr(value, "type_code") and value.type() == type_fn():
                 View.__init__(self, value)
-            else:
-                View.__init__(self, cast(dsviper.Value.create(type_fn(), value)))
+                return
 
+            # DEUX FAÇONS DE SE TROMPER, ET UNE SEULE EST UNE ERREUR. `Optional_StructureT(s)`
+            # donne l'élément et non le conteneur : c'est la façon la plus courte d'en écrire
+            # un, et le runtime sait le bâtir. `Vector_uint8(vector_int8)` donne un conteneur
+            # d'un autre type, et là il n'y a rien à bâtir. Laisser le runtime trancher, et
+            # traduire son refus dans le `TypeError` que le contrat annonce — par un `raise` et
+            # non un `assert`, pour que ça tienne aussi sous `python -O`.
+            try:
+                View.__init__(self, cast(dsviper.Value.create(type_fn(), unwrap(value))))
+            except dsviper.ViperError as refus:
+                raise TypeError(
+                    f"cette valeur n'est pas un {type_fn().representation()}") from refus
+
+    Bound.__name__ = Bound.__qualname__ = type_fn().representation()
+    _BOUND[(view, type_fn().representation())] = Bound
     return Bound
 
 
@@ -550,3 +628,22 @@ def _alternative_name(type_) -> str:
     caractère qu'un identifiant accepte.
     """
     return type_.representation().replace("::", "_")
+
+
+def _forward(view: View, name: str) -> typing.Any:
+    """Transmettre à la valeur ce que la vue ne nomme pas, en enveloppant ce qui revient."""
+    inner: typing.Any = getattr(view.value, name, None)
+    if inner is None:
+        raise AttributeError(f"ni la vue ni {view.value.type().representation()} n'ont '{name}'")
+    if not callable(inner):
+        return wrap(inner)
+
+    def forwarded(*args, **kwargs) -> typing.Any:
+        result: typing.Any = inner(*[unwrap(a) for a in args], **kwargs)
+        if hasattr(result, "type_code"):
+            return type(view)(result) if result.type() == view.value.type() else wrap(result)
+        if isinstance(result, tuple):
+            return tuple(wrap(r) if hasattr(r, "type_code") else r for r in result)
+        return result
+
+    return forwarded

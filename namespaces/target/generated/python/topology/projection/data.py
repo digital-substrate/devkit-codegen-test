@@ -11,8 +11,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._codegen import (AnyConceptKey, Mapping, Ordered, Proxy, Sequence, is_known,
-                        register, unwrap, wrap)
+from .._codegen import (NEUF as _NEUF, AnyConceptKey, Mapping, Ordered, Proxy, Sequence,
+                        is_known, register, unwrap, wrap)
 from .. import model_b
 from .. import model_a
 
@@ -51,13 +51,26 @@ class LinkKey(Proxy):
         """
         return dsviper.TypeKey(cls.concept())
 
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+    def __init__(self, identifier: typing.Any = _NEUF):
+        # `None` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `LinkKey()` demande une clé
+        # neuve ; `LinkKey(None)` passe quelque chose, et ce quelque chose n'est pas un
+        # identifiant. Un témoin distingue les deux là où `None` ne le peut pas.
+        if identifier is _NEUF:
+            identifier = None
+        elif identifier is None:
+            raise TypeError("None n'est pas un identifiant d'instance")
+
         if isinstance(identifier, dsviper.ValueKey):
             if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Projection::LinkKey")
             super().__init__(identifier)
-        else:
+        elif identifier is None or isinstance(identifier, (dsviper.ValueUUId, str)):
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+        else:
+            # UN IDENTIFIANT EST UNE CHAÎNE OU UN UUId, ET RIEN D'AUTRE. Laisser passer un
+            # entier ou une liste ferait lever le runtime -- ce qui est juste, mais par une
+            # erreur qui parle de décodage plutôt que du type qu'on lui a donné.
+            raise TypeError(f"{identifier!r} n'est pas un identifiant d'instance")
 
     @classmethod
     def decode(cls, blob, **kwargs) -> LinkKey:
@@ -94,13 +107,20 @@ class LinkKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == LINK else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:Projection::LinkKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
 
     def __repr__(self) -> str:
-        return f"Projection::LinkKey({self.value.representation()})"
+        return self.description()
+
 
 
 class DerivedMaterialKey(Proxy):
@@ -128,13 +148,26 @@ class DerivedMaterialKey(Proxy):
         """
         return dsviper.TypeKey(cls.concept())
 
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+    def __init__(self, identifier: typing.Any = _NEUF):
+        # `None` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `DerivedMaterialKey()` demande une clé
+        # neuve ; `DerivedMaterialKey(None)` passe quelque chose, et ce quelque chose n'est pas un
+        # identifiant. Un témoin distingue les deux là où `None` ne le peut pas.
+        if identifier is _NEUF:
+            identifier = None
+        elif identifier is None:
+            raise TypeError("None n'est pas un identifiant d'instance")
+
         if isinstance(identifier, dsviper.ValueKey):
             if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Projection::DerivedMaterialKey")
             super().__init__(identifier)
-        else:
+        elif identifier is None or isinstance(identifier, (dsviper.ValueUUId, str)):
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+        else:
+            # UN IDENTIFIANT EST UNE CHAÎNE OU UN UUId, ET RIEN D'AUTRE. Laisser passer un
+            # entier ou une liste ferait lever le runtime -- ce qui est juste, mais par une
+            # erreur qui parle de décodage plutôt que du type qu'on lui a donné.
+            raise TypeError(f"{identifier!r} n'est pas un identifiant d'instance")
 
     @classmethod
     def decode(cls, blob, **kwargs) -> DerivedMaterialKey:
@@ -171,13 +204,28 @@ class DerivedMaterialKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == DERIVED_MATERIAL else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:Projection::DerivedMaterialKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
 
     def __repr__(self) -> str:
-        return f"Projection::DerivedMaterialKey({self.value.representation()})"
+        return self.description()
+
+    def to_parent_key(self):
+        """Élargir vers le parent.
+
+        NE PERD RIEN ET NE PEUT PAS ÉCHOUER : l'identifiant d'exécution reste celui du concept
+        réel, et c'est ce qui permet d'en revenir ensuite.
+        """
+        return model_a.MaterialKey(self.value)
+
 
 class Pair(Proxy):
     """Projection::Pair.

@@ -89,6 +89,15 @@ class Proxy:
 # de rendre ses éléments avec leurs noms sans qu'aucune classe de conteneur soit générée :
 # le pack en émet une par combinaison rencontrée, ici il n'y en a aucune.
 
+class _Neuf:
+    """Le témoin d'un argument absent, là où `None` est une valeur possible."""
+
+    def __repr__(self) -> str:
+        return "<neuf>"
+
+
+NEUF = _Neuf()
+
 _CLASSES: dict[str, type] = {}
 
 # LES DÉFINITIONS DU MODÈLE, POSÉES PAR LE PAQUET. Décoder demande de savoir quel modèle lire,
@@ -235,7 +244,9 @@ class AnyConceptKey(Proxy):
         return self.value.instance_id().is_valid()
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et le concept qu'elle désigne, dits comme le modèle les nomme."""
+        return (f"{self.value.instance_id().encoded()}:AnyConceptKey"
+                f"({self.value.type_concept().representation()}Key)")
 
     def is_known(self) -> bool:
         return is_known(self.value)
@@ -251,4 +262,4 @@ class AnyConceptKey(Proxy):
         return cls(self.value) if self.value.type() == cls.type() else None
 
     def __repr__(self) -> str:
-        return f"AnyConceptKey({self.value.representation()})"
+        return self.description()

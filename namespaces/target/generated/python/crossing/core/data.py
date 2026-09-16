@@ -11,8 +11,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._codegen import (AnyConceptKey, Mapping, Ordered, Proxy, Sequence, is_known,
-                        register, unwrap, wrap)
+from .._codegen import (NEUF as _NEUF, AnyConceptKey, Mapping, Ordered, Proxy, Sequence,
+                        is_known, register, unwrap, wrap)
 
 # ── l'identité de cette unité dans le modèle ──
 #
@@ -54,13 +54,26 @@ class OtherKey(Proxy):
         """
         return dsviper.TypeKey(cls.concept())
 
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+    def __init__(self, identifier: typing.Any = _NEUF):
+        # `None` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `OtherKey()` demande une clé
+        # neuve ; `OtherKey(None)` passe quelque chose, et ce quelque chose n'est pas un
+        # identifiant. Un témoin distingue les deux là où `None` ne le peut pas.
+        if identifier is _NEUF:
+            identifier = None
+        elif identifier is None:
+            raise TypeError("None n'est pas un identifiant d'instance")
+
         if isinstance(identifier, dsviper.ValueKey):
             if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Core::OtherKey")
             super().__init__(identifier)
-        else:
+        elif identifier is None or isinstance(identifier, (dsviper.ValueUUId, str)):
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+        else:
+            # UN IDENTIFIANT EST UNE CHAÎNE OU UN UUId, ET RIEN D'AUTRE. Laisser passer un
+            # entier ou une liste ferait lever le runtime -- ce qui est juste, mais par une
+            # erreur qui parle de décodage plutôt que du type qu'on lui a donné.
+            raise TypeError(f"{identifier!r} n'est pas un identifiant d'instance")
 
     @classmethod
     def decode(cls, blob, **kwargs) -> OtherKey:
@@ -97,13 +110,20 @@ class OtherKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == OTHER else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:Core::OtherKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
 
     def __repr__(self) -> str:
-        return f"Core::OtherKey({self.value.representation()})"
+        return self.description()
+
 
 
 class ThingKey(Proxy):
@@ -131,13 +151,26 @@ class ThingKey(Proxy):
         """
         return dsviper.TypeKey(cls.concept())
 
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+    def __init__(self, identifier: typing.Any = _NEUF):
+        # `None` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `ThingKey()` demande une clé
+        # neuve ; `ThingKey(None)` passe quelque chose, et ce quelque chose n'est pas un
+        # identifiant. Un témoin distingue les deux là où `None` ne le peut pas.
+        if identifier is _NEUF:
+            identifier = None
+        elif identifier is None:
+            raise TypeError("None n'est pas un identifiant d'instance")
+
         if isinstance(identifier, dsviper.ValueKey):
             if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Core::ThingKey")
             super().__init__(identifier)
-        else:
+        elif identifier is None or isinstance(identifier, (dsviper.ValueUUId, str)):
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+        else:
+            # UN IDENTIFIANT EST UNE CHAÎNE OU UN UUId, ET RIEN D'AUTRE. Laisser passer un
+            # entier ou une liste ferait lever le runtime -- ce qui est juste, mais par une
+            # erreur qui parle de décodage plutôt que du type qu'on lui a donné.
+            raise TypeError(f"{identifier!r} n'est pas un identifiant d'instance")
 
     @classmethod
     def decode(cls, blob, **kwargs) -> ThingKey:
@@ -174,13 +207,20 @@ class ThingKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == THING else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:Core::ThingKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
 
     def __repr__(self) -> str:
-        return f"Core::ThingKey({self.value.representation()})"
+        return self.description()
+
 
 
 class SubThingKey(Proxy):
@@ -208,13 +248,26 @@ class SubThingKey(Proxy):
         """
         return dsviper.TypeKey(cls.concept())
 
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+    def __init__(self, identifier: typing.Any = _NEUF):
+        # `None` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `SubThingKey()` demande une clé
+        # neuve ; `SubThingKey(None)` passe quelque chose, et ce quelque chose n'est pas un
+        # identifiant. Un témoin distingue les deux là où `None` ne le peut pas.
+        if identifier is _NEUF:
+            identifier = None
+        elif identifier is None:
+            raise TypeError("None n'est pas un identifiant d'instance")
+
         if isinstance(identifier, dsviper.ValueKey):
             if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Core::SubThingKey")
             super().__init__(identifier)
-        else:
+        elif identifier is None or isinstance(identifier, (dsviper.ValueUUId, str)):
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+        else:
+            # UN IDENTIFIANT EST UNE CHAÎNE OU UN UUId, ET RIEN D'AUTRE. Laisser passer un
+            # entier ou une liste ferait lever le runtime -- ce qui est juste, mais par une
+            # erreur qui parle de décodage plutôt que du type qu'on lui a donné.
+            raise TypeError(f"{identifier!r} n'est pas un identifiant d'instance")
 
     @classmethod
     def decode(cls, blob, **kwargs) -> SubThingKey:
@@ -251,13 +304,28 @@ class SubThingKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == SUB_THING else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:Core::SubThingKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
 
     def __repr__(self) -> str:
-        return f"Core::SubThingKey({self.value.representation()})"
+        return self.description()
+
+    def to_parent_key(self):
+        """Élargir vers le parent.
+
+        NE PERD RIEN ET NE PEUT PAS ÉCHOUER : l'identifiant d'exécution reste celui du concept
+        réel, et c'est ce qui permet d'en revenir ensuite.
+        """
+        return ThingKey(self.value)
+
 
 class KlubKey(Proxy):
     """Une poignée sur une instance d'un membre de Core::Klub.
@@ -315,7 +383,13 @@ class KlubKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == KLUB else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:Core::KlubKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
@@ -330,13 +404,21 @@ class KlubKey(Proxy):
         """La clé d'un membre, vue comme celle du club."""
         return cls(key.value if isinstance(key, Proxy) else key)
 
+    def to_other_key(self):
+        """La clé vue comme celle de ce membre, ou `None` si l'instance n'en est pas un."""
+        return self.as_(OtherKey)
+
+    def to_sub_thing_key(self):
+        """La clé vue comme celle de ce membre, ou `None` si l'instance n'en est pas un."""
+        return self.as_(SubThingKey)
+
     def as_(self, cls):
         """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
         concept = cls.concept()
         return cls(self.value.to_member_key(concept)) if self.value.is_member(concept) else None
 
     def __repr__(self) -> str:
-        return f"Core::KlubKey({self.value.representation()})"
+        return self.description()
 
 class Grade(enum.Enum):
     """Core::Grade.
@@ -358,6 +440,18 @@ class Grade(enum.Enum):
         return definitions().check_enumeration(GRADE)
 
     @classmethod
+    def from_str(cls, name: str) -> Grade:
+        """Depuis le nom d'un cas, et depuis rien d'autre.
+
+        LE CONSTRUCTEUR EST PLUS LARGE : il prend aussi un rang, parce qu'un appel venu du
+        dynamique en tient un. `from_str` dit ce qu'il attend, donc il refuse le reste par une
+        erreur de type — ce sont deux portes, et elles n'ouvrent pas sur la même chose.
+        """
+        if not isinstance(name, str):
+            raise TypeError(f"{name!r} n'est pas un nom de cas")
+        return cls(name)
+
+    @classmethod
     def _missing_(cls, value):
         """Se construire depuis un rang, comme le modèle les numérote.
 
@@ -371,8 +465,9 @@ class Grade(enum.Enum):
             if value in range(len(cases)):
                 return cases[value]
             return None
-        # NI UN NOM NI UN RANG : c'est une erreur de type et non de valeur, et le dire
-        # autrement enverrait l'appelant chercher une faute là où il n'y en a pas.
+        if isinstance(value, str):
+            return None          # un nom inconnu est une erreur de valeur
+        # NI UN NOM NI UN RANG : c'est une erreur de type et non de valeur.
         raise TypeError(f"{value!r} n'est ni un cas de Grade ni un rang")
 
     def index(self) -> int:

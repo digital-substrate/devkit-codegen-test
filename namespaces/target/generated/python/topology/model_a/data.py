@@ -11,8 +11,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._codegen import (AnyConceptKey, Mapping, Ordered, Proxy, Sequence, is_known,
-                        register, unwrap, wrap)
+from .._codegen import (NEUF as _NEUF, AnyConceptKey, Mapping, Ordered, Proxy, Sequence,
+                        is_known, register, unwrap, wrap)
 
 # ── l'identité de cette unité dans le modèle ──
 #
@@ -49,13 +49,26 @@ class MaterialKey(Proxy):
         """
         return dsviper.TypeKey(cls.concept())
 
-    def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
+    def __init__(self, identifier: typing.Any = _NEUF):
+        # `None` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `MaterialKey()` demande une clé
+        # neuve ; `MaterialKey(None)` passe quelque chose, et ce quelque chose n'est pas un
+        # identifiant. Un témoin distingue les deux là où `None` ne le peut pas.
+        if identifier is _NEUF:
+            identifier = None
+        elif identifier is None:
+            raise TypeError("None n'est pas un identifiant d'instance")
+
         if isinstance(identifier, dsviper.ValueKey):
             if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un ModelA::MaterialKey")
             super().__init__(identifier)
-        else:
+        elif identifier is None or isinstance(identifier, (dsviper.ValueUUId, str)):
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+        else:
+            # UN IDENTIFIANT EST UNE CHAÎNE OU UN UUId, ET RIEN D'AUTRE. Laisser passer un
+            # entier ou une liste ferait lever le runtime -- ce qui est juste, mais par une
+            # erreur qui parle de décodage plutôt que du type qu'on lui a donné.
+            raise TypeError(f"{identifier!r} n'est pas un identifiant d'instance")
 
     @classmethod
     def decode(cls, blob, **kwargs) -> MaterialKey:
@@ -92,13 +105,20 @@ class MaterialKey(Proxy):
         return cls(value) if value.type_concept().runtime_id() == MATERIAL else None
 
     def description(self) -> str:
-        return self.value.description()
+        """L'instance et son type, dits comme le modèle les nomme.
+
+        `Value.description()` du runtime rend `key<Demo::ConceptA>` : la forme du *type*, qui
+        est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
+        tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
+        """
+        return f"{self.value.instance_id().encoded()}:ModelA::MaterialKey"
 
     def is_known(self) -> bool:
         return is_known(self.value)
 
     def __repr__(self) -> str:
-        return f"ModelA::MaterialKey({self.value.representation()})"
+        return self.description()
+
 
 class Finish(enum.Enum):
     """ModelA::Finish.
@@ -122,6 +142,18 @@ class Finish(enum.Enum):
         return definitions().check_enumeration(FINISH)
 
     @classmethod
+    def from_str(cls, name: str) -> Finish:
+        """Depuis le nom d'un cas, et depuis rien d'autre.
+
+        LE CONSTRUCTEUR EST PLUS LARGE : il prend aussi un rang, parce qu'un appel venu du
+        dynamique en tient un. `from_str` dit ce qu'il attend, donc il refuse le reste par une
+        erreur de type — ce sont deux portes, et elles n'ouvrent pas sur la même chose.
+        """
+        if not isinstance(name, str):
+            raise TypeError(f"{name!r} n'est pas un nom de cas")
+        return cls(name)
+
+    @classmethod
     def _missing_(cls, value):
         """Se construire depuis un rang, comme le modèle les numérote.
 
@@ -135,8 +167,9 @@ class Finish(enum.Enum):
             if value in range(len(cases)):
                 return cases[value]
             return None
-        # NI UN NOM NI UN RANG : c'est une erreur de type et non de valeur, et le dire
-        # autrement enverrait l'appelant chercher une faute là où il n'y en a pas.
+        if isinstance(value, str):
+            return None          # un nom inconnu est une erreur de valeur
+        # NI UN NOM NI UN RANG : c'est une erreur de type et non de valeur.
         raise TypeError(f"{value!r} n'est ni un cas de Finish ni un rang")
 
     def index(self) -> int:

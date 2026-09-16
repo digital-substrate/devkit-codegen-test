@@ -301,3 +301,44 @@ modèles — et s'annonce non vérifié si `pyright` n'est pas là.
    avoir demandé donnait « NoneType n'est pas indexable » — qui ne nomme ni le pool ni le
    service. C'est maintenant une erreur qui les nomme.
 3. **`unwrap` construisait un ensemble d'éléments non hachables** selon son type déclaré.
+
+
+## L'épreuve du projet : 474 sur 474
+
+La seule épreuve qui n'a pas été écrite ici. `features/python/tests` fait 4 068 lignes et
+474 tests, écrits contre le paquet de l'ancien pack, et `python/link/migrate.py` les porte sur
+le rendu — **1 091 substitutions, rien que des renommages.** Sa longueur est le coût de
+migration ; un portage à la main ne mesurerait rien.
+
+```
+  la suite    474 / 474 tests du projet, 1091 substitutions de portage
+```
+
+Elle tourne à chaque rendu. Entre le premier portage et maintenant : **155 → 474.**
+
+### Ce que la suite a trouvé, et que rien d'autre ne pouvait trouver
+
+L'architecture n'a jamais été mise en cause — aucun des 319 échecs ne disait qu'elle était
+fausse. Tous disaient qu'une surface manquait, et deux d'entre eux étaient des défauts :
+
+- **une clé refusait celle d'un descendant.** Élargir ne perd rien : l'identifiant d'exécution
+  reste celui du concept réel, et c'est ce qui permet d'en revenir. Comparer les types à
+  l'identique interdisait tout polymorphisme — `test_polymorphism` passait de 1/33 à 29/33 ;
+- **`isinstance(v, dsviper.Value)` est toujours faux**, la liaison ne tenant pas la hiérarchie
+  que son `.pyi` déclare. Le contrôle de type d'une vue liée ne se déclenchait donc jamais :
+  une valeur du mauvais type filait jusqu'au runtime, qui la refusait par une `ViperError` et
+  non par le `TypeError` que le contrat annonce. **Le fail-fast était en place et désarmé.**
+
+Et un point de conception que seule une assertion d'identité révèle : **une forme, une
+classe**. Deux appels de la fabrique pour le même type rendaient deux classes distinctes, donc
+`isinstance(v, Vector_int8)` était faux pour un vecteur pourtant construit par elle. La table
+par représentation de type est ce qui fait de « la même forme » la même chose.
+
+### Deux endroits où le rendu garde sa forme contre celle du pack
+
+Absorbés par le portage plutôt que suivis, et c'est délibéré :
+
+- **un champ garde le nom du modèle.** Le pack coupe avant les chiffres et invente `f_uint_8`
+  là où le `.dsm` dit `f_uint8` ;
+- **un document absent est `None`**, et non un optional enveloppé. Python a `None` pour dire
+  l'absence, et le typage l'exprime dans le retour.

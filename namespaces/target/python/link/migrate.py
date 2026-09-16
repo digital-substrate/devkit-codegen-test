@@ -18,6 +18,8 @@ RENAMES = [
     # types générés, donc elle suit — c'est la dette notée dans PLAN.md, payée ici.
     (re.compile(r"(?<![A-Za-z])Test_(\w+)"), r"Demo_\1"),
     (re.compile(r"\bfrom_test_(\w+)"), r"from_demo_\1"),
+    (re.compile(r"\bTest::"), "Demo::"),
+    (re.compile(r"\bto_test_(\w+)_key\b"), r"to_\1_key"),
 
     # Une unité est un module, pas un préfixe : `Demo_ConceptAKey` devient `ConceptAKey` dans
     # `features.demo`. C'est ce que tout le chantier cherchait.
@@ -50,7 +52,6 @@ RENAMES = [
     # d'appel et non un nom, et c'est délibéré : la classe du pack ne faisait que redire ce que
     # le langage offre.
     (re.compile(r"\.name\(\)"), ".value"),
-    (re.compile(r"(\w+)\.from_str\("), r"\1("),
 
     # `.name()` rendait le nom déclaré par le modèle ; sur une `enum.Enum` c'est `.value`,
     # puisque le membre porte la majuscule et la valeur porte le nom du modèle.
@@ -60,6 +61,7 @@ RENAMES = [
     # portait le namespace parce qu'un module plat n'avait pas d'autre moyen de distinguer deux
     # membres homonymes ; ici le module le fait.
     (re.compile(r"\.from_demo_(\w+)_key\b"), r".from_\1_key"),
+    (re.compile(r"\.to_demo_(\w+)_key\b"), r".to_\1_key"),
 
     # UN CHAMP GARDE LE NOM DU MODÈLE. Le pack lui applique une casse qui coupe avant les
     # chiffres — `f_uint8` devient `f_uint_8` — et invente ainsi un nom que le modèle ne
