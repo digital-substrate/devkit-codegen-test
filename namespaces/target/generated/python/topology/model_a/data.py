@@ -51,11 +51,17 @@ class MaterialKey(Proxy):
 
     def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
         if isinstance(identifier, dsviper.ValueKey):
-            if identifier.type() != self.type():
+            if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un ModelA::MaterialKey")
             super().__init__(identifier)
         else:
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def decode(cls, blob, **kwargs) -> MaterialKey:
+        """Relire depuis des octets : la classe connaît son type."""
+        return cls(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, cls.type(), definitions(), **kwargs)))
 
     @classmethod
     def create(cls) -> MaterialKey:
@@ -74,6 +80,16 @@ class MaterialKey(Proxy):
     # La clé, vue sans son type.
     def to_any_concept_key(self) -> AnyConceptKey:
         return AnyConceptKey(self.value.to_any_concept_key())
+
+    @classmethod
+    def from_any_concept_key(cls, key) -> MaterialKey | None:
+        """La clé non typée, retypée — ou `None` si elle ne désigne pas ce concept.
+
+        LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+        question dont la réponse est dans l'identifiant que la valeur porte.
+        """
+        value = key.value if isinstance(key, Proxy) else key
+        return cls(value) if value.type_concept().runtime_id() == MATERIAL else None
 
     def description(self) -> str:
         return self.value.description()
@@ -106,8 +122,36 @@ class Finish(enum.Enum):
         return definitions().check_enumeration(FINISH)
 
     @classmethod
+    def _missing_(cls, value):
+        """Se construire depuis un rang, comme le modèle les numérote.
+
+        `enum.Enum` cherche par valeur ; le pack acceptait aussi l'index, et c'est ce qu'un
+        appelant qui vient du dynamique tient. Les deux entrées, une seule classe.
+        """
+        # `in range(...)` plutôt qu'une double comparaison : un `<` dans un corps de
+        # template ouvre une expression StringTemplate, et le fichier rendu s'arrête là.
+        if isinstance(value, int) and not isinstance(value, bool):
+            cases = list(cls)
+            if value in range(len(cases)):
+                return cases[value]
+            return None
+        # NI UN NOM NI UN RANG : c'est une erreur de type et non de valeur, et le dire
+        # autrement enverrait l'appelant chercher une faute là où il n'y en a pas.
+        raise TypeError(f"{value!r} n'est ni un cas de Finish ni un rang")
+
+    def index(self) -> int:
+        return list(type(self)).index(self)
+
+    def encode(self, **kwargs) -> dsviper.ValueBlob:
+        return dsviper.Value.encode(dsviper.ValueEnumeration(type(self).type(), self.value), **kwargs)
+
+    @classmethod
+    def decode(cls, blob, **kwargs) -> Finish:
+        return cls._wrap(dsviper.Value.decode(blob, cls.type(), definitions(), **kwargs))
+
+    @classmethod
     def _wrap(cls, value) -> Finish:
-        return cls(value.name())
+        return cls(dsviper.ValueEnumeration.cast(value).name())
 
     def _unwrap(self) -> str:
         return self.value

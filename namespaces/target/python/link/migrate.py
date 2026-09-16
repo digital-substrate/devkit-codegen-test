@@ -49,8 +49,12 @@ RENAMES = [
     # et sa construction depuis la valeur. C'est le seul endroit où le portage change une forme
     # d'appel et non un nom, et c'est délibéré : la classe du pack ne faisait que redire ce que
     # le langage offre.
-    (re.compile(r"\.name\(\)"), ".name"),
+    (re.compile(r"\.name\(\)"), ".value"),
     (re.compile(r"(\w+)\.from_str\("), r"\1("),
+
+    # `.name()` rendait le nom déclaré par le modèle ; sur une `enum.Enum` c'est `.value`,
+    # puisque le membre porte la majuscule et la valeur porte le nom du modèle.
+    (re.compile(r"\.name\b(?!\()"), ".value"),
 
     # UN CONSTRUCTEUR DE CLUB EST NOMMÉ DEPUIS L'UNITÉ, donc sans elle. `from_demo_concept_c_key`
     # portait le namespace parce qu'un module plat n'avait pas d'autre moyen de distinguer deux
@@ -60,18 +64,28 @@ RENAMES = [
     # UN CHAMP GARDE LE NOM DU MODÈLE. Le pack lui applique une casse qui coupe avant les
     # chiffres — `f_uint8` devient `f_uint_8` — et invente ainsi un nom que le modèle ne
     # contient pas. Le rendu garde celui qui est déclaré.
-    (re.compile(r"\bf_uint_(8|16|32|64)\b"), r"f_uint\1"),
-    (re.compile(r"\bf_int_(8|16|32|64)\b"), r"f_int\1"),
-    (re.compile(r"\bset_f_uint_(8|16|32|64)\b"), r"set_f_uint\1"),
-    (re.compile(r"\bset_f_int_(8|16|32|64)\b"), r"set_f_int\1"),
-    (re.compile(r"\bf_s\b"), "f_S"),
+    (re.compile(r"(?<![A-Za-z])f_uint_(8|16|32|64)\b"), r"f_uint\1"),
+    (re.compile(r"(?<![A-Za-z])f_int_(8|16|32|64)\b"), r"f_int\1"),
+            (re.compile(r"\bf_s\b"), "f_S"),
     (re.compile(r"\bf_t\b"), "f_T"),
 
     # UN DOCUMENT ABSENT EST `None`, ET NON UN OPTIONAL ENVELOPPÉ. Python a `None` pour dire
     # l'absence ; une classe pour ça n'apporterait que du poids, et le typage l'exprime dans
     # le retour. C'est le seul endroit où le portage change la forme d'un test et non un nom.
-    (re.compile(r"self\.assertTrue\((\w+)\.is_nil\(\)\)"), r"self.assertIsNone(\1)"),
-    (re.compile(r"self\.assertFalse\((\w+)\.is_nil\(\)\)"), r"self.assertIsNotNone(\1)"),
+    # SEULEMENT SUR LE RÉSULTAT D'UN `get`. Un optional construit par son nom garde son
+    # `is_nil()` — la vue le porte ; c'est le document rendu par un attachment qui est `None`
+    # plutôt qu'un optional enveloppé.
+    (re.compile(r"self\.assertTrue\((result|retrieved|doc|document)\.is_nil\(\)\)"),
+     r"self.assertIsNone(\1)"),
+    (re.compile(r"self\.assertFalse\((result|retrieved|doc|document)\.is_nil\(\)\)"),
+     r"self.assertIsNotNone(\1)"),
+
+    # UN `get` REND LE DOCUMENT, PAS UN OPTIONAL. C'est le seul endroit où le portage change la
+    # forme d'un appel et non un nom, et c'est délibéré : Python a `None` pour dire l'absence,
+    # et le typage l'exprime dans le retour. Les tests déballaient le résultat d'un `get` ; ici
+    # il n'y a rien à déballer.
+    (re.compile(r"\.get\(([^()]*)\)\.unwrap\(\)"), r".get(\1)"),
+    (re.compile(r"\b(result|retrieved|doc|document)\.unwrap\(\)"), r"\1"),
 
     # `md` était l'alias du module de définitions, qui n'existe plus comme module.
     (re.compile(r"\bmd\.definitions\b"), "definitions"),
@@ -81,7 +95,7 @@ RENAMES = [
      "from features import definitions\nfrom features.demo import data as md"),
     # UN IDENTIFIANT D'EXÉCUTION EST UNE CONSTANTE, donc en majuscules — convention de Python
     # que le pack n'applique pas à ses `RuntimeIds`.
-    (re.compile(r"\bmd\.(?:Attachment)?RuntimeIds\.[A-Za-z]+_(\w+)\b"),
+    (re.compile(r"\bmd\.(?:Attachment)?RuntimeIds\.(?:[A-Za-z]+_)?(\w+)\b"),
      lambda m: "md." + re.sub(r"(?<!^)(?=[A-Z])", "_", m.group(1)).upper()),
 
     # `f_e` : un champ dont le nom du modèle porte une capitale que la casse du pack efface.
@@ -107,9 +121,18 @@ def attachment_table(package: Path) -> dict:
     for scope in (n for n in dir(attachments) if n[0].isupper()):
         cls = getattr(attachments, scope)
         for name in (a for a in dir(cls) if not a.startswith("_")):
-            flat = re.sub(r"(?<!^)(?=[A-Z])", "_", scope).lower() + "_" + name
-            table[flat] = f"{scope}.{name}"
+            table[_flat(scope) + "_" + _flat(name)] = f"{scope}.{name}"
     return table
+
+
+def _flat(name: str) -> str:
+    """Le nom tel que le pack l'aplatit : une coupure avant chaque capitale et chaque chiffre.
+
+    `propertiesInt8` devient `properties_int_8`. C'est la casse que le pack applique et que le
+    rendu n'applique pas — il garde le nom déclaré par le modèle — donc c'est ici que les deux
+    se rencontrent.
+    """
+    return re.sub(r"(?<!^)(?=[A-Z])|(?<=[A-Za-z])(?=[0-9])", "_", name).lower()
 
 
 IMPORT = re.compile(r"from features\.demo import \(([^)]*)\)|from features\.demo import ([^\n(]+)")
@@ -172,7 +195,13 @@ def migrate(into: Path, package: Path | None = None) -> dict:
         text, n = redistribute(text)
         touched += n
 
-        for flat, scoped in TABLE.items():
+        # `del` EST UN MOT-CLÉ, DONC L'OPÉRATION S'APPELLE `delete`. Le pack la nomme `_del`
+        # dans un identifiant plat, où le mot n'a pas de sens syntaxique ; sur un objet il en a
+        # un, et `x.del(...)` ne se compile pas. Un fichier entier — dix-neuf tests — mourait là.
+        text, n = re.subn(r"\b(ma|db)\.((?:test|demo)_\w+)_del\b", r"\1.\2_delete", text)
+        touched += n
+
+        for flat, scoped in sorted(TABLE.items(), key=lambda kv: -len(kv[0])):
             # `test_` en minuscules aussi : le nom plat du pack porte le namespace en
             # minuscules, et le renommage du modèle n'a touché que la forme capitalisée.
             text, n = re.subn(rf"\b(ma|db)\.(?:test|demo)_{flat}_(\w+)\b", rf"\1.{scoped}.\2", text)

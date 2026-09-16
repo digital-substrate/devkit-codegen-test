@@ -86,6 +86,13 @@ class AttachmentProxy:
         document = getting.get(self.descriptor, key.value)
         return None if document.is_nil() else _wrap(document.unwrap())
 
+    def enumerate(self, getting, *, encoded: bool = True):
+        """Les paires clé/document, telles que le runtime les rend."""
+        # UNE BASE N'ÉNUMÈRE PAS ELLE-MÊME : elle offre l'interface de lecture qui le fait.
+        source = getting if hasattr(getting, "enumerate") else getting.attachment_getting()
+        return [(_wrap(key), _wrap(document) if isinstance(document, dsviper.Value) else document)
+                for key, document in source.enumerate(self.descriptor, encoded=encoded)]
+
     def diff_keys(self, current: dsviper.AttachmentGetting, other: dsviper.AttachmentGetting):
         added, removed, different, same = dsviper.AttachmentGetting.diff_keys(
             current, other, self.descriptor)

@@ -56,11 +56,17 @@ class OtherKey(Proxy):
 
     def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
         if isinstance(identifier, dsviper.ValueKey):
-            if identifier.type() != self.type():
+            if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Core::OtherKey")
             super().__init__(identifier)
         else:
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def decode(cls, blob, **kwargs) -> OtherKey:
+        """Relire depuis des octets : la classe connaît son type."""
+        return cls(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, cls.type(), definitions(), **kwargs)))
 
     @classmethod
     def create(cls) -> OtherKey:
@@ -79,6 +85,16 @@ class OtherKey(Proxy):
     # La clé, vue sans son type.
     def to_any_concept_key(self) -> AnyConceptKey:
         return AnyConceptKey(self.value.to_any_concept_key())
+
+    @classmethod
+    def from_any_concept_key(cls, key) -> OtherKey | None:
+        """La clé non typée, retypée — ou `None` si elle ne désigne pas ce concept.
+
+        LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+        question dont la réponse est dans l'identifiant que la valeur porte.
+        """
+        value = key.value if isinstance(key, Proxy) else key
+        return cls(value) if value.type_concept().runtime_id() == OTHER else None
 
     def description(self) -> str:
         return self.value.description()
@@ -117,11 +133,17 @@ class ThingKey(Proxy):
 
     def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
         if isinstance(identifier, dsviper.ValueKey):
-            if identifier.type() != self.type():
+            if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Core::ThingKey")
             super().__init__(identifier)
         else:
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def decode(cls, blob, **kwargs) -> ThingKey:
+        """Relire depuis des octets : la classe connaît son type."""
+        return cls(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, cls.type(), definitions(), **kwargs)))
 
     @classmethod
     def create(cls) -> ThingKey:
@@ -140,6 +162,16 @@ class ThingKey(Proxy):
     # La clé, vue sans son type.
     def to_any_concept_key(self) -> AnyConceptKey:
         return AnyConceptKey(self.value.to_any_concept_key())
+
+    @classmethod
+    def from_any_concept_key(cls, key) -> ThingKey | None:
+        """La clé non typée, retypée — ou `None` si elle ne désigne pas ce concept.
+
+        LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+        question dont la réponse est dans l'identifiant que la valeur porte.
+        """
+        value = key.value if isinstance(key, Proxy) else key
+        return cls(value) if value.type_concept().runtime_id() == THING else None
 
     def description(self) -> str:
         return self.value.description()
@@ -178,11 +210,17 @@ class SubThingKey(Proxy):
 
     def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
         if isinstance(identifier, dsviper.ValueKey):
-            if identifier.type() != self.type():
+            if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un Core::SubThingKey")
             super().__init__(identifier)
         else:
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def decode(cls, blob, **kwargs) -> SubThingKey:
+        """Relire depuis des octets : la classe connaît son type."""
+        return cls(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, cls.type(), definitions(), **kwargs)))
 
     @classmethod
     def create(cls) -> SubThingKey:
@@ -201,6 +239,16 @@ class SubThingKey(Proxy):
     # La clé, vue sans son type.
     def to_any_concept_key(self) -> AnyConceptKey:
         return AnyConceptKey(self.value.to_any_concept_key())
+
+    @classmethod
+    def from_any_concept_key(cls, key) -> SubThingKey | None:
+        """La clé non typée, retypée — ou `None` si elle ne désigne pas ce concept.
+
+        LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+        question dont la réponse est dans l'identifiant que la valeur porte.
+        """
+        value = key.value if isinstance(key, Proxy) else key
+        return cls(value) if value.type_concept().runtime_id() == SUB_THING else None
 
     def description(self) -> str:
         return self.value.description()
@@ -256,6 +304,16 @@ class KlubKey(Proxy):
     def to_any_concept_key(self) -> AnyConceptKey:
         return AnyConceptKey(self.value.to_any_concept_key())
 
+    @classmethod
+    def from_any_concept_key(cls, key) -> KlubKey | None:
+        """La clé non typée, retypée — ou `None` si elle ne désigne pas ce concept.
+
+        LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+        question dont la réponse est dans l'identifiant que la valeur porte.
+        """
+        value = key.value if isinstance(key, Proxy) else key
+        return cls(value) if value.type_concept().runtime_id() == KLUB else None
+
     def description(self) -> str:
         return self.value.description()
 
@@ -300,8 +358,36 @@ class Grade(enum.Enum):
         return definitions().check_enumeration(GRADE)
 
     @classmethod
+    def _missing_(cls, value):
+        """Se construire depuis un rang, comme le modèle les numérote.
+
+        `enum.Enum` cherche par valeur ; le pack acceptait aussi l'index, et c'est ce qu'un
+        appelant qui vient du dynamique tient. Les deux entrées, une seule classe.
+        """
+        # `in range(...)` plutôt qu'une double comparaison : un `<` dans un corps de
+        # template ouvre une expression StringTemplate, et le fichier rendu s'arrête là.
+        if isinstance(value, int) and not isinstance(value, bool):
+            cases = list(cls)
+            if value in range(len(cases)):
+                return cases[value]
+            return None
+        # NI UN NOM NI UN RANG : c'est une erreur de type et non de valeur, et le dire
+        # autrement enverrait l'appelant chercher une faute là où il n'y en a pas.
+        raise TypeError(f"{value!r} n'est ni un cas de Grade ni un rang")
+
+    def index(self) -> int:
+        return list(type(self)).index(self)
+
+    def encode(self, **kwargs) -> dsviper.ValueBlob:
+        return dsviper.Value.encode(dsviper.ValueEnumeration(type(self).type(), self.value), **kwargs)
+
+    @classmethod
+    def decode(cls, blob, **kwargs) -> Grade:
+        return cls._wrap(dsviper.Value.decode(blob, cls.type(), definitions(), **kwargs))
+
+    @classmethod
     def _wrap(cls, value) -> Grade:
-        return cls(value.name())
+        return cls(dsviper.ValueEnumeration.cast(value).name())
 
     def _unwrap(self) -> str:
         return self.value

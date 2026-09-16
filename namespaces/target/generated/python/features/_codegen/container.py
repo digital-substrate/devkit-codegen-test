@@ -45,6 +45,10 @@ class View:
 
     __slots__ = ("_value",)
 
+    # DÉCLARÉ, ET PAS SEULEMENT AFFECTÉ. Une sous-classe qui définit `__getattr__` fait douter
+    # le vérificateur de tout attribut résolu autrement ; l'annotation dit lequel existe.
+    _value: typing.Any
+
     def __init__(self, value):
         self._value = value
 
@@ -85,14 +89,26 @@ class Sequence(View, typing.Generic[E]):
     def __len__(self) -> int:
         return len(self._value)
 
-    def __iter__(self) -> typing.Iterator[E]:
+    def __iter__(self) -> typing.Iterator[typing.Any]:
         # UNE MAT N'EST PAS ITÉRABLE, et toutes les autres suites le sont. L'index est le seul
         # accès que les quatre portent ; itérer par lui marche partout.
         if hasattr(self._value, "__iter__"):
             return (wrap(element) for element in self._value)
-        return (wrap(self._value.at(i)) for i in range(len(self._value)))
 
-    def __getitem__(self, index: int) -> E:
+        # UNE MATRICE EST UNE SUITE DE COLONNES, et non une suite de nombres. Son `at` prend
+        # deux rangs, et la parcourir à plat perdrait sa forme -- ce que le modèle dit d'elle.
+        type_ = self._value.type()
+        if hasattr(type_, "columns"):
+            columns, rows = type_.columns(), type_.rows()
+            return (tuple(wrap(self._value.at(column, row)) for row in range(rows))
+                    for column in range(columns))
+        return (wrap(self._value.at(index)) for index in range(len(self._value)))
+
+    def __getitem__(self, index) -> E:
+        # UNE MATRICE S'INDEXE PAR DEUX RANGS. `m[1, 2]` passe un tuple, que la valeur attend
+        # sous forme de deux arguments.
+        if isinstance(index, tuple):
+            return wrap(self._value.at(*index))
         return wrap(self._value[index])
 
     def __setitem__(self, index: int, element: E) -> None:
@@ -101,8 +117,10 @@ class Sequence(View, typing.Generic[E]):
     def __contains__(self, element) -> bool:
         return unwrap(element) in self._value
 
-    def at(self, index: int) -> E:
-        return wrap(self._value.at(index))
+    def at(self, *position) -> E:
+        # UNE MATRICE S'INDEXE PAR COLONNE ET PAR LIGNE, les autres suites par un seul rang.
+        # La vue transmet ce qu'on lui donne plutôt que de choisir une arité.
+        return wrap(self._value.at(*position))
 
     def append(self, element: E) -> None:
         # UNE SUITE N'EST PAS TOUJOURS UN VECTEUR. Un ensemble ajoute par `add`, un vecteur par
@@ -156,6 +174,23 @@ class Sequence(View, typing.Generic[E]):
     def to_tuple(self) -> tuple:
         return tuple(self)
 
+    def __add__(self, other):
+        return type(self)(self._value + unwrap(other))
+
+    def __iadd__(self, other):
+        self._value += unwrap(other)
+        return self
+
+    def __getattr__(self, name: str):
+        """`get_0`, `get_1` — l'accès positionnel d'un tuple, nommé.
+
+        Le pack en émet un par membre de chaque tuple du modèle ; ici le rang est dans le nom
+        et la vue le lit.
+        """
+        if name.startswith("get_") and name[4:].isdigit():
+            return lambda _i=int(name[4:]): self[_i]
+        raise AttributeError(name)
+
     # Les opérations d'ensemble, transmises telles que la valeur les porte.
     def union(self, other):
         return type(self)(self._value.union(unwrap(other)))
@@ -189,6 +224,20 @@ class Sequence(View, typing.Generic[E]):
     def __isub__(self, other):
         self._value.difference_update(unwrap(other))
         return self
+
+    def symmetric_difference(self, other):
+        return type(self)(self._value.symmetric_difference(unwrap(other)))
+
+    def __xor__(self, other):
+        return self.symmetric_difference(other)
+
+    def __ixor__(self, other):
+        # LE RUNTIME N'A PAS TOUJOURS LA FORME EN PLACE. Quand elle manque, la composer depuis
+        # celle qui rend une valeur dit la même chose sans rien inventer.
+        if hasattr(self._value, "symmetric_difference_update"):
+            self._value.symmetric_difference_update(unwrap(other))
+            return self
+        return type(self)(self._value.symmetric_difference(unwrap(other)))
 
 
 class Mapping(View, typing.Generic[K, E]):
@@ -273,6 +322,7 @@ class Ordered(View, typing.Generic[E]):
     __slots__ = ()
 
     END = dsviper.ValueXArray.END
+    end = dsviper.ValueXArray.END
 
     def __len__(self) -> int:
         return len(self._value)
@@ -330,6 +380,14 @@ class Ordered(View, typing.Generic[E]):
 
     def remove(self, position: dsviper.ValueUUId) -> None:
         self._value.remove(position)
+
+    def items(self) -> list[tuple[dsviper.ValueUUId, E | None]]:
+        """Les paires position/élément, dans l'ordre.
+
+        LA POSITION EST CE QUI FAIT UN XARRAY, donc la lire séparément de l'élément oblige à
+        deux parcours et à supposer qu'ils s'alignent. Une seule liste le dit.
+        """
+        return [(position, self.at(position)) for position in self.positions()]
 
     def to_vector(self) -> Sequence[E]:
         return Sequence(self._value.to_vector())

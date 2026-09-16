@@ -240,6 +240,12 @@ class AnyConceptKey(Proxy):
     def is_known(self) -> bool:
         return is_known(self.value)
 
+    @classmethod
+    def decode(cls, blob, definitions=None, **kwargs) -> "AnyConceptKey":
+        return cls(dsviper.ValueKey.cast(dsviper.Value.decode(
+            blob, dsviper.TypeKey(dsviper.TypeAnyConcept()),
+            definitions if definitions is not None else definitions_of(), **kwargs)))
+
     def as_(self, cls):
         """La clé vue comme celle d'un concept donné, ou `None` si elle n'en est pas une."""
         return cls(self.value) if self.value.type() == cls.type() else None

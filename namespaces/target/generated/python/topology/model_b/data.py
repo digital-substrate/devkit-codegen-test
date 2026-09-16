@@ -50,11 +50,17 @@ class MaterialKey(Proxy):
 
     def __init__(self, identifier: dsviper.ValueKey | dsviper.ValueUUId | str | None = None):
         if isinstance(identifier, dsviper.ValueKey):
-            if identifier.type() != self.type():
+            if not identifier.is_member(self.concept()):
                 raise TypeError("cette valeur n'est pas un ModelB::MaterialKey")
             super().__init__(identifier)
         else:
             super().__init__(dsviper.ValueKey.create(self.concept(), identifier))
+
+    @classmethod
+    def decode(cls, blob, **kwargs) -> MaterialKey:
+        """Relire depuis des octets : la classe connaît son type."""
+        return cls(dsviper.ValueKey.cast(
+            dsviper.Value.decode(blob, cls.type(), definitions(), **kwargs)))
 
     @classmethod
     def create(cls) -> MaterialKey:
@@ -73,6 +79,16 @@ class MaterialKey(Proxy):
     # La clé, vue sans son type.
     def to_any_concept_key(self) -> AnyConceptKey:
         return AnyConceptKey(self.value.to_any_concept_key())
+
+    @classmethod
+    def from_any_concept_key(cls, key) -> MaterialKey | None:
+        """La clé non typée, retypée — ou `None` si elle ne désigne pas ce concept.
+
+        LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
+        question dont la réponse est dans l'identifiant que la valeur porte.
+        """
+        value = key.value if isinstance(key, Proxy) else key
+        return cls(value) if value.type_concept().runtime_id() == MATERIAL else None
 
     def description(self) -> str:
         return self.value.description()
