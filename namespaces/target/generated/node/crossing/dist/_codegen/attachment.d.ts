@@ -11,6 +11,7 @@
  * que `Proxy`, qui est l'accesseur typé d'une `Value`.
  */
 import dsviper from "@digitalsubstrate/dsviper";
+import { Sequence } from "./container.js";
 import { type Wrapping } from "./registry.js";
 /** Le contexte sur lequel une opération de lecture porte : un état en mémoire, ou une base. */
 export interface Getting {
@@ -44,6 +45,7 @@ export declare class AttachmentProxy<K, D> {
     private readonly runtimeId;
     private readonly definitions;
     private resolved?;
+    [name: string]: unknown;
     /** LES DEUX CLASSES NE SERVENT PAS À CONVERTIR — `wrap` le fait depuis le type que la
      *  valeur porte. Elles sont là pour que l'unité les nomme, parce que **les nommer force
      *  leur import**, et que c'est l'import qui remplit la table des classes. Sans elles la
@@ -52,7 +54,24 @@ export declare class AttachmentProxy<K, D> {
     constructor(runtimeId: dsviper.ValueUUId, definitions: () => dsviper.DefinitionsConst, _key: Wrapping, _document: Wrapping | undefined);
     /** Le descripteur que le runtime en tire, résolu une fois. */
     get descriptor(): dsviper.Attachment;
-    keys(getting: Getting): K[];
+    /** Les clés, comme le runtime les tient — un ensemble, et non un tableau recopié.
+     *
+     * RECOPIER PERDRAIT DEUX CHOSES : la taille sans parcours, et l'appartenance par valeur.
+     * Un tableau de JavaScript n'a ni l'une ni l'autre, et l'ensemble du runtime a les deux.
+     */
+    keys(getting: Getting): Sequence<K>;
+    /** Les paires clé/document, telles que le runtime les rend.
+     *
+     * UNE BASE N'ÉNUMÈRE PAS ELLE-MÊME : elle offre l'interface de lecture qui le fait.
+     */
+    enumerate(getting: Getting): [K, D | undefined][];
+    /** Ce qui a changé entre deux états : ajouté, retiré, modifié, identique. */
+    diffKeys(current: Getting, other: Getting): [
+        Sequence<K>,
+        Sequence<K>,
+        Sequence<K>,
+        Sequence<K>
+    ];
     has(getting: Getting, key: K): boolean;
     /** Le document, ou `undefined` — et non un `Optional` enveloppé.
      *

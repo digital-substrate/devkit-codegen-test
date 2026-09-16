@@ -69,6 +69,9 @@ export declare class DerivedMaterialKey extends Proxy<dsviper.ValueKey> {
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
+    /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
+     *  réel, et c'est ce qui permet d'en revenir ensuite. */
+    toParentKey(): model_a.MaterialKey;
     /** La clé, vue sans son type. */
     toAnyConceptKey(): AnyConceptKey;
     /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.

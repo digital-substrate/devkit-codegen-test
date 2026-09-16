@@ -180,6 +180,12 @@ export class DerivedMaterialKey extends Proxy<dsviper.ValueKey> {
         return isKnown(this.value);
     }
 
+    /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
+     *  réel, et c'est ce qui permet d'en revenir ensuite. */
+    toParentKey(): model_a.MaterialKey {
+        return new model_a.MaterialKey(this.value);
+    }
+
     /** La clé, vue sans son type. */
     toAnyConceptKey(): AnyConceptKey {
         return new AnyConceptKey(this.value.toAnyConceptKey());

@@ -10,6 +10,7 @@
  * — le runtime s'y suffit — mais seulement pour ne pas répéter ce qu'elles partagent.
  */
 import dsviper from "@digitalsubstrate/dsviper";
+import { isKnown } from "./registry.js";
 export class Proxy {
     value;
     constructor(value) {
@@ -89,6 +90,9 @@ export class AnyConceptKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    isKnown() {
+        return isKnown(this.value);
     }
     description() {
         return `${this.value.instanceId().encoded()}:AnyConceptKey`

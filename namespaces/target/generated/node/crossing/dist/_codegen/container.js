@@ -140,6 +140,19 @@ export class Sequence extends View {
     toArray() {
         return [...this];
     }
+    /** La colonne d'une matrice, et la ligne — deux façons de la lire, et le modèle les nomme. */
+    row(index) {
+        const type = this.value.type();
+        const held = [];
+        for (let column = 0; column < type.columns(); column += 1) {
+            held.push(this.at(column, index));
+        }
+        return held;
+    }
+    setRow(index, elements) {
+        const inner = this.value;
+        elements.forEach((element, column) => inner.set(column, index, unwrap(element)));
+    }
     /** Ce que la valeur sait faire et que la vue ne nomme pas.
      *
      * LA VUE NE CHOISIT PAS CE QUI PASSE. Un ensemble a `isdisjoint`, `union`, `min` ; un
@@ -220,11 +233,19 @@ export class Ordered extends View {
     static createPosition() {
         return dsviper.ValueXArray.createPosition();
     }
+    /** Le nombre d'éléments — et la fin n'en est pas un.
+     *
+     * `positions()` rend aussi `END`, la place d'après le dernier, parce qu'on y insère. La
+     * compter ferait un élément de plus dans un ordonné vide, ce qui est visiblement faux.
+     */
     get size() {
-        return this.positions().length;
+        return this.elementPositions().length;
     }
     positions() {
         return this.ordered.positions();
+    }
+    elementPositions() {
+        return this.positions().filter((p) => !p.equals(dsviper.ValueXArray.END));
     }
     position(index) {
         return this.ordered.position(index);
@@ -272,9 +293,7 @@ export class Ordered extends View {
      * ferait un élément de plus à chaque parcours.
      */
     items() {
-        return this.positions()
-            .filter((position) => !position.equals(dsviper.ValueXArray.END))
-            .map((position) => [position, this.at(position)]);
+        return this.elementPositions().map((position) => [position, this.at(position)]);
     }
     *[Symbol.iterator]() {
         for (const element of this.ordered) {

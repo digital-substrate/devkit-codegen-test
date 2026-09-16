@@ -12,6 +12,7 @@
  */
 import dsviper from "@digitalsubstrate/dsviper";
 
+import { Sequence } from "./container.js";
 import { wrap, unwrap, type Wrapping } from "./registry.js";
 
 /** Le contexte sur lequel une opération de lecture porte : un état en mémoire, ou une base. */
@@ -52,6 +53,8 @@ export class AttachmentProxy<K, D> {
     private readonly definitions: () => dsviper.DefinitionsConst;
     private resolved?: dsviper.Attachment;
 
+    [name: string]: unknown;
+
     /** LES DEUX CLASSES NE SERVENT PAS À CONVERTIR — `wrap` le fait depuis le type que la
      *  valeur porte. Elles sont là pour que l'unité les nomme, parce que **les nommer force
      *  leur import**, et que c'est l'import qui remplit la table des classes. Sans elles la
@@ -63,6 +66,24 @@ export class AttachmentProxy<K, D> {
                 _document: Wrapping | undefined) {
         this.runtimeId = runtimeId;
         this.definitions = definitions;
+
+        // `setF_uint8`, `unionF_set` — DÉRIVÉS DU TYPE DU DOCUMENT, PAS GÉNÉRÉS. Le pack en
+        // émet un par champ de chaque document de chaque attachment ; ici le document connaît
+        // ses champs, donc l'objet répond au nom demandé s'il en désigne un. Un `Proxy` est ce
+        // que JavaScript offre là où Python a `__getattr__`.
+        return new globalThis.Proxy(this, {
+            get(attached, name, receiver) {
+                if (name in attached || typeof name === "symbol") {
+                    return Reflect.get(attached, name, receiver);
+                }
+                const field = fieldOf(attached.descriptor, name);
+                if (field === undefined) {
+                    return undefined;
+                }
+                return (mutating: Mutating, key: unknown, value: unknown) =>
+                    attached.update(mutating, key as K, field, value);
+            },
+        });
     }
 
     /** Le descripteur que le runtime en tire, résolu une fois. */
@@ -70,8 +91,36 @@ export class AttachmentProxy<K, D> {
         return (this.resolved ??= this.definitions().checkAttachment(this.runtimeId));
     }
 
-    keys(getting: Getting): K[] {
-        return [...getting.keys(this.descriptor)].map(wrap);
+    /** Les clés, comme le runtime les tient — un ensemble, et non un tableau recopié.
+     *
+     * RECOPIER PERDRAIT DEUX CHOSES : la taille sans parcours, et l'appartenance par valeur.
+     * Un tableau de JavaScript n'a ni l'une ni l'autre, et l'ensemble du runtime a les deux.
+     */
+    keys(getting: Getting): Sequence<K> {
+        return new Sequence<K>(getting.keys(this.descriptor));
+    }
+
+    /** Les paires clé/document, telles que le runtime les rend.
+     *
+     * UNE BASE N'ÉNUMÈRE PAS ELLE-MÊME : elle offre l'interface de lecture qui le fait.
+     */
+    enumerate(getting: Getting): [K, D | undefined][] {
+        const source = (getting as unknown as { enumerate?: unknown; attachmentGetting?: () => dsviper.AttachmentGetting });
+        const reader = typeof source.enumerate === "function"
+            ? (getting as unknown as dsviper.AttachmentGetting)
+            : (source.attachmentGetting as () => dsviper.AttachmentGetting)();
+        return reader.enumerate(this.descriptor)
+            .map(([key, document]) => [wrap(key), wrap(document)]);
+    }
+
+    /** Ce qui a changé entre deux états : ajouté, retiré, modifié, identique. */
+    diffKeys(current: Getting, other: Getting):
+            [Sequence<K>, Sequence<K>, Sequence<K>, Sequence<K>] {
+        const groups = dsviper.AttachmentGetting.diffKeys(
+            current as unknown as dsviper.AttachmentGetting,
+            other as unknown as dsviper.AttachmentGetting, this.descriptor);
+        return groups.map((group) => new Sequence<K>(group)) as unknown as
+            [Sequence<K>, Sequence<K>, Sequence<K>, Sequence<K>];
     }
 
     has(getting: Getting, key: K): boolean {
@@ -141,4 +190,23 @@ function path(field: string): dsviper.PathConst {
         paths.set(field, found);
     }
     return found;
+}
+
+
+/** Le champ qu'un nom comme `setF_uint8` désigne, ou rien.
+ *
+ * LE NOM PORTE LA CASSE DE JAVASCRIPT ET LE CHAMP CELLE DU MODÈLE : `setF_uint8` désigne
+ * `f_uint8`. Remettre la première lettre en minuscule est tout ce qui les sépare.
+ */
+function fieldOf(descriptor: dsviper.Attachment, name: string): string | undefined {
+    if (!name.startsWith("set")) {
+        return undefined;
+    }
+    const wanted = name.slice(3);
+    const field = wanted.charAt(0).toLowerCase() + wanted.slice(1);
+    const document = descriptor.documentType() as unknown as {
+        query?(name: string): unknown;
+    };
+    return typeof document.query === "function" && document.query(field) !== undefined
+        ? field : undefined;
 }

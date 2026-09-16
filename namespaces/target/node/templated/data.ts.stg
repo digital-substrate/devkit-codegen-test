@@ -129,6 +129,14 @@ export class <c.name>Key extends Proxy\<dsviper.ValueKey> {
         return isKnown(this.value);
     }
 
+<if(c.parent)>
+    /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
+     *  réel, et c'est ce qui permet d'en revenir ensuite. */
+    toParentKey(): <c.parentBindingInNamespace> {
+        return new <c.parentBindingInNamespace>(this.value);
+    }
+
+<endif>
     /** La clé, vue sans son type. */
     toAnyConceptKey(): AnyConceptKey {
         return new AnyConceptKey(this.value.toAnyConceptKey());
@@ -206,6 +214,10 @@ export class <c.name>Key extends Proxy\<dsviper.ValueKey> {
     }
 
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
+<c.membersInNamespace:club_from(c);separator="\n\n">
+
+<c.membersInNamespace:club_to(c);separator="\n\n">
+
     as\<K>(member: { concept(): dsviper.TypeConcept; wrap(value: dsviper.Value): K }): K | undefined {
         const concept = member.concept();
         return this.value.isMember(concept) ? member.wrap(this.value.toMemberKey(concept)) : undefined;
@@ -336,3 +348,20 @@ read(f) ::= <%<if(f.bindingType.useProxy)>return wrap(this.value.at("<f.name>", 
 // et `unknown` ne s'assigne à rien sans être affirmé. Les autres primitifs la traversent sans
 // rien changer.
 write(f) ::= <%setField(this.value, "<f.name>", value);%>
+
+// LE PACK NOMME CHAQUE ENTRÉE ET CHAQUE SORTIE D'UN CLUB. `as_(cls)` dit la même chose pour
+// tous les membres, y compris ceux qu'un modèle ajoutera ; les noms restent parce qu'ils se
+// lisent -- `KlubKey.fromConceptCKey(k)` dit lequel, `as_` demande à l'appelant de le savoir.
+club_from(cm, c) ::= <<
+    /** La clé d'un membre, vue comme celle du club. */
+    static from<cm.asNameInNamespace>Key(key: Proxy\<dsviper.ValueKey> | dsviper.ValueKey): <c.name>Key {
+        return new <c.name>Key(key);
+    }
+>>
+
+club_to(cm, c) ::= <<
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    to<cm.asNameInNamespace>Key(): <cm.bindingInNamespace> | undefined {
+        return this.as(<cm.bindingInNamespace>);
+    }
+>>

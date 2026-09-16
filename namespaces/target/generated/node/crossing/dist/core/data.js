@@ -226,6 +226,11 @@ export class SubThingKey extends Proxy {
     isKnown() {
         return isKnown(this.value);
     }
+    /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
+     *  réel, et c'est ce qui permet d'en revenir ensuite. */
+    toParentKey() {
+        return new ThingKey(this.value);
+    }
     /** La clé, vue sans son type. */
     toAnyConceptKey() {
         return new AnyConceptKey(this.value.toAnyConceptKey());
@@ -283,6 +288,22 @@ export class KlubKey extends Proxy {
         return isKnown(this.value);
     }
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromOtherKey(key) {
+        return new KlubKey(key);
+    }
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromSubThingKey(key) {
+        return new KlubKey(key);
+    }
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toOtherKey() {
+        return this.as(OtherKey);
+    }
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toSubThingKey() {
+        return this.as(SubThingKey);
+    }
     as(member) {
         const concept = member.concept();
         return this.value.isMember(concept) ? member.wrap(this.value.toMemberKey(concept)) : undefined;

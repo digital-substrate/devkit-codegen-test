@@ -11,6 +11,7 @@
  * que `Proxy`, qui est l'accesseur typé d'une `Value`.
  */
 import dsviper from "@digitalsubstrate/dsviper";
+import { Sequence } from "./container.js";
 import { wrap, unwrap } from "./registry.js";
 /** Un attachment du modèle, vu depuis l'unité qui le déclare.
  *
@@ -31,13 +32,51 @@ export class AttachmentProxy {
     constructor(runtimeId, definitions, _key, _document) {
         this.runtimeId = runtimeId;
         this.definitions = definitions;
+        // `setF_uint8`, `unionF_set` — DÉRIVÉS DU TYPE DU DOCUMENT, PAS GÉNÉRÉS. Le pack en
+        // émet un par champ de chaque document de chaque attachment ; ici le document connaît
+        // ses champs, donc l'objet répond au nom demandé s'il en désigne un. Un `Proxy` est ce
+        // que JavaScript offre là où Python a `__getattr__`.
+        return new globalThis.Proxy(this, {
+            get(attached, name, receiver) {
+                if (name in attached || typeof name === "symbol") {
+                    return Reflect.get(attached, name, receiver);
+                }
+                const field = fieldOf(attached.descriptor, name);
+                if (field === undefined) {
+                    return undefined;
+                }
+                return (mutating, key, value) => attached.update(mutating, key, field, value);
+            },
+        });
     }
     /** Le descripteur que le runtime en tire, résolu une fois. */
     get descriptor() {
         return (this.resolved ??= this.definitions().checkAttachment(this.runtimeId));
     }
+    /** Les clés, comme le runtime les tient — un ensemble, et non un tableau recopié.
+     *
+     * RECOPIER PERDRAIT DEUX CHOSES : la taille sans parcours, et l'appartenance par valeur.
+     * Un tableau de JavaScript n'a ni l'une ni l'autre, et l'ensemble du runtime a les deux.
+     */
     keys(getting) {
-        return [...getting.keys(this.descriptor)].map(wrap);
+        return new Sequence(getting.keys(this.descriptor));
+    }
+    /** Les paires clé/document, telles que le runtime les rend.
+     *
+     * UNE BASE N'ÉNUMÈRE PAS ELLE-MÊME : elle offre l'interface de lecture qui le fait.
+     */
+    enumerate(getting) {
+        const source = getting;
+        const reader = typeof source.enumerate === "function"
+            ? getting
+            : source.attachmentGetting();
+        return reader.enumerate(this.descriptor)
+            .map(([key, document]) => [wrap(key), wrap(document)]);
+    }
+    /** Ce qui a changé entre deux états : ajouté, retiré, modifié, identique. */
+    diffKeys(current, other) {
+        const groups = dsviper.AttachmentGetting.diffKeys(current, other, this.descriptor);
+        return groups.map((group) => new Sequence(group));
     }
     has(getting, key) {
         return getting.has(this.descriptor, unwrap(key));
@@ -98,4 +137,19 @@ function path(field) {
         paths.set(field, found);
     }
     return found;
+}
+/** Le champ qu'un nom comme `setF_uint8` désigne, ou rien.
+ *
+ * LE NOM PORTE LA CASSE DE JAVASCRIPT ET LE CHAMP CELLE DU MODÈLE : `setF_uint8` désigne
+ * `f_uint8`. Remettre la première lettre en minuscule est tout ce qui les sépare.
+ */
+function fieldOf(descriptor, name) {
+    if (!name.startsWith("set")) {
+        return undefined;
+    }
+    const wanted = name.slice(3);
+    const field = wanted.charAt(0).toLowerCase() + wanted.slice(1);
+    const document = descriptor.documentType();
+    return typeof document.query === "function" && document.query(field) !== undefined
+        ? field : undefined;
 }

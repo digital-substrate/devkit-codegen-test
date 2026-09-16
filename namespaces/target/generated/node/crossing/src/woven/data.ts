@@ -183,6 +183,12 @@ export class DerivedKey extends Proxy<dsviper.ValueKey> {
         return isKnown(this.value);
     }
 
+    /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
+     *  réel, et c'est ce qui permet d'en revenir ensuite. */
+    toParentKey(): core.ThingKey {
+        return new core.ThingKey(this.value);
+    }
+
     /** La clé, vue sans son type. */
     toAnyConceptKey(): AnyConceptKey {
         return new AnyConceptKey(this.value.toAnyConceptKey());
@@ -255,6 +261,26 @@ export class WeaveKey extends Proxy<dsviper.ValueKey> {
     }
 
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromCoreThingKey(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey): WeaveKey {
+        return new WeaveKey(key);
+    }
+
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromPartsThingKey(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey): WeaveKey {
+        return new WeaveKey(key);
+    }
+
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toCoreThingKey(): core.ThingKey | undefined {
+        return this.as(core.ThingKey);
+    }
+
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toPartsThingKey(): parts.ThingKey | undefined {
+        return this.as(parts.ThingKey);
+    }
+
     as<K>(member: { concept(): dsviper.TypeConcept; wrap(value: dsviper.Value): K }): K | undefined {
         const concept = member.concept();
         return this.value.isMember(concept) ? member.wrap(this.value.toMemberKey(concept)) : undefined;

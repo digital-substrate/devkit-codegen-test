@@ -170,6 +170,21 @@ export class Sequence<E> extends View {
         return [...this];
     }
 
+    /** La colonne d'une matrice, et la ligne — deux façons de la lire, et le modèle les nomme. */
+    row(index: number): unknown[] {
+        const type = this.value.type() as unknown as { columns(): number };
+        const held: unknown[] = [];
+        for (let column = 0; column < type.columns(); column += 1) {
+            held.push(this.at(column, index));
+        }
+        return held;
+    }
+
+    setRow(index: number, elements: unknown[]): void {
+        const inner = this.value as unknown as { set(c: number, r: number, v: unknown): void };
+        elements.forEach((element, column) => inner.set(column, index, unwrap(element)));
+    }
+
     /** Ce que la valeur sait faire et que la vue ne nomme pas.
      *
      * LA VUE NE CHOISIT PAS CE QUI PASSE. Un ensemble a `isdisjoint`, `union`, `min` ; un
@@ -268,12 +283,21 @@ export class Ordered<E> extends View {
         return dsviper.ValueXArray.createPosition();
     }
 
+    /** Le nombre d'éléments — et la fin n'en est pas un.
+     *
+     * `positions()` rend aussi `END`, la place d'après le dernier, parce qu'on y insère. La
+     * compter ferait un élément de plus dans un ordonné vide, ce qui est visiblement faux.
+     */
     get size(): number {
-        return this.positions().length;
+        return this.elementPositions().length;
     }
 
     positions(): dsviper.ValueUUId[] {
         return this.ordered.positions();
+    }
+
+    private elementPositions(): dsviper.ValueUUId[] {
+        return this.positions().filter((p) => !p.equals(dsviper.ValueXArray.END));
     }
 
     position(index: number): dsviper.ValueUUId | undefined {
@@ -332,9 +356,7 @@ export class Ordered<E> extends View {
      * ferait un élément de plus à chaque parcours.
      */
     items(): [dsviper.ValueUUId, E | undefined][] {
-        return this.positions()
-            .filter((position) => !position.equals(dsviper.ValueXArray.END))
-            .map((position) => [position, this.at(position)]);
+        return this.elementPositions().map((position) => [position, this.at(position)]);
     }
 
     *[Symbol.iterator](): Iterator<E> {

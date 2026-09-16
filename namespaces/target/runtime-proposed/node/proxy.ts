@@ -11,6 +11,8 @@
  */
 import dsviper from "@digitalsubstrate/dsviper";
 
+import { isKnown } from "./registry.js";
+
 export abstract class Proxy<V extends dsviper.Value> {
     readonly value: V;
 
@@ -106,6 +108,10 @@ export class AnyConceptKey extends Proxy<dsviper.ValueKey> {
 
     isValid(): boolean {
         return this.value.instanceId().isValid();
+    }
+
+    isKnown(): boolean {
+        return isKnown(this.value);
     }
 
     description(): string {

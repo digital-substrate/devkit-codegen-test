@@ -4,6 +4,8 @@ import dsviper from "@digitalsubstrate/dsviper";
 import { Proxy } from "../_codegen/proxy.js";
 import { AnyConceptKey, isKnown, register, setField, wrap } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
+import * as parts from "../parts/data.js";
+import * as core from "../core/data.js";
 // ── l'identité de cette unité dans le modèle ──
 //
 // LE MÊME ARTEFACT QU'EN C++ ET EN PYTHON, POUR LA MÊME RAISON : plusieurs couches en ont
@@ -148,6 +150,11 @@ export class DerivedKey extends Proxy {
     isKnown() {
         return isKnown(this.value);
     }
+    /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
+     *  réel, et c'est ce qui permet d'en revenir ensuite. */
+    toParentKey() {
+        return new core.ThingKey(this.value);
+    }
     /** La clé, vue sans son type. */
     toAnyConceptKey() {
         return new AnyConceptKey(this.value.toAnyConceptKey());
@@ -205,6 +212,22 @@ export class WeaveKey extends Proxy {
         return isKnown(this.value);
     }
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromCoreThingKey(key) {
+        return new WeaveKey(key);
+    }
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromPartsThingKey(key) {
+        return new WeaveKey(key);
+    }
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toCoreThingKey() {
+        return this.as(core.ThingKey);
+    }
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toPartsThingKey() {
+        return this.as(parts.ThingKey);
+    }
     as(member) {
         const concept = member.concept();
         return this.value.isMember(concept) ? member.wrap(this.value.toMemberKey(concept)) : undefined;

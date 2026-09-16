@@ -4,6 +4,7 @@ import dsviper from "@digitalsubstrate/dsviper";
 import { Proxy } from "../_codegen/proxy.js";
 import { AnyConceptKey, isKnown, register, setField, wrap } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
+import * as model_a from "../model_a/data.js";
 // ── l'identité de cette unité dans le modèle ──
 //
 // LE MÊME ARTEFACT QU'EN C++ ET EN PYTHON, POUR LA MÊME RAISON : plusieurs couches en ont
@@ -144,6 +145,11 @@ export class DerivedMaterialKey extends Proxy {
     }
     isKnown() {
         return isKnown(this.value);
+    }
+    /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
+     *  réel, et c'est ce qui permet d'en revenir ensuite. */
+    toParentKey() {
+        return new model_a.MaterialKey(this.value);
     }
     /** La clé, vue sans son type. */
     toAnyConceptKey() {

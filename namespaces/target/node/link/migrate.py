@@ -18,6 +18,8 @@ RENAMES = [
     # frontière entre deux caractères de mot, donc il ne sert à rien au milieu d'un identifiant.
     (re.compile(r"(?<![A-Za-z])Test_(\w+)"), r"Demo_\1"),
     (re.compile(r"\bTest::"), "Demo::"),
+    # La valeur enveloppée porte le nom que le langage donne à ce qu'on lit.
+    (re.compile(r"\.vprValue\b"), ".value"),
     # `md.definitions()` devient `definitions()` : le modèle offre la fonction, pas un module
     # qui la contiendrait.
     (re.compile(r"\b(md|definitions)\.definitions\(\)"), "definitions()"),
@@ -64,7 +66,9 @@ def redistribute(text: str):
         # `definitions` et les identifiants d'exécution sont du modèle, pas d'une unité : ils
         # ne nomment aucun type, donc aucune unité ne peut les revendiquer.
         model = [n for n in names if n in ("definitions", "RuntimeIds", "AttachmentRuntimeIds")]
-        attached = [n for n in names if n.startswith("attachments")]
+        # `databaseAttachments` et `attachments` sont le même module ici : une base porte les
+        # mêmes appels qu'un état en mémoire, et n'ajoute que `delete`.
+        attached = [n for n in names if n.startswith(("attachments", "databaseAttachments"))]
         unit = [n for n in names if n not in containers and n not in untyped
                 and n not in model and n not in attached]
 
@@ -78,8 +82,9 @@ def redistribute(text: str):
             lines.append('import { AnyConceptKey } from "../features/dist/_codegen/registry.js";')
         if model:
             lines.append('import { ' + ", ".join(model) + ' } from "../features/dist/index.js";')
-        if attached:
-            lines.append('import * as ma from "../features/dist/demo/attachments.js";')
+        for name in attached:
+            alias = name.split(" as ")[-1].strip() if " as " in name else name
+            lines.append(f'import * as {alias} from "../features/dist/demo/attachments.js";')
         return "\n".join(lines)
 
     return IMPORT.sub(one, text), count
@@ -128,8 +133,49 @@ def migrate(into: Path, package: Path | None = None) -> dict:
         # LE NOM PLAT D'UN ATTACHMENT SE RESCOPE, et la table se lit dans le rendu plutôt que
         # de se deviner : `conceptA_Properties` ne dit pas où le concept finit.
         for flat, scoped in sorted(TABLE.items(), key=lambda kv: -len(kv[0])):
-            text, n = re.subn(rf"\bma\.{flat}\b", f"ma.{scoped}", text)
+            text, n = re.subn(rf"\b(ma|db)\.{flat}\b", rf"\1.{scoped}", text)
             touched += n
+
+        # UN DOCUMENT ABSENT EST `undefined`, ET NON UN OPTIONAL ENVELOPPÉ. C'est le seul
+        # endroit où le portage change la forme d'un test et non un nom : le typage l'exprime
+        # dans le retour, et JavaScript a `undefined` pour dire l'absence.
+        text, n = re.subn(r"\b(result|retrieved|doc|document)\.isNil\(\)",
+                          r"(\1 === undefined)", text)
+        touched += n
+        text, n = re.subn(r"\b(result|retrieved|doc|document)\.unwrap\(\)", r"\1", text)
+        touched += n
+
+        # `del` EST UN MOT-CLÉ EN PYTHON ET UN OPÉRATEUR EN JAVASCRIPT : l'opération s'appelle
+        # `delete` des deux côtés, et le nom plat du pack ne le disait pas.
+        text, n = re.subn(r"\.properties\.del\b", ".properties.delete", text)
+        touched += n
+
+        # UN CAS D'ÉNUMÉRATION EST UN LITTÉRAL : deux cas se comparent par `===`, et non par une
+        # méthode qu'une chaîne ne porte pas.
+        text, n = re.subn(r"\b(e\d?|enumValue|decoded)\.equals\(([^)]+)\)", r"(\1 === \2)", text)
+        touched += n
+        text, n = re.subn(r"\bEnumerationE\.([A-Z])\.equals\(([^)]+)\)",
+                          r"(EnumerationE.\1 === \2)", text)
+        touched += n
+
+        # Un document rendu est le document, pas un enveloppe : on le compare directement.
+        text, n = re.subn(r"\b(result|retrieved|doc|document)\.equals\(([^)]+)\)",
+                          r"\1.equals?.(\2) ?? (\1 === \2)", text)
+        touched += n
+
+        # UN IDENTIFIANT D'EXÉCUTION APPARTIENT À L'UNITÉ QUI DÉCLARE LE TYPE, pas à un annuaire
+        # du modèle — et c'est une constante, donc en majuscules.
+        def constante(found):
+            name = found.group(1)
+            return "demo." + re.sub(r"(?<!^)(?=[A-Z])", "_", name).upper()
+
+        text, n = re.subn(r"\b(?:definitions|md)\.(?:Attachment)?RuntimeIds\.(\w+)",
+                          constante, text)
+        if n:
+            text = text.replace('import { definitions }',
+                                'import * as demo from "../features/dist/demo/data.js";\n'
+                                'import { definitions }', 1)
+        touched += n
         (into / source.name).write_text(text)
         counts[source.name] = touched
     return counts

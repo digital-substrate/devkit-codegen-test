@@ -48,6 +48,9 @@ export declare class Sequence<E> extends View {
     has(element: E): boolean;
     [Symbol.iterator](): Iterator<E>;
     toArray(): E[];
+    /** La colonne d'une matrice, et la ligne — deux façons de la lire, et le modèle les nomme. */
+    row(index: number): unknown[];
+    setRow(index: number, elements: unknown[]): void;
     /** Ce que la valeur sait faire et que la vue ne nomme pas.
      *
      * LA VUE NE CHOISIT PAS CE QUI PASSE. Un ensemble a `isdisjoint`, `union`, `min` ; un
@@ -90,8 +93,14 @@ export declare class Ordered<E> extends View {
     static readonly END: dsviper.ValueUUId;
     static end(): dsviper.ValueUUId;
     static createPosition(): dsviper.ValueUUId;
+    /** Le nombre d'éléments — et la fin n'en est pas un.
+     *
+     * `positions()` rend aussi `END`, la place d'après le dernier, parce qu'on y insère. La
+     * compter ferait un élément de plus dans un ordonné vide, ce qui est visiblement faux.
+     */
     get size(): number;
     positions(): dsviper.ValueUUId[];
+    private elementPositions;
     position(index: number): dsviper.ValueUUId | undefined;
     indexOf(position: dsviper.ValueUUId): number | undefined;
     hasPosition(position: dsviper.ValueUUId): boolean;

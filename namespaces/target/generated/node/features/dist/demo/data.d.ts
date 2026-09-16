@@ -178,6 +178,9 @@ export declare class ConceptCKey extends Proxy<dsviper.ValueKey> {
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
+    /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
+     *  réel, et c'est ce qui permet d'en revenir ensuite. */
+    toParentKey(): ConceptBKey;
     /** La clé, vue sans son type. */
     toAnyConceptKey(): AnyConceptKey;
     /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
@@ -220,6 +223,14 @@ export declare class KlubKey extends Proxy<dsviper.ValueKey> {
     description(): string;
     isKnown(): boolean;
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromConceptCKey(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey): KlubKey;
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromConceptDKey(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey): KlubKey;
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toConceptCKey(): ConceptCKey | undefined;
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toConceptDKey(): ConceptDKey | undefined;
     as<K>(member: {
         concept(): dsviper.TypeConcept;
         wrap(value: dsviper.Value): K;

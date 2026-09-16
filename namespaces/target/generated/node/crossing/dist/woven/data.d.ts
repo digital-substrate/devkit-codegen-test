@@ -73,6 +73,9 @@ export declare class DerivedKey extends Proxy<dsviper.ValueKey> {
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
+    /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
+     *  réel, et c'est ce qui permet d'en revenir ensuite. */
+    toParentKey(): core.ThingKey;
     /** La clé, vue sans son type. */
     toAnyConceptKey(): AnyConceptKey;
     /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
@@ -96,6 +99,14 @@ export declare class WeaveKey extends Proxy<dsviper.ValueKey> {
     description(): string;
     isKnown(): boolean;
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromCoreThingKey(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey): WeaveKey;
+    /** La clé d'un membre, vue comme celle du club. */
+    static fromPartsThingKey(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey): WeaveKey;
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toCoreThingKey(): core.ThingKey | undefined;
+    /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
+    toPartsThingKey(): parts.ThingKey | undefined;
     as<K>(member: {
         concept(): dsviper.TypeConcept;
         wrap(value: dsviper.Value): K;
