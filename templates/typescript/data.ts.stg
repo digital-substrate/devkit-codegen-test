@@ -308,7 +308,12 @@ export const <e.name> = {
 >>
 
 enumeration_case(m) ::= <%"<m.name>"%>
-enumeration_member(m) ::= <<    <m.name;format="usc">: "<m.name>">>
+// `as const` FIGE LE LITTÉRAL, ET SANS LUI RIEN NE MARCHE. Dans un objet ordinaire
+// TypeScript élargit "beginner" en `string`, donc `Level.BEGINNER` n'est plus assignable à
+// un paramètre `Level` : le consommateur reçoit « Argument of type 'string' is not
+// assignable to parameter of type 'Level' » en passant la constante que le module lui
+// offre. Mesuré sur le client du service, pas déduit.
+enumeration_member(m) ::= <<    <m.name;format="usc">: "<m.name>" as const>>
 
 structure(s, u) ::= <<
 let <s.name;format="lsc">Type: dsviper.TypeStructure | undefined;

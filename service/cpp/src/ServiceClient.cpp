@@ -6,8 +6,8 @@
 #include "Viper_ServiceRemote.hpp"
 #include "Viper_StringHelper.hpp"
 
-#include "PlayerModel_AttachmentFunctionPoolRemotes.hpp"
-#include "Tools_FunctionPoolRemotes.hpp"
+#include "PlayerModel_Pool.hpp"
+#include "Tools_Pool.hpp"
 
 #include "CLI11.hpp"
 
@@ -47,7 +47,7 @@ int main(int argc, char * argv[]) {
             service = Viper::ServiceRemote::connect(inetAddress, inetPort, definitions);
         }
 
-        auto const tools{Service::Tools::Remote{service}};
+        auto const tools{Tools::Remote{service}};
         if (tools.isAvailable()) {
             auto const r{tools.add(32, 10)};
             std::cout << "add(32,10) -> " << r << '\n';
@@ -58,7 +58,7 @@ int main(int argc, char * argv[]) {
             std::cout << "add_vector(v1,v2) -> (" << rv.x << "," << rv.y << "," << rv.z << ")" << '\n';
         }
 
-        auto const playerModel{Service::PlayerModel::Remote{service}};
+        auto const playerModel{PlayerModel::Remote{service}};
         if (playerModel.isAvailable()) {
             auto state{Viper::CommitState::make(Viper::CommitId::Invalid(), definitions, {})};
             auto mutableState{Viper::CommitMutableState::make(state)};
@@ -67,7 +67,7 @@ int main(int argc, char * argv[]) {
             std::cout << "key is " << key.description() << '\n';
 
             if (auto const pk{playerModel.has_player(mutableState, nickname)}) {
-                if (auto const property{Demo::Attachments::Player_Property::get(mutableState, *pk)}) {
+                if (auto const property{Demo::Attachments::Player::property::get(mutableState, *pk)}) {
                     std::cout << "nickname=" << property->nickname << ", level=" << static_cast<int>(property->level) << '\n';
                 }
             }

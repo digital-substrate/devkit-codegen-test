@@ -1,7 +1,7 @@
 #include "CLI11.hpp"
-#include "Service_AttachmentFunctionPools.hpp"
-#include "Service_Definitions.hpp"
-#include "Service_FunctionPools.hpp"
+#include "PlayerModel_Pool.hpp"
+#include "Service_Codec.hpp"
+#include "Tools_Pool.hpp"
 #include "Viper_Cancelation.hpp"
 #include "Viper_LoggerConsole.hpp"
 #include "Viper_Service.hpp"
@@ -39,12 +39,12 @@ int main(int argc, char * argv[]) {
 
     auto const service{
         Viper::Service::make(
-            Service::definitions(),
+            Service::Codec::definitions(),
             {
-                Service::FunctionPools::tools(),
+                Tools::pool(),
             },
             {
-                Service::AttachmentFunctionPools::playerModel()
+                PlayerModel::pool()
             })
     };
 

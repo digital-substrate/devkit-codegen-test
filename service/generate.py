@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import subprocess
+import sys
+import shutil
+import json
 import argparse
 import os
 import re
@@ -17,7 +20,7 @@ arguments = parser.parse_args()
 
 SIBLING_ROOT = Path(__file__).resolve().parent.parent.parent
 SIBLING_KIBO = SIBLING_ROOT / "kibo"
-SIBLING_TEMPLATES = SIBLING_ROOT / "kibo-template-viper"
+SIBLING_TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
 
 # The kibo-template-viper line this repository generates against. A sibling
 # checkout's branch decides which templates you get, and a pack from another line
@@ -79,6 +82,40 @@ TEMPLATES = os.environ.get("KIBO_TEMPLATES") or str(SIBLING_TEMPLATES)
 _check_templates(TEMPLATES)
 KIBO = ['java', '-jar', JAR]
 
+# LA SÉLECTION EST UNE FEATURE. `templates/features.json` dit quels `.stg` chacune demande et
+# ce qu'elle entraîne ; `resolve` calcule la clôture. Ce site les prend toutes -- il est là
+# pour éprouver la surface entière -- mais un vrai projet en nomme deux ou trois.
+sys.path.insert(0, TEMPLATES)
+import resolve                                                          # noqa: E402
+
+RUNTIME = Path(__file__).resolve().parent.parent / "runtime-proposed"
+# Les typages Node vivent dans le node_modules du site : le paquet généré est compilé
+# là où ses dépendances sont installées, pas ailleurs.
+NODE_TYPES = Path(__file__).resolve().parent / "typescript" / "node_modules" / "@types"
+
+TSCONFIG = {
+    "compilerOptions": {
+        "target": "ES2022", "module": "NodeNext", "moduleResolution": "NodeNext",
+        "declaration": True, "strict": True, "esModuleInterop": True, "skipLibCheck": True,
+        "outDir": "dist", "rootDir": "src",
+        "typeRoots": [str(NODE_TYPES)], "types": ["node"],
+    },
+    "include": ["src/**/*.ts"],
+}
+
+CPP_OUT = 'cpp/generated'
+PY_PROJECT = Path('python/generated')          # ce que `pip install` reçoit
+PY_PACKAGE = PY_PROJECT / 'service'           # ce que `import` trouve
+TS_PACKAGE = Path('typescript/generated')
+
+
+def render(target: str, namespace: str, dsm_path: str, stgs, output):
+    """Render each resolved template in turn; `kibo -t` takes one .stg as well as a dir."""
+    Path(output).mkdir(parents=True, exist_ok=True)
+    for stg in stgs:
+        subprocess.run(KIBO + ['-c', target, '-n', namespace,
+                               '-d', dsm_path, '-t', str(stg), '-o', str(output)])
+
 def generate(namespace: str, dsm_path: str, template:str, output:str, *args):
     options = [
         '-c', 'cpp', 
@@ -92,9 +129,28 @@ def generate(namespace: str, dsm_path: str, template:str, output:str, *args):
     subprocess.run(cmd)
 
 def generate_resource(definitions: DefinitionsConst, output: str):
-    blob = definitions.encode()
-    with open(f'{output}', 'w') as file:
-        file.write(blob.embed("definitions"))
+    """Le modèle, en octets, dans un namespace.
+
+    LE .DSM EMBARQUÉ TEL QUEL. Le générateur ne produit aucun code d'enregistrement de types :
+    le document est embarqué et décodé au chargement. C'est aussi la réponse à « qui tient la
+    liste des concepts connus » -- cette donnée-là.
+
+    Ce n'est pas un texte écrit à la main : ce sont les octets que la chaîne de production
+    encode, enveloppés dans `<Namespace>::Resources` -- ce que les templates attendent.
+    """
+    octets = bytes(definitions.encode().encoded())
+    lignes = [", ".join(f"0x{b:02x}" for b in octets[i:i + 12]) for i in range(0, len(octets), 12)]
+    corps = ",\n ".join(lignes)
+    Path(output).parent.mkdir(parents=True, exist_ok=True)
+    Path(output).write_text(
+        f"#ifndef {NAMESPACE}_Resources_hpp\n"
+        f"#define {NAMESPACE}_Resources_hpp\n\n"
+        f"#include <cstddef>\n\n"
+        f"namespace {NAMESPACE}::Resources {{\n\n"
+        f"inline constexpr unsigned char definitions[] = {{\n {corps}\n}};\n\n"
+        f"}} // namespace {NAMESPACE}::Resources\n\n"
+        f"#endif\n")
+
 
 def render_templates(namespace: str, dsm_path: str, output: str):
     templates =  [
@@ -178,14 +234,45 @@ if not (arguments.cpp | arguments.python | arguments.typescript):
     exit(0)
 
 if arguments.cpp:
-    print('** Render C++')
-    render_templates(namespace=NAMESPACE, dsm_path=DSM_PATH, output=f'{NAMESPACE}')
-    generate_resource(definitions=DEFINITIONS, output=f'{NAMESPACE}/{NAMESPACE}_Resources.hpp')
+    print('** Render Cpp')
+    render('cpp', NAMESPACE, DSM_PATH,
+           resolve.templates('cpp', ['Pool', 'AttachmentPool', 'Test']), CPP_OUT)
+    generate_resource(definitions=DEFINITIONS, output=f'{CPP_OUT}/{NAMESPACE}_Resources.hpp')
 
 if arguments.python:
     print('** Render Python Package')
-    generate_package(name='service', dsm_path=DSM_PATH, definitions=DEFINITIONS, output=f'python/service')
+    base = resolve.templates('python', ['Base', 'Pool'])
+    render('python', NAMESPACE, DSM_PATH, base, PY_PACKAGE)
+    # La roue n'atterrit pas au même endroit : py.typed dans le paquet, pyproject.toml un
+    # cran au-dessus. Sans py.typed, toutes les annotations sont invisibles au consommateur.
+    for stg in resolve.templates('python', ['Wheel']):
+        if stg in base:
+            continue
+        render('python', NAMESPACE, DSM_PATH, [stg],
+               PY_PACKAGE if stg.name.startswith('py.typed') else PY_PROJECT)
+    # Ce qui ne sort pas des templates : les octets du modèle, et le runtime que la liaison
+    # devrait porter et ne porte pas encore.
+    blob = DEFINITIONS.encode()
+    (PY_PACKAGE / 'resources.py').write_text(
+        f"B64_DEFINITIONS = {base64.b64encode(zlib.compress(blob))}")
+    shutil.rmtree(PY_PACKAGE / '_codegen', ignore_errors=True)
+    shutil.copytree(RUNTIME / 'python', PY_PACKAGE / '_codegen',
+                    ignore=shutil.ignore_patterns('__pycache__', '*.md'))
 
 if arguments.typescript:
     print('** Render TypeScript Package')
-    generate_typescript(name='service', dsm_path=DSM_PATH, definitions=DEFINITIONS, package_root=f'typescript/service')
+    source = TS_PACKAGE / 'src'
+    render('typescript', NAMESPACE, DSM_PATH,
+           resolve.templates('typescript', ['Base', 'Pool']), source)
+    blob = DEFINITIONS.encode()
+    (source / 'resources.ts').write_text(
+        f'export const B64_DEFINITIONS = "{base64.b64encode(blob).decode("ascii")}";\n')
+    shutil.rmtree(source / '_codegen', ignore_errors=True)
+    shutil.copytree(RUNTIME / 'node', source / '_codegen',
+                    ignore=shutil.ignore_patterns('*.md'))
+    # Le calage du projet. Il n'y a pas encore de template pour ça : `templates/typescript`
+    # n'a pas de feature `Project`, contrairement au pack. Écrit ici en attendant, et c'est
+    # une dette, pas un choix -- un paquet npm n'est pas au projet de l'inventer.
+    (TS_PACKAGE / 'package.json').write_text(json.dumps(
+        {"name": NAMESPACE.lower(), "private": True, "type": "module"}, indent=4) + "\n")
+    (TS_PACKAGE / 'tsconfig.json').write_text(json.dumps(TSCONFIG, indent=4) + "\n")

@@ -1,8 +1,8 @@
-#include "Tools_FunctionPoolBridges.hpp"
+#include "Tools_Pool.hpp"
 #include <random>
 
 // MARK: - Tools
-namespace Service::Tools {
+namespace Tools {
 
 std::int64_t add(std::int64_t a, std::int64_t b) {
   return a + b;

@@ -5,11 +5,12 @@ features/Features.dsm.json
 features/python/generated/
 features/typescript/generated/
 
-service/Service/
+service/cpp/generated/
 service/Service.dsmb
 service/Service.dsm.json
-service/python/service/
-service/typescript/service/
+service/python/generated/
+service/typescript/generated/
+service/typescript/build/
 
 namespaces/Topology.dsm.json
 namespaces/Topology/

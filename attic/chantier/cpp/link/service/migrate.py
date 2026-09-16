@@ -12,7 +12,7 @@ from pathlib import Path
 import sys
 
 HERE = Path(__file__).resolve().parent
-SOURCE = HERE.parents[4] / "service"
+SOURCE = HERE.parents[4] / "service" / "cpp" / "src"
 
 # Chaque entrée est une chose que les nouveaux templates nomment autrement, avec la raison.
 RENAMES = [
