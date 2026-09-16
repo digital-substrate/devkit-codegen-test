@@ -65,7 +65,7 @@ check("après écriture, la clé est connue", MaterialA.colour.has(mutating, key
 const read = MaterialA.colour.get(mutating, key);
 check("et le document revient typé", read instanceof modelA.Colour && read.r === 1);
 check("les clés de l'attachment sont typées",
-      MaterialA.colour.keys(mutating).every((k) => k instanceof modelA.MaterialKey));
+      MaterialA.colour.keys(mutating).toArray().every((k) => k instanceof modelA.MaterialKey));
 
 // Un champ seul, adressé par son nom -- ce que le pack appelle un chemin et met dans un module.
 MaterialA.colour.update(mutating, key, "r", 9);
