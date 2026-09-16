@@ -2,7 +2,8 @@
 """Tests for the shared Proxy base of Kibo-generated classes."""
 
 import unittest
-from features.data import Test_StructureS, Set_uint8, Vector_uint8
+from features.demo import StructureS
+from features.containers import Set_uint8, Vector_uint8
 
 
 class TestProxyEqualityWithForeignOperand(unittest.TestCase):
@@ -13,15 +14,15 @@ class TestProxyEqualityWithForeignOperand(unittest.TestCase):
     """
 
     def test_eq_none(self):
-        s = Test_StructureS()
+        s = StructureS()
         self.assertFalse(s == None)  # noqa: E711 — the point is the operator, not `is`
 
     def test_ne_none(self):
-        s = Test_StructureS()
+        s = StructureS()
         self.assertTrue(s != None)  # noqa: E711
 
     def test_eq_unrelated_type(self):
-        s = Test_StructureS()
+        s = StructureS()
         self.assertFalse(s == 42)
         self.assertFalse(s == "StructureS")
 

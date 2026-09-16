@@ -8,10 +8,8 @@ remain stable across insertions and deletions.
 
 import unittest
 import dsviper
-from features.data import (
-    XArray_int8, XArray_uint8, Vector_int8, Vector_uint8,
-    XArray_Test_StructureS, Test_StructureS,
-)
+from features.demo import StructureS
+from features.containers import XArray_int8, XArray_uint8, Vector_int8, Vector_uint8, XArray_Demo_StructureS
 
 
 class TestXArrayConstruction(unittest.TestCase):
@@ -474,9 +472,9 @@ class TestXArrayProxiedElementWraps(unittest.TestCase):
     """
 
     def _make(self):
-        xa = XArray_Test_StructureS()
-        xa.append(Test_StructureS({"f_float": 3.5, "f_string": "hello"}))
-        xa.append(Test_StructureS({"f_float": 1.0, "f_string": "world"}))
+        xa = XArray_Demo_StructureS()
+        xa.append(StructureS({"f_float": 3.5, "f_string": "hello"}))
+        xa.append(StructureS({"f_float": 1.0, "f_string": "world"}))
         return xa
 
     def test_items_returns_wrapped_proxies(self):
@@ -485,7 +483,7 @@ class TestXArrayProxiedElementWraps(unittest.TestCase):
         self.assertEqual(len(items), 2)
         for pos, val in items:
             self.assertIsInstance(pos, dsviper.ValueUUId)
-            self.assertIsInstance(val, Test_StructureS)
+            self.assertIsInstance(val, StructureS)
         self.assertEqual(items[0][1].f_string, "hello")
         self.assertEqual(items[1][1].f_string, "world")
 
@@ -493,18 +491,18 @@ class TestXArrayProxiedElementWraps(unittest.TestCase):
         xa = self._make()
         pos, _ = xa.items()[0]
         got = xa.at(pos)
-        self.assertIsInstance(got, Test_StructureS)
+        self.assertIsInstance(got, StructureS)
         self.assertEqual(got.f_string, "hello")
 
     def test_getitem_returns_wrapped_proxy(self):
         xa = self._make()
-        self.assertIsInstance(xa[0], Test_StructureS)
+        self.assertIsInstance(xa[0], StructureS)
         self.assertEqual(xa[0].f_string, "hello")
 
     def test_to_vector_returns_wrapped_proxies(self):
         xa = self._make()
         vec = xa.to_vector()
-        self.assertIsInstance(vec[0], Test_StructureS)
+        self.assertIsInstance(vec[0], StructureS)
         self.assertEqual(vec[0].f_string, "hello")
 
 

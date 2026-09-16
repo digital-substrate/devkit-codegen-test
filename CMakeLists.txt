@@ -29,8 +29,8 @@ include(lib.cmake)
 # Subdirs are skipped (with a notice) when the generated sources are
 # missing, so a fresh clone configures cleanly.
 
-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/features/Features)
-    add_subdirectory(features)
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/features/cpp/generated)
+    add_subdirectory(features/cpp)
 else()
     message(STATUS "features/ skipped: run 'cd features && python3 generate.py all.dsm -c' first")
 endif()

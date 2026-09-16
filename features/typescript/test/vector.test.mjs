@@ -1,9 +1,8 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
-import {
-  Vector_uint8, Vector_Test_StructureS, Test_StructureS,
-} from "../features/dist/index.js";
+import { StructureS } from "../generated/dist/demo/data.js";
+import { Vector_uint8, Vector_Demo_StructureS } from "../generated/dist/containers.js";
 
 // --- TestVectorConstruction ---
 
@@ -94,7 +93,7 @@ test("remove", () => {
 // --- TestVectorStructure ---
 
 test("vector_of_structures", () => {
-  const v = new Vector_Test_StructureS([
+  const v = new Vector_Demo_StructureS([
     { f_float: 1.0, f_string: "one" },
     { f_float: 2.0, f_string: "two" },
   ]);

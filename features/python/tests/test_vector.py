@@ -2,7 +2,8 @@
 """Tests for Kibo-generated Vector proxy classes."""
 
 import unittest
-from features.data import Vector_uint8, Vector_Test_StructureS, Test_StructureS
+from features.demo import StructureS
+from features.containers import Vector_uint8, Vector_Demo_StructureS
 
 
 class TestVectorConstruction(unittest.TestCase):
@@ -89,7 +90,7 @@ class TestVectorStructure(unittest.TestCase):
 
     def test_vector_of_structures(self):
         # Vectors of structures need dicts or vpr_values, not proxy objects
-        v = Vector_Test_StructureS([
+        v = Vector_Demo_StructureS([
             {"f_float": 1.0, "f_string": "one"},
             {"f_float": 2.0, "f_string": "two"}
         ])

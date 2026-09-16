@@ -1,10 +1,8 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
-import {
-  Optional_uint8, Optional_int8, Optional_Test_StructureT,
-  Test_StructureT,
-} from "../features/dist/index.js";
+import { StructureT } from "../generated/dist/demo/data.js";
+import { Optional_uint8, Optional_int8, Optional_Demo_StructureT } from "../generated/dist/containers.js";
 
 // --- TestOptionalNil ---
 
@@ -61,14 +59,14 @@ test("wrap_method", () => {
 // --- TestOptionalStructure ---
 
 test("optional_structure_nil", () => {
-  const opt = new Optional_Test_StructureT();
+  const opt = new Optional_Demo_StructureT();
   assert.ok(opt.isNil());
 });
 
 test("optional_structure_value", () => {
-  const s = new Test_StructureT();
+  const s = new StructureT();
   s.field_string = "test";
-  const opt = new Optional_Test_StructureT(s);
+  const opt = new Optional_Demo_StructureT(s);
   assert.ok(!opt.isNil());
   const unwrapped = opt.unwrap();
   assert.equal(unwrapped.field_string, "test");

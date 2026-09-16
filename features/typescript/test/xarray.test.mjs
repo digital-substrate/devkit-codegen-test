@@ -7,10 +7,8 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
-import {
-  XArray_int8, XArray_uint8, Vector_int8, Vector_uint8,
-  XArray_Test_StructureS, Test_StructureS,
-} from "../features/dist/index.js";
+import { StructureS } from "../generated/dist/demo/data.js";
+import { XArray_int8, XArray_uint8, Vector_int8, Vector_uint8, XArray_Demo_StructureS } from "../generated/dist/containers.js";
 
 // --- Construction ---
 
@@ -488,9 +486,9 @@ test("encode_decode_preserves_positions", () => {
 // values from returning proxies.
 
 function makeStructXArray() {
-  const xa = new XArray_Test_StructureS();
-  xa.append(new Test_StructureS({ f_float: 3.5, f_string: "hello" }));
-  xa.append(new Test_StructureS({ f_float: 1.0, f_string: "world" }));
+  const xa = new XArray_Demo_StructureS();
+  xa.append(new StructureS({ f_float: 3.5, f_string: "hello" }));
+  xa.append(new StructureS({ f_float: 1.0, f_string: "world" }));
   return xa;
 }
 
@@ -500,7 +498,7 @@ test("proxied items returns wrapped proxies", () => {
   assert.equal(items.length, 2);
   for (const [pos, val] of items) {
     assert.ok(pos instanceof dsviper.ValueUUId);
-    assert.ok(val instanceof Test_StructureS);
+    assert.ok(val instanceof StructureS);
   }
   assert.equal(items[0][1].f_string, "hello");
   assert.equal(items[1][1].f_string, "world");
@@ -510,7 +508,7 @@ test("proxied at returns wrapped proxy", () => {
   const xa = makeStructXArray();
   const [pos] = xa.items()[0];
   const got = xa.at(pos);
-  assert.ok(got instanceof Test_StructureS);
+  assert.ok(got instanceof StructureS);
   assert.equal(got.f_string, "hello");
 });
 
@@ -518,13 +516,13 @@ test("proxied get returns wrapped proxy", () => {
   // TS index access is get(index); the Python mirror uses xa[0] (__getitem__).
   const xa = makeStructXArray();
   const got = xa.get(0);
-  assert.ok(got instanceof Test_StructureS);
+  assert.ok(got instanceof StructureS);
   assert.equal(got.f_string, "hello");
 });
 
 test("proxied toVector returns wrapped proxies", () => {
   const xa = makeStructXArray();
   const vec = xa.toVector();
-  assert.ok(vec.at(0) instanceof Test_StructureS);
+  assert.ok(vec.at(0) instanceof StructureS);
   assert.equal(vec.at(0).f_string, "hello");
 });

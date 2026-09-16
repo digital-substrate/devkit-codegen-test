@@ -2,10 +2,8 @@
 """Tests for Kibo-generated Optional proxy classes."""
 
 import unittest
-from features.data import (
-    Optional_uint8, Optional_int8, Optional_Test_StructureT,
-    Test_StructureT
-)
+from features.demo import StructureT
+from features.containers import Optional_uint8, Optional_int8, Optional_Demo_StructureT
 
 
 class TestOptionalNil(unittest.TestCase):
@@ -61,13 +59,13 @@ class TestOptionalStructure(unittest.TestCase):
     """Test Optional with structure type."""
 
     def test_optional_structure_nil(self):
-        opt = Optional_Test_StructureT()
+        opt = Optional_Demo_StructureT()
         self.assertTrue(opt.is_nil())
 
     def test_optional_structure_value(self):
-        s = Test_StructureT()
+        s = StructureT()
         s.field_string = "test"
-        opt = Optional_Test_StructureT(s)
+        opt = Optional_Demo_StructureT(s)
         self.assertFalse(opt.is_nil())
         unwrapped = opt.unwrap()
         self.assertEqual(unwrapped.field_string, "test")

@@ -1,10 +1,8 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
-import {
-  Map_int8_to_string, Map_string_to_Test_StructureS, Map_Test_StructureS_to_string,
-  Test_StructureS,
-} from "../features/dist/index.js";
+import { StructureS } from "../generated/dist/demo/data.js";
+import { Map_int8_to_string, Map_string_to_Demo_StructureS, Map_Demo_StructureS_to_string } from "../generated/dist/containers.js";
 
 // --- TestMapConstruction ---
 
@@ -122,14 +120,14 @@ test("iter_multiple_times", () => {
 
 test("map_string_to_structure", () => {
   // Map values need plain shapes or vpr_values, not proxy objects
-  const m = new Map_string_to_Test_StructureS([["key", { f_float: 1.5, f_string: "test" }]]);
+  const m = new Map_string_to_Demo_StructureS([["key", { f_float: 1.5, f_string: "test" }]]);
   const retrieved = m.at("key");
   assert.ok(Math.abs(retrieved.f_float - 1.5) < 1e-5);
 });
 
 test("map_structure_to_string", () => {
-  const s = new Test_StructureS({ f_float: 1.5, f_string: "test" });
-  const m = new Map_Test_StructureS_to_string();
+  const s = new StructureS({ f_float: 1.5, f_string: "test" });
+  const m = new Map_Demo_StructureS_to_string();
   m.set(s, "value");
   assert.equal(m.at(s), "value");
 });

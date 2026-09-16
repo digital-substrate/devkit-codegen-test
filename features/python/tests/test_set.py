@@ -2,7 +2,8 @@
 """Tests for Kibo-generated Set proxy classes."""
 
 import unittest
-from features.data import Set_uint8, Set_Test_ConceptAKey, Test_ConceptAKey
+from features.demo import ConceptAKey
+from features.containers import Set_uint8, Set_Demo_ConceptAKey
 
 
 class TestSetConstruction(unittest.TestCase):
@@ -142,9 +143,9 @@ class TestSetWithKeys(unittest.TestCase):
     """Test Set with concept key elements."""
 
     def test_set_of_keys(self):
-        k1 = Test_ConceptAKey.create()
-        k2 = Test_ConceptAKey.create()
-        s = Set_Test_ConceptAKey()
+        k1 = ConceptAKey.create()
+        k2 = ConceptAKey.create()
+        s = Set_Demo_ConceptAKey()
         s.add(k1)
         s.add(k2)
         self.assertEqual(len(s), 2)

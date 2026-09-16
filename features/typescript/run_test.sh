@@ -1,8 +1,6 @@
 #!/bin/bash
-# Build the kibo-generated `features` package and run the TypeScript test suite.
-# Requires the @digitalsubstrate/dsviper binding to be installable/available.
+# Compile le paquet généré, puis lance la suite contre le résultat compilé.
 set -e
-cd "$(dirname "$0")"
-npm install
-./node_modules/.bin/tsc -p features/tsconfig.json
-node --test test/*.test.mjs
+cd "$(dirname "${BASH_SOURCE[0]}")"
+./node_modules/.bin/tsc -p generated/tsconfig.json
+node --test test/*.mjs

@@ -2,10 +2,8 @@
 """Tests for Kibo-generated Map proxy classes."""
 
 import unittest
-from features.data import (
-    Map_int8_to_string, Map_string_to_Test_StructureS, Map_Test_StructureS_to_string,
-    Test_StructureS
-)
+from features.demo import StructureS
+from features.containers import Map_int8_to_string, Map_string_to_Demo_StructureS, Map_Demo_StructureS_to_string
 
 
 class TestMapConstruction(unittest.TestCase):
@@ -118,13 +116,13 @@ class TestMapWithStructures(unittest.TestCase):
 
     def test_map_string_to_structure(self):
         # Map values need dicts or vpr_values, not proxy objects
-        m = Map_string_to_Test_StructureS({"key": {"f_float": 1.5, "f_string": "test"}})
+        m = Map_string_to_Demo_StructureS({"key": {"f_float": 1.5, "f_string": "test"}})
         retrieved = m["key"]
         self.assertAlmostEqual(retrieved.f_float, 1.5, places=5)
 
     def test_map_structure_to_string(self):
-        s = Test_StructureS({"f_float": 1.5, "f_string": "test"})
-        m = Map_Test_StructureS_to_string()
+        s = StructureS({"f_float": 1.5, "f_string": "test"})
+        m = Map_Demo_StructureS_to_string()
         m[s] = "value"
         self.assertEqual(m[s], "value")
 

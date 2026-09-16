@@ -115,6 +115,17 @@
         "Base"
       ],
       "note": "Selecting Base alone leaves out pool.py.stg, but not the pool's own entry point: __init__.py.stg declares the `pool` entry itself, so kibo still renders a package directory for every pool. Expressing \"no pools\" fully means moving that entry out of __init__.py.stg, not choosing differently here. Measured, not assumed."
+    },
+    "Wheel": {
+      "doc": "What makes the package installable, and therefore typed.",
+      "templates": [
+        "pyproject.toml.stg",
+        "py.typed.stg"
+      ],
+      "requires": [
+        "Base"
+      ],
+      "note": "These two do not land beside the modules: py.typed goes inside the package, pyproject.toml one level up at the project root. A project script renders them with a different -o. Measured: without py.typed a consumer gets `Stub file not found` and every annotation in the package is invisible; without pyproject.toml `pip install` refuses the directory outright."
     }
   },
   "typescript": {

@@ -1,11 +1,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
-import {
-  Vec_uint8_2,
-  Mat_uint8_2_2, Mat_uint8_2_3,
-  Tuple_uint8_string,
-} from "../features/dist/index.js";
+import { Vec_uint8_2, Mat_uint8_2_2, Mat_uint8_2_3, Tuple_uint8_string } from "../generated/dist/containers.js";
 
 // =============================================================================
 // Vec Tests

@@ -9,11 +9,7 @@ This module tests:
 
 import unittest
 import dsviper
-from features.data import (
-    Vec_uint8_2,
-    Mat_uint8_2_2, Mat_uint8_2_3,
-    Tuple_uint8_string
-)
+from features.containers import Vec_uint8_2, Mat_uint8_2_2, Mat_uint8_2_3, Tuple_uint8_string
 
 
 # =============================================================================

@@ -1,9 +1,8 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
-import {
-  Set_uint8, Set_Test_ConceptAKey, Test_ConceptAKey,
-} from "../features/dist/index.js";
+import { ConceptAKey } from "../generated/dist/demo/data.js";
+import { Set_uint8, Set_Demo_ConceptAKey } from "../generated/dist/containers.js";
 
 // --- TestSetConstruction ---
 
@@ -155,9 +154,9 @@ test("isdisjoint", () => {
 // --- TestSetWithKeys ---
 
 test("set_of_keys", () => {
-  const k1 = Test_ConceptAKey.create();
-  const k2 = Test_ConceptAKey.create();
-  const s = new Set_Test_ConceptAKey();
+  const k1 = ConceptAKey.create();
+  const k2 = ConceptAKey.create();
+  const s = new Set_Demo_ConceptAKey();
   s.add(k1);
   s.add(k2);
   assert.equal(s.size, 2);
