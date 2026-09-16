@@ -45,3 +45,15 @@ namespaces/target/python/hand/topology/_codegen/
 # La source est `namespaces/target/runtime-proposed/node/`.
 namespaces/target/node/hand/src/_codegen/
 namespaces/target/node/hand/dist/
+
+namespaces/cpp/generated/
+namespaces/python/generated/
+namespaces/typescript/generated/
+namespaces/Topology.dsm.json
+crossing/cpp/generated/
+crossing/python/generated/
+crossing/typescript/generated/
+crossing/Crossing.dsm.json
+
+# Un node_modules n'est jamais versionné, quel que soit le site.
+node_modules/

@@ -1,63 +1,37 @@
-# namespaces — a model about namespace topology, and nothing else
+# namespaces — namespace topology, and nothing else
 
-`features/all.dsm` covers the type system and `service` covers pools and the remote.
-Both declare a single namespace, so neither reaches any cross-namespace path in the
-generator. This model covers only the topology, and stays small on purpose: the types
-it uses are the simplest ones that carry an edge.
+Six namespaces, including the global one, and every kind of edge between them: a homonym
+declared twice (`ModelA::Colour` and `ModelB::Colour`), a namespace that references two
+others, three pools. `features/` covers the type system in one namespace; this covers what
+having several does to it.
 
-Its shape is drawn from a real integration: two driver models owned by different
-vendors, a namespace that composes them, and pools on top.
+Generated from `../templates`.
 
 ```
-Projection ──→ ModelA        Annotations ──→ ModelA
-    │      ╲─→ ModelB        Projector   ──→ ModelA, ModelB
-    ╰────────→ ModelC        Tools       ──→ (nothing)
+namespaces/
+  definitions/  Topology.dsm.json  generate.py  check.py
+
+  cpp/          generated/   src/   run_test.sh   CMakeLists.txt
+  python/       generated/topology/  test/   run_test.sh
+  typescript/   generated/src/       test/   run_test.sh
 ```
 
-## What it is for
+**`generated/` is kibo's; `src/` is the developer's.** The six files in `cpp/src` carry no
+`main()`: each exercises one facet of the generated surface — fields, codec, json, an
+attachment read, a pool — so compiling them proves the surface is usable, and linking them
+proves it resolves. `application.cpp` implements what the three pools declare, which is the
+line the generator does not cross.
 
-Every case below is either a defect that has shipped or a path nothing else in the
-repository reaches. `check.py` asserts each one against the generated JSON, so the
-model cannot quietly stop covering what it claims:
+## What the tests prove
 
-| case | where it lives |
-|---|---|
-| a namespace reached **only** through an attachment | `ModelC`, via `Projection.marker` |
-| a `key<NS::C>` edge in a structure field | `Projection.Pair` |
-| a concept whose parent is in another namespace | `Projection::DerivedMaterial` |
-| a namespace holding **only** attachments | `Annotations` |
-| the same name declared in two namespaces | `Material` and `Colour`, in `ModelA` and `ModelB` |
-| a container shape spanning two namespaces | `Projection.mapping` |
-| a pool spanning two namespaces | `Projector` |
-| a pool naming no namespaced type at all | `Tools` |
-| a `void` return | `Tools.reset` |
-| two attachments told apart only by their key's namespace | `Annotations.note`, twice |
+    cpp/run_test.sh          the library links and the generated programme runs
+    python/run_test.sh       23 assertions on the rendered package
+    typescript/run_test.sh   4 assertions: two namespaces declare the same name, neither moved
 
-The first two matter because a namespace reachable only through an attachment carried
-no dependency edge before `9328acd`, and a namespace holding nothing but attachments
-was absent from the model entirely. Both would have gone unnoticed here before that
-fix; both are asserted now.
+The TypeScript check is the smallest statement of why this whole line exists. Where the
+previous pack wrote `ModelA_Colour` and `ModelB_Colour` — a flattening that hides the clash
+by having already resolved it inside the name — here the path *is* the namespace and `Colour`
+stays `Colour`.
 
-## Usage
-
-```bash
-python3 generate.py -c -p -t      # render into the working tree, like the other models
-python3 check.py                  # assert the cases above are still covered
-```
-
-`check.py` exits non-zero if any case stops being covered.
-
-To measure a change rather than render one, use `../tools/render.py`: it renders every
-model into a scratch tree without touching the working tree, so it can be run before and
-after an edit.
-
-```bash
-python3 ../tools/render.py /tmp/before
-#   ... change a template or the generator ...
-python3 ../tools/render.py /tmp/after
-python3 ../tools/render.py --diff /tmp/before /tmp/after
-```
-
-The two mono-namespace models guard against regression and their diff must be empty; this
-one shows the effect a change is meant to have, so its diff is read rather than asserted.
-`--diff` exits non-zero only when a mono model moved.
+`check.py` at the site root is a different thing: it asserts the *model* still exercises what
+it claims, and is run after regenerating the JSON.

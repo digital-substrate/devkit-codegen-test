@@ -1,41 +1,39 @@
-# crossing — the type system, across namespaces
+# crossing — references that cross a namespace, inside a composite
 
-`features/all.dsm` covers every shape of the type system in **one** namespace.
-`namespaces/` covers namespace topology with **three** type shapes. Neither reaches the
-place where the two meet, and that is where a namespace-based generator lives: a
-`map<key<Core::Thing>, key<Parts::Thing>>` is a shape whose halves belong to different
-units and which belongs to neither.
+Four namespaces. `Core` and `Parts` each declare `Thing`, `Colour` and `Grade` — three
+homonym families. `Woven` declares nothing of its own worth naming: its two structures are
+documented as *"every container, with elements from both suppliers"* and *"the entities of
+both suppliers, bare, as fields"*. It references `Core` 27 times and `Parts` 16.
 
-This model is that crossing. Three namespaces:
+That is what separates this site from `namespaces/`. There, the question is how declarations
+spread across namespaces. Here it is what happens when a `map<Core::Grade, Parts::Colour>` or
+a `variant<Core::Colour, Parts::Colour>` has to be named, bound and type-checked — which is
+exactly what the converter's in-namespace binding and the container factory must get right,
+and what no other model asks of them.
+
+Generated from `../templates`.
 
 ```
-Core   ──  everything that cannot cross: numbers, ids, strings, blobs, vec, mat,
-           an enumeration, a club, a concept and its local derived concept
-Parts  ──  a second supplier, declaring the same names as Core and nothing else
-Woven  ──  every composite shape, with its elements taken from both suppliers,
-           twice over: once as a structure field, once as an attachment document
+crossing/
+  definitions/  Crossing.dsm.json  generate.py
+
+  cpp/          generated/   run_test.sh   CMakeLists.txt
+  python/       generated/crossing/  test/   run_test.sh
+  typescript/   generated/src/       test/   run_test.sh
 ```
 
-The two code paths are not the same, which is why every shape appears twice: a field is
-written through its own accessor, while a document is encoded, decoded and
-brace-initialised, and the templates branch on the document's shape.
+There is no `cpp/src` here: this site has no pool to implement and no service to run. The
+compiler is the judge — if a composite crossing two namespaces did not name its elements
+correctly, the library would not build.
 
-`Woven` also carries the three corners at once — an attachment declared by one namespace,
-keyed on a concept of a second, whose document type comes from a third.
+## What the tests prove
 
-## What it found on the day it was written
+    cpp/run_test.sh          the library builds and the generated programme runs
+    python/run_test.sh       fail-fast: six refusals that must happen and must be TypeError
+    typescript/run_test.sh   the containers, on elements from two suppliers
 
-Five namespace-based templates had rendered and compiled against `namespaces/` for weeks.
-Against this model, on the first render:
-
-| defect | why the other models could not see it |
-|---|---|
-| the model's own namespace was hard-coded as `Topology` in a template | every model until now was called Topology |
-| a derived concept was emitted **before** its parent | sorting is by name, and `SubThing` < `Thing` |
-| layer 1 emits no club at all | no other multi-namespace model declares one |
-| `key<any_concept>` comes out as a bare `AnyConceptKey` | it belongs to no namespace, so nothing qualified it |
-
-All four are answered, the first two in the generator and the last two by hand in
-`target/hand/`, which is where the reference for a club and for the untyped key now lives.
-The fourth turned out not to be a type no namespace can claim: it is a runtime type, with
-two operations on it that should never have been members.
+The Python check is about **fail-fast**, which is the runtime's contract and not something
+the generated code re-implements: a generated class is a box around a `dsviper.Value` and
+holds nothing, so every write reaches the runtime. What the check pins is that the refusal
+still arrives, and arrives as the declared error — including the one case the generated layer
+must raise itself, when a unit that would name a value has not been imported.

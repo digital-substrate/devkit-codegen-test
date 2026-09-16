@@ -12,9 +12,10 @@ cmake --build "$BUILD" -j --target service_server service_client > /dev/null
 
 "$BIN/service_server" -s "$SOCKET" &
 SERVER=$!
-trap 'kill $SERVER 2>/dev/null; wait $SERVER 2>/dev/null; rm -f "$SOCKET"' EXIT
+trap 'kill $SERVER 2>/dev/null; wait $SERVER 2>/dev/null || true; rm -f "$SOCKET"' EXIT
 
 for _ in $(seq 40); do [ -S "$SOCKET" ] && break; sleep 0.1; done
 [ -S "$SOCKET" ] || { echo "le serveur n'a pas ouvert $SOCKET"; exit 1; }
 
-"$BIN/service_client" -s "$SOCKET"
+"$BIN/service_client" -s "$SOCKET" && STATUS=0 || STATUS=$?
+exit $STATUS

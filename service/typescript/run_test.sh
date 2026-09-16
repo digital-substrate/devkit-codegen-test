@@ -16,7 +16,8 @@ cmake --build "$BUILD" -j --target service_server > /dev/null
 
 "$BUILD/service/cpp/service_server" -a localhost -p $PORT &
 SERVER=$!
-trap 'kill $SERVER 2>/dev/null; wait $SERVER 2>/dev/null' EXIT
+trap 'kill $SERVER 2>/dev/null; wait $SERVER 2>/dev/null || true' EXIT
 sleep 1
 
-node build/client.js localhost $PORT
+node build/client.js localhost $PORT && STATUS=0 || STATUS=$?
+exit $STATUS
