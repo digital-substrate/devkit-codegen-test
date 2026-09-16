@@ -1,13 +1,13 @@
 # Écarts de liaison — à signaler à viper
 
-Cinq écarts trouvés en écrivant un générateur de code pour les trois cibles à partir du même
+Six écarts trouvés en écrivant un générateur de code pour les trois cibles à partir du même
 modèle. Chacun est **reproduit** ci-dessous, avec la commande exacte et sa sortie.
 
 Ce qui les rend intéressants, c'est ce qui les a fait apparaître : rendre le *même* modèle
 vers C++, Python et Node oblige à poser la même question aux trois liaisons, et trois réponses
 différentes à une même question est une définition utilisable du mot « écart ».
 
-Deux d'entre eux — 3 et 5 — sont des **divergences entre liaisons** : la même écriture est
+Trois d'entre eux — 3, 5 et 6 — sont des **divergences entre liaisons** : la même écriture est
 acceptée d'un côté et refusée de l'autre. Ce sont les plus coûteux, parce qu'un code porté
 d'un langage à l'autre change de comportement sans changer de forme.
 
@@ -139,6 +139,34 @@ liaison Node vérifient ; celle-ci est la seule qui ne le fait pas.
 
 Contourné aujourd'hui par une comparaison de type dans la couche générée, **à retirer le jour
 où la liaison vérifie**.
+
+---
+
+## 6. `Value.create` rend un autre type que celui demandé — Node
+
+Demander un `set<uint8>` en donnant un `set<string>` rend un `set<string>`, sans rien dire.
+
+**Reproduction**
+
+```js
+const s8 = new dsviper.TypeSet(dsviper.Type.UINT8);
+const sStr = new dsviper.ValueSet(new dsviper.TypeSet(dsviper.Type.STRING));
+sStr.add("a");
+dsviper.Value.create(s8, sStr).type().representation();   // "set<string>"
+```
+
+```python
+dsviper.Value.create(s8, sstr)
+# refusé : expected set<uint8>, got set<string> [create]
+```
+
+**C'est le même dégât que le point 5, et par un autre chemin** : une valeur du mauvais type
+entre sans que rien ne l'arrête, et se découvre au prochain lecteur. Ici c'est pire, parce que
+la fonction *a reçu* le type attendu et ne s'en est pas servie pour refuser.
+
+Contourné en vérifiant, après construction, que ce qui est sorti a bien le type demandé — et
+c'est ce contrôle qui a rendu leur sens aux épreuves de fail-fast du projet, qui passaient sans
+rien vérifier.
 
 ---
 

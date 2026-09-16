@@ -43,8 +43,13 @@ export class ConceptAKey extends Proxy {
         return (concept_aType ??= new dsviper.TypeKey(ConceptAKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(ConceptAKey.type())) {
+            if (!identifier.isMember(ConceptAKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Demo::ConceptAKey");
             }
             super(identifier);
@@ -71,6 +76,10 @@ export class ConceptAKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -117,8 +126,13 @@ export class ConceptBKey extends Proxy {
         return (concept_bType ??= new dsviper.TypeKey(ConceptBKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(ConceptBKey.type())) {
+            if (!identifier.isMember(ConceptBKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Demo::ConceptBKey");
             }
             super(identifier);
@@ -145,6 +159,10 @@ export class ConceptBKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -191,8 +209,13 @@ export class ConceptCoverageKey extends Proxy {
         return (concept_coverageType ??= new dsviper.TypeKey(ConceptCoverageKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(ConceptCoverageKey.type())) {
+            if (!identifier.isMember(ConceptCoverageKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Demo::ConceptCoverageKey");
             }
             super(identifier);
@@ -219,6 +242,10 @@ export class ConceptCoverageKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -265,8 +292,13 @@ export class ConceptDKey extends Proxy {
         return (concept_dType ??= new dsviper.TypeKey(ConceptDKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(ConceptDKey.type())) {
+            if (!identifier.isMember(ConceptDKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Demo::ConceptDKey");
             }
             super(identifier);
@@ -293,6 +325,10 @@ export class ConceptDKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -339,8 +375,13 @@ export class ConceptCKey extends Proxy {
         return (concept_cType ??= new dsviper.TypeKey(ConceptCKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(ConceptCKey.type())) {
+            if (!identifier.isMember(ConceptCKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Demo::ConceptCKey");
             }
             super(identifier);
@@ -367,6 +408,10 @@ export class ConceptCKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -496,8 +541,18 @@ export class KlubKey extends Proxy {
     toConceptCKey() {
         return this.as(ConceptCKey);
     }
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asConceptCKey() {
+        return this.as(ConceptCKey);
+    }
     /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
     toConceptDKey() {
+        return this.as(ConceptDKey);
+    }
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asConceptDKey() {
         return this.as(ConceptDKey);
     }
     as(member) {

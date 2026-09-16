@@ -140,18 +140,24 @@ export class Sequence extends View {
     toArray() {
         return [...this];
     }
-    /** La colonne d'une matrice, et la ligne — deux façons de la lire, et le modèle les nomme. */
+    /** Une ligne d'une matrice, telle qu'on l'écrit.
+     *
+     * LE RUNTIME RANGE PAR COLONNES, ET UN LITTÉRAL SE LIT PAR LIGNES. `[[1, 2], [3, 4]]`
+     * donne `row(0) === [1, 2]` pour qui l'a écrit ; le runtime appelle ça sa première
+     * colonne. Suivre ce que l'appelant a écrit plutôt que la disposition interne est ce qui
+     * évite une transposition silencieuse.
+     */
     row(index) {
         const type = this.value.type();
         const held = [];
-        for (let column = 0; column < type.columns(); column += 1) {
-            held.push(this.at(column, index));
+        for (let position = 0; position < type.rows(); position += 1) {
+            held.push(this.at(index, position));
         }
         return held;
     }
     setRow(index, elements) {
         const inner = this.value;
-        elements.forEach((element, column) => inner.set(column, index, unwrap(element)));
+        elements.forEach((element, position) => inner.set(index, position, unwrap(element)));
     }
     /** Ce que la valeur sait faire et que la vue ne nomme pas.
      *
@@ -179,9 +185,9 @@ export class Mapping extends View {
     at(key) {
         return wrap(this.map.at(unwrap(key)));
     }
-    get(key) {
+    get(key, fallback) {
         const held = this.map.get(unwrap(key));
-        return held === undefined ? undefined : wrap(held);
+        return held === undefined ? fallback : wrap(held);
     }
     set(key, element) {
         this.map.set(unwrap(key), unwrap(element));
@@ -196,18 +202,28 @@ export class Mapping extends View {
         this.map.clear();
     }
     keys() {
-        return [...this].map(([key]) => key);
-    }
-    values() {
-        return [...this].map(([, element]) => element);
-    }
-    entries() {
         return [...this];
     }
-    /** ITÉRER UNE MAP DU RUNTIME REND DES PAIRES, et non des clés — contrairement à une `Map`
-     *  de JavaScript et à un `dict` de Python, qui rendent les clés. Les redemander une par
-     *  une serait un aller-retour de plus, et la clé encodée ne se represente pas toujours. */
+    values() {
+        return this.entries().map(([, element]) => element);
+    }
+    entries() {
+        return [...this.pairs()];
+    }
+    /** ITÉRER REND LES CLÉS, comme une `Map` de JavaScript et un `dict` de Python.
+     *
+     * La map du runtime, elle, rend des paires ; `entries()` est là pour ça. Les deux langages
+     * voisins rendent les clés, et suivre le runtime ici obligerait chaque appelant à défaire
+     * une paire dont il ne voulait pas.
+     */
     *[Symbol.iterator]() {
+        for (const pair of this.map) {
+            const [key] = pair;
+            yield wrap(key);
+        }
+    }
+    /** Les paires clé/valeur, telles que le runtime les tient. */
+    *pairs() {
         for (const pair of this.map) {
             const [key, element] = pair;
             yield [wrap(key), wrap(element)];
@@ -245,7 +261,7 @@ export class Ordered extends View {
         return this.ordered.positions();
     }
     elementPositions() {
-        return this.positions().filter((p) => !p.equals(dsviper.ValueXArray.END));
+        return this.positions().filter((p) => !p.equals(dsviper.ValueXArray.END) && this.ordered.at(p) !== undefined);
     }
     position(index) {
         return this.ordered.position(index);
@@ -292,6 +308,20 @@ export class Ordered extends View {
      * LA FIN N'EST PAS UNE PLACE : `positions()` la rend parce qu'on y insère, et la compter
      * ferait un élément de plus à chaque parcours.
      */
+    /** Le xarray à plat, sous le type que le modèle lui donne.
+     *
+     * LA CLASSE EST CELLE QUE L'UNITÉ A DÉCLARÉE, ET NON UNE NOUVELLE. Lier à la volée rendrait
+     * une classe distincte à chaque appel, donc `instanceof Vector_uint8` serait faux pour un
+     * vecteur pourtant de cette forme. La table des formes est cherchée par le type, ce qu'on
+     * ne peut faire qu'ici — au chargement, elle n'est pas encore remplie.
+     */
+    toVector() {
+        const flat = this.ordered.toVector();
+        const known = boundFor(Sequence, flat.type());
+        return known === undefined
+            ? new Sequence(flat)
+            : new known(flat);
+    }
     items() {
         return this.elementPositions().map((position) => [position, this.at(position)]);
     }
@@ -402,6 +432,20 @@ function forward(view, name, args) {
     return result instanceof dsviper.Value ? wrap(result) : result;
 }
 const bound = new Map();
+/** La classe liée à cette forme, si une unité l'a déclarée.
+ *
+ * CHERCHÉE PAR LE TYPE ET NON PAR LA FONCTION, parce que l'appelant tient une valeur et pas la
+ * fonction qui l'a nommée. Le parcours n'est possible qu'après chargement — évaluer un
+ * descripteur pendant qu'un module s'initialise le prendrait en pleine zone morte.
+ */
+function boundFor(view, type) {
+    for (const [typeOf, held] of bound) {
+        if (Object.getPrototypeOf(held) === view && typeOf().equals(type)) {
+            return held;
+        }
+    }
+    return undefined;
+}
 /** Une vue liée à un type : nommable, constructible, et qui refuse ce qui n'est pas d'elle.
  *
  * MÉMOÏSÉE PAR FORME. Deux appels pour le même type rendraient deux classes distinctes, et
@@ -429,12 +473,23 @@ function bind(view, typeOf, build) {
             // Vector_uint8(vectorInt8)` donne un conteneur d'un autre type, et là il n'y a rien
             // à bâtir. Laisser le runtime trancher, et traduire son refus dans le `TypeError`
             // que le contrat annonce.
+            let built;
             try {
-                super(build(typeOf(), given));
+                built = build(typeOf(), given);
             }
             catch (refus) {
                 throw new TypeError(`cette valeur n'est pas un ${typeOf().representation()}`, { cause: refus });
             }
+            // ET VÉRIFIER CE QUI EST SORTI. `Value.create` de la liaison Node rend un
+            // `set<string>` quand on lui demande un `set<uint8>` : il ignore le type demandé au
+            // lieu de refuser, là où la liaison Python lève. Sans ce contrôle une valeur du
+            // mauvais type entrerait dans une vue qui annonce l'autre, et le fail-fast serait
+            // en place et désarmé — la pire des deux situations.
+            if (!built.type().equals(typeOf())) {
+                throw new TypeError(`cette valeur n'est pas un ${typeOf().representation()} `
+                    + `mais un ${built.type().representation()}`);
+            }
+            super(built);
         }
         static type() {
             return typeOf();

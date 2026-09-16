@@ -83,9 +83,14 @@ export class <c.name>Key extends Proxy\<dsviper.ValueKey> {
         return (<c.name;format="lsc">Type ??= new dsviper.TypeKey(<c.name>Key.concept()));
     }
 
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId) {
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(<c.name>Key.type())) {
+            if (!identifier.isMember(<c.name>Key.concept())) {
                 throw new TypeError("cette valeur n'est pas un <u.name>::<c.name>Key");
             }
             super(identifier);
@@ -118,6 +123,11 @@ export class <c.name>Key extends Proxy\<dsviper.ValueKey> {
 
     isValid(): boolean {
         return this.value.instanceId().isValid();
+    }
+
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: <c.name>Key | dsviper.ValueKey): number {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
 
     /** L'instance et son type, dits comme le modèle les nomme. */
@@ -362,6 +372,12 @@ club_from(cm, c) ::= <<
 club_to(cm, c) ::= <<
     /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
     to<cm.asNameInNamespace>Key(): <cm.bindingInNamespace> | undefined {
+        return this.as(<cm.bindingInNamespace>);
+    }
+
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    as<cm.asNameInNamespace>Key(): <cm.bindingInNamespace> | undefined {
         return this.as(<cm.bindingInNamespace>);
     }
 >>

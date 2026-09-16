@@ -48,7 +48,13 @@ export declare class Sequence<E> extends View {
     has(element: E): boolean;
     [Symbol.iterator](): Iterator<E>;
     toArray(): E[];
-    /** La colonne d'une matrice, et la ligne — deux façons de la lire, et le modèle les nomme. */
+    /** Une ligne d'une matrice, telle qu'on l'écrit.
+     *
+     * LE RUNTIME RANGE PAR COLONNES, ET UN LITTÉRAL SE LIT PAR LIGNES. `[[1, 2], [3, 4]]`
+     * donne `row(0) === [1, 2]` pour qui l'a écrit ; le runtime appelle ça sa première
+     * colonne. Suivre ce que l'appelant a écrit plutôt que la disposition interne est ce qui
+     * évite une transposition silencieuse.
+     */
     row(index: number): unknown[];
     setRow(index: number, elements: unknown[]): void;
     /** Ce que la valeur sait faire et que la vue ne nomme pas.
@@ -69,7 +75,7 @@ export declare class Mapping<K, V> extends View {
     private get map();
     get size(): number;
     at(key: K): V;
-    get(key: K): V | undefined;
+    get(key: K, fallback?: V): V | undefined;
     set(key: K, element: V): void;
     has(key: K): boolean;
     remove(key: K): void;
@@ -77,10 +83,15 @@ export declare class Mapping<K, V> extends View {
     keys(): K[];
     values(): V[];
     entries(): [K, V][];
-    /** ITÉRER UNE MAP DU RUNTIME REND DES PAIRES, et non des clés — contrairement à une `Map`
-     *  de JavaScript et à un `dict` de Python, qui rendent les clés. Les redemander une par
-     *  une serait un aller-retour de plus, et la clé encodée ne se represente pas toujours. */
-    [Symbol.iterator](): Iterator<[K, V]>;
+    /** ITÉRER REND LES CLÉS, comme une `Map` de JavaScript et un `dict` de Python.
+     *
+     * La map du runtime, elle, rend des paires ; `entries()` est là pour ça. Les deux langages
+     * voisins rendent les clés, et suivre le runtime ici obligerait chaque appelant à défaire
+     * une paire dont il ne voulait pas.
+     */
+    [Symbol.iterator](): Iterator<K>;
+    /** Les paires clé/valeur, telles que le runtime les tient. */
+    pairs(): Generator<[K, V]>;
     call(name: string, ...args: unknown[]): unknown;
 }
 /** Un xarray du runtime : une suite dont chaque place a une identité stable.
@@ -117,6 +128,14 @@ export declare class Ordered<E> extends View {
      * LA FIN N'EST PAS UNE PLACE : `positions()` la rend parce qu'on y insère, et la compter
      * ferait un élément de plus à chaque parcours.
      */
+    /** Le xarray à plat, sous le type que le modèle lui donne.
+     *
+     * LA CLASSE EST CELLE QUE L'UNITÉ A DÉCLARÉE, ET NON UNE NOUVELLE. Lier à la volée rendrait
+     * une classe distincte à chaque appel, donc `instanceof Vector_uint8` serait faux pour un
+     * vecteur pourtant de cette forme. La table des formes est cherchée par le type, ce qu'on
+     * ne peut faire qu'ici — au chargement, elle n'est pas encore remplie.
+     */
+    toVector(): Sequence<E>;
     items(): [dsviper.ValueUUId, E | undefined][];
     [Symbol.iterator](): Iterator<E>;
     call(name: string, ...args: unknown[]): unknown;

@@ -38,8 +38,13 @@ export class KnotKey extends Proxy {
         return (knotType ??= new dsviper.TypeKey(KnotKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(KnotKey.type())) {
+            if (!identifier.isMember(KnotKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Woven::KnotKey");
             }
             super(identifier);
@@ -66,6 +71,10 @@ export class KnotKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -114,8 +123,13 @@ export class DerivedKey extends Proxy {
         return (derivedType ??= new dsviper.TypeKey(DerivedKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(DerivedKey.type())) {
+            if (!identifier.isMember(DerivedKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Woven::DerivedKey");
             }
             super(identifier);
@@ -142,6 +156,10 @@ export class DerivedKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -224,8 +242,18 @@ export class WeaveKey extends Proxy {
     toCoreThingKey() {
         return this.as(core.ThingKey);
     }
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asCoreThingKey() {
+        return this.as(core.ThingKey);
+    }
     /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
     toPartsThingKey() {
+        return this.as(parts.ThingKey);
+    }
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asPartsThingKey() {
         return this.as(parts.ThingKey);
     }
     as(member) {

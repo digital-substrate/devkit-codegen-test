@@ -59,6 +59,7 @@ export declare class AnyConceptKey extends Proxy<dsviper.ValueKey> {
     runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
     isKnown(): boolean;
+    static decode(blob: dsviper.ValueBlob): AnyConceptKey;
     description(): string;
     /** La clé vue comme celle d'un concept donné, ou `undefined` si elle n'en est pas une. */
     as<K>(concept: {

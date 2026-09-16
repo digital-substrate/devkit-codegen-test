@@ -38,8 +38,13 @@ export class OtherKey extends Proxy {
         return (otherType ??= new dsviper.TypeKey(OtherKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(OtherKey.type())) {
+            if (!identifier.isMember(OtherKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Core::OtherKey");
             }
             super(identifier);
@@ -66,6 +71,10 @@ export class OtherKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -114,8 +123,13 @@ export class ThingKey extends Proxy {
         return (thingType ??= new dsviper.TypeKey(ThingKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(ThingKey.type())) {
+            if (!identifier.isMember(ThingKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Core::ThingKey");
             }
             super(identifier);
@@ -142,6 +156,10 @@ export class ThingKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -190,8 +208,13 @@ export class SubThingKey extends Proxy {
         return (sub_thingType ??= new dsviper.TypeKey(SubThingKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(SubThingKey.type())) {
+            if (!identifier.isMember(SubThingKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Core::SubThingKey");
             }
             super(identifier);
@@ -218,6 +241,10 @@ export class SubThingKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -300,8 +327,18 @@ export class KlubKey extends Proxy {
     toOtherKey() {
         return this.as(OtherKey);
     }
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asOtherKey() {
+        return this.as(OtherKey);
+    }
     /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
     toSubThingKey() {
+        return this.as(SubThingKey);
+    }
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asSubThingKey() {
         return this.as(SubThingKey);
     }
     as(member) {

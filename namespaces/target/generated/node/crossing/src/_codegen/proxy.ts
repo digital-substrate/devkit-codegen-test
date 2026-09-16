@@ -11,7 +11,7 @@
  */
 import dsviper from "@digitalsubstrate/dsviper";
 
-import { isKnown } from "./registry.js";
+import { definitionsOf, isKnown } from "./registry.js";
 
 export abstract class Proxy<V extends dsviper.Value> {
     readonly value: V;
@@ -112,6 +112,11 @@ export class AnyConceptKey extends Proxy<dsviper.ValueKey> {
 
     isKnown(): boolean {
         return isKnown(this.value);
+    }
+
+    static decode(blob: dsviper.ValueBlob): AnyConceptKey {
+        return new AnyConceptKey(dsviper.ValueKey.cast(dsviper.Value.decode(
+            blob, new dsviper.TypeKey(dsviper.Type.ANY_CONCEPT), definitionsOf())));
     }
 
     description(): string {

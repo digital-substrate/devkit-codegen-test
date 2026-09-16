@@ -26,7 +26,7 @@ export declare class KnotKey extends Proxy<dsviper.ValueKey> {
      * l'appelant écrit déjà le nom de la classe.
      */
     static type(): dsviper.TypeKey;
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId);
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null);
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): KnotKey;
     static wrap(value: dsviper.Value): KnotKey;
@@ -34,6 +34,8 @@ export declare class KnotKey extends Proxy<dsviper.ValueKey> {
     instanceId(): dsviper.ValueUUId;
     runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: KnotKey | dsviper.ValueKey): number;
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
@@ -62,7 +64,7 @@ export declare class DerivedKey extends Proxy<dsviper.ValueKey> {
      * l'appelant écrit déjà le nom de la classe.
      */
     static type(): dsviper.TypeKey;
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId);
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null);
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): DerivedKey;
     static wrap(value: dsviper.Value): DerivedKey;
@@ -70,6 +72,8 @@ export declare class DerivedKey extends Proxy<dsviper.ValueKey> {
     instanceId(): dsviper.ValueUUId;
     runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: DerivedKey | dsviper.ValueKey): number;
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
@@ -105,8 +109,14 @@ export declare class WeaveKey extends Proxy<dsviper.ValueKey> {
     static fromPartsThingKey(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey): WeaveKey;
     /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
     toCoreThingKey(): core.ThingKey | undefined;
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asCoreThingKey(): core.ThingKey | undefined;
     /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
     toPartsThingKey(): parts.ThingKey | undefined;
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asPartsThingKey(): parts.ThingKey | undefined;
     as<K>(member: {
         concept(): dsviper.TypeConcept;
         wrap(value: dsviper.Value): K;

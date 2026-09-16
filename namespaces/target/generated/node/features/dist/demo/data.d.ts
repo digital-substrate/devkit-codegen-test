@@ -31,7 +31,7 @@ export declare class ConceptAKey extends Proxy<dsviper.ValueKey> {
      * l'appelant écrit déjà le nom de la classe.
      */
     static type(): dsviper.TypeKey;
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId);
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null);
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptAKey;
     static wrap(value: dsviper.Value): ConceptAKey;
@@ -39,6 +39,8 @@ export declare class ConceptAKey extends Proxy<dsviper.ValueKey> {
     instanceId(): dsviper.ValueUUId;
     runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: ConceptAKey | dsviper.ValueKey): number;
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
@@ -65,7 +67,7 @@ export declare class ConceptBKey extends Proxy<dsviper.ValueKey> {
      * l'appelant écrit déjà le nom de la classe.
      */
     static type(): dsviper.TypeKey;
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId);
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null);
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptBKey;
     static wrap(value: dsviper.Value): ConceptBKey;
@@ -73,6 +75,8 @@ export declare class ConceptBKey extends Proxy<dsviper.ValueKey> {
     instanceId(): dsviper.ValueUUId;
     runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: ConceptBKey | dsviper.ValueKey): number;
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
@@ -99,7 +103,7 @@ export declare class ConceptCoverageKey extends Proxy<dsviper.ValueKey> {
      * l'appelant écrit déjà le nom de la classe.
      */
     static type(): dsviper.TypeKey;
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId);
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null);
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptCoverageKey;
     static wrap(value: dsviper.Value): ConceptCoverageKey;
@@ -107,6 +111,8 @@ export declare class ConceptCoverageKey extends Proxy<dsviper.ValueKey> {
     instanceId(): dsviper.ValueUUId;
     runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: ConceptCoverageKey | dsviper.ValueKey): number;
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
@@ -133,7 +139,7 @@ export declare class ConceptDKey extends Proxy<dsviper.ValueKey> {
      * l'appelant écrit déjà le nom de la classe.
      */
     static type(): dsviper.TypeKey;
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId);
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null);
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptDKey;
     static wrap(value: dsviper.Value): ConceptDKey;
@@ -141,6 +147,8 @@ export declare class ConceptDKey extends Proxy<dsviper.ValueKey> {
     instanceId(): dsviper.ValueUUId;
     runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: ConceptDKey | dsviper.ValueKey): number;
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
@@ -167,7 +175,7 @@ export declare class ConceptCKey extends Proxy<dsviper.ValueKey> {
      * l'appelant écrit déjà le nom de la classe.
      */
     static type(): dsviper.TypeKey;
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId);
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null);
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): ConceptCKey;
     static wrap(value: dsviper.Value): ConceptCKey;
@@ -175,6 +183,8 @@ export declare class ConceptCKey extends Proxy<dsviper.ValueKey> {
     instanceId(): dsviper.ValueUUId;
     runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: ConceptCKey | dsviper.ValueKey): number;
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;
@@ -229,8 +239,14 @@ export declare class KlubKey extends Proxy<dsviper.ValueKey> {
     static fromConceptDKey(key: Proxy<dsviper.ValueKey> | dsviper.ValueKey): KlubKey;
     /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
     toConceptCKey(): ConceptCKey | undefined;
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asConceptCKey(): ConceptCKey | undefined;
     /** La clé vue comme celle de ce membre, ou `undefined` si l'instance n'en est pas un. */
     toConceptDKey(): ConceptDKey | undefined;
+    /** Le même, sous le mot que le pack emploie. Deux noms pour une question qui n'en est
+     *  qu'une, parce que les deux se lisent et qu'aucun ne se devine depuis l'autre. */
+    asConceptDKey(): ConceptDKey | undefined;
     as<K>(member: {
         concept(): dsviper.TypeConcept;
         wrap(value: dsviper.Value): K;

@@ -170,19 +170,25 @@ export class Sequence<E> extends View {
         return [...this];
     }
 
-    /** La colonne d'une matrice, et la ligne — deux façons de la lire, et le modèle les nomme. */
+    /** Une ligne d'une matrice, telle qu'on l'écrit.
+     *
+     * LE RUNTIME RANGE PAR COLONNES, ET UN LITTÉRAL SE LIT PAR LIGNES. `[[1, 2], [3, 4]]`
+     * donne `row(0) === [1, 2]` pour qui l'a écrit ; le runtime appelle ça sa première
+     * colonne. Suivre ce que l'appelant a écrit plutôt que la disposition interne est ce qui
+     * évite une transposition silencieuse.
+     */
     row(index: number): unknown[] {
-        const type = this.value.type() as unknown as { columns(): number };
+        const type = this.value.type() as unknown as { rows(): number };
         const held: unknown[] = [];
-        for (let column = 0; column < type.columns(); column += 1) {
-            held.push(this.at(column, index));
+        for (let position = 0; position < type.rows(); position += 1) {
+            held.push(this.at(index, position));
         }
         return held;
     }
 
     setRow(index: number, elements: unknown[]): void {
         const inner = this.value as unknown as { set(c: number, r: number, v: unknown): void };
-        elements.forEach((element, column) => inner.set(column, index, unwrap(element)));
+        elements.forEach((element, position) => inner.set(index, position, unwrap(element)));
     }
 
     /** Ce que la valeur sait faire et que la vue ne nomme pas.
@@ -215,9 +221,9 @@ export class Mapping<K, V> extends View {
         return wrap(this.map.at(unwrap(key)));
     }
 
-    get(key: K): V | undefined {
+    get(key: K, fallback?: V): V | undefined {
         const held = this.map.get(unwrap(key));
-        return held === undefined ? undefined : wrap(held);
+        return held === undefined ? fallback : wrap(held);
     }
 
     set(key: K, element: V): void {
@@ -237,21 +243,32 @@ export class Mapping<K, V> extends View {
     }
 
     keys(): K[] {
-        return [...this].map(([key]) => key);
-    }
-
-    values(): V[] {
-        return [...this].map(([, element]) => element);
-    }
-
-    entries(): [K, V][] {
         return [...this];
     }
 
-    /** ITÉRER UNE MAP DU RUNTIME REND DES PAIRES, et non des clés — contrairement à une `Map`
-     *  de JavaScript et à un `dict` de Python, qui rendent les clés. Les redemander une par
-     *  une serait un aller-retour de plus, et la clé encodée ne se represente pas toujours. */
-    *[Symbol.iterator](): Iterator<[K, V]> {
+    values(): V[] {
+        return this.entries().map(([, element]) => element);
+    }
+
+    entries(): [K, V][] {
+        return [...this.pairs()];
+    }
+
+    /** ITÉRER REND LES CLÉS, comme une `Map` de JavaScript et un `dict` de Python.
+     *
+     * La map du runtime, elle, rend des paires ; `entries()` est là pour ça. Les deux langages
+     * voisins rendent les clés, et suivre le runtime ici obligerait chaque appelant à défaire
+     * une paire dont il ne voulait pas.
+     */
+    *[Symbol.iterator](): Iterator<K> {
+        for (const pair of this.map as unknown as Iterable<dsviper.OutputValue>) {
+            const [key] = pair as unknown as [dsviper.OutputValue, dsviper.OutputValue];
+            yield wrap(key);
+        }
+    }
+
+    /** Les paires clé/valeur, telles que le runtime les tient. */
+    *pairs(): Generator<[K, V]> {
         for (const pair of this.map as unknown as Iterable<dsviper.OutputValue>) {
             const [key, element] = pair as unknown as [dsviper.OutputValue, dsviper.OutputValue];
             yield [wrap(key), wrap(element)];
@@ -297,7 +314,8 @@ export class Ordered<E> extends View {
     }
 
     private elementPositions(): dsviper.ValueUUId[] {
-        return this.positions().filter((p) => !p.equals(dsviper.ValueXArray.END));
+        return this.positions().filter(
+            (p) => !p.equals(dsviper.ValueXArray.END) && this.ordered.at(p) !== undefined);
     }
 
     position(index: number): dsviper.ValueUUId | undefined {
@@ -355,6 +373,21 @@ export class Ordered<E> extends View {
      * LA FIN N'EST PAS UNE PLACE : `positions()` la rend parce qu'on y insère, et la compter
      * ferait un élément de plus à chaque parcours.
      */
+    /** Le xarray à plat, sous le type que le modèle lui donne.
+     *
+     * LA CLASSE EST CELLE QUE L'UNITÉ A DÉCLARÉE, ET NON UNE NOUVELLE. Lier à la volée rendrait
+     * une classe distincte à chaque appel, donc `instanceof Vector_uint8` serait faux pour un
+     * vecteur pourtant de cette forme. La table des formes est cherchée par le type, ce qu'on
+     * ne peut faire qu'ici — au chargement, elle n'est pas encore remplie.
+     */
+    toVector(): Sequence<E> {
+        const flat = this.ordered.toVector();
+        const known = boundFor(Sequence, flat.type());
+        return known === undefined
+            ? new Sequence<E>(flat)
+            : new (known as new (v: unknown) => Sequence<E>)(flat);
+    }
+
     items(): [dsviper.ValueUUId, E | undefined][] {
         return this.elementPositions().map((position) => [position, this.at(position)]);
     }
@@ -490,6 +523,21 @@ type Bound<V> = {
 
 const bound = new Map<() => dsviper.Type, unknown>();
 
+/** La classe liée à cette forme, si une unité l'a déclarée.
+ *
+ * CHERCHÉE PAR LE TYPE ET NON PAR LA FONCTION, parce que l'appelant tient une valeur et pas la
+ * fonction qui l'a nommée. Le parcours n'est possible qu'après chargement — évaluer un
+ * descripteur pendant qu'un module s'initialise le prendrait en pleine zone morte.
+ */
+function boundFor(view: unknown, type: dsviper.Type): unknown {
+    for (const [typeOf, held] of bound) {
+        if (Object.getPrototypeOf(held as object) === view && typeOf().equals(type)) {
+            return held;
+        }
+    }
+    return undefined;
+}
+
 /** Une vue liée à un type : nommable, constructible, et qui refuse ce qui n'est pas d'elle.
  *
  * MÉMOÏSÉE PAR FORME. Deux appels pour le même type rendraient deux classes distinctes, et
@@ -521,12 +569,24 @@ function bind<V extends View>(view: new (value: dsviper.Value) => V,
             // Vector_uint8(vectorInt8)` donne un conteneur d'un autre type, et là il n'y a rien
             // à bâtir. Laisser le runtime trancher, et traduire son refus dans le `TypeError`
             // que le contrat annonce.
+            let built: dsviper.Value;
             try {
-                super(build(typeOf(), given));
+                built = build(typeOf(), given);
             } catch (refus) {
                 throw new TypeError(`cette valeur n'est pas un ${typeOf().representation()}`,
                                     { cause: refus });
             }
+
+            // ET VÉRIFIER CE QUI EST SORTI. `Value.create` de la liaison Node rend un
+            // `set<string>` quand on lui demande un `set<uint8>` : il ignore le type demandé au
+            // lieu de refuser, là où la liaison Python lève. Sans ce contrôle une valeur du
+            // mauvais type entrerait dans une vue qui annonce l'autre, et le fail-fast serait
+            // en place et désarmé — la pire des deux situations.
+            if (!built.type().equals(typeOf())) {
+                throw new TypeError(`cette valeur n'est pas un ${typeOf().representation()} `
+                                    + `mais un ${built.type().representation()}`);
+            }
+            super(built);
         }
 
         static type(): dsviper.Type {

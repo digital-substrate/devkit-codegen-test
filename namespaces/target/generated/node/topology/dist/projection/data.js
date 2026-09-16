@@ -34,8 +34,13 @@ export class LinkKey extends Proxy {
         return (linkType ??= new dsviper.TypeKey(LinkKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(LinkKey.type())) {
+            if (!identifier.isMember(LinkKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Projection::LinkKey");
             }
             super(identifier);
@@ -62,6 +67,10 @@ export class LinkKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {
@@ -110,8 +119,13 @@ export class DerivedMaterialKey extends Proxy {
         return (derived_materialType ??= new dsviper.TypeKey(DerivedMaterialKey.concept()));
     }
     constructor(identifier) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(DerivedMaterialKey.type())) {
+            if (!identifier.isMember(DerivedMaterialKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un Projection::DerivedMaterialKey");
             }
             super(identifier);
@@ -138,6 +152,10 @@ export class DerivedMaterialKey extends Proxy {
     }
     isValid() {
         return this.value.instanceId().isValid();
+    }
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other) {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
     /** L'instance et son type, dits comme le modèle les nomme. */
     description() {

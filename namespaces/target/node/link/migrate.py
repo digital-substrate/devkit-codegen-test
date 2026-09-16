@@ -40,8 +40,17 @@ RENAMES = [
     # portage qui déborde est pire que pas de règle, parce qu'elle casse ce qui marchait.
     (re.compile(r"\b(e\d?|enumValue|decoded)\.(hexdigest|encode|name)\(\)"),
      r"EnumerationE.\2(\1)"),
-    (re.compile(r"\bEnumerationE\.([A-Z])\.(hexdigest|encode)\(\)"),
+    (re.compile(r"\bEnumerationE\.([A-Z])\.(hexdigest|encode|name|index)\(\)"),
      r"EnumerationE.\2(EnumerationE.\1)"),
+    (re.compile(r"\bEnumerationE\.fromStr\(([^)]*)\)\.equals\(([^)]*)\)"),
+     r"(EnumerationE.fromStr(\1) === \2)"),
+    (re.compile(r"\bEnumerationE\.fromStr\(([^)]*)\)\.(name|hexdigest|encode|index)\(\)"),
+     r"EnumerationE.\2(EnumerationE.fromStr(\1))"),
+    # Un champ dont le type est une énumération porte un littéral, pas un objet.
+    (re.compile(r"\b(\w+)\.(f_E|f_enum)\.equals\(([^)]*)\)"), r"(\1.\2 === \3)"),
+    (re.compile(r"\b(\w+)\.(f_E|f_enum)\.name\(\)"), r"\1.\2"),
+    # Un cas d'énumération relu est un littéral : son nom *est* lui-même.
+    (re.compile(r"\b(retrieved|decodedEnum|held)\.name\(\)"), r"\1"),
 
     # Et `instanceof` ne s'applique pas à une union de littéraux : le test est l'appartenance.
     (re.compile(r"assert\.ok\((\w+) instanceof EnumerationE\)"),
@@ -143,6 +152,13 @@ def migrate(into: Path, package: Path | None = None) -> dict:
                           r"(\1 === undefined)", text)
         touched += n
         text, n = re.subn(r"\b(result|retrieved|doc|document)\.unwrap\(\)", r"\1", text)
+        touched += n
+
+        # UN RÉTRÉCISSEMENT QUI ÉCHOUE REND `undefined`, ET NON `null`. C'est ce que JavaScript
+        # a pour dire l'absence d'un résultat, et c'est ce que rendent déjà `get`, `at` et un
+        # optional : deux mots pour la même chose feraient hésiter à chaque lecture.
+        text, n = re.subn(r"assert\.equal\((result|\w*[Kk]ey\w*), null\)",
+                          r"assert.equal(\1, undefined)", text)
         touched += n
 
         # `del` EST UN MOT-CLÉ EN PYTHON ET UN OPÉRATEUR EN JAVASCRIPT : l'opération s'appelle

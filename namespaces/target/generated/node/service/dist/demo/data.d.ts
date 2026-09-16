@@ -19,7 +19,7 @@ export declare class PlayerKey extends Proxy<dsviper.ValueKey> {
      * l'appelant écrit déjà le nom de la classe.
      */
     static type(): dsviper.TypeKey;
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId);
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null);
     /** Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit. */
     static create(): PlayerKey;
     static wrap(value: dsviper.Value): PlayerKey;
@@ -27,6 +27,8 @@ export declare class PlayerKey extends Proxy<dsviper.ValueKey> {
     instanceId(): dsviper.ValueUUId;
     runtimeId(): dsviper.ValueUUId;
     isValid(): boolean;
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: PlayerKey | dsviper.ValueKey): number;
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string;
     isKnown(): boolean;

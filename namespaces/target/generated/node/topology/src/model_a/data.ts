@@ -41,9 +41,14 @@ export class MaterialKey extends Proxy<dsviper.ValueKey> {
         return (materialType ??= new dsviper.TypeKey(MaterialKey.concept()));
     }
 
-    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId) {
+    constructor(identifier?: dsviper.ValueKey | dsviper.ValueUUId | null) {
+        if (identifier === null) {
+            // `null` EXPLICITE N'EST PAS L'ABSENCE D'ARGUMENT. `new XKey()` demande une clé
+            // neuve ; `new XKey(null)` passe quelque chose, et ce quelque chose n'en est pas un.
+            throw new TypeError("null n'est pas un identifiant d'instance");
+        }
         if (identifier instanceof dsviper.ValueKey) {
-            if (!identifier.type().equals(MaterialKey.type())) {
+            if (!identifier.isMember(MaterialKey.concept())) {
                 throw new TypeError("cette valeur n'est pas un ModelA::MaterialKey");
             }
             super(identifier);
@@ -76,6 +81,11 @@ export class MaterialKey extends Proxy<dsviper.ValueKey> {
 
     isValid(): boolean {
         return this.value.instanceId().isValid();
+    }
+
+    /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
+    compareTo(other: MaterialKey | dsviper.ValueKey): number {
+        return this.value.compare(other instanceof Proxy ? other.value : other);
     }
 
     /** L'instance et son type, dits comme le modèle les nomme. */
