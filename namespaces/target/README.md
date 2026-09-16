@@ -76,7 +76,30 @@ n'est pas implémenté par le code généré, il en découle — à condition qu
 générée ne l'intercepte ni ne le contourne. C'est ça qu'il faut vérifier, et c'est ce que
 `checks/*failfast*` vérifie, sur le rendu et pas sur une référence.
 
-Deux sortes d'erreur, et les deux comptent :
+### Deux lignes de défense, et elles ne se recouvrent pas
+
+| | attrape quoi | quand | ce qu'elle ne peut pas voir |
+|---|---|---|---|
+| **le typage** | une valeur du mauvais type **là où le code est écrit** | avant l'exécution | tout ce qui arrive d'ailleurs : un littéral, du JSON, une socket, un script |
+| **le fail-fast** | une valeur du mauvais type **là où elle arrive** | à l'exécution | une erreur dans le code généré lui-même, qui ne s'exécute jamais |
+
+Mesuré : aucune de ces valeurs n'a croisé une annotation, et toutes sont rejetées.
+
+```
+  ok ViperError   un littéral avec un champ du mauvais type
+  ok ViperError   un entier hors de la plage du champ
+  ok ViperError   un JSON décodé vers le mauvais type
+  ok AttributeError  un littéral avec un champ qui n'existe pas
+```
+
+**Et le typage n'a pas seulement servi l'IDE.** Il a trouvé trois défauts dans le code généré
+lui-même, que le fail-fast n'aurait jamais pu voir puisqu'ils ne dépendent d'aucune donnée
+d'appelant : la clé d'un club avait un `create()` qui passait le descripteur du club là où le
+runtime attend celui d'un concept ; `Database` n'a ni `diff` ni `update`, donc il fallait
+trois interfaces et non deux ; et le `Remote` d'un pool indexait des fonctions qui pouvaient
+être absentes. Les deux lignes ne se remplacent pas.
+
+Deux sortes d'erreur au moment de l'exécution, et les deux comptent :
 
 - **du runtime** — une valeur du mauvais type atteint `set`, et `ViperError` sort ;
 - **du code généré** — un constructeur refuse une `Value` qui n'est pas la sienne, avant même
