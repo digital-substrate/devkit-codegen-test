@@ -61,7 +61,17 @@ export declare class AttachmentProxy<K, D> {
      * qu'une classe existe pour ça.
      */
     get(getting: Getting, key: K): D | undefined;
-    /** Poser le document. Rend ce que le contexte rend : rien en mémoire, un statut sur base. */
+    /** Poser le document. Rend ce que le contexte rend : rien en mémoire, un statut sur base.
+     *
+     * LA VÉRIFICATION DU TYPE EST ICI PARCE QUE LA LIAISON NE LA FAIT PAS. Mesuré : écrire un
+     * `Parts::Colour` dans un attachment dont le document est déclaré `Core::Colour` est
+     * accepté par `AttachmentMutating.set` de la liaison Node, et se relit tel quel. La
+     * liaison Python refuse la même écriture. Un document du mauvais type doit être rejeté là
+     * où il apparaît -- c'est le contrat de viper, et il tient partout ailleurs par
+     * construction, puisqu'un proxy ne détient rien et que toute écriture atteint le runtime.
+     *
+     * À retirer le jour où la liaison vérifie, et à signaler d'ici là.
+     */
     set(setting: Setting, key: K, value: D): unknown;
     diff(mutating: Mutating, key: K, value: D, recursive?: boolean): void;
     /** Écrire un seul champ.

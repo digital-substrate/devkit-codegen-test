@@ -130,6 +130,21 @@ def typecheck(package):
     return 1 if errors else 0
 
 
+# Et les épreuves qu'un modèle donné permet : le fail-fast demande des types qui se
+# ressemblent dans deux unités, ce que seul `Crossing` porte.
+if not arguments.check and status == 0:
+    for assertions in sorted((HERE / "python" / "checks").glob("*.py")):
+        r = subprocess.run([sys.executable, str(assertions), str(target)],
+                           capture_output=True, text=True)
+        passed = sum(1 for line in r.stdout.splitlines() if line.strip().startswith("ok"))
+        print(f"  {'fail-fast':11} {passed:3} assertions, "
+              + ("toutes passent" if r.returncode == 0 else "ÉCHEC"))
+        if r.returncode:
+            status = 1
+            for line in (r.stdout + r.stderr).splitlines()[-4:]:
+                print(f"     {line.strip()}")
+
+
 # ET LES MÊMES ASSERTIONS QUE LA RÉFÉRENCE ÉCRITE À LA MAIN. Un module qui s'importe n'est
 # pas un module qui marche : l'import ne dit rien de ce qu'un attachment écrit ni de ce qu'une
 # base relit. La référence dit ce qu'on veut, le rendu dit ce qu'on obtient, et c'est la même

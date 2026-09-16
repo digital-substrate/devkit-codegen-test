@@ -123,13 +123,13 @@ for model, spec in MODELS.items():
     # ET L'ÉPREUVE QUE CE MODÈLE-LÀ PERMET. `Crossing` porte toutes les formes de conteneurs
     # traversant deux unités ; aucune unité de la référence n'en a, et lui en ajouter
     # reviendrait à écrire à la main ce que les templates produisent déjà.
-    assertions = HERE / "node" / "checks" / f"{model}.mjs"
-    if assertions.exists():
+    for assertions in sorted((HERE / "node" / "checks").glob(f"{model}*.mjs")):
         shutil.copy(assertions, package)
         r = subprocess.run(["node", assertions.name], cwd=package, capture_output=True, text=True)
         (package / assertions.name).unlink()
-        passed = sum(1 for line in r.stdout.splitlines() if line.startswith("  ok"))
-        print(f"  {'épreuve':11} {passed:3} assertions sur {namespace}, "
+        passed = sum(1 for line in r.stdout.splitlines() if line.strip().startswith("ok"))
+        label = assertions.stem.split("-")[-1] if "-" in assertions.stem else namespace
+        print(f"  {'épreuve':11} {passed:3} assertions, {label}, "
               + ("toutes passent" if r.returncode == 0 else "ÉCHEC"))
         if r.returncode:
             status = 1

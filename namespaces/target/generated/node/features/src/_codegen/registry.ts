@@ -49,14 +49,11 @@ export function wrap(value: dsviper.OutputValue): any {
 
     switch (value.typeCode()) {
         case "struct":
-        case "enum": {
-            const found = classes.get(value.type().runtimeId().encoded());
-            return found ? found.wrap(value) : value;
-        }
+        case "enum":
+            return named(value.type()).wrap(value);
         case "key": {
             const key = dsviper.ValueKey.cast(value);
-            const found = classes.get(key.typeConcept().runtimeId().encoded());
-            return found ? found.wrap(key) : new AnyConceptKey(key);
+            return named(key.typeConcept()).wrap(key);
         }
         case "optional":
         case "any": {
@@ -78,6 +75,25 @@ export function wrap(value: dsviper.OutputValue): any {
         default:
             return value;
     }
+}
+
+/** La classe de ce type, ou une erreur qui dit laquelle manque.
+ *
+ * ÉCHOUER PLUTÔT QUE RENDRE LA VALEUR NUE. L'appelant est un accesseur annoté `Colour` ou
+ * `Sequence<Colour>` ; lui rendre une `ValueStructure` serait un mensonge que `tsc` ne peut
+ * pas rattraper, et qui se découvrirait bien plus loin, sur une propriété absente. Un type
+ * sans classe veut dire qu'une unité n'a pas été importée — ou qu'une fonctionnalité n'a pas
+ * été sélectionnée — et l'erreur le nomme.
+ *
+ * C'est le contrat de viper : une valeur du mauvais type est rejetée là où elle apparaît.
+ */
+function named(type: dsviper.Type): Wrapping {
+    const found = classes.get(type.runtimeId().encoded());
+    if (found === undefined) {
+        throw new TypeError(`aucune classe générée pour ${type.representation()} : `
+                            + "l'unité qui le déclare n'est pas importée");
+    }
+    return found;
 }
 
 /** La Value que le runtime attend, depuis ce que l'appelant a écrit.

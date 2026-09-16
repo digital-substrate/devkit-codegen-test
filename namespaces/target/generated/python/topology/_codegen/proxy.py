@@ -103,12 +103,10 @@ def wrap(value) -> typing.Any:
 
     code = code()
     if code == "struct" or code == "enum":
-        cls = _CLASSES.get(value.type().runtime_id().encoded())
-        return cls._wrap(value) if cls is not None else value
+        return _named(value.type())._wrap(value)
 
     if code == "key":
-        cls = _CLASSES.get(value.type_concept().runtime_id().encoded())
-        return cls(value) if cls is not None else AnyConceptKey(value)
+        return _named(value.type_concept())(value)
 
     if code in ("optional", "any"):
         return None if value.is_nil() else wrap(value.unwrap())
@@ -126,6 +124,26 @@ def wrap(value) -> typing.Any:
         return Sequence(value)
 
     return value
+
+
+def _named(type_):
+    """La classe de ce type, ou une erreur qui dit laquelle manque.
+
+    ÉCHOUER PLUTÔT QUE RENDRE LA VALEUR NUE. L'appelant est un accesseur annoté `Colour` ou
+    `Sequence[Colour]` ; lui rendre une `ValueStructure` serait un mensonge que le typage ne
+    peut pas rattraper, et qui se découvrirait bien plus loin, sur un attribut absent. Un type
+    sans classe veut dire qu'une unité n'a pas été importée -- ou qu'une fonctionnalité n'a pas
+    été sélectionnée -- et l'erreur le nomme.
+
+    C'est le contrat de viper : une valeur du mauvais type est rejetée là où elle apparaît, et
+    non plus loin. `raise` et non `assert`, pour que ça tienne aussi sous `python -O`.
+    """
+    cls = _CLASSES.get(type_.runtime_id().encoded())
+    if cls is None:
+        raise TypeError(
+            f"aucune classe générée pour {type_.representation()} : "
+            f"l'unité qui le déclare n'est pas importée")
+    return cls
 
 
 def unwrap(value) -> typing.Any:

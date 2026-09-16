@@ -89,9 +89,27 @@ export class AttachmentProxy<K, D> {
         return document.isNil() ? undefined : wrap(document.unwrap());
     }
 
-    /** Poser le document. Rend ce que le contexte rend : rien en mémoire, un statut sur base. */
+    /** Poser le document. Rend ce que le contexte rend : rien en mémoire, un statut sur base.
+     *
+     * LA VÉRIFICATION DU TYPE EST ICI PARCE QUE LA LIAISON NE LA FAIT PAS. Mesuré : écrire un
+     * `Parts::Colour` dans un attachment dont le document est déclaré `Core::Colour` est
+     * accepté par `AttachmentMutating.set` de la liaison Node, et se relit tel quel. La
+     * liaison Python refuse la même écriture. Un document du mauvais type doit être rejeté là
+     * où il apparaît -- c'est le contrat de viper, et il tient partout ailleurs par
+     * construction, puisqu'un proxy ne détient rien et que toute écriture atteint le runtime.
+     *
+     * À retirer le jour où la liaison vérifie, et à signaler d'ici là.
+     */
     set(setting: Setting, key: K, value: D): unknown {
-        return setting.set(this.descriptor, unwrap(key) as dsviper.ValueKey, unwrap(value));
+        const document = unwrap(value);
+        if (document instanceof dsviper.Value
+            && !document.type().equals(this.descriptor.documentType())) {
+            throw new TypeError(
+                `document de type ${document.type().representation()} pour `
+                + `${this.descriptor.representation()}, qui en attend `
+                + `${this.descriptor.documentType().representation()}`);
+        }
+        return setting.set(this.descriptor, unwrap(key) as dsviper.ValueKey, document);
     }
 
     diff(mutating: Mutating, key: K, value: D, recursive = false): void {

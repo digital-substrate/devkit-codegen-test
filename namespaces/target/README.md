@@ -60,12 +60,40 @@ a trouvé des défauts qu'aucune autre ne pouvait voir.
 | couverture | les 162 opérations du pack sont émises, ou écartées avec une raison | elle ne voit que des **noms** : un déplacement de portée lui est invisible |
 | rendu Python | un paquet par modèle, et **chaque module s'importe** — syntaxe, dépendances, classes construites, descripteurs trouvés | |
 | assertions | les mêmes 23 sur la référence écrite à la main et sur le rendu | |
-| types | `pyright` ne trouve aucune erreur : les annotations tiennent | |
+| types | `pyright` et `tsc --strict` ne trouvent aucune erreur : les annotations tiennent | |
+| fail-fast | une valeur du mauvais type est rejetée **là où elle apparaît**, dans les trois cibles | |
 
 **Sept défauts n'étaient visibles qu'au lien, et aucun avant.** Deux références à un
 temporaire mort, un `auto` qui créait une conversion, un identifiant de blob inventé, une
 transaction absente, le modèle jamais donné à la base, et un défaut dans viper lui-même.
 C'est pourquoi `-fsyntax-only` ne suffit pas et pourquoi le lien est dans la chaîne.
+
+## Le fail-fast, et pourquoi il est hérité
+
+**Un proxy ne détient rien.** C'est une boîte vide devant une `Value` : chaque écriture passe
+par `value.set(...)`, donc atteint le runtime, qui lève son exception typée. Le fail-fast
+n'est pas implémenté par le code généré, il en découle — à condition que rien dans la couche
+générée ne l'intercepte ni ne le contourne. C'est ça qu'il faut vérifier, et c'est ce que
+`checks/*failfast*` vérifie, sur le rendu et pas sur une référence.
+
+Deux sortes d'erreur, et les deux comptent :
+
+- **du runtime** — une valeur du mauvais type atteint `set`, et `ViperError` sort ;
+- **du code généré** — un constructeur refuse une `Value` qui n'est pas la sienne, avant même
+  qu'une écriture ait lieu. En Python ce sont des `raise` et non des `assert`, donc le contrat
+  tient aussi sous `python -O` ; en C++ le rendu ne contient aucun `assert`.
+
+**Deux endroits où il ne tenait pas, trouvés en le mesurant :**
+
+1. **`wrap` rendait la valeur nue** quand un type n'avait pas de classe enregistrée, au lieu
+   d'échouer. C'est le seul repli que j'avais introduit, et c'était un mensonge contre
+   l'annotation — que le typage ne peut pas rattraper et qui se découvre bien plus loin, sur
+   un attribut absent. Il échoue maintenant, en nommant le type et l'unité manquante.
+2. **La liaison Node n'oppose rien à un document du mauvais type.** Mesuré au niveau du
+   runtime, pas de ma couche : écrire un `Parts::Colour` dans un attachment déclaré
+   `Core::Colour` est accepté et se relit tel quel. La liaison Python refuse la même écriture.
+   La vérification est donc dans le socle Node, marquée comme un pis-aller, **à retirer le
+   jour où la liaison vérifie** — et à signaler d'ici là.
 
 **Et trois défauts n'étaient visibles que du consommateur** — le `Remote` d'un pool
 d'attachments qui n'existait pas, `description()` et `isKnown()` disparus des clés typées —
