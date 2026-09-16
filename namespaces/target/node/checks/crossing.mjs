@@ -24,7 +24,7 @@ check("et ses éléments portent leur classe",
 c.f_optional = core.ThingKey.create();
 check("un optional rend la valeur", c.f_optional instanceof core.ThingKey);
 
-c.f_map_enum = [[core.Grade.low, new parts.Colour({ r: 7, g: 8, b: 9 })]];
+c.f_map_enum = [[core.Grade.LOW, new parts.Colour({ r: 7, g: 8, b: 9 })]];
 const [key, value] = [...c.f_map_enum][0];
 check("une map rend une correspondance", c.f_map_enum.size === 1);
 check("dont la clé est l'énumération du modèle", key === "low");
