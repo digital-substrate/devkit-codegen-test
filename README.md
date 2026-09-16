@@ -2,6 +2,13 @@
 
 Codegen pipeline integration tests for the dsviper DevKit.
 
+One gate for all of it:
+
+    ./check.py              render the four sites and run every suite
+    ./check.py features     just one
+    ./check.py --no-render  test what is already rendered
+
+
 Two projects exercise the DSM → Kibo → templates → runtime pipeline:
 
 - `features/` — value-system features: data, stream, json, database, attachments, codecs, hashers, fuzz.
