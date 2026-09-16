@@ -30,7 +30,9 @@ def _module(path, name):
 jar = _module(ROOT / "tools" / "render.py", "kibo_tools_render").jar
 MODELS = _module(ROOT / "tools" / "models.py", "kibo_tools_models").MODELS
 
-TEMPLATES = HERE / "node" / "templated"
+resolve = _module(ROOT / "templates" / "resolve.py", "kibo_templates_resolve")
+# Même principe qu'en Python : la feature choisit, le dossier ne choisit rien.
+TEMPLATES = resolve.templates("typescript", ["Base", "Pool"])
 RESOURCES = HERE / "cpp" / "link" / "resources"
 
 # CE QUE LA LIAISON DEVRAIT PORTER ET NE PORTE PAS. Aucun de ces modules ne nomme un type d'un
@@ -98,13 +100,17 @@ for model, spec in MODELS.items():
     package = target / namespace.lower()
     source = package / "src"
 
-    r = subprocess.run(["java", "-jar", jar(), "-c", "typescript", "-n", namespace,
-                        "-d", str(definitions), "-t", str(TEMPLATES), "-o", str(source)],
-                       capture_output=True, text=True)
-    noise = [l for l in r.stderr.splitlines() if l.strip()]
+    noise = []
+    echec = False
+    for stg in TEMPLATES:
+        r = subprocess.run(["java", "-jar", jar(), "-c", "typescript", "-n", namespace,
+                            "-d", str(definitions), "-t", str(stg), "-o", str(source)],
+                           capture_output=True, text=True)
+        noise += [l for l in r.stderr.splitlines() if l.strip()]
+        echec = echec or bool(r.returncode)
     for line in noise[:8]:
         print(f"  !! {line}")
-    if r.returncode or noise:
+    if echec or noise:
         status = 1
         continue
 

@@ -16,7 +16,13 @@ ROOT = HERE.parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 from render import jar                                    # noqa: E402
 
-TEMPLATES = HERE / "cpp/templated"
+sys.path.insert(0, str(ROOT / "templates"))
+import resolve                                            # noqa: E402
+
+# TOUTES LES FEATURES, ICI, parce que le chantier éprouve la surface entière. Un vrai projet
+# en nomme deux ou trois et `resolve` calcule le reste : `resolve.templates("cpp", ["Database"])`
+# rend 9 `.stg` sans que le projet ait à savoir lesquels.
+TEMPLATES = resolve.templates("cpp", ["TestApp", "AttachmentPool"])
 # LES VRAIS EN-TÊTES DU RUNTIME, et seulement ce qu'il ne porte pas encore à côté. Tant que
 # la vérification se faisait contre des signatures recopiées, une recopie de travers passait
 # inaperçue ; ici elles viennent de la source et le résultat se lie contre `libviper.a`.
@@ -71,13 +77,16 @@ STANDALONE = [ROOT / "crossing/target/hand"]
 
 def render(model, definitions, out):
     out.mkdir(parents=True, exist_ok=True)
-    r = subprocess.run(["java", "-jar", jar(), "-c", "cpp", "-n", model,
-                        "-d", str(definitions), "-t", str(TEMPLATES), "-o", str(out)],
-                       capture_output=True, text=True)
-    noise = [l for l in r.stderr.splitlines() if l.strip()]
+    noise, echec = [], False
+    for stg in TEMPLATES:
+        r = subprocess.run(["java", "-jar", jar(), "-c", "cpp", "-n", model,
+                            "-d", str(definitions), "-t", str(stg), "-o", str(out)],
+                           capture_output=True, text=True)
+        noise += [l for l in r.stderr.splitlines() if l.strip()]
+        echec = echec or bool(r.returncode)
     for l in noise[:8]:
         print(f"  !! {l}")
-    return not (r.returncode or noise)
+    return not (echec or noise)
 
 
 def compile_tree(model, out):
