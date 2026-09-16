@@ -72,8 +72,8 @@ let finishType;
  * mieux et ne coûte aucun objet.
  */
 export const Finish = {
-    matte: "matte",
-    gloss: "gloss",
+    MATTE: "matte",
+    GLOSS: "gloss",
     type() {
         return (finishType ??= definitions().checkEnumeration(FINISH));
     },

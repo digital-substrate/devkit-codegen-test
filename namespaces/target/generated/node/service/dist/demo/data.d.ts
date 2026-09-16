@@ -38,9 +38,9 @@ export type Level = "beginner" | "intermediate" | "expert";
  * mieux et ne coûte aucun objet.
  */
 export declare const Level: {
-    beginner: string;
-    intermediate: string;
-    expert: string;
+    BEGINNER: string;
+    INTERMEDIATE: string;
+    EXPERT: string;
     type(): dsviper.TypeEnumeration;
     wrap(value: dsviper.Value): Level;
 };

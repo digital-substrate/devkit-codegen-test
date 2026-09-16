@@ -71,9 +71,9 @@ let levelType;
  * mieux et ne coûte aucun objet.
  */
 export const Level = {
-    beginner: "beginner",
-    intermediate: "intermediate",
-    expert: "expert",
+    BEGINNER: "beginner",
+    INTERMEDIATE: "intermediate",
+    EXPERT: "expert",
     type() {
         return (levelType ??= definitions().checkEnumeration(LEVEL));
     },

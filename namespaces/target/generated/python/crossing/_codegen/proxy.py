@@ -45,8 +45,23 @@ class Proxy:
     def __hash__(self) -> int:
         return self._value.hash()
 
-    def encode(self) -> dsviper.ValueBlob:
-        return dsviper.Value.encode(self._value)
+    def encode(self, **kwargs) -> dsviper.ValueBlob:
+        return dsviper.Value.encode(self._value, **kwargs)
+
+    def copy(self):
+        return type(self)(self._value.copy())
+
+    def __lt__(self, other) -> bool:
+        return self._value < unwrap(other)
+
+    def __le__(self, other) -> bool:
+        return self._value <= unwrap(other)
+
+    def __gt__(self, other) -> bool:
+        return self._value > unwrap(other)
+
+    def __ge__(self, other) -> bool:
+        return self._value >= unwrap(other)
 
     def hexdigest(self) -> str:
         return dsviper.Value.hexdigest(self._value)
@@ -75,6 +90,22 @@ class Proxy:
 # le pack en émet une par combinaison rencontrée, ici il n'y en a aucune.
 
 _CLASSES: dict[str, type] = {}
+
+# LES DÉFINITIONS DU MODÈLE, POSÉES PAR LE PAQUET. Décoder demande de savoir quel modèle lire,
+# et une vue générique ne peut pas le deviner — c'est la seule chose que le socle emprunte au
+# paquet qui l'accueille, et il la reçoit au chargement.
+_DEFINITIONS = None
+
+
+def set_definitions(definitions) -> None:
+    global _DEFINITIONS
+    _DEFINITIONS = definitions
+
+
+def definitions_of():
+    if _DEFINITIONS is None:
+        raise RuntimeError("le paquet n'a pas déclaré ses définitions")
+    return _DEFINITIONS()
 
 
 def register(classes: dict) -> None:
@@ -146,6 +177,18 @@ def _named(type_):
     return cls
 
 
+def is_known(value) -> bool:
+    """Le modèle connaît-il le concept que cette clé désigne ?
+
+    LA TABLE RÉPOND, ET C'EST LA MÊME QUESTION. Une unité y enregistre les types qu'elle
+    déclare ; un identifiant d'exécution absent est donc celui d'un concept qu'aucune unité
+    chargée ne porte -- un descendant venu d'ailleurs, ou une unité non importée. Le pack
+    répond en comparant à une liste figée à la génération ; ici la réponse suit ce qui est
+    réellement chargé.
+    """
+    return value.type_concept().runtime_id().encoded() in _CLASSES
+
+
 def unwrap(value) -> typing.Any:
     """La Value que le runtime attend, depuis ce que l'appelant a écrit.
 
@@ -182,16 +225,20 @@ class AnyConceptKey(Proxy):
             raise TypeError("cette valeur n'est pas une clé")
         super().__init__(value)
 
-    @property
     def instance_id(self) -> dsviper.ValueUUId:
         return self.value.instance_id()
 
-    @property
     def runtime_id(self) -> dsviper.ValueUUId:
         return self.value.type_concept().runtime_id()
 
     def is_valid(self) -> bool:
-        return self.instance_id.is_valid()
+        return self.value.instance_id().is_valid()
+
+    def description(self) -> str:
+        return self.value.description()
+
+    def is_known(self) -> bool:
+        return is_known(self.value)
 
     def as_(self, cls):
         """La clé vue comme celle d'un concept donné, ou `None` si elle n'en est pas une."""

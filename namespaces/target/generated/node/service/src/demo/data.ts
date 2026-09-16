@@ -90,9 +90,9 @@ export type Level = "beginner" | "intermediate" | "expert";
  * mieux et ne coûte aucun objet.
  */
 export const Level = {
-    beginner: "beginner",
-    intermediate: "intermediate",
-    expert: "expert",
+    BEGINNER: "beginner",
+    INTERMEDIATE: "intermediate",
+    EXPERT: "expert",
 
     type(): dsviper.TypeEnumeration {
         return (levelType ??= definitions().checkEnumeration(LEVEL));

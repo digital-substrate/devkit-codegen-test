@@ -8,7 +8,8 @@ import functools
 
 import dsviper
 
-from ._codegen import mapping_of, ordered_of, sequence_of
+from ._codegen import (mapping_of, optional_of, ordered_of, sequence_of,
+                       variant_of)
 from . import demo
 
 # ── les descripteurs de type, chaînés par forme ──
@@ -51,7 +52,7 @@ def type_set_Demo_PlayerKey(): return dsviper.TypeSet(type_Demo_PlayerKey())
 
 # ── et le nom de chaque forme ──
 
-Optional_AnyConceptKey = sequence_of(type_optional_AnyConceptKey)
-Optional_Demo_PlayerKey = sequence_of(type_optional_Demo_PlayerKey)
-Optional_Demo_PlayerProperty = sequence_of(type_optional_Demo_PlayerProperty)
+Optional_AnyConceptKey = optional_of(type_optional_AnyConceptKey)
+Optional_Demo_PlayerKey = optional_of(type_optional_Demo_PlayerKey)
+Optional_Demo_PlayerProperty = optional_of(type_optional_Demo_PlayerProperty)
 Set_Demo_PlayerKey = sequence_of(type_set_Demo_PlayerKey)

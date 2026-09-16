@@ -41,8 +41,8 @@ export type Finish = "matte" | "gloss";
  * mieux et ne coûte aucun objet.
  */
 export declare const Finish: {
-    matte: string;
-    gloss: string;
+    MATTE: string;
+    GLOSS: string;
     type(): dsviper.TypeEnumeration;
     wrap(value: dsviper.Value): Finish;
 };

@@ -72,8 +72,8 @@ let gradeType;
  * mieux et ne coûte aucun objet.
  */
 export const Grade = {
-    soft: "soft",
-    hard: "hard",
+    SOFT: "soft",
+    HARD: "hard",
     type() {
         return (gradeType ??= definitions().checkEnumeration(GRADE));
     },

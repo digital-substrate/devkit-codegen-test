@@ -39,8 +39,8 @@ export type Grade = "soft" | "hard";
  * mieux et ne coûte aucun objet.
  */
 export declare const Grade: {
-    soft: string;
-    hard: string;
+    SOFT: string;
+    HARD: string;
     type(): dsviper.TypeEnumeration;
     wrap(value: dsviper.Value): Grade;
 };

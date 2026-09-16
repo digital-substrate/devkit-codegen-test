@@ -260,8 +260,8 @@ export type Grade = "low" | "high";
  * mieux et ne coûte aucun objet.
  */
 export const Grade = {
-    low: "low",
-    high: "high",
+    LOW: "low",
+    HIGH: "high",
 
     type(): dsviper.TypeEnumeration {
         return (gradeType ??= definitions().checkEnumeration(GRADE));

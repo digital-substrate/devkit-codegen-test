@@ -350,9 +350,9 @@ let enumeration_eType;
  * mieux et ne coûte aucun objet.
  */
 export const EnumerationE = {
-    a: "a",
-    b: "b",
-    c: "c",
+    A: "a",
+    B: "b",
+    C: "c",
     type() {
         return (enumeration_eType ??= definitions().checkEnumeration(ENUMERATION_E));
     },

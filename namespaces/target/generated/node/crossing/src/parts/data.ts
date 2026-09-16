@@ -91,8 +91,8 @@ export type Grade = "soft" | "hard";
  * mieux et ne coûte aucun objet.
  */
 export const Grade = {
-    soft: "soft",
-    hard: "hard",
+    SOFT: "soft",
+    HARD: "hard",
 
     type(): dsviper.TypeEnumeration {
         return (gradeType ??= definitions().checkEnumeration(GRADE));

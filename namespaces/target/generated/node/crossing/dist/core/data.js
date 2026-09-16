@@ -215,8 +215,8 @@ let gradeType;
  * mieux et ne coûte aucun objet.
  */
 export const Grade = {
-    low: "low",
-    high: "high",
+    LOW: "low",
+    HIGH: "high",
     type() {
         return (gradeType ??= definitions().checkEnumeration(GRADE));
     },

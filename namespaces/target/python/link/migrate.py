@@ -51,6 +51,43 @@ RENAMES = [
     # le langage offre.
     (re.compile(r"\.name\(\)"), ".name"),
     (re.compile(r"(\w+)\.from_str\("), r"\1("),
+
+    # UN CONSTRUCTEUR DE CLUB EST NOMMÉ DEPUIS L'UNITÉ, donc sans elle. `from_demo_concept_c_key`
+    # portait le namespace parce qu'un module plat n'avait pas d'autre moyen de distinguer deux
+    # membres homonymes ; ici le module le fait.
+    (re.compile(r"\.from_demo_(\w+)_key\b"), r".from_\1_key"),
+
+    # UN CHAMP GARDE LE NOM DU MODÈLE. Le pack lui applique une casse qui coupe avant les
+    # chiffres — `f_uint8` devient `f_uint_8` — et invente ainsi un nom que le modèle ne
+    # contient pas. Le rendu garde celui qui est déclaré.
+    (re.compile(r"\bf_uint_(8|16|32|64)\b"), r"f_uint\1"),
+    (re.compile(r"\bf_int_(8|16|32|64)\b"), r"f_int\1"),
+    (re.compile(r"\bset_f_uint_(8|16|32|64)\b"), r"set_f_uint\1"),
+    (re.compile(r"\bset_f_int_(8|16|32|64)\b"), r"set_f_int\1"),
+    (re.compile(r"\bf_s\b"), "f_S"),
+    (re.compile(r"\bf_t\b"), "f_T"),
+
+    # UN DOCUMENT ABSENT EST `None`, ET NON UN OPTIONAL ENVELOPPÉ. Python a `None` pour dire
+    # l'absence ; une classe pour ça n'apporterait que du poids, et le typage l'exprime dans
+    # le retour. C'est le seul endroit où le portage change la forme d'un test et non un nom.
+    (re.compile(r"self\.assertTrue\((\w+)\.is_nil\(\)\)"), r"self.assertIsNone(\1)"),
+    (re.compile(r"self\.assertFalse\((\w+)\.is_nil\(\)\)"), r"self.assertIsNotNone(\1)"),
+
+    # `md` était l'alias du module de définitions, qui n'existe plus comme module.
+    (re.compile(r"\bmd\.definitions\b"), "definitions"),
+    (re.compile(r"\bmd\.RuntimeIds\.[A-Za-z]+_(\w+)\b"), r"\1"),
+    (re.compile(r"\bmd\.AttachmentRuntimeIds\.[A-Za-z]+_(\w+)\b"), r"\1"),
+    (re.compile(r"(?m)^from features import definitions$"),
+     "from features import definitions\nfrom features.demo import data as md"),
+    # UN IDENTIFIANT D'EXÉCUTION EST UNE CONSTANTE, donc en majuscules — convention de Python
+    # que le pack n'applique pas à ses `RuntimeIds`.
+    (re.compile(r"\bmd\.(?:Attachment)?RuntimeIds\.[A-Za-z]+_(\w+)\b"),
+     lambda m: "md." + re.sub(r"(?<!^)(?=[A-Z])", "_", m.group(1)).upper()),
+
+    # `f_e` : un champ dont le nom du modèle porte une capitale que la casse du pack efface.
+    (re.compile(r"\bf_e\b"), "f_E"),
+    (re.compile(r"\bf_v\b"), "f_V"),
+    (re.compile(r"\bf_u\b"), "f_U"),
 ]
 
 # LES CONTENEURS SONT IMPORTÉS D'AILLEURS. Ils n'appartiennent à aucune unité -- un

@@ -11,7 +11,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._codegen import AnyConceptKey, Mapping, Ordered, Proxy, Sequence, register, unwrap, wrap
+from .._codegen import (AnyConceptKey, Mapping, Ordered, Proxy, Sequence, is_known,
+                        register, unwrap, wrap)
 
 # ── l'identité de cette unité dans le modèle ──
 #

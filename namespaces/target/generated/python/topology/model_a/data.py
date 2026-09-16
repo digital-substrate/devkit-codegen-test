@@ -11,7 +11,8 @@ import typing
 import dsviper
 
 from .. import definitions
-from .._codegen import AnyConceptKey, Mapping, Ordered, Proxy, Sequence, register, unwrap, wrap
+from .._codegen import (AnyConceptKey, Mapping, Ordered, Proxy, Sequence, is_known,
+                        register, unwrap, wrap)
 
 # ── l'identité de cette unité dans le modèle ──
 #
@@ -61,12 +62,24 @@ class MaterialKey(Proxy):
         """Une clé sur une instance neuve. L'instance n'existe pas tant que rien ne l'écrit."""
         return cls(dsviper.ValueUUId.create())
 
-    @property
     def instance_id(self) -> dsviper.ValueUUId:
         return self.value.instance_id()
 
+    def runtime_id(self) -> dsviper.ValueUUId:
+        return self.value.type_concept().runtime_id()
+
     def is_valid(self) -> bool:
-        return self.instance_id.is_valid()
+        return self.value.instance_id().is_valid()
+
+    # La clé, vue sans son type.
+    def to_any_concept_key(self) -> AnyConceptKey:
+        return AnyConceptKey(self.value.to_any_concept_key())
+
+    def description(self) -> str:
+        return self.value.description()
+
+    def is_known(self) -> bool:
+        return is_known(self.value)
 
     def __repr__(self) -> str:
         return f"ModelA::MaterialKey({self.value.representation()})"
@@ -112,9 +125,17 @@ class Colour(Proxy):
     def type(cls) -> dsviper.TypeStructure:
         return definitions().check_structure(COLOUR)
 
-    def __init__(self, value: dsviper.ValueStructure | None = None, /, **fields):
+    @classmethod
+    def decode(cls, blob, **kwargs) -> Colour:
+        """Relire depuis des octets : la classe connaît son type, donc elle peut le demander."""
+        return cls(dsviper.ValueStructure.cast(
+            dsviper.Value.decode(blob, cls.type(), definitions(), **kwargs)))
+
+    def __init__(self, value: dsviper.ValueStructure | dict | None = None, /, **fields):
         if value is None:
             value = dsviper.ValueStructure(self.type())
+        elif isinstance(value, dict):
+            value = dsviper.ValueStructure(self.type(), value)
         elif value.type() != self.type():
             raise TypeError("cette valeur n'est pas un ModelA::Colour")
         super().__init__(value)

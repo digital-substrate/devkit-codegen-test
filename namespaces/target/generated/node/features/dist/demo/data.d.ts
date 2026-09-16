@@ -170,9 +170,9 @@ export type EnumerationE = "a" | "b" | "c";
  * mieux et ne coûte aucun objet.
  */
 export declare const EnumerationE: {
-    a: string;
-    b: string;
-    c: string;
+    A: string;
+    B: string;
+    C: string;
     type(): dsviper.TypeEnumeration;
     wrap(value: dsviper.Value): EnumerationE;
 };

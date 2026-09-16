@@ -421,9 +421,9 @@ export type EnumerationE = "a" | "b" | "c";
  * mieux et ne coûte aucun objet.
  */
 export const EnumerationE = {
-    a: "a",
-    b: "b",
-    c: "c",
+    A: "a",
+    B: "b",
+    C: "c",
 
     type(): dsviper.TypeEnumeration {
         return (enumeration_eType ??= definitions().checkEnumeration(ENUMERATION_E));

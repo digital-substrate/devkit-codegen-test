@@ -21,7 +21,7 @@ import zlib
 import dsviper
 
 from . import resources
-from ._codegen import AnyConceptKey
+from ._codegen import AnyConceptKey, set_definitions
 
 __all__ = ["AnyConceptKey", "definitions"]
 
@@ -36,3 +36,6 @@ def definitions() -> dsviper.DefinitionsConst:
     """
     blob = dsviper.ValueBlob(zlib.decompress(base64.b64decode(resources.B64_DEFINITIONS)))
     return dsviper.Definitions.decode(blob).const()
+
+
+set_definitions(definitions)

@@ -109,8 +109,8 @@ export type Grade = "low" | "high";
  * mieux et ne coûte aucun objet.
  */
 export declare const Grade: {
-    low: string;
-    high: string;
+    LOW: string;
+    HIGH: string;
     type(): dsviper.TypeEnumeration;
     wrap(value: dsviper.Value): Grade;
 };

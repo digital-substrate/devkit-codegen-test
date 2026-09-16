@@ -8,7 +8,8 @@ import functools
 
 import dsviper
 
-from ._codegen import mapping_of, ordered_of, sequence_of
+from ._codegen import (mapping_of, optional_of, ordered_of, sequence_of,
+                       variant_of)
 from . import model_a
 from . import model_c
 from . import model_b
@@ -85,17 +86,17 @@ def type_map_ModelA_MaterialKey_to_ModelB_MaterialKey(): return dsviper.TypeMap(
 
 # ── et le nom de chaque forme ──
 
-Optional_AnyConceptKey = sequence_of(type_optional_AnyConceptKey)
-Optional_ModelA_Colour = sequence_of(type_optional_ModelA_Colour)
-Optional_ModelA_MaterialKey = sequence_of(type_optional_ModelA_MaterialKey)
-Optional_ModelB_Colour = sequence_of(type_optional_ModelB_Colour)
-Optional_ModelB_MaterialKey = sequence_of(type_optional_ModelB_MaterialKey)
-Optional_ModelC_MarkerKey = sequence_of(type_optional_ModelC_MarkerKey)
-Optional_Projection_DerivedMaterialKey = sequence_of(type_optional_Projection_DerivedMaterialKey)
-Optional_Projection_LinkKey = sequence_of(type_optional_Projection_LinkKey)
-Optional_Projection_Pair = sequence_of(type_optional_Projection_Pair)
-Optional_Map_ModelA_MaterialKey_to_ModelB_MaterialKey = sequence_of(type_optional_map_ModelA_MaterialKey_to_ModelB_MaterialKey)
-Optional_string = sequence_of(type_optional_string)
+Optional_AnyConceptKey = optional_of(type_optional_AnyConceptKey)
+Optional_ModelA_Colour = optional_of(type_optional_ModelA_Colour)
+Optional_ModelA_MaterialKey = optional_of(type_optional_ModelA_MaterialKey)
+Optional_ModelB_Colour = optional_of(type_optional_ModelB_Colour)
+Optional_ModelB_MaterialKey = optional_of(type_optional_ModelB_MaterialKey)
+Optional_ModelC_MarkerKey = optional_of(type_optional_ModelC_MarkerKey)
+Optional_Projection_DerivedMaterialKey = optional_of(type_optional_Projection_DerivedMaterialKey)
+Optional_Projection_LinkKey = optional_of(type_optional_Projection_LinkKey)
+Optional_Projection_Pair = optional_of(type_optional_Projection_Pair)
+Optional_Map_ModelA_MaterialKey_to_ModelB_MaterialKey = optional_of(type_optional_map_ModelA_MaterialKey_to_ModelB_MaterialKey)
+Optional_string = optional_of(type_optional_string)
 Set_ModelA_MaterialKey = sequence_of(type_set_ModelA_MaterialKey)
 Set_ModelB_MaterialKey = sequence_of(type_set_ModelB_MaterialKey)
 Set_Projection_LinkKey = sequence_of(type_set_Projection_LinkKey)

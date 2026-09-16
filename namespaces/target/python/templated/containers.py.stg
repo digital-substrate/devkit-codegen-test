@@ -22,7 +22,8 @@ import functools
 
 import dsviper
 
-from ._codegen import mapping_of, ordered_of, sequence_of
+from ._codegen import (mapping_of, optional_of, ordered_of, sequence_of,
+                       variant_of)
 <m.nameSpaces:{u|from . import <u.name;format="lsc">};separator="\n">
 
 # ── les descripteurs de type, chaînés par forme ──
@@ -49,18 +50,17 @@ from ._codegen import mapping_of, ordered_of, sequence_of
 <m.vecFunctions:bound("sequence_of");separator="\n">
 <m.matFunctions:bound("sequence_of");separator="\n">
 <m.tupleFunctions:bound("sequence_of");separator="\n">
-<m.optionalFunctions:bound("sequence_of");separator="\n">
+<m.optionalFunctions:bound("optional_of");separator="\n">
 <m.vectorFunctions:bound("sequence_of");separator="\n">
 <m.setFunctions:bound("sequence_of");separator="\n">
 <m.mapFunctions:bound("mapping_of");separator="\n">
 <m.xarrayFunctions:bound("ordered_of");separator="\n">
-<m.variantFunctions:bound("sequence_of");separator="\n">
+<m.variantFunctions:bound("variant_of");separator="\n">
 >>
 
-// UN OPTIONAL ET UN VARIANT NE SONT PAS DES SUITES, et pourtant ils passent par `sequence_of`
-// ici. C'est volontaire et temporaire : le nom et la construction sont ce qui manquait, et une
-// vue propre à chacun -- `Optional` qui rend `None`, `Variant` qui rend l'alternative -- est le
-// pas suivant. Ce fichier dit ce qui est, pas ce qu'on voudrait.
+// CHAQUE FORME REÇOIT LA VUE QUI LUI CORRESPOND. Un optional pose une question qu'aucun autre
+// conteneur ne pose -- « y a-t-il quelque chose ? » -- et un variant en pose une autre --
+// « laquelle ? ». Les lire comme des suites compilerait et ne dirait rien de juste.
 
 primitives() ::= <<
 type_bool = lambda: dsviper.TypeBool()

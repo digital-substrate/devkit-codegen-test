@@ -119,6 +119,34 @@ class AttachmentProxy:
         """
         mutating.update(self.descriptor, key.value, _path(field), _unwrap(value))
 
+    def __getattr__(self, name: str):
+        """`set_<champ>`, `union_<champ>`, `subtract_<champ>` — dérivés du type du document.
+
+        LE PACK EN ÉMET UN PAR CHAMP DE CHAQUE DOCUMENT DE CHAQUE ATTACHMENT. Ici le document
+        connaît ses champs : l'objet répond au nom qu'on lui demande s'il correspond à l'un
+        d'eux, et lève sinon -- ce qui est le même fail-fast qu'un attribut absent, avec un
+        message qui dit ce qui existe.
+        """
+        for prefix, operation in (("set_", "update"),
+                                  ("union_", "union_in_set"),
+                                  ("subtract_", "subtract_in_set")):
+            if not name.startswith(prefix):
+                continue
+            field = name[len(prefix):]
+            document = self.descriptor.document_type()
+            query = getattr(document, "query", None)
+            if query is None or query(field) is None:
+                break
+
+            def bound(mutating, key, value, _field=field, _operation=operation):
+                getattr(mutating, _operation)(
+                    self.descriptor, _unwrap(key), _path(_field), _unwrap(value))
+
+            return bound
+
+        raise AttributeError(
+            f"{self.descriptor.representation()} n'a pas de champ pour '{name}'")
+
     def __repr__(self) -> str:
         return f"AttachmentProxy({self.descriptor.representation()})"
 
