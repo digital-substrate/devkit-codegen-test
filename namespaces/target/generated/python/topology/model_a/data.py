@@ -84,8 +84,8 @@ class Finish(enum.Enum):
     `Finish("matte")`.
     """
 
-    matte = "matte"
-    gloss = "gloss"
+    MATTE = "matte"
+    GLOSS = "gloss"
 
     @classmethod
     @functools.cache

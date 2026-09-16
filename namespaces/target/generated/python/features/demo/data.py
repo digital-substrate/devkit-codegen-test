@@ -373,9 +373,9 @@ class EnumerationE(enum.Enum):
     `Finish("matte")`.
     """
 
-    a = "a"
-    b = "b"
-    c = "c"
+    A = "a"
+    B = "b"
+    C = "c"
 
     @classmethod
     @functools.cache

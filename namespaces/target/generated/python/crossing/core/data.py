@@ -232,8 +232,8 @@ class Grade(enum.Enum):
     `Finish("matte")`.
     """
 
-    low = "low"
-    high = "high"
+    LOW = "low"
+    HIGH = "high"
 
     @classmethod
     @functools.cache

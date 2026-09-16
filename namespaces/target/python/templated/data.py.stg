@@ -211,7 +211,10 @@ class <e.name>(enum.Enum):
         return self.value
 >>
 
-enumeration_case(c) ::= <<    <c.name> = "<c.name>">>
+// UN CAS S'ÉCRIT EN MAJUSCULES, ET SA VALEUR RESTE LE NOM DU MODÈLE. La majuscule est la
+// convention de Python pour une constante ; la valeur est ce qui passe sur le fil, donc elle
+// ne s'invente pas.
+enumeration_case(c) ::= <<    <c.name;format="usc"> = "<c.name>">>
 
 structure(s, u) ::= <<
 class <s.name>(Proxy):

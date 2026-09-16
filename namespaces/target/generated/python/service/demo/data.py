@@ -78,9 +78,9 @@ class Level(enum.Enum):
     `Finish("matte")`.
     """
 
-    beginner = "beginner"
-    intermediate = "intermediate"
-    expert = "expert"
+    BEGINNER = "beginner"
+    INTERMEDIATE = "intermediate"
+    EXPERT = "expert"
 
     @classmethod
     @functools.cache

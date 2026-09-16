@@ -180,3 +180,54 @@ class Ordered(typing.Generic[E]):
 
     def __repr__(self) -> str:
         return repr(list(self))
+
+
+# ── un conteneur nommé, et constructible ──
+#
+# CE QUE LA VUE SEULE NE DONNAIT PAS. Une vue enveloppe la valeur d'un champ qui existe déjà ;
+# elle ne permet pas d'écrire `Vector_uint8([1, 2, 3])`, donc pas de construire un conteneur
+# pour le passer à une fonction de pool, ni de bâtir un document avant de l'attacher. Mesuré
+# sur la suite d'épreuves du projet : 274 de ses 474 tests commencent par cette ligne-là.
+#
+# ET POURTANT IL N'Y A TOUJOURS PAS UNE CLASSE PAR FORME À ÉCRIRE. Ce qui manquait est un *nom*
+# lié à un descripteur de type, pas une logique : la fabrique ci-dessous rend une sous-classe
+# de la vue générique, et l'unité en déclare une ligne par forme. Le pack en émet une classe
+# complète par combinaison rencontrée.
+
+
+def _bind(view, type_fn, cast):
+    """Une vue liée à un type : nommable, constructible, et qui refuse ce qui n'est pas d'elle."""
+
+    class Bound(view):
+        __slots__ = ()
+
+        @classmethod
+        def type(cls):
+            return type_fn()
+
+        def __init__(self, value=None):
+            if isinstance(value, Sequence) or isinstance(value, Mapping) or isinstance(value, Ordered):
+                value = value.value
+            if isinstance(value, dsviper.Value):
+                # LE CONTRAT DE FAIL-FAST DU PACK : une valeur du mauvais type est rejetée à la
+                # construction, et par un `raise` et non un `assert`, pour que ça tienne aussi
+                # sous `python -O` où les assertions disparaissent.
+                if value.type() != type_fn():
+                    raise TypeError(f"cette valeur n'est pas un {type_fn().representation()}")
+                super().__init__(value)
+            else:
+                super().__init__(cast(dsviper.Value.create(type_fn(), value)))
+
+    return Bound
+
+
+def sequence_of(type_fn):
+    return _bind(Sequence, type_fn, lambda v: v)
+
+
+def mapping_of(type_fn):
+    return _bind(Mapping, type_fn, dsviper.ValueMap.cast)
+
+
+def ordered_of(type_fn):
+    return _bind(Ordered, type_fn, dsviper.ValueXArray.cast)

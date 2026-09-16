@@ -1,0 +1,57 @@
+# Generated from /Volumes/DigitalSubstrate/devkit-codegen-test/service/Service.dsm.json by kibo-2.0.0.jar
+
+"""Service — les conteneurs que le modèle mentionne, nommés et constructibles."""
+
+from __future__ import annotations
+
+import functools
+
+import dsviper
+
+from ._codegen import mapping_of, ordered_of, sequence_of
+from . import demo
+
+# ── les descripteurs de type, chaînés par forme ──
+#
+# Chaque forme compose celui de ses éléments, donc la chaîne s'arrête sur un primitif ou sur un
+# type qu'une unité déclare. Mémoïsés : le runtime rend un objet neuf à chaque appel, et deux
+# descripteurs égaux mais distincts feraient échouer la comparaison d'une construction.
+
+type_bool = lambda: dsviper.TypeBool()
+type_uint8 = lambda: dsviper.TypeUInt8()
+type_uint16 = lambda: dsviper.TypeUInt16()
+type_uint32 = lambda: dsviper.TypeUInt32()
+type_uint64 = lambda: dsviper.TypeUInt64()
+type_int8 = lambda: dsviper.TypeInt8()
+type_int16 = lambda: dsviper.TypeInt16()
+type_int32 = lambda: dsviper.TypeInt32()
+type_int64 = lambda: dsviper.TypeInt64()
+type_float = lambda: dsviper.TypeFloat()
+type_double = lambda: dsviper.TypeDouble()
+type_string = lambda: dsviper.TypeString()
+type_blob = lambda: dsviper.TypeBlob()
+type_blob_id = lambda: dsviper.TypeBlobId()
+type_commit_id = lambda: dsviper.TypeCommitId()
+type_uuid = lambda: dsviper.TypeUUId()
+type_any = lambda: dsviper.TypeAny()
+type_AnyConceptKey = lambda: dsviper.TypeKey(dsviper.TypeAnyConcept())
+type_Demo_PlayerKey = demo.PlayerKey.type
+type_Demo_Level = demo.Level.type
+type_Demo_PlayerProperty = demo.PlayerProperty.type
+type_Demo_Vector3 = demo.Vector3.type
+
+@functools.cache
+def type_optional_AnyConceptKey(): return dsviper.TypeOptional(type_AnyConceptKey())
+@functools.cache
+def type_optional_Demo_PlayerKey(): return dsviper.TypeOptional(type_Demo_PlayerKey())
+@functools.cache
+def type_optional_Demo_PlayerProperty(): return dsviper.TypeOptional(type_Demo_PlayerProperty())
+@functools.cache
+def type_set_Demo_PlayerKey(): return dsviper.TypeSet(type_Demo_PlayerKey())
+
+# ── et le nom de chaque forme ──
+
+Optional_AnyConceptKey = sequence_of(type_optional_AnyConceptKey)
+Optional_Demo_PlayerKey = sequence_of(type_optional_Demo_PlayerKey)
+Optional_Demo_PlayerProperty = sequence_of(type_optional_Demo_PlayerProperty)
+Set_Demo_PlayerKey = sequence_of(type_set_Demo_PlayerKey)

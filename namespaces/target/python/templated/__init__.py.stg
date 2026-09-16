@@ -33,6 +33,9 @@ import zlib
 import dsviper
 
 from . import resources
+from ._codegen import AnyConceptKey
+
+__all__ = ["AnyConceptKey", "definitions"]
 
 
 @functools.cache

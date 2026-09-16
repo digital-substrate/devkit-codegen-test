@@ -25,7 +25,8 @@ descripteur, ce qui est aussi pourquoi l'accesseur typé s'appelle `AttachmentPr
 """
 
 from .attachment import AttachmentProxy
-from .container import Mapping, Ordered, Sequence
+from .container import (Mapping, Ordered, Sequence,
+                        mapping_of, ordered_of, sequence_of)
 from .proxy import AnyConceptKey, Proxy, register, unwrap, wrap
 
 __all__ = [
@@ -35,6 +36,9 @@ __all__ = [
     "Ordered",
     "Proxy",
     "Sequence",
+    "mapping_of",
+    "ordered_of",
+    "sequence_of",
     "register",
     "unwrap",
     "wrap",

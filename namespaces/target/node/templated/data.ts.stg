@@ -196,7 +196,7 @@ export const <e.name> = {
 >>
 
 enumeration_case(m) ::= <%"<m.name>"%>
-enumeration_member(m) ::= <<    <m.name>: "<m.name>">>
+enumeration_member(m) ::= <<    <m.name;format="usc">: "<m.name>">>
 
 structure(s, u) ::= <<
 let <s.name;format="lsc">Type: dsviper.TypeStructure | undefined;
