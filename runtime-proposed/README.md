@@ -7,30 +7,122 @@ référence se compile et se lie contre `libviper.a`.
 C'était la limite principale du chantier, et elle est levée : une signature recopiée de
 travers ne passe plus, parce que rien n'est recopié.
 
-## Ce qu'il y a dedans
+## Trois sociétés, et ce qui revient à chacune
 
-**`Viper_TypedCodec.hpp` — le codec typé.** `viper` a le codec *non typé* : une `Value` va
-sur un flux (`ValueWriter`) et en revient (`ValueReader`). Ce qui manque est l'autre côté,
-celui où une valeur C++ va sur le même flux — `Writer`, `Reader`, `tag<T>`, et les gabarits
-génériques des conteneurs.
+Le critère qui place chaque pièce : **viper** complète *sa propre* dual-reality, quelle que
+soit la façon de l'exposer ; **kibo** fournit ce dont n'importe quel template a besoin et que
+StringTemplate ne sait pas calculer ; **le pack** construit *une* exposition parmi d'autres,
+et a droit à ses propres outils pour cela.
 
-Le pack le génère aujourd'hui, par modèle, parce que ses méthodes portent un suffixe de type.
-Rendues libres et trouvées par l'argument, il ne reste dans les classes rien qui connaisse un
-modèle : leur place est le runtime.
+« Une parmi d'autres » porte sur la **forme** des classes, pas sur leur **mise en page**. Deux
+packs peuvent façonner différemment le côté statique ; ils ne peuvent pas le sérialiser
+différemment, parce qu'il n'existe qu'une mise en page — celle que `ValueReader` relit.
 
-**Et le format est un contrat, pas un choix.** Ce que ces gabarits posent sur le flux doit
-être exactement ce que `Viper::ValueWriter` pose pour la Value correspondante — sans quoi le
-pont statique/dynamique ne peut pas exister. Le format vient donc de `Viper_ValueWriter.cpp`,
-et l'écrire une fois à côté de lui est plus sûr que le ré-émettre par forme et par modèle.
+## `Viper_TypedCodec.hpp` — revient à viper
 
-**`Viper_HashAccumulator.hpp` — le hachage sous la même forme.** `Viper::Hash` a
-`combine_acc` ; ce qui manque est un accumulateur passé en premier argument. Ce n'est pas un
-ornement : `hash(x)` sur un `std::uint8_t` ne peut pas marcher, un type fondamental n'ayant
-aucun namespace associé, donc la recherche par argument ne mène nulle part. Un premier
-argument porté par le runtime la rétablit pour tous les types.
+**C'est l'énoncé, pour le côté statique, du contrat de mise en page de la dual-reality.**
 
-**`Viper_Assert.hpp`, `Viper_Test.hpp`** — de quoi écrire une épreuve. Le pack les
-reconstruit dans chaque modèle.
+Deux couches, à ne pas confondre :
+
+- **le format binaire** — les octets d'un `uint64` — est décidé par un codec enfichable
+  (`StreamBinary`, `StreamRaw`, `StreamTokenBinary`) derrière l'interface `StreamWriting`.
+  Ce fichier n'y touche jamais : il appelle `writeUInt64`, et le codec branché décide.
+- **la mise en page** — quelles primitives, dans quel ordre, pour chaque forme composite :
+  un vecteur est une taille puis ses éléments, un optionnel un drapeau puis peut-être une
+  valeur. C'est la projection du système de types sur un flux. `ValueWriter` l'énonce pour
+  les `Value` ; ce fichier l'énonce pour les types C++.
+
+La mise en page est un pivot de viper, pas un accident : `StreamHasher` implémente
+`StreamWriting`, et viper calcule ses digests en *écrivant la mise en page* dans un codec
+qui hache. Encoder, décoder et hacher en dépendent déjà.
+
+**Le partage, qui est la relation même d'`XArray` :** viper énonce la mise en page des types
+**de vocabulaire** — primitives, conteneurs standard, ses propres types statiques ; le code
+généré la compose pour les types **du modèle**, les champs d'une structure dans l'ordre
+déclaré, parce que seul le modèle connaît ses champs.
+
+Le contenu, trié : 25 `write`/`read` de primitives, 8 gabarits de conteneurs et 20
+correspondances `type(tag<T>)` sont **le contrat** — la dernière catégorie aussi, puisque
+`std::uint8_t` ↔ `TypeUInt8` est la correspondance statique ↔ dynamique des types. `Writer`
+et `Reader` en sont le point d'entrée.
+
+**Ce qui doit changer avant de le proposer :**
+
+- **un test aller-retour dans le harnais de viper** : pour chaque type de vocabulaire, écrire
+  côté statique, relire avec `ValueReader`, comparer — et l'inverse. C'est lui qui fait de
+  ceci un contrat plutôt qu'une seconde copie de la mise en page ;
+- **l'espace de noms** : `Viper::Codec` désigne aujourd'hui le *registre* des codecs ;
+  y ranger la mise en page mélangerait deux concepts. Décision de viper ;
+- **les deux macros publiques** disparaissent, quel que soit le propriétaire.
+
+## `Viper_HashAccumulator.hpp` — ne revient pas à viper
+
+Son unique raison d'être est un trou de la convention existante. Les types statiques de
+viper se hachent déjà par un `hash()` membre, et souvent par `std::hash` :
+
+| | `hash()` | `std::hash` |
+|---|---|---|
+| UUId, BlobId, CommitId | oui | oui |
+| Blob, Any | oui | non |
+| **Key, XArray** | **non** | **non** |
+
+`ValueKey` et `ValueXArray` se hachent — `Value` impose `hash()` à tous ses dérivés. Leurs
+jumeaux statiques, non. Ce fichier contourne ce trou en inventant une seconde convention.
+
+**La correction est côté viper, et elle est dans l'esprit d'`XArray`** : donner un `hash()`
+membre à `Viper_Key` et `Viper_XArray`, comme à leurs cinq voisins. Elle complète le côté
+données de la dual-reality sans rien inventer, et rend ce fichier inutile.
+
+Ne pas confondre avec le digest : `StreamHasher` produit une empreinte de contenu, pas le
+`std::size_t` qu'attend une table de hachage. Deux usages, deux mécanismes.
+
+## Et après : ce dossier se vide, pour le C++
+
+Trois additions à viper, et il ne reste rien ici :
+
+| addition viper | ce qu'elle retire |
+|---|---|
+| le contrat de mise en page statique — ce `TypedCodec`, avec son test aller-retour | la mise en page réénoncée par le pack |
+| `hash()` sur `Key` et `XArray` | `HashAccumulator` |
+| `hexdigest(value, hashing = SHA-1)` | la même composition, écrite dans P_Viper, N_Viper et notre `Codec` |
+
+Mesuré : ce dossier contient ces quatre fichiers et rien d'autre, et le C++ généré n'inclut
+que ces deux en-têtes — `TypedCodec` 28 fois, `HashAccumulator` 14. L'outillage d'épreuve
+n'a jamais été au pack : `VIPER_ASSERT` vient de `Viper_GeneralErrors.hpp`, et les
+`Viper_Assert.hpp`/`Viper_Test.hpp` qu'une version antérieure de ce fichier annonçait
+n'existent pas.
+
+**Le principe qui vide aussi le `Codec` généré :** le pack génère le pont C++ ⇄ `Value`, et
+rien qui ne soit une composition de ce pont avec une transition du runtime. JSON et XML
+s'obtiennent en une ligne sur `encode`/`decode`, qui sont publics ; `jsonEncode`,
+`jsonDecode`, `jsonDefinitions`, `hexdigest` et `hexdigestValue` disparaissent.
+
+**`runtime-proposed/python` et `runtime-proposed/node` se vident aussi — dans dsviper.** Une
+version antérieure de ce fichier affirmait le contraire, au motif qu'en Python la classe
+générée *est* une vue sur une `Value`, donc qu'il n'y aurait pas de dual-reality. C'était
+confondre donnée et face : il n'y a pas de seconde donnée, mais il y a une seconde face. La
+dual-reality est là, sur un autre modèle — par proxy au lieu de par copie :
+
+| | C++ — par copie | Python / Node — par proxy |
+|---|---|---|
+| le pont | `encode`/`decode` | `wrap`/`unwrap` |
+| le contrat du pont | la mise en page → viper | `Proxy`, `wrap`/`unwrap`, le registre → dsviper |
+| le vocabulaire | `XArray<T>` → viper | `Sequence`, `Mapping`, `Ordered`, `Optional`, `Variant` → dsviper |
+| les types du modèle | générés | générés |
+
+Le proxy n'est pas un style parmi d'autres : une classe qui ne tient rien **hérite** du
+fail-fast de dsviper au lieu de le réimplémenter. Un modèle par copie le perdrait. C'est ce qui
+le fait revenir à dsviper plutôt qu'à un pack.
+
+**Mais pas maintenant.** Les relecteurs à froid ont trouvé des défauts réels dans exactement
+ces classes — `Mapping.items()` rend une liste, `Optional` masque `typing.Optional`, cinq
+`__getattr__` non annotés, `Sequence<unknown>` en TypeScript. Les déplacer avant le polissage,
+ce serait figer une API défectueuse sous les engagements du runtime.
+
+**Et deux travaux de dsviper les attendent** : la vraie hiérarchie remplacera les trois
+`hasattr(value, "type_code")` de `container.py` par des `isinstance` ; et `decode(…,
+encoded=False)` devra remplacer la forme `ValueKey.cast(Value.decode(…))` de `data.py.stg`
+avant qu'un `py.typed` soit livré.
 
 ## Ce qui n'est pas ici, et pourquoi
 
@@ -47,8 +139,9 @@ mesure disait, et le vrai en-tête le confirme.
 
 ## L'ordre des choses
 
-1. le runtime gagne ces deux en-têtes ;
-2. le générateur cesse de les émettre ;
-3. les templates pleins-modèle cessent de déclarer leurs versions.
+1. viper gagne le contrat de mise en page statique, son test aller-retour, et `hash()` sur
+   `Key` et `XArray` ;
+2. le pack retire `TypedCodec` de ce dossier et `HashAccumulator` avec lui ;
+3. les templates cessent de déclarer leurs versions.
 
 Rien avant l'étape 1 n'est sûr.
