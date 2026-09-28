@@ -13,9 +13,6 @@ service/typescript/generated/
 service/typescript/build/
 
 namespaces/Topology.dsm.json
-namespaces/Topology/
-namespaces/python/
-namespaces/typescript/
 
 # Python
 __pycache__/
