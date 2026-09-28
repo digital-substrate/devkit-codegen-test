@@ -42,11 +42,12 @@ test("setitem_by_index", () => {
   assert.equal(xa.get(1), 99);
 });
 
-test("negative_index_not_supported", () => {
-  // XArray does not support negative indexing like Python lists.
+test("negative_index_counts_from_end", () => {
+  // A negative index counts from the end, as Array.prototype.at does.
   const xa = new XArray_int8([10, 20, 30]);
-  // Negative indices return undefined in XArray.
-  assert.equal(xa.get(-1), undefined);
+  assert.equal(xa.get(-1), 30);
+  assert.equal(xa.get(-3), 10);
+  assert.equal(xa.get(-4), undefined);
 });
 
 // --- Position (UUID) access ---

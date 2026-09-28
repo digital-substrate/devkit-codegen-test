@@ -58,7 +58,7 @@ export function register(...entries: (readonly [dsviper.ValueUUId, Wrapping])[])
  * fois, au lieu d'un `any` répandu sur chaque champ.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function wrap(value: dsviper.OutputValue): any {
+export function wrap(value: dsviper.OutputValue | dsviper.Value): any {
     if (!(value instanceof dsviper.Value)) {
         return value;
     }

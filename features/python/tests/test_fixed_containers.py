@@ -129,21 +129,22 @@ class TestMatConstruction(unittest.TestCase):
 
     def test_default_construction_2x2(self):
         m = Mat_uint8_2_2()
-        # len returns total element count (2*2=4)
-        self.assertEqual(len(m), 4)
+        # A matrix is the sequence of its columns: len counts the columns.
+        self.assertEqual(len(m), 2)
 
     def test_from_nested_list_2x2(self):
         m = Mat_uint8_2_2([[1, 2], [3, 4]])
-        self.assertEqual(len(m), 4)
+        self.assertEqual(len(m), 2)
 
     def test_default_construction_2x3(self):
         m = Mat_uint8_2_3()
-        # len returns total element count (2*3=6)
-        self.assertEqual(len(m), 6)
+        # Two columns of three rows: len counts the columns.
+        self.assertEqual(len(m), 2)
 
     def test_from_nested_list_2x3(self):
         m = Mat_uint8_2_3([[1, 2, 3], [4, 5, 6]])
-        self.assertEqual(len(m), 6)
+        self.assertEqual(len(m), 2)
+        self.assertEqual([list(column) for column in m], [[1, 2, 3], [4, 5, 6]])
 
 
 class TestMatAccessByRowIndex(unittest.TestCase):
@@ -209,17 +210,15 @@ class TestMatSetRow(unittest.TestCase):
 
 
 class TestMatLen(unittest.TestCase):
-    """Test Mat length (total element count)."""
+    """Test Mat length (the number of columns)."""
 
     def test_len_2x2(self):
         m = Mat_uint8_2_2()
-        # 2x2 = 4 elements
-        self.assertEqual(len(m), 4)
+        self.assertEqual(len(m), 2)
 
     def test_len_2x3(self):
         m = Mat_uint8_2_3()
-        # 2x3 = 6 elements
-        self.assertEqual(len(m), 6)
+        self.assertEqual(len(m), 2)
 
 
 class TestMatToTuple(unittest.TestCase):

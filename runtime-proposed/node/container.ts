@@ -319,7 +319,10 @@ export class Ordered<E> extends View {
     }
 
     position(index: number): dsviper.ValueUUId | undefined {
-        return this.ordered.position(index);
+        // Un index négatif compte depuis la fin, comme `Array.prototype.at` et comme `xa[-1]`
+        // en Python. La liaison déclare l'index en uint64 et lève sur un négatif : on le ramène.
+        const i = index < 0 ? this.ordered.size() + index : index;
+        return i < 0 ? undefined : this.ordered.position(i);
     }
 
     indexOf(position: dsviper.ValueUUId): number | undefined {
