@@ -85,6 +85,18 @@
       ],
       "laboratory": true,
       "note": "Laboratory only: it tests the generator, not an application, and no project selects it. It stays here and does not move into the pack."
+    },
+    "PythonDefinitions": {
+      "doc": "The model's types, attachments and field paths as constants of a Python module embedded in a C++ application, for scripts using the dynamic API. What Fields is to C++ code, for that Python.",
+      "templates": [
+        "Python_Definitions.cpp.stg",
+        "Python_Definitions.hpp.stg"
+      ],
+      "requires": [
+        "Base",
+        "Attachments"
+      ],
+      "note": "Compiles against Python.h and viper's P_Viper wrappers, which the laboratory does not build: GraphEditor is where it is exercised."
     }
   },
   "python": {

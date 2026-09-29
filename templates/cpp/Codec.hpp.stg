@@ -115,7 +115,8 @@ model(m) ::= <<
 //
 //   definitions()      the model, as the runtime knows it
 //   encode / decode    a C++ value to a Viper::Value, and back, for any generated type
-//                      and any container of them
+//                      and any container of them -- this header brings every namespace's
+//                      codec, so including it is enough
 //   description, isKnown, isMember   what an untyped key names
 //
 // JSON, XML and hashing are the runtime's, applied to what `encode` returns.
@@ -124,6 +125,8 @@ model(m) ::= <<
 #define <m.namespace>_Codec_hpp
 
 #include "<m.namespace>_AnyConcept.hpp"
+<m.nameSpaces:{u|#include "<u.include.Codec>"
+#include "<u.include.Model>"};separator="\n">
 #include "Viper_StaticWriter.hpp"
 #include "Viper_StaticReader.hpp"
 #include "Viper_Definitions.hpp"
