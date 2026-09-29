@@ -156,7 +156,7 @@ bool operator\<(<c.name>Key const & l, <c.name>Key const & r) noexcept {
 >>
 
 key_hash(c) ::= <<
-void hash(Viper::Hash::Accumulator & h, <c.name>Key const & value) noexcept {
+void hash(Viper::StaticHash::Hasher & h, <c.name>Key const & value) noexcept {
     hash(h, value.instanceId());
     hash(h, value.runtimeId());
 }
@@ -177,7 +177,7 @@ bool operator\<(<s.name> const & l, <s.name> const & r) noexcept {
     return l.<last(s.fields).name> \< r.<last(s.fields).name>;
 }
 
-void hash(Viper::Hash::Accumulator & h, <s.name> const & value) noexcept {
+void hash(Viper::StaticHash::Hasher & h, <s.name> const & value) noexcept {
 <s.fields:field_hash();separator="\n">
 }
 >>
@@ -188,7 +188,7 @@ void hash(Viper::Hash::Accumulator & h, <s.name> const & value) noexcept {
 enumeration(e, u) ::= <<
 // ── <e.name> ──
 
-void hash(Viper::Hash::Accumulator & h, <e.name> value) noexcept {
+void hash(Viper::StaticHash::Hasher & h, <e.name> value) noexcept {
     hash(h, static_cast\<std::uint8_t>(value));
 }
 >>

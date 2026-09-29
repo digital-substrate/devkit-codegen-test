@@ -5,14 +5,9 @@ file(GLOB CROSSING_HEADERS generated/*.hpp)
 file(GLOB CROSSING_SOURCES generated/*.cpp)
 list(FILTER CROSSING_SOURCES EXCLUDE REGEX "_TestApp\\.cpp$")
 
-set(PROPOSED ${CMAKE_CURRENT_SOURCE_DIR}/../../runtime-proposed/cpp)
-file(GLOB PROPOSED_SOURCES ${PROPOSED}/*.cpp)
-file(GLOB PROPOSED_HEADERS ${PROPOSED}/*.hpp)
-
 add_library(crossing STATIC
-    ${CROSSING_HEADERS} ${CROSSING_SOURCES}
-    ${PROPOSED_HEADERS} ${PROPOSED_SOURCES})
-target_include_directories(crossing PUBLIC generated ${PROPOSED})
+    ${CROSSING_HEADERS} ${CROSSING_SOURCES})
+target_include_directories(crossing PUBLIC generated)
 target_link_libraries(crossing PUBLIC viper)
 
 add_executable(crossing_test generated/Crossing_TestApp.cpp)

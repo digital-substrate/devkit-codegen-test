@@ -25,7 +25,7 @@ model(m) ::= <<
 
 namespace <m.namespace> {
 
-void hash(Viper::Hash::Accumulator & h, AnyConceptKey const & value) noexcept {
+void hash(Viper::StaticHash::Hasher & h, AnyConceptKey const & value) noexcept {
     hash(h, value.instanceId());
     hash(h, value.runtimeId());
 }

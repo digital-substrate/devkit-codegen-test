@@ -15,7 +15,7 @@ unit(u) ::= <<
 
 #include "<u.model.include.AnyConcept>"
 
-#include "Viper_HashAccumulator.hpp"
+#include "Viper_StaticHash.hpp"
 #include "Viper_Blob.hpp"
 #include "Viper_UUId.hpp"
 
@@ -105,7 +105,7 @@ bool operator==(<c.name>Key const &, <c.name>Key const &) noexcept;
 bool operator!=(<c.name>Key const &, <c.name>Key const &) noexcept;
 bool operator\<(<c.name>Key const &, <c.name>Key const &) noexcept;
 
-void hash(Viper::Hash::Accumulator & h, <c.name>Key const & value) noexcept;
+void hash(Viper::StaticHash::Hasher & h, <c.name>Key const & value) noexcept;
 >>
 
 // UN CLUB EST UN ENSEMBLE NOMMÉ DE CONCEPTS, et sa clé peut désigner une instance de
@@ -152,7 +152,7 @@ bool operator==(<c.name>Key const &, <c.name>Key const &) noexcept;
 bool operator!=(<c.name>Key const &, <c.name>Key const &) noexcept;
 bool operator\<(<c.name>Key const &, <c.name>Key const &) noexcept;
 
-void hash(Viper::Hash::Accumulator & h, <c.name>Key const & value) noexcept;
+void hash(Viper::StaticHash::Hasher & h, <c.name>Key const & value) noexcept;
 >>
 
 /// Depuis un membre : implicite, appartenir au club n'est pas une demande.
@@ -184,7 +184,7 @@ bool operator==(<s.name> const &, <s.name> const &) noexcept;
 bool operator!=(<s.name> const &, <s.name> const &) noexcept;
 bool operator\<(<s.name> const &, <s.name> const &) noexcept;
 
-void hash(Viper::Hash::Accumulator & h, <s.name> const & value) noexcept;
+void hash(Viper::StaticHash::Hasher & h, <s.name> const & value) noexcept;
 >>
 
 field(f) ::= <<    <f.typeInNamespace> <f.name>{};>>
@@ -205,7 +205,7 @@ enumeration(e) ::= <<
 <e.members:enumeration_case();separator=",\n">
 };
 
-void hash(Viper::Hash::Accumulator & h, <e.name> value) noexcept;
+void hash(Viper::StaticHash::Hasher & h, <e.name> value) noexcept;
 >>
 
 // Une sous-template nommée, et non `{m|    <m.name>}` : StringTemplate mange une espace
@@ -229,7 +229,7 @@ enumeration_case(m) ::= <<
 // et `<%…%>` mange les blancs de tête, donc la ligne indentée reste dans un `<<…>>`.
 std_hash(e, u) ::= <<
 <std_hash_head(e, u)>
-    std::size_t operator()(<u.name>::<e.name>Key const & v) const noexcept { return Viper::Hash::of(v); }
+    std::size_t operator()(<u.name>::<e.name>Key const & v) const noexcept { return Viper::StaticHash::of(v); }
 };
 >>
 
@@ -237,7 +237,7 @@ std_hash_head(e, u) ::= <%template\<> struct std::hash\<<u.name>::<e.name>Key> {
 
 std_hash_value(e, u) ::= <<
 <std_hash_value_head(e, u)>
-    std::size_t operator()(<u.name>::<e.name> const & v) const noexcept { return Viper::Hash::of(v); }
+    std::size_t operator()(<u.name>::<e.name> const & v) const noexcept { return Viper::StaticHash::of(v); }
 };
 >>
 

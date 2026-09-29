@@ -8,16 +8,9 @@ file(GLOB TOPOLOGY_SOURCES generated/*.cpp)
 list(FILTER TOPOLOGY_SOURCES EXCLUDE REGEX "_TestApp\\.cpp$")
 file(GLOB TOPOLOGY_CONSUMERS src/*.cpp)
 
-# Ce que le runtime devrait porter et ne porte pas encore -- le pendant C++ du `_codegen`
-# embarqué en Python et TypeScript. Dette, pas choix.
-set(PROPOSED ${CMAKE_CURRENT_SOURCE_DIR}/../../runtime-proposed/cpp)
-file(GLOB PROPOSED_SOURCES ${PROPOSED}/*.cpp)
-file(GLOB PROPOSED_HEADERS ${PROPOSED}/*.hpp)
-
 add_library(topology STATIC
-    ${TOPOLOGY_HEADERS} ${TOPOLOGY_SOURCES} ${TOPOLOGY_CONSUMERS}
-    ${PROPOSED_HEADERS} ${PROPOSED_SOURCES})
-target_include_directories(topology PUBLIC generated ${PROPOSED})
+    ${TOPOLOGY_HEADERS} ${TOPOLOGY_SOURCES} ${TOPOLOGY_CONSUMERS})
+target_include_directories(topology PUBLIC generated)
 target_link_libraries(topology PUBLIC viper)
 
 add_executable(topology_test generated/Topology_TestApp.cpp)

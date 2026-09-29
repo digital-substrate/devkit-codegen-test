@@ -6,16 +6,9 @@
 file(GLOB SERVICE_HEADERS generated/*.hpp)
 file(GLOB SERVICE_SOURCES generated/*.cpp)
 
-# Ce que le runtime devrait porter et ne porte pas encore -- le pendant C++ du `_codegen`
-# embarqué en Python et TypeScript. Dette, pas choix.
-set(PROPOSED ${CMAKE_CURRENT_SOURCE_DIR}/../../runtime-proposed/cpp)
-file(GLOB PROPOSED_SOURCES ${PROPOSED}/*.cpp)
-file(GLOB PROPOSED_HEADERS ${PROPOSED}/*.hpp)
-
 add_library(service STATIC
-    ${SERVICE_HEADERS} ${SERVICE_SOURCES}
-    ${PROPOSED_HEADERS} ${PROPOSED_SOURCES})
-target_include_directories(service PUBLIC generated ${PROPOSED})
+    ${SERVICE_HEADERS} ${SERVICE_SOURCES})
+target_include_directories(service PUBLIC generated)
 target_link_libraries(service PUBLIC viper)
 
 add_executable(service_server src/ServiceServer.cpp src/ToolsPoolBridges.cpp src/PlayerModelPoolBridges.cpp)

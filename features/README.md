@@ -39,10 +39,10 @@ naming (`Test_StructureS`). They now name what the templates produce (`features.
 
 ## Debts, visible on purpose
 
-- **`_codegen/` is copied into every generated package** (Python and TypeScript), and
-  `runtime-proposed/cpp` is compiled into the C++ library. None of it names a model type or
-  varies between models: it belongs in the runtime. Until it moves, each package carries a
-  copy that can drift from the `dsviper` installed beside it.
+- **`_codegen/` is copied into every generated package** (Python and TypeScript). None of it
+  names a model type or varies between models: it belongs in the runtime. Until it moves, each
+  package carries a copy that can drift from the `dsviper` installed beside it. The C++ side
+  has none left: what it carried is now viper's.
 - **The TypeScript project files are written by `generate.py`**, not rendered: there is no
   `Project` feature in `templates/typescript` yet. Inventing a `package.json` is not the
   project's job.

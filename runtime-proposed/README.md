@@ -51,26 +51,31 @@ vise.
 viper. `lib.cmake` le vérifie et échoue tôt sinon ; `REPO_VIPER` désigne le checkout, un
 worktree gardant l'arbre voisin sur sa propre branche.
 
-## `Viper_HashAccumulator.hpp` — ne revient pas à viper
+## `Viper_HashAccumulator.hpp` — déplacé dans viper, sous le nom `Viper_StaticHash`
 
-Son unique raison d'être est un trou de la convention existante. Les types statiques de
-viper se hachent déjà par un `hash()` membre, et souvent par `std::hash` :
+Une version antérieure de cette section disait le contraire : qu'il suffisait d'ajouter un
+`hash()` membre à `Key` et `XArray`, comme à leurs voisins `UUId`, `Blob`, `BlobId`, `CommitId`
+et `Any`, et que ce fichier ne contournait qu'un trou de cette convention. C'était oublier les
+conteneurs. Un champ de structure peut être un `std::vector`, une `std::map`, un
+`std::optional`, un `std::variant`, un `std::tuple`, un `std::array` — et la bibliothèque
+standard n'en hache aucun. Une convention de membre ne les atteint pas ; un parcours par
+surcharge, si. C'est ce que ce fichier était : le parcours statique d'une valeur, résolu par
+surcharge et ADL, exactement comme `StaticWriter`. Il ne nomme aucun type du modèle, donc il
+revient à viper.
 
-| | `hash()` | `std::hash` |
-|---|---|---|
-| UUId, BlobId, CommitId | oui | oui |
-| Blob, Any | oui | non |
-| **Key, XArray** | **non** | **non** |
+Et le hachage des types générés est consommé : `red` range des `SurfaceKey` dans des
+`std::unordered_map`, `ge` des `VertexKey` et des `EdgeKey`.
 
-`ValueKey` et `ValueXArray` se hachent — `Value` impose `hash()` à tous ses dérivés. Leurs
-jumeaux statiques, non. Ce fichier contourne ce trou en inventant une seconde convention.
+| viper, `kibo-2-dev` | |
+|---|---|
+| `Viper_StaticHash.hpp/.cpp` | `Hasher`, `hash(Hasher &, T)` pour le vocabulaire et tous les conteneurs, `of(value)` |
+| `cpp-test-harness/Viper_StaticHash_test.cpp` | valeurs égales ⇒ empreintes égales ; formes distinctes ⇒ empreintes distinctes ; ADL depuis un conteneur |
 
-**La correction est côté viper, et elle est dans l'esprit d'`XArray`** : donner un `hash()`
-membre à `Viper_Key` et `Viper_XArray`, comme à leurs cinq voisins. Elle complète le côté
-données de la dual-reality sans rien inventer, et rend ce fichier inutile.
-
-Ne pas confondre avec le digest : `StreamHasher` produit une empreinte de contenu, pas le
-`std::size_t` qu'attend une table de hachage. Deux usages, deux mécanismes.
+Trois faiblesses corrigées au passage, aucune fausse au regard de `==`, toutes sources de
+collisions : la xarray se hachait à vide (elle hache maintenant ses éléments dans l'ordre, sans
+ses positions) ; un `optional` vide et un `optional` tenant la valeur par défaut coïncidaient ;
+l'alternative d'un `variant` n'entrait pas dans l'empreinte. La longueur de chaque conteneur y
+entre aussi, pour que `{{1}, {}}` et `{{}, {1}}` diffèrent.
 
 ## Et après : ce dossier se vide, pour le C++
 
@@ -78,15 +83,14 @@ Trois additions à viper, et il ne reste rien ici :
 
 | addition viper | ce qu'elle retire |
 |---|---|
-| le contrat de mise en page statique — ce `TypedCodec`, avec son test aller-retour | la mise en page réénoncée par le pack |
-| `hash()` sur `Key` et `XArray` | `HashAccumulator` |
+| le contrat de mise en page statique — `Viper_Static*`, fait | la mise en page réénoncée par le pack |
+| ~~`hash()` sur `Key` et `XArray`~~ → `Viper_StaticHash`, fait | `HashAccumulator` |
 | `hexdigest(value, hashing = SHA-1)` | la même composition, écrite dans P_Viper, N_Viper et notre `Codec` |
 
-Mesuré : ce dossier contient ces quatre fichiers et rien d'autre, et le C++ généré n'inclut
-que ces deux en-têtes — `TypedCodec` 28 fois, `HashAccumulator` 14. L'outillage d'épreuve
-n'a jamais été au pack : `VIPER_ASSERT` vient de `Viper_GeneralErrors.hpp`, et les
-`Viper_Assert.hpp`/`Viper_Test.hpp` qu'une version antérieure de ce fichier annonçait
-n'existent pas.
+**Le dossier `cpp/` est vide depuis le 2026-09-29, et supprimé.** Le C++ généré n'inclut plus
+rien d'ici : le pont et le hachage viennent de viper. Reste `hexdigest`, qui ne retire plus
+rien au pack — le `Codec` généré n'en porte plus. L'outillage d'épreuve n'a jamais été au
+pack : `VIPER_ASSERT` vient de `Viper_GeneralErrors.hpp`.
 
 **Le principe qui vide aussi le `Codec` généré :** le pack génère le pont C++ ⇄ `Value`, et
 rien qui ne soit une composition de ce pont avec une transition du runtime. JSON et XML
