@@ -116,9 +116,9 @@ void set<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const 
 path(sf, a) ::= <%::<u.model.namespace>::<a.documentType.structure.namespace;format="lsc">::fields::<a.documentType.structure.name>::<sf.name>Path()%>
 root() ::= <%Viper::Path::make()%>
 
-// LE CAST N'EST PAS UNE FORMALITÉ. Le runtime veut un `ValueSet` là où le générique rend
-// une `Value` : c'est la seule chose que le modèle sait et que le type C++ ne dit pas.
-mutate(op, viper, address, value, u) ::= <%mutating-><op>(attachment(), encodeKey(key), <address>, Viper::<viper>::cast(<u.model.namespace>::codec::encode(<value>)));%>
+// PAS DE CAST : `encode` rend la classe de Value que le type C++ devient -- un `ValueSet` pour
+// un `std::set`, ce que le runtime demande ici. Le type dit ce que le cast affirmait.
+mutate(op, viper, address, value, u) ::= <%mutating-><op>(attachment(), encodeKey(key), <address>, <u.model.namespace>::codec::encode(<value>));%>
 
 field_set(sf, a, u) ::= <<
 void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value) {
@@ -214,9 +214,9 @@ void remove(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.key
 // de tête -- donc il ne sert que pour la ligne qui contient le `>>`, jamais pour un corps
 // indenté. D'où le découpage ci-dessous, qui n'a pas d'autre raison d'être.
 encode_key(a, u) ::= <<
-/// The key, encoded; an attachment's key is a key, so the cast cannot fail.
+/// The key, encoded: `encode` of a key is a ValueKey.
 <encode_key_head(a)>
-    return Viper::ValueKey::cast(<u.model.namespace>::codec::encode(key));
+    return <u.model.namespace>::codec::encode(key);
 }
 >>
 

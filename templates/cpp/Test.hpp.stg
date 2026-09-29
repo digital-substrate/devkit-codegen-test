@@ -224,7 +224,7 @@ void roundTripAttachment(std::shared_ptr\<Viper::Database> const & db,
 
     VIPER_ASSERT(name, db->keys(attachment)->empty());
 
-    auto const key{Viper::ValueKey::cast(codec::encode(fuzz\<Key>()))};
+    auto const key{codec::encode(fuzz\<Key>())};
     VIPER_ASSERT(name, db->set(attachment, key, codec::encode(fuzz\<Document>())));
     VIPER_ASSERT(name, !db->get(attachment, key)->isNil());
 
@@ -244,7 +244,7 @@ template\<class Key, class Document>
 void fuzzAttachment(std::shared_ptr\<Viper::Database> const & db,
                     std::shared_ptr\<Viper::Attachment> const & attachment, std::size_t count) {
     for (std::size_t n{}; n \< count; ++n)
-        db->set(attachment, Viper::ValueKey::cast(codec::encode(fuzz\<Key>())),
+        db->set(attachment, codec::encode(fuzz\<Key>()),
                 codec::encode(fuzz\<Document>()));
 
     // Rebuild each key from its identity: the set yields const keys, `get` takes a mutable one.

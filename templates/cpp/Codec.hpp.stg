@@ -79,6 +79,11 @@ plain_read(e) ::= <%<e.name> read(Viper::StaticReader::Reader & r, Viper::Static
 // Les descripteurs des primitives et des conteneurs sont du runtime : le type d'une
 // primitive est un singleton, celui d'un conteneur se compose à partir de ses éléments.
 //
+// decode VÉRIFIE LE TYPE, ET CE N'EST PAS UNE PRÉCAUTION. Sans elle, une clé d'un autre
+// concept -- deux uuid, comme toute clé -- se lit sans erreur dans le mauvais type, et les
+// autres écarts n'échouent que par accident, sur un flux trop court, avec un message qui ne dit
+// pas ce qui manque. checkType est la règle du runtime, celle qu'il applique partout ailleurs.
+//
 // LE BLOB DE decode EST NOMMÉ, ET IL LE DOIT : passer le résultat de l'encodage directement
 // laisse mourir le temporaire à la fin de l'expression, et le décodeur lit dans le vide.
 // ── ce que la clé non typée ne peut pas porter elle-même ──
@@ -172,21 +177,24 @@ inline bool isMember(AnyConceptKey const & key, std::shared_ptr\<Viper::Type> co
     return isMember(key, concept_, definitions());
 }
 
-/// A C++ value to a Viper::Value of the matching type.
+/// A C++ value to its Value, typed: a key gives a ValueKey, a structure a ValueStructure, a
+/// vector a ValueVector.
 template\<class T>
-std::shared_ptr\<Viper::Value> encode(T const & value) {
+std::shared_ptr\<Viper::StaticType::ValueOf\<T> > encode(T const & value) {
     auto const encoder = stream()->createEncoder();
     Viper::StaticWriter::Writer writer{encoder};
     write(writer, value);
 
-    return Viper::ValueDecoder::decode(encoder->endEncoding(), stream(),
-                                       type(tag\<T>{}),
-                                       definitions());
+    return Viper::StaticType::ValueOf\<T>::cast(
+        Viper::ValueDecoder::decode(encoder->endEncoding(), stream(), type(tag\<T>{}), definitions()));
 }
 
-/// A Viper::Value back to a C++ value; the value must have the type of `T`.
+/// A Viper::Value back to a C++ value. Throws if the value's type is not `T`'s -- a key of
+/// another concept included -- as the runtime does wherever a value meets a type.
 template\<class T>
 T decode(std::shared_ptr\<Viper::Value const> const & value) {
+    value->checkType("<m.namespace>::codec", "decode", type(tag\<T>{}).get());
+
     // Named: `createDecoder` keeps a reference to the blob.
     auto const blob{Viper::ValueEncoder::encode(value, stream())};
     auto const decoder{stream()->createDecoder(blob)};

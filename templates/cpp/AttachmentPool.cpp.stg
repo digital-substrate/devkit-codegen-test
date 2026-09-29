@@ -52,6 +52,7 @@ model(m) ::= <<
 #include "Viper_FunctionPrototype.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_Path.hpp"
+#include "Viper_StringHelper.hpp"
 #include "Viper_Types.hpp"
 #include "Viper_Values.hpp"
 #include "Viper_ValueVoid.hpp"
@@ -110,30 +111,33 @@ private:
     Body _body;
 };
 
-/// A function's name: the attachment's, and the operation.
+/// A function's name: namespace, concept, attachment and operation, in snake case --
+/// `graph_vertex_visual_attributes_get`, the names Python and remote clients call.
 std::string named(Attachment const & a, std::string const & operation) {
-    return a->identifier() + "_" + operation;
+    using Viper::StringHelper::snakeCase;
+    return snakeCase(a->typeName.nameSpace.name) + "_" + snakeCase(a->keyTypeName().name) + "_"
+           + snakeCase(a->typeName.name) + "_" + operation;
 }
 
 void addReading(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, Attachment const & a) {
     using P = Viper::FunctionPrototype;
 
     pool->add(std::make_shared\<Getting>(
-        P::make(named(a, "keys"), {}, Viper::TypeSet::make(a->keyType)),
+        P::make(named(a, "keys"), {}, a->keysType),
         "return the set of keys.", a,
         [](auto const & g, auto const & at, auto const &) -> ValuePtr {
             return g->keys(at);
         }));
 
     pool->add(std::make_shared\<Getting>(
-        P::make(named(a, "has"), {{"key", a->keyType}}, type(Viper::StaticType::tag\<bool>{})),
+        P::make(named(a, "has"), {{"key", a->typeKey}}, type(Viper::StaticType::tag\<bool>{})),
         "return true if a document is present.", a,
         [](auto const & g, auto const & at, auto const & args) -> ValuePtr {
             return Viper::ValueBool::from(g->has(at, Viper::ValueKey::cast(args.at(0))));
         }));
 
     pool->add(std::make_shared\<Getting>(
-        P::make(named(a, "get"), {{"key", a->keyType}}, Viper::TypeOptional::make(a->documentType)),
+        P::make(named(a, "get"), {{"key", a->typeKey}}, a->optionalDocumentType),
         "return an optional document.", a,
         [](auto const & g, auto const & at, auto const & args) -> ValuePtr {
             return g->get(at, Viper::ValueKey::cast(args.at(0)));
@@ -144,7 +148,7 @@ void addWriting(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, At
     using P = Viper::FunctionPrototype;
 
     pool->add(std::make_shared\<Mutating>(
-        P::make(named(a, "set"), {{"key", a->keyType}, {"value", a->documentType}},
+        P::make(named(a, "set"), {{"key", a->typeKey}, {"value", a->documentType}},
                 Viper::TypeVoid::Instance()),
         "set the document.", a,
         [](auto const & m, auto const & at, auto const & args) -> ValuePtr {
@@ -155,15 +159,16 @@ void addWriting(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, At
 
 /// Writing one field of a structure document, by its path.
 void addFields(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, Attachment const & a) {
-    auto const structure = Viper::TypeStructure::cast(a->documentType);
-    if (!structure)
+    // `cast` throws on another type rather than answering null: ask first.
+    if (a->documentType->typeCode != Viper::TypeCode::Structure)
         return;
+    auto const structure = Viper::TypeStructure::cast(a->documentType);
 
     for (auto const & field : structure->fields()) {
         auto const path = Viper::Path::makeField(field->name);
         pool->add(std::make_shared\<Mutating>(
-            Viper::FunctionPrototype::make(named(a, "set_" + field->name),
-                                           {{"key", a->keyType}, {"value", field->type}},
+            Viper::FunctionPrototype::make(named(a, "set_" + Viper::StringHelper::snakeCase(field->name)),
+                                           {{"key", a->typeKey}, {"value", field->type}},
                                            Viper::TypeVoid::Instance()),
             "set the property of the document.", a,
             [path](auto const & m, auto const & at, auto const & args) -> ValuePtr {

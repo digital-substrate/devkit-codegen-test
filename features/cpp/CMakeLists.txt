@@ -13,3 +13,7 @@ target_link_libraries(features PUBLIC viper)
 
 add_executable(features_test generated/features_TestApp.cpp)
 target_link_libraries(features_test features cli11)
+
+# src/ est écrit à la main : le contrat du pont, vu d'un développeur.
+add_executable(features_contract src/contract.cpp)
+target_link_libraries(features_contract features)

@@ -54,6 +54,12 @@ namespace runtime_ids {
 <u.enumerations:plain_type();separator="\n">
 <u.structures:plain_type();separator="\n">
 
+/// The Value class each type becomes -- what `encode` returns and the dynamic side holds.
+<u.concepts:keyed_value();separator="\n">
+<u.clubs:keyed_value();separator="\n">
+<u.enumerations:{e|<e:plain_value("ValueEnumeration")>};separator="\n">
+<u.structures:{s|<s:plain_value("ValueStructure")>};separator="\n">
+
 } // namespace <u.model.namespace>::<u.name;format="lsc">
 
 #endif
@@ -65,3 +71,5 @@ concept_type(c) ::= <%std::shared_ptr\<Viper::Type> const & conceptType(Viper::S
 club_type(c) ::= <%std::shared_ptr\<Viper::Type> const & clubType(Viper::StaticType::tag\<<c.name>Key>);%>
 keyed_type(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::StaticType::tag\<<e.name>Key>);%>
 plain_type(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::StaticType::tag\<<e.name>>);%>
+keyed_value(e) ::= <%Viper::ValueKey * valueOf(Viper::StaticType::tag\<<e.name>Key>);%>
+plain_value(e, kind) ::= <%Viper::<kind> * valueOf(Viper::StaticType::tag\<<e.name>>);%>
