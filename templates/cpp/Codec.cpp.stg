@@ -162,7 +162,7 @@ model(m) ::= <<
 #include "<m.namespace>_Resources.hpp"      // le modèle, en octets
 
 #include "Viper_Definitions.hpp"
-#include "Viper_StreamBinaryCodec.hpp"
+#include "Viper_StreamRawCodec.hpp"
 #include "Viper_StreamTokenBinaryCodec.hpp"
 #include "Viper_TypeClub.hpp"
 #include "Viper_TypeConcept.hpp"
@@ -192,9 +192,14 @@ std::shared_ptr\<Viper::Definitions const> const & definitions() {
 /// conversion temporaire et rend une référence dessus, qui meurt à la sortie. Le
 /// compilateur le dit -- `returning reference to local temporary` -- et seul le vrai type
 /// le fait apparaître.
+///
+/// LE PONT NE PERSISTE RIEN, DONC IL N'A PAS BESOIN D'UN FORMAT PORTABLE. Le blob qu'il écrit
+/// devient une `Value` et meurt dans le processus ; une base persiste avec son propre codec.
+/// `StreamRaw` garde la mise en page -- le contrat de StaticWriter le vérifie sous chaque codec
+/// -- sans gérer l'ordre des octets, qui n'a pas de sens ici.
 std::shared_ptr\<Viper::StreamCodecInstancing> const & stream() {
     static std::shared_ptr\<Viper::StreamCodecInstancing> const instance{
-        Viper::StreamBinaryCodec::Instance()};
+        Viper::StreamRawCodec::Instance()};
     return instance;
 }
 
