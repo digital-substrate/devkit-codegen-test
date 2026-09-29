@@ -10,5 +10,5 @@ add_library(crossing STATIC
 target_include_directories(crossing PUBLIC generated)
 target_link_libraries(crossing PUBLIC viper)
 
-add_executable(crossing_test generated/Crossing_TestApp.cpp)
+add_executable(crossing_test generated/crossing_TestApp.cpp)
 target_link_libraries(crossing_test crossing cli11)

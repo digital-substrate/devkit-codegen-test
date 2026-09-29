@@ -13,5 +13,5 @@ add_library(topology STATIC
 target_include_directories(topology PUBLIC generated)
 target_link_libraries(topology PUBLIC viper)
 
-add_executable(topology_test generated/Topology_TestApp.cpp)
+add_executable(topology_test generated/topology_TestApp.cpp)
 target_link_libraries(topology_test topology cli11)

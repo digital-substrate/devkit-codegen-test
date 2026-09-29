@@ -49,13 +49,13 @@ int main(int argc, char * argv[]) {
             service = Viper::ServiceRemote::connect(inetAddress, inetPort, definitions);
         }
 
-        auto const tools{tools::Remote{service}};
+        auto const tools{service::tools::Remote{service}};
         if (tools.isAvailable()) {
             auto const r{tools.add(32, 10)};
             std::cout << "add(32,10) -> " << r << '\n';
 
-            demo::Vector3 const v1{1, 2, 3};
-            demo::Vector3 const v2{10, 20, 30};
+            service::demo::Vector3 const v1{1, 2, 3};
+            service::demo::Vector3 const v2{10, 20, 30};
             auto const rv{tools.add_vector(v1, v2)};
             std::cout << "add_vector(v1,v2) -> (" << rv.x << "," << rv.y << "," << rv.z << ")" << '\n';
 
@@ -64,16 +64,16 @@ int main(int argc, char * argv[]) {
             std::cout << "is_greater(5,3) -> " << tools.is_greater(five, three) << '\n';
         }
 
-        auto const playerModel{player_model::Remote{service}};
+        auto const playerModel{service::player_model::Remote{service}};
         if (playerModel.isAvailable()) {
             auto state{Viper::CommitState::make(Viper::CommitId::Invalid(), definitions, {})};
             auto mutableState{Viper::CommitMutableState::make(state)};
             std::string nickname{"the shadow man"};
-            auto key{playerModel.create(mutableState, nickname, demo::Level::Beginner)};
+            auto key{playerModel.create(mutableState, nickname, service::demo::Level::Beginner)};
             std::cout << "key is " << key.description() << '\n';
 
             if (auto const pk{playerModel.has_player(mutableState, nickname)}) {
-                if (auto const property{demo::attachments::Player::property::get(mutableState, *pk)}) {
+                if (auto const property{service::demo::attachments::Player::property::get(mutableState, *pk)}) {
                     std::cout << "nickname=" << property->nickname << ", level=" << static_cast<int>(property->level) << '\n';
                 }
             }

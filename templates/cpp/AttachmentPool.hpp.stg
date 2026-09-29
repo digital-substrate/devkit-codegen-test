@@ -39,12 +39,12 @@ model(m) ::= <<
 
 #include \<memory>
 
-namespace <m.namespace;format="lsc"> {
+namespace <m.namespace> {
 
 /// The pool of the model's attachments, built once from the definitions.
-std::shared_ptr\<Viper::AttachmentFunctionPool> attachments();
+std::shared_ptr\<Viper::AttachmentFunctionPool> attachment_pool();
 
-} // namespace <m.namespace;format="lsc">
+} // namespace <m.namespace>
 
 #endif
 

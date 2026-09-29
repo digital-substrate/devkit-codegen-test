@@ -53,7 +53,7 @@ int main(int argc, char * argv[]) {
     // An explicit seed makes the sequence reproducible; without one each run tests
     // something else, which is the point.
     if (argc > 2 && std::string{argv[1]} == "--seed")
-        <m.namespace;format="lsc">::test::seed(std::strtoull(argv[2], nullptr, 10));
+        <m.namespace>::test::seed(std::strtoull(argv[2], nullptr, 10));
 
     try {
         testTypes();
@@ -61,23 +61,23 @@ int main(int argc, char * argv[]) {
         auto const db = Viper::Database::createInMemory();
 
         // The model's definitions go into the database.
-        db->extendDefinitions(<m.namespace;format="lsc">::codec::definitions());
+        db->extendDefinitions(<m.namespace>::codec::definitions());
 
         // The database refuses to write outside a transaction.
         db->beginTransaction(Viper::DatabaseTransactionMode::Exclusive);
 
         // What the database offers outside the model.
-        <m.namespace;format="lsc">::test::testMetadata(db);
-        <m.namespace;format="lsc">::test::testBlobCreate(db);
-        <m.namespace;format="lsc">::test::testBlobStream(db);
-        <m.namespace;format="lsc">::test::testBlobIO(db);
+        <m.namespace>::test::testMetadata(db);
+        <m.namespace>::test::testBlobCreate(db);
+        <m.namespace>::test::testBlobStream(db);
+        <m.namespace>::test::testBlobIO(db);
 
         // A blob exists during the attachment tests: a document may hold a blob id, and the
         // database refuses one that names no blob.
-        <m.namespace;format="lsc">::test::withBlob(db);
+        <m.namespace>::test::withBlob(db);
         testDatabase(db);
         fuzzDatabase(db, 32);
-        <m.namespace;format="lsc">::test::withoutBlob(db);
+        <m.namespace>::test::withoutBlob(db);
 <if(m.functionPools)>
 
         // Every function of every pool, called through the dynamic bridge with arguments
@@ -103,23 +103,23 @@ int main(int argc, char * argv[]) {
 // Une sous-template nommée : StringTemplate mange une espace après le `|` d'une anonyme, et
 // l'indentation sortirait à trois caractères sans que rien ne le signale.
 call_test(u) ::= <<
-    <u.name;format="lsc">::test();
+    <u.model.namespace>::<u.name;format="lsc">::test();
 >>
 
 call_database(u) ::= <<
-    <u.name;format="lsc">::testDatabase(db);
+    <u.model.namespace>::<u.name;format="lsc">::testDatabase(db);
 >>
 
 call_fuzz(u) ::= <<
-    <u.name;format="lsc">::fuzzDatabase(db, count);
+    <u.model.namespace>::<u.name;format="lsc">::fuzzDatabase(db, count);
 >>
 
 call_pool(p) ::= <<
-        <m_test(p)>::testPool(<p.name;format="lsc">::pool());
+        <m_test(p)>::testPool(<p.model.namespace>::<p.name;format="lsc">::pool());
 >>
 
 call_attachment_pool(p) ::= <<
-        <m_test(p)>::testPool(<p.name;format="lsc">::pool(), db);
+        <m_test(p)>::testPool(<p.model.namespace>::<p.name;format="lsc">::pool(), db);
 >>
 
-m_test(p) ::= <%<p.model.namespace;format="lsc">::test%>
+m_test(p) ::= <%<p.model.namespace>::test%>

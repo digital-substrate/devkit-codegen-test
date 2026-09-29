@@ -20,7 +20,7 @@ unit(u) ::= <<
 #include "<u.include.Model>"
 #include "<u.model.include.Codec>"
 
-namespace <u.name;format="lsc"> {
+namespace <u.model.namespace>::<u.name;format="lsc"> {
 
 <u.concepts:concept(u);separator="\n\n">
 
@@ -30,7 +30,7 @@ namespace <u.name;format="lsc"> {
 
 <u.structures:structure(u);separator="\n\n">
 
-} // namespace <u.name;format="lsc">
+} // namespace <u.model.namespace>::<u.name;format="lsc">
 >>
 
 concept(c, u) ::= <<
@@ -48,8 +48,8 @@ Viper::UUId const & <c.name>Key::instanceId() const noexcept { return _instanceI
 Viper::UUId const & <c.name>Key::runtimeId() const noexcept { return _runtimeId; }
 bool <c.name>Key::isValid() const noexcept { return _instanceId.isValid(); }
 
-std::string <c.name>Key::description() const { return <u.model.namespace;format="lsc">::codec::description(toAny()); }
-bool <c.name>Key::isKnown() const { return <u.model.namespace;format="lsc">::codec::isKnown(toAny()); }
+std::string <c.name>Key::description() const { return <u.model.namespace>::codec::description(toAny()); }
+bool <c.name>Key::isKnown() const { return <u.model.namespace>::codec::isKnown(toAny()); }
 <if(c.parent)>
 
 /// Widening loses nothing: the runtime id stays the real concept's, which is what makes
@@ -59,7 +59,7 @@ bool <c.name>Key::isKnown() const { return <u.model.namespace;format="lsc">::cod
 <c.parentNameInNamespace>Key <c.name>Key::toParentKey() const noexcept { return {_instanceId, _runtimeId}; }
 <endif>
 
-<u.model.namespace;format="lsc">::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }
+<u.model.namespace>::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 <narrowing_doc()>
 <from(c, u, "conceptType")>
@@ -90,10 +90,10 @@ Viper::UUId const & <c.name>Key::instanceId() const noexcept { return _instanceI
 Viper::UUId const & <c.name>Key::runtimeId() const noexcept { return _runtimeId; }
 bool <c.name>Key::isValid() const noexcept { return _instanceId.isValid(); }
 
-std::string <c.name>Key::description() const { return <u.model.namespace;format="lsc">::codec::description(toAny()); }
-bool <c.name>Key::isKnown() const { return <u.model.namespace;format="lsc">::codec::isKnown(toAny()); }
+std::string <c.name>Key::description() const { return <u.model.namespace>::codec::description(toAny()); }
+bool <c.name>Key::isKnown() const { return <u.model.namespace>::codec::isKnown(toAny()); }
 
-<u.model.namespace;format="lsc">::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }
+<u.model.namespace>::AnyConceptKey <c.name>Key::toAny() const noexcept { return {_instanceId, _runtimeId}; }
 
 <narrowing_doc()>
 <from(c, u, "clubType")>
@@ -134,14 +134,14 @@ narrowing_doc() ::= <<
 
 from(c, u, descriptor) ::= <<
 <from_head(c)>
-    if (!<u.model.namespace;format="lsc">::codec::isMember(key, <descriptor>(Viper::StaticType::tag\<<c.name>Key>{})))
+    if (!<u.model.namespace>::codec::isMember(key, <descriptor>(Viper::StaticType::tag\<<c.name>Key>{})))
         return std::nullopt;
 
     return <c.name>Key{key.instanceId(), key.runtimeId()};
 }
 >>
 
-from_head(c) ::= <%std::optional\<<c.name>Key> <c.name>Key::from(<u.model.namespace;format="lsc">::AnyConceptKey const & key) noexcept {%>
+from_head(c) ::= <%std::optional\<<c.name>Key> <c.name>Key::from(<u.model.namespace>::AnyConceptKey const & key) noexcept {%>
 
 comparisons(c) ::= <<
 bool operator==(<c.name>Key const & l, <c.name>Key const & r) noexcept {

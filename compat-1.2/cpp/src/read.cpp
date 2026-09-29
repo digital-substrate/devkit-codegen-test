@@ -16,8 +16,8 @@
 
 namespace {
 
-using namespace compat;
-namespace A = compat::attachments::Probe;
+using namespace compat12::compat;
+namespace A = compat12::compat::attachments::Probe;
 
 int failures{};
 

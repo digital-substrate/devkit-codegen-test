@@ -29,7 +29,7 @@ unit(u) ::= <<
 #include \<functional>
 #include \<optional>
 
-namespace <u.name;format="lsc"> {
+namespace <u.model.namespace>::<u.name;format="lsc"> {
 
 <u.concepts:concept();separator="\n\n">
 
@@ -39,7 +39,7 @@ namespace <u.name;format="lsc"> {
 
 <u.sortedStructures:structure();separator="\n\n">
 
-} // namespace <u.name;format="lsc">
+} // namespace <u.model.namespace>::<u.name;format="lsc">
 
 <u.concepts:std_hash(u);separator="\n">
 <u.clubs:std_hash(u);separator="\n">
@@ -92,9 +92,9 @@ public:
 <endif>
 
     /// This key, untyped.
-    <u.model.namespace;format="lsc">::AnyConceptKey toAny() const noexcept;
+    <u.model.namespace>::AnyConceptKey toAny() const noexcept;
     /// The typed key, if `key` names this concept or one derived from it.
-    static std::optional\<<c.name>Key> from(<u.model.namespace;format="lsc">::AnyConceptKey const & key) noexcept;
+    static std::optional\<<c.name>Key> from(<u.model.namespace>::AnyConceptKey const & key) noexcept;
 
 private:
     Viper::UUId _instanceId{};
@@ -139,7 +139,7 @@ public:
     bool isValid() const noexcept;
 
     /// This key, untyped.
-    <u.model.namespace;format="lsc">::AnyConceptKey toAny() const noexcept;
+    <u.model.namespace>::AnyConceptKey toAny() const noexcept;
     /// The club key, if `key` names one of its members.
     <club_from(c)>
 
@@ -172,7 +172,7 @@ club_getter(cm, c) ::= <<
 >>
 club_getter_body(cm) ::= <%std::optional\<<cm.nameInNamespace>Key> as<cm.asNameInNamespace>Key() const noexcept;%>
 
-club_from(c) ::= <%static std::optional\<<c.name>Key> from(<u.model.namespace;format="lsc">::AnyConceptKey const & key) noexcept;%>
+club_from(c) ::= <%static std::optional\<<c.name>Key> from(<u.model.namespace>::AnyConceptKey const & key) noexcept;%>
 
 structure(s) ::= <<
 <if(s.documentation)>/** <s.documentation> */
@@ -229,16 +229,16 @@ enumeration_case(m) ::= <<
 // et `<%…%>` mange les blancs de tête, donc la ligne indentée reste dans un `<<…>>`.
 std_hash(e, u) ::= <<
 <std_hash_head(e, u)>
-    std::size_t operator()(<u.name;format="lsc">::<e.name>Key const & v) const noexcept { return Viper::StaticHash::of(v); }
+    std::size_t operator()(<u.model.namespace>::<u.name;format="lsc">::<e.name>Key const & v) const noexcept { return Viper::StaticHash::of(v); }
 };
 >>
 
-std_hash_head(e, u) ::= <%template\<> struct std::hash\<<u.name;format="lsc">::<e.name>Key> {%>
+std_hash_head(e, u) ::= <%template\<> struct std::hash\<<u.model.namespace>::<u.name;format="lsc">::<e.name>Key> {%>
 
 std_hash_value(e, u) ::= <<
 <std_hash_value_head(e, u)>
-    std::size_t operator()(<u.name;format="lsc">::<e.name> const & v) const noexcept { return Viper::StaticHash::of(v); }
+    std::size_t operator()(<u.model.namespace>::<u.name;format="lsc">::<e.name> const & v) const noexcept { return Viper::StaticHash::of(v); }
 };
 >>
 
-std_hash_value_head(e, u) ::= <%template\<> struct std::hash\<<u.name;format="lsc">::<e.name>> {%>
+std_hash_value_head(e, u) ::= <%template\<> struct std::hash\<<u.model.namespace>::<u.name;format="lsc">::<e.name>> {%>

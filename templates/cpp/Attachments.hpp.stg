@@ -8,7 +8,7 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 //
-// One scope per attachment, `<u.name;format="lsc">::attachments::\<Concept>::\<attachment>`. A concept
+// One scope per attachment, `<u.model.namespace>::<u.name;format="lsc">::attachments::\<Concept>::\<attachment>`. A concept
 // declared in another namespace is spelled `\<Namespace>_\<Concept>` there, so that
 // adding an attachment never renames another.
 //
@@ -58,7 +58,7 @@ unit(u) ::= <<
 // le modèle ait à découper quoi que ce soit.
 attachment(a, u) ::= <<
 <if(a.hasDocumentation)>/** <a.documentation> */
-<endif>namespace <u.name;format="lsc">::attachments::<a.conceptScope>::<a.name> {
+<endif>namespace <u.model.namespace>::<u.name;format="lsc">::attachments::<a.conceptScope>::<a.name> {
 
 /// The identity of this attachment in the definitions.
 extern Viper::UUId const runtimeId;
@@ -96,7 +96,7 @@ bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.typeInNamespac
 <a:document_aggregate()>
 <endif>
 
-} // namespace <u.name;format="lsc">::attachments::<a.conceptScope>::<a.name>
+} // namespace <u.model.namespace>::<u.name;format="lsc">::attachments::<a.conceptScope>::<a.name>
 >>
 
 // Un setter par champ du document -- l'unique consommateur des chemins de la couche 2.

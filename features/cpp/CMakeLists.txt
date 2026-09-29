@@ -11,5 +11,5 @@ add_library(features STATIC
 target_include_directories(features PUBLIC generated)
 target_link_libraries(features PUBLIC viper)
 
-add_executable(features_test generated/Features_TestApp.cpp)
+add_executable(features_test generated/features_TestApp.cpp)
 target_link_libraries(features_test features cli11)

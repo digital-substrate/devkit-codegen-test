@@ -41,10 +41,10 @@ int main(int argc, char * argv[]) {
         Viper::Service::make(
             service::codec::definitions(),
             {
-                tools::pool(),
+                service::tools::pool(),
             },
             {
-                player_model::pool()
+                service::player_model::pool()
             })
     };
 

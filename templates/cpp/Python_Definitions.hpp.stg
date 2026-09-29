@@ -20,12 +20,12 @@ model(m) ::= <<
 #define PY_SSIZE_T_CLEAN
 #include \<Python.h>
 
-namespace <m.namespace;format="lsc">::python_definitions {
+namespace <m.namespace>::python_definitions {
 
 /// Add every constant to `module`.
 void fill(PyObject * module);
 
-} // namespace <m.namespace;format="lsc">::python_definitions
+} // namespace <m.namespace>::python_definitions
 
 #endif
 

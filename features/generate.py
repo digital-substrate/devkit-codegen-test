@@ -239,7 +239,8 @@ def generate_typescript(name: str, dsm_path: str, definitions: DefinitionsConst,
 PROJECT = 'Features'
 DSM_SOURCE = arguments.definitions
 DSM_PATH = f'{PROJECT}.dsm.json'
-NAMESPACE = f'{PROJECT}'
+# Le namespace C++ de l'infrastructure générée (-n) : pris tel quel par kibo.
+NAMESPACE = 'features'
 
 # LE SEUL ENDROIT OÙ KIBO ÉCRIT DU C++. Séparé de PROJECT, qui nomme le modèle :
 # confondre les deux fait d'un changement de dossier un changement de namespace.

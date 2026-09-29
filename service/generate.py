@@ -216,7 +216,8 @@ def generate_typescript(name: str, dsm_path: str, definitions: DefinitionsConst,
 PROJECT = 'Service'
 DSM_SOURCE = f'definitions/Service'
 DSM_PATH = f'{PROJECT}.dsm.json'
-NAMESPACE = f'{PROJECT}'
+# Le namespace C++ de l'infrastructure générée (-n) : pris tel quel par kibo.
+NAMESPACE = 'service'
 
 if not os.path.exists(JAR):
     print(f'{JAR} not found.')

@@ -21,13 +21,13 @@ model(m) ::= <<
 #include "P_Viper_Attachment.hpp"
 #include "P_Viper_PathConst.hpp"
 
-namespace <m.namespace;format="lsc">::python_definitions {
+namespace <m.namespace>::python_definitions {
 
 void fill(PyObject * module) {
 <m.nameSpaces:namespace();separator="\n">
 }
 
-} // namespace <m.namespace;format="lsc">::python_definitions
+} // namespace <m.namespace>::python_definitions
 
 >>
 
@@ -50,12 +50,12 @@ plain_type(e, u, letter) ::= <<
     PyModule_AddObject(module, "<u.name;format="usc">_<letter>_<e.name;format="usc">", P_ViperWrapper::wrapType(<tag_call(u, "type", e.name)>));
 >>
 
-tag_call(u, fn, t) ::= <%::<u.name;format="lsc">::<fn>(Viper::StaticType::tag\<::<u.name;format="lsc">::<t>>{})%>
+tag_call(u, fn, t) ::= <%::<u.model.namespace>::<u.name;format="lsc">::<fn>(Viper::StaticType::tag\<::<u.model.namespace>::<u.name;format="lsc">::<t>>{})%>
 
 field_path(sf, s, u) ::= <<
-    PyModule_AddObject(module, "<u.name;format="usc">_P_<s.name;format="usc">_<sf.name;format="usc">", P_Viper_PathConst_New(::<u.name;format="lsc">::fields::<s.name>::<sf.name>Path()));
+    PyModule_AddObject(module, "<u.name;format="usc">_P_<s.name;format="usc">_<sf.name;format="usc">", P_Viper_PathConst_New(::<u.model.namespace>::<u.name;format="lsc">::fields::<s.name>::<sf.name>Path()));
 >>
 
 attachment(a, u) ::= <<
-    PyModule_AddObject(module, "<u.name;format="usc">_A_<a.identifier;format="usc">", P_Viper_Attachment_New(::<u.name;format="lsc">::attachments::<a.conceptScope>::<a.name>::descriptor()));
+    PyModule_AddObject(module, "<u.name;format="usc">_A_<a.identifier;format="usc">", P_Viper_Attachment_New(::<u.model.namespace>::<u.name;format="lsc">::attachments::<a.conceptScope>::<a.name>::descriptor()));
 >>

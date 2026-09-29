@@ -3,13 +3,13 @@
 #include <random>
 
 // MARK: - Tools
-namespace tools {
+namespace service::tools {
 
 std::int64_t add(std::int64_t a, std::int64_t b) {
   return a + b;
 }
 
-demo::Vector3 add_vector(demo::Vector3 const & a, demo::Vector3 const & b) {
+service::demo::Vector3 add_vector(service::demo::Vector3 const & a, service::demo::Vector3 const & b) {
   return {a.x + b.x, a.y + b.y, a.z + b.z};
 }
 
@@ -29,6 +29,6 @@ bool is_greater(Viper::Any const & a, Viper::Any const & b) {
   return Viper::isGreater(a.value()->compare(b.value()));
 }
 
-} // namespace tools
+} // namespace service::tools
 
 // namespace SV::FunctionPoolBridges

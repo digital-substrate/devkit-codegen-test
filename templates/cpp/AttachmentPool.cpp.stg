@@ -57,7 +57,7 @@ model(m) ::= <<
 #include "Viper_ValueVoid.hpp"
 #include "Viper_ValueSetIter.hpp"
 
-namespace <m.namespace;format="lsc"> {
+namespace <m.namespace> {
 
 namespace {
 
@@ -175,7 +175,7 @@ void addFields(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, Att
 
 } // namespace
 
-std::shared_ptr\<Viper::AttachmentFunctionPool> attachments() {
+std::shared_ptr\<Viper::AttachmentFunctionPool> attachment_pool() {
     static auto const instance = [] {
         auto const pool = Viper::AttachmentFunctionPool::make(
             Viper::UUId::parse("00000000-0000-0000-0000-000000000000"), "Attachments");
@@ -190,6 +190,6 @@ std::shared_ptr\<Viper::AttachmentFunctionPool> attachments() {
     return instance;
 }
 
-} // namespace <m.namespace;format="lsc">
+} // namespace <m.namespace>
 
 >>

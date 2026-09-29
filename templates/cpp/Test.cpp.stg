@@ -25,7 +25,7 @@ unit(u) ::= <<
 
 #include "<u.model.include.Test>"
 
-namespace <u.name;format="lsc"> {
+namespace <u.model.namespace>::<u.name;format="lsc"> {
 
 void test() {
 <u.concepts:keyed(u);separator="\n">
@@ -42,7 +42,7 @@ void fuzzDatabase(std::shared_ptr\<Viper::Database> const & db, std::size_t coun
 <u.attachments:attachment_fuzz(u);separator="\n">
 }
 
-} // namespace <u.name;format="lsc">
+} // namespace <u.model.namespace>::<u.name;format="lsc">
 >>
 
 // Un aller-retour par attachment, sur la clé et le document. Le pack écrit ici quinze
@@ -52,14 +52,14 @@ attachment(a, u) ::= <<
         db, attachments::<a.conceptScope>::<a.name>::descriptor());
 >>
 
-attachment_call(a, u) ::= <%<u.model.namespace;format="lsc">::test::roundTripAttachment\<<a.keyType.typeInNamespace>, <a.documentType.typeInNamespace>>(%>
+attachment_call(a, u) ::= <%<u.model.namespace>::test::roundTripAttachment\<<a.keyType.typeInNamespace>, <a.documentType.typeInNamespace>>(%>
 
 attachment_fuzz(a, u) ::= <<
     <attachment_fuzz_call(a, u)>
         db, attachments::<a.conceptScope>::<a.name>::descriptor(), count);
 >>
 
-attachment_fuzz_call(a, u) ::= <%<u.model.namespace;format="lsc">::test::fuzzAttachment\<<a.keyType.typeInNamespace>, <a.documentType.typeInNamespace>>(%>
+attachment_fuzz_call(a, u) ::= <%<u.model.namespace>::test::fuzzAttachment\<<a.keyType.typeInNamespace>, <a.documentType.typeInNamespace>>(%>
 
 // `<%…%>` : `roundTrip\<<e.name>>()` met un `>` juste après l'expression, ce qui donne un
 // `>>` dans le texte brut et ferme le corps là. Le même piège qu'ailleurs, à sa dernière
@@ -67,11 +67,11 @@ attachment_fuzz_call(a, u) ::= <%<u.model.namespace;format="lsc">::test::fuzzAtt
 keyed(e, u) ::= <<
     <keyed_body(e, u)>
 >>
-keyed_body(e, u) ::= <%<u.model.namespace;format="lsc">::test::roundTrip\<<e.name>Key>();%>
+keyed_body(e, u) ::= <%<u.model.namespace>::test::roundTrip\<<e.name>Key>();%>
 plain(e, u) ::= <<
     <plain_body(e, u)>
 >>
-plain_body(e, u) ::= <%<u.model.namespace;format="lsc">::test::roundTrip\<<e.name>>();%>
+plain_body(e, u) ::= <%<u.model.namespace>::test::roundTrip\<<e.name>>();%>
 
 // Les deux alias ne sont pas cosmétiques. Un vecteur de pointeurs partagés finit par
 // deux chevrons fermants collés, et cette séquence ferme un corps de template
@@ -99,7 +99,7 @@ model(m) ::= <<
 #include \<iostream>
 #include \<optional>
 
-namespace <m.namespace;format="lsc">::test {
+namespace <m.namespace>::test {
 
 namespace {
 std::optional\<std::uint64_t> g_seed;
@@ -248,6 +248,6 @@ void testPool(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool,
     }
 }
 
-} // namespace <m.namespace;format="lsc">::test
+} // namespace <m.namespace>::test
 
 >>

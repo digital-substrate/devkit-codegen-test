@@ -14,22 +14,22 @@
 
 #include <iostream>
 
-namespace tools {
+namespace topology::tools {
 
 void reset() {}
 
 std::int64_t add(std::int64_t a, std::int64_t b) { return a + b; }
 
-} // namespace tools
+} // namespace topology::tools
 
-namespace projector {
+namespace topology::projector {
 
-void link(model_a::MaterialKey const &, model_b::MaterialKey const &) {}
+void link(topology::model_a::MaterialKey const &, topology::model_b::MaterialKey const &) {}
 
-} // namespace projector
+} // namespace topology::projector
 
-namespace link_model {
+namespace topology::link_model {
 
-void clear(std::shared_ptr<Viper::AttachmentMutating> const &, projection::LinkKey const &) {}
+void clear(std::shared_ptr<Viper::AttachmentMutating> const &, topology::projection::LinkKey const &) {}
 
-} // namespace link_model
+} // namespace topology::link_model

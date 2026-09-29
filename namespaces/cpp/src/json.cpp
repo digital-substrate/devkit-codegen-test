@@ -29,17 +29,17 @@ std::string hexdigest(std::shared_ptr<Viper::Value const> const & value) {
 
 void use_json() {
     using namespace topology::codec;
-    model_a::Colour const c{1, 2, 3};
+    topology::model_a::Colour const c{1, 2, 3};
 
     // un type d'unité : le pont, puis la transition du runtime
     auto const j = Viper::JsonValueEncoder::json_encode(encode(c));
-    auto const back = decode<model_a::Colour>(
-        Viper::JsonValueDecoder::json_decode(j, type(tag<model_a::Colour>{}), definitions()));
+    auto const back = decode<topology::model_a::Colour>(
+        Viper::JsonValueDecoder::json_decode(j, type(tag<topology::model_a::Colour>{}), definitions()));
     auto const h = hexdigest(encode(c));
     auto const x = Viper::XmlValueEncoder::to_string(encode(c));
 
     // et n'importe quelle forme au-dessus, sans qu'aucune unité ait rien déclaré
-    std::map<model_a::MaterialKey, model_a::Colour> m;
+    std::map<topology::model_a::MaterialKey, topology::model_a::Colour> m;
     auto const jm = Viper::JsonValueEncoder::json_encode(encode(m));
     auto const hm = hexdigest(encode(m));
 

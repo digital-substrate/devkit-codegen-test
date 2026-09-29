@@ -5,7 +5,7 @@
 pool(p) ::= <<
 <preamble(p, "FunctionPool", "")>
 
-namespace <p.name;format="lsc"> {
+namespace <p.model.namespace>::<p.name;format="lsc"> {
 
 <p.functions:bridge();separator="\n">
 
@@ -13,7 +13,7 @@ std::shared_ptr\<Viper::FunctionPool> pool();
 
 <remote(p)>
 
-} // namespace <p.name;format="lsc">
+} // namespace <p.model.namespace>::<p.name;format="lsc">
 
 #endif
 >>
@@ -21,7 +21,7 @@ std::shared_ptr\<Viper::FunctionPool> pool();
 attachment_pool(p) ::= <<
 <preamble(p, "AttachmentFunctionPool", "yes")>
 
-namespace <p.name;format="lsc"> {
+namespace <p.model.namespace>::<p.name;format="lsc"> {
 
 <p.functions:attachment_bridge();separator="\n">
 
@@ -29,7 +29,7 @@ std::shared_ptr\<Viper::AttachmentFunctionPool> pool();
 
 <attachment_remote(p)>
 
-} // namespace <p.name;format="lsc">
+} // namespace <p.model.namespace>::<p.name;format="lsc">
 
 #endif
 >>

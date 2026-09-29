@@ -1,12 +1,12 @@
 #include "PlayerModel_Pool.hpp"
 #include "Demo_Attachments.hpp"
 
-using namespace demo;
+using namespace service::demo;
 
 // MARK: - VertexModel
-namespace player_model {
+namespace service::player_model {
 
-PlayerKey create(std::shared_ptr<Viper::AttachmentMutating> const & mutating, std::string const & nickname, demo::Level level) {
+PlayerKey create(std::shared_ptr<Viper::AttachmentMutating> const & mutating, std::string const & nickname, service::demo::Level level) {
     auto const key{PlayerKey::create()};
     auto const property{PlayerProperty{nickname, level}};
     attachments::Player::property::set(mutating, key, property);

@@ -6,22 +6,22 @@
 
 void use() {
     // deux Material homonymes, aucun renommage
-    model_a::MaterialKey a;
-    model_b::MaterialKey b;
-    model_a::Colour ca{1, 2, 3};        // agrégat, initialisation par accolades
-    model_b::Colour cb{1.f, 2.f, 3.f};
+    topology::model_a::MaterialKey a;
+    topology::model_b::MaterialKey b;
+    topology::model_a::Colour ca{1, 2, 3};        // agrégat, initialisation par accolades
+    topology::model_b::Colour cb{1.f, 2.f, 3.f};
 
     // la composition, qualifiée là où elle doit l'être
-    projection::Pair p{a, b};
+    topology::projection::Pair p{a, b};
 
     // « is a » : le dérivé passe où le parent est attendu, sans être demandé
-    projection::DerivedMaterialKey d;
-    model_a::MaterialKey widened = d;
-    [](model_a::MaterialKey) {}(d);
+    topology::projection::DerivedMaterialKey d;
+    topology::model_a::MaterialKey widened = d;
+    [](topology::model_a::MaterialKey) {}(d);
 
     // utilisable en conteneur, ordonné et haché
-    std::map<model_a::MaterialKey, model_b::MaterialKey> ordered;
-    std::unordered_map<projection::Pair, int> hashed;
+    std::map<topology::model_a::MaterialKey, topology::model_b::MaterialKey> ordered;
+    std::unordered_map<topology::projection::Pair, int> hashed;
     (void)ca; (void)cb; (void)p; (void)widened; (void)ordered; (void)hashed;
 }
 
@@ -30,11 +30,11 @@ void use() {
 
 void use_fields() {
     // le nom, utilisable en expression constante
-    static_assert(model_a::fields::Colour::r == "r");
-    constexpr auto n = model_a::fields::Colour::g;
+    static_assert(topology::model_a::fields::Colour::r == "r");
+    constexpr auto n = topology::model_a::fields::Colour::g;
 
     // l'adresse, pour une opération partielle
-    auto const & p = model_a::fields::Colour::rPath();
-    auto const & q = projection::fields::Pair::aPath();
+    auto const & p = topology::model_a::fields::Colour::rPath();
+    auto const & q = topology::projection::fields::Pair::aPath();
     (void)n; (void)p; (void)q;
 }

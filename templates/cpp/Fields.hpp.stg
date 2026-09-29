@@ -27,13 +27,13 @@ unit(u) ::= <<
 >>
 
 structure(s, u) ::= <<
-namespace <u.name;format="lsc">::fields::<s.name> {
+namespace <u.model.namespace>::<u.name;format="lsc">::fields::<s.name> {
 
 <s.fields:name();separator="\n">
 
 <s.fields:path();separator="\n">
 
-} // namespace <u.name;format="lsc">::fields::<s.name>
+} // namespace <u.model.namespace>::<u.name;format="lsc">::fields::<s.name>
 >>
 
 // A field name is a constant of the model, so it costs nothing at run time and can be

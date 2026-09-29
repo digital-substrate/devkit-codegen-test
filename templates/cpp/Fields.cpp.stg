@@ -24,11 +24,11 @@ unit(u) ::= <<
 >>
 
 structure(s, u) ::= <<
-namespace <u.name;format="lsc">::fields::<s.name> {
+namespace <u.model.namespace>::<u.name;format="lsc">::fields::<s.name> {
 
 <s.fields:path();separator="\n\n">
 
-} // namespace <u.name;format="lsc">::fields::<s.name>
+} // namespace <u.model.namespace>::<u.name;format="lsc">::fields::<s.name>
 >>
 
 path(f) ::= <<
