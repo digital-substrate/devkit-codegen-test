@@ -30,19 +30,19 @@ void hash(Viper::Hash::Accumulator & h, AnyConceptKey const & value) noexcept {
     hash(h, value.runtimeId());
 }
 
-void write(Viper::Codec::Writer & w, AnyConceptKey const & value) {
+void write(Viper::StaticWriter::Writer & w, AnyConceptKey const & value) {
     write(w, value.instanceId());
     write(w, value.runtimeId());
 }
 
-AnyConceptKey read(Viper::Codec::Reader & r, Viper::Codec::tag\<AnyConceptKey>) {
-    auto const instanceId{read(r, Viper::Codec::tag\<Viper::UUId>{})};
-    auto const runtimeId{read(r, Viper::Codec::tag\<Viper::UUId>{})};
+AnyConceptKey read(Viper::StaticReader::Reader & r, Viper::StaticType::tag\<AnyConceptKey>) {
+    auto const instanceId{read(r, Viper::StaticType::tag\<Viper::UUId>{})};
+    auto const runtimeId{read(r, Viper::StaticType::tag\<Viper::UUId>{})};
 
     return {instanceId, runtimeId};
 }
 
-std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<AnyConceptKey>) {
+std::shared_ptr\<Viper::Type> const & type(Viper::StaticType::tag\<AnyConceptKey>) {
     static std::shared_ptr\<Viper::Type> const instance{Viper::TypeAnyConcept::InstanceTypeKey()};
     return instance;
 }

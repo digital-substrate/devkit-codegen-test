@@ -119,7 +119,7 @@ void addReading(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, At
         }));
 
     pool->add(std::make_shared\<Getting>(
-        P::make(named(a, "has"), {{"key", a->keyType}}, type(Viper::Codec::tag\<bool>{})),
+        P::make(named(a, "has"), {{"key", a->keyType}}, type(Viper::StaticType::tag\<bool>{})),
         "return true if a document is present.", a,
         [](auto const & g, auto const & at, auto const & args) -> ValuePtr {
             return Viper::ValueBool::from(g->has(at, Viper::ValueKey::cast(args.at(0))));

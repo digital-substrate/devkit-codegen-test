@@ -97,6 +97,8 @@ model(m) ::= <<
 #include "Viper_Fuzzer.hpp"
 #include "Viper_JsonValueEncoder.hpp"
 #include "Viper_JsonValueDecoder.hpp"
+#include "Viper_StreamDecoding.hpp"
+#include "Viper_StreamEncoding.hpp"
 
 #include \<memory>
 #include \<string>
@@ -111,7 +113,7 @@ void seed(std::uint64_t value);
 /// Une valeur aléatoire de T, côté dynamique puis côté statique.
 template\<class T>
 std::shared_ptr\<Viper::Value> fuzzValue() {
-    return fuzzer()->fuzzType(type(Viper::Codec::tag\<T>{}));   // ADL : l'unité de T
+    return fuzzer()->fuzzType(type(Viper::StaticType::tag\<T>{}));   // ADL : l'unité de T
 }
 
 template\<class T>
@@ -139,7 +141,7 @@ void roundTripStream() {
     auto const value{fuzz\<T>()};
 
     auto const encoder{Codec::stream()->createEncoder()};
-    Viper::Codec::Writer writer{encoder};
+    Viper::StaticWriter::Writer writer{encoder};
     write(writer, value);                                      // ADL : l'unité de T
 
     // LE BLOB EST NOMMÉ, POUR LA MÊME RAISON QUE DANS `decode`. `createDecoder` garde une
@@ -148,9 +150,9 @@ void roundTripStream() {
     // ne se voit qu'en exécutant.
     auto const blob{encoder->endEncoding()};
     auto const decoder{Codec::stream()->createDecoder(blob)};
-    Viper::Codec::Reader reader{decoder, Codec::definitions()};
+    Viper::StaticReader::Reader reader{decoder, Codec::definitions()};
 
-    VIPER_ASSERT(named\<T>(), read(reader, Viper::Codec::tag\<T>{}) == value);
+    VIPER_ASSERT(named\<T>(), read(reader, Viper::StaticType::tag\<T>{}) == value);
 }
 
 /// Fabriquer une Value, la décoder, la ré-encoder, comparer.
@@ -167,7 +169,7 @@ template\<class T>
 void roundTripJson() {
     auto const value{fuzzValue\<T>()};
     auto const json{Viper::JsonValueEncoder::json_encode(value)};
-    auto const back{Viper::JsonValueDecoder::json_decode(json, type(Viper::Codec::tag\<T>{}),
+    auto const back{Viper::JsonValueDecoder::json_decode(json, type(Viper::StaticType::tag\<T>{}),
                                                          Codec::definitions())};
 
     VIPER_ASSERT(named\<T>(), value->equal(back));

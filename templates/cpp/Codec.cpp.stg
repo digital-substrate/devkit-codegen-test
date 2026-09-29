@@ -54,27 +54,27 @@ namespace <u.name> {
 // Le second est stocké et non déduit du type, parce qu'une clé peut nommer une instance
 // d'un concept dérivé, et c'est l'identité de celui-là qui doit traverser.
 keyed(c, u) ::= <<
-void write(Viper::Codec::Writer & w, <c.name>Key const & value) {
+void write(Viper::StaticWriter::Writer & w, <c.name>Key const & value) {
     write(w, value.instanceId());
     write(w, value.runtimeId());
 }
 
 <keyed_read_head(c)>
-    auto const instanceId{read(r, Viper::Codec::tag\<Viper::UUId>{})};
-    auto const runtimeId{read(r, Viper::Codec::tag\<Viper::UUId>{})};
+    auto const instanceId{read(r, Viper::StaticType::tag\<Viper::UUId>{})};
+    auto const runtimeId{read(r, Viper::StaticType::tag\<Viper::UUId>{})};
 
     return {instanceId, runtimeId};
 }
 
 >>
 
-keyed_read_head(c) ::= <%<c.name>Key read(Viper::Codec::Reader & r, Viper::Codec::tag\<<c.name>Key>) {%>
+keyed_read_head(c) ::= <%<c.name>Key read(Viper::StaticReader::Reader & r, Viper::StaticType::tag\<<c.name>Key>) {%>
 
 // CE QUI TRAVERSE EST L'INDEX DE LA CASE, PAS SA VALEUR. Le modèle ordonne les cases et
 // c'est cet ordre qui est le contrat ; une valeur C++ explicite ferait dire au langage ce
 // que le modèle dit déjà, et les deux pourraient diverger.
 enumeration(e, u) ::= <<
-void write(Viper::Codec::Writer & w, <e.name> value) {
+void write(Viper::StaticWriter::Writer & w, <e.name> value) {
     switch (value) {
 <e.members:{m|<m:enumeration_write(e, i0)>};separator="\n">
         default:
@@ -107,7 +107,7 @@ enumeration_read(m, e, i) ::= <<
 // `write(w, value.x)` part chez le runtime pour un entier et chez une autre unité pour une
 // clé étrangère, sans que rien ici ait à le savoir.
 structure(s, u) ::= <<
-void write(Viper::Codec::Writer & w, <s.name> const & value) {
+void write(Viper::StaticWriter::Writer & w, <s.name> const & value) {
 <s.fields:field_write();separator="\n">
 }
 
@@ -125,9 +125,9 @@ field_write(f) ::= <<    write(w, value.<f.name>);>>
 // qui lit sa propre variable non initialisée. Une liste d'initialisation entre accolades
 // évalue ses éléments de gauche à droite, garanti par le langage, donc l'ordre du modèle
 // est respecté sans nommer quoi que ce soit.
-field_read(f) ::= <%read(r, Viper::Codec::tag\<<f.typeInNamespace>>{})%>
+field_read(f) ::= <%read(r, Viper::StaticType::tag\<<f.typeInNamespace>>{})%>
 
-plain_read_head(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>>) {%>
+plain_read_head(e) ::= <%<e.name> read(Viper::StaticReader::Reader & r, Viper::StaticType::tag\<<e.name>>) {%>
 
 // ── et le socle ──
 model(m) ::= <<

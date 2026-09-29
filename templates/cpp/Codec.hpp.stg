@@ -19,7 +19,8 @@ unit(u) ::= <<
 #include "<u.include.Data>"
 <u.dependencies.types:{d|#include "<d.include.Codec>"};separator="\n">
 
-#include "Viper_TypedCodec.hpp"
+#include "Viper_StaticWriter.hpp"
+#include "Viper_StaticReader.hpp"
 
 #include \<memory>
 
@@ -39,8 +40,8 @@ namespace <u.name> {
 >>
 
 keyed(e) ::= <<
-void write(Viper::Codec::Writer & w, <e.name>Key const & value);
-<e.name>Key read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>Key>);
+void write(Viper::StaticWriter::Writer & w, <e.name>Key const & value);
+<e.name>Key read(Viper::StaticReader::Reader & r, Viper::StaticType::tag\<<e.name>Key>);
 >>
 
 // `<%…%>` and not `<<…>>` for the two below: a `>>` in the emitted text closes a
@@ -51,16 +52,16 @@ void write(Viper::Codec::Writer & w, <e.name>Key const & value);
 // l'appel devient ambigu au lieu d'être introuvable -- un diagnostic qui ne dit pas ce
 // qui manque.
 enumeration(e) ::= <<
-void write(Viper::Codec::Writer & w, <e.name> value);
+void write(Viper::StaticWriter::Writer & w, <e.name> value);
 <plain_read(e)>
 >>
 
 plain(e) ::= <<
-void write(Viper::Codec::Writer & w, <e.name> const & value);
+void write(Viper::StaticWriter::Writer & w, <e.name> const & value);
 <plain_read(e)>
 >>
 
-plain_read(e) ::= <%<e.name> read(Viper::Codec::Reader & r, Viper::Codec::tag\<<e.name>>);%>
+plain_read(e) ::= <%<e.name> read(Viper::StaticReader::Reader & r, Viper::StaticType::tag\<<e.name>>);%>
 
 // ── et le socle, rendu une fois pour tout le modèle ──
 //
@@ -102,9 +103,12 @@ model(m) ::= <<
 #define <m.namespace>_Codec_hpp
 
 #include "<m.namespace>_AnyConcept.hpp"
-#include "Viper_TypedCodec.hpp"
+#include "Viper_StaticWriter.hpp"
+#include "Viper_StaticReader.hpp"
 #include "Viper_Definitions.hpp"
 #include "Viper_StreamCodecInstancing.hpp"
+#include "Viper_StreamDecoding.hpp"
+#include "Viper_StreamEncoding.hpp"
 #include "Viper_ValueDecoder.hpp"
 #include "Viper_ValueEncoder.hpp"
 #include "Viper_Values.hpp"
@@ -115,7 +119,7 @@ model(m) ::= <<
 
 namespace <m.namespace>::Codec {
 
-using Viper::Codec::tag;
+using Viper::StaticType::tag;
 
 /// Le modèle, décodé une fois depuis la ressource qui le porte.
 std::shared_ptr\<Viper::Definitions const> const & definitions();
@@ -173,7 +177,7 @@ inline bool isMember(AnyConceptKey const & key, std::shared_ptr\<Viper::Type> co
 template\<class T>
 std::shared_ptr\<Viper::Value> encode(T const & value) {
     auto const encoder = stream()->createEncoder();
-    Viper::Codec::Writer writer{encoder};
+    Viper::StaticWriter::Writer writer{encoder};
     write(writer, value);                                   // ADL : l'unité de value
 
     return Viper::ValueDecoder::decode(encoder->endEncoding(), stream(),
@@ -190,7 +194,7 @@ T decode(std::shared_ptr\<Viper::Value const> const & value) {
     // seule différence entre un aller-retour qui marche et un qui rend « fin de flux ».
     auto const blob{Viper::ValueEncoder::encode(value, stream())};
     auto const decoder{stream()->createDecoder(blob)};
-    Viper::Codec::Reader reader{decoder, definitions()};
+    Viper::StaticReader::Reader reader{decoder, definitions()};
 
     return read(reader, tag\<T>{});                          // ADL : l'unité de T
 }

@@ -173,8 +173,8 @@ make(f) ::= <<
 make_head(f) ::= <%static std::shared_ptr\<<f.name;format="uf">> make() {%>
 make_body(f) ::= <%return std::make_shared\<<f.name;format="uf">>(Viper::FunctionPrototype::make(%>
 
-parameter(a) ::= <%{"<a.name>", type(Viper::Codec::tag\<<a.type>>{})}%>
-return_type(f) ::= <%<if(f.isVoid)>Viper::TypeVoid::Instance()<else>type(Viper::Codec::tag\<<f.type>>{})<endif>%>
+parameter(a) ::= <%{"<a.name>", type(Viper::StaticType::tag\<<a.type>>{})}%>
+return_type(f) ::= <%<if(f.isVoid)>Viper::TypeVoid::Instance()<else>type(Viper::StaticType::tag\<<f.type>>{})<endif>%>
 
 // CHAQUE LIGNE QUI ÉMET UN `>>` SORT D'UN `<%…%>`. Ici il y en a partout --
 // `shared_ptr<Value>>`, `decode<T>` -- et un `>>` dans un corps `<<…>>` le ferme là, sans

@@ -65,14 +65,14 @@ club_type(c, u) ::= <<
 // d'un club se fabrique pareil, à partir du descripteur du club.
 concept_key_type(c, u) ::= <<
 <keyed_type_head(c)>
-    static std::shared_ptr\<Viper::Type> const instance{Viper::TypeKey::make(conceptType(Viper::Codec::tag\<<c.name>Key>{}))};
+    static std::shared_ptr\<Viper::Type> const instance{Viper::TypeKey::make(conceptType(Viper::StaticType::tag\<<c.name>Key>{}))};
     return instance;
 }
 >>
 
 club_key_type(c, u) ::= <<
 <keyed_type_head(c)>
-    static std::shared_ptr\<Viper::Type> const instance{Viper::TypeKey::make(clubType(Viper::Codec::tag\<<c.name>Key>{}))};
+    static std::shared_ptr\<Viper::Type> const instance{Viper::TypeKey::make(clubType(Viper::StaticType::tag\<<c.name>Key>{}))};
     return instance;
 }
 >>
@@ -93,7 +93,7 @@ structure_type(s, u) ::= <<
 }
 >>
 
-concept_type_head(c) ::= <%std::shared_ptr\<Viper::Type> const & conceptType(Viper::Codec::tag\<<c.name>Key>) {%>
-club_type_head(c) ::= <%std::shared_ptr\<Viper::Type> const & clubType(Viper::Codec::tag\<<c.name>Key>) {%>
-keyed_type_head(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>Key>) {%>
-plain_type_head(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>>) {%>
+concept_type_head(c) ::= <%std::shared_ptr\<Viper::Type> const & conceptType(Viper::StaticType::tag\<<c.name>Key>) {%>
+club_type_head(c) ::= <%std::shared_ptr\<Viper::Type> const & clubType(Viper::StaticType::tag\<<c.name>Key>) {%>
+keyed_type_head(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::StaticType::tag\<<e.name>Key>) {%>
+plain_type_head(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::StaticType::tag\<<e.name>>) {%>

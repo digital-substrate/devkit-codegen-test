@@ -18,42 +18,38 @@ et a droit à ses propres outils pour cela.
 packs peuvent façonner différemment le côté statique ; ils ne peuvent pas le sérialiser
 différemment, parce qu'il n'existe qu'une mise en page — celle que `ValueReader` relit.
 
-## `Viper_TypedCodec.hpp` — revient à viper
+## Le dépliage statique — déplacé dans viper
 
-**C'est l'énoncé, pour le côté statique, du contrat de mise en page de la dual-reality.**
+`Viper_TypedCodec` a quitté ce dossier le 2026-09-29. Il vit désormais sur la branche
+`kibo-2-dev` de viper, à côté de ce qu'il déplie :
 
-Deux couches, à ne pas confondre :
+| viper | rôle |
+|---|---|
+| `Viper_StaticType.hpp` | `tag<T>` et la correspondance type C++ ↔ descripteur, partagée |
+| `Viper_StaticWriter.hpp/.cpp` | le dépliage statique de `ValueWriter` |
+| `Viper_StaticReader.hpp/.cpp` | le dépliage statique de `ValueReader` |
+| `cpp-test-harness/Viper_StaticLayout_test.cpp` | le contrat |
 
-- **le format binaire** — les octets d'un `uint64` — est décidé par un codec enfichable
-  (`StreamBinary`, `StreamRaw`, `StreamTokenBinary`) derrière l'interface `StreamWriting`.
-  Ce fichier n'y touche jamais : il appelle `writeUInt64`, et le codec branché décide.
-- **la mise en page** — quelles primitives, dans quel ordre, pour chaque forme composite :
-  un vecteur est une taille puis ses éléments, un optionnel un drapeau puis peut-être une
-  valeur. C'est la projection du système de types sur un flux. `ValueWriter` l'énonce pour
-  les `Value` ; ce fichier l'énonce pour les types C++.
+Le nom dit ce que c'est : la moitié statique de `ValueWriter`/`ValueReader`, avec le mot que
+la documentation emploie pour ce côté de la dual reality. `Viper::Codec` reste le registre des
+codecs, qu'il ne fallait pas rouvrir.
 
-La mise en page est un pivot de viper, pas un accident : `StreamHasher` implémente
-`StreamWriting`, et viper calcule ses digests en *écrivant la mise en page* dans un codec
-qui hache. Encoder, décoder et hacher en dépendent déjà.
+**Le contrat se vérifie sur la suite des appels à `StreamWriting`**, enregistrée — pas sur des
+octets. C'est ce qui le rend indépendant de l'encodage, et c'est ce qui a démasqué deux
+défauts du code d'ici, invisibles à un aller-retour :
 
-**Le partage, qui est la relation même d'`XArray` :** viper énonce la mise en page des types
-**de vocabulaire** — primitives, conteneurs standard, ses propres types statiques ; le code
-généré la compose pour les types **du modèle**, les champs d'une structure dans l'ordre
-déclaré, parce que seul le modèle connaît ses champs.
+- un `vec` et un `mat` étaient écrits élément par élément, là où `ValueWriter` les écrit d'un
+  seul appel par tableau. Sous `StreamBinary`, que le pont emploie, les octets coïncident ;
+  sous `StreamTokenBinary`, non ;
+- la correspondance de type d'un `mat` inversait colonnes et lignes. Un aller-retour par le
+  même code la compense exactement ; seule une `ValueMat` bâtie case par case la voit.
 
-Le contenu, trié : 25 `write`/`read` de primitives, 8 gabarits de conteneurs et 20
-correspondances `type(tag<T>)` sont **le contrat** — la dernière catégorie aussi, puisque
-`std::uint8_t` ↔ `TypeUInt8` est la correspondance statique ↔ dynamique des types. `Writer`
-et `Reader` en sont le point d'entrée.
+Chacun a été réintroduit pour vérifier que le test le rattrape — il le fait, par le cas qui le
+vise.
 
-**Ce qui doit changer avant de le proposer :**
-
-- **un test aller-retour dans le harnais de viper** : pour chaque type de vocabulaire, écrire
-  côté statique, relire avec `ValueReader`, comparer — et l'inverse. C'est lui qui fait de
-  ceci un contrat plutôt qu'une seconde copie de la mise en page ;
-- **l'espace de noms** : `Viper::Codec` désigne aujourd'hui le *registre* des codecs ;
-  y ranger la mise en page mélangerait deux concepts. Décision de viper ;
-- **les deux macros publiques** disparaissent, quel que soit le propriétaire.
+**Ce que ça impose ici** : la branche `kibo-2-dev` de ce dépôt se construit contre celle de
+viper. `lib.cmake` le vérifie et échoue tôt sinon ; `REPO_VIPER` désigne le checkout, un
+worktree gardant l'arbre voisin sur sa propre branche.
 
 ## `Viper_HashAccumulator.hpp` — ne revient pas à viper
 

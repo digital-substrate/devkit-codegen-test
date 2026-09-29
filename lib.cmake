@@ -24,6 +24,18 @@ else()
     message(CHECK_PASS "found at ${REPO_VIPER}")
 endif()
 
+# The generated C++ of the kibo 2 line crosses from the static side to a Value through
+# viper's StaticWriter/StaticReader, which exist on viper's kibo-2-dev branch only. Built
+# against another line, it would fail deep in a generated header on a missing include; fail
+# here instead, naming what is needed.
+if (NOT EXISTS ${REPO_VIPER}/src/Viper/Viper_StaticWriter.hpp)
+    message(FATAL_ERROR
+        "${REPO_VIPER} has no Viper_StaticWriter.hpp: this branch generates against viper's "
+        "kibo-2-dev branch. Point REPO_VIPER at a checkout of it -- a worktree keeps the "
+        "sibling checkout on its own branch: "
+        "git -C ${REPO_VIPER} worktree add ../${REPO_VIPER_NAME}-kibo-2-dev kibo-2-dev")
+endif()
+
 set(REPO_VIPER_TPS ${REPO_VIPER}/third_parties)
 set(REPO_VIPER_SRC ${REPO_VIPER}/src)
 

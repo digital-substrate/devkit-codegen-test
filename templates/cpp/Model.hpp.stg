@@ -26,7 +26,7 @@ unit(u) ::= <<
 
 #include "<u.include.Data>"
 
-#include "Viper_TypedCodec.hpp"
+#include "Viper_StaticType.hpp"
 #include "Viper_Types.hpp"
 
 #include \<memory>
@@ -61,7 +61,7 @@ namespace RuntimeIds {
 
 runtime_id(e) ::= <<extern Viper::UUId const <e.name>;>>
 
-concept_type(c) ::= <%std::shared_ptr\<Viper::Type> const & conceptType(Viper::Codec::tag\<<c.name>Key>);%>
-club_type(c) ::= <%std::shared_ptr\<Viper::Type> const & clubType(Viper::Codec::tag\<<c.name>Key>);%>
-keyed_type(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>Key>);%>
-plain_type(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::Codec::tag\<<e.name>>);%>
+concept_type(c) ::= <%std::shared_ptr\<Viper::Type> const & conceptType(Viper::StaticType::tag\<<c.name>Key>);%>
+club_type(c) ::= <%std::shared_ptr\<Viper::Type> const & clubType(Viper::StaticType::tag\<<c.name>Key>);%>
+keyed_type(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::StaticType::tag\<<e.name>Key>);%>
+plain_type(e) ::= <%std::shared_ptr\<Viper::Type> const & type(Viper::StaticType::tag\<<e.name>>);%>

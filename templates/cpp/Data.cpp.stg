@@ -135,7 +135,7 @@ narrowing_doc() ::= <<
 
 from(c, u, descriptor) ::= <<
 <from_head(c)>
-    if (!<u.model.namespace>::Codec::isMember(key, <descriptor>(Viper::Codec::tag\<<c.name>Key>{})))
+    if (!<u.model.namespace>::Codec::isMember(key, <descriptor>(Viper::StaticType::tag\<<c.name>Key>{})))
         return std::nullopt;
 
     return <c.name>Key{key.instanceId(), key.runtimeId()};
