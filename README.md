@@ -4,7 +4,7 @@ Codegen pipeline integration tests for the dsviper DevKit.
 
 One gate for all of it:
 
-    ./check.py              render the four sites and run every suite
+    ./check.py              render the five sites and run every suite
     ./check.py features     just one
     ./check.py --no-render  test what is already rendered
 
@@ -13,6 +13,10 @@ Two projects exercise the DSM → Kibo → templates → runtime pipeline:
 
 - `features/` — value-system features: data, stream, json, database, attachments, codecs, hashers, fuzz.
 - `service/` — RPC / function-pool features: function pools, attachments pools, remote variants, bridges.
+
+And one site guards the other direction of time:
+
+- `compat-1.2/` — a database written by the 1.2 runtime, committed, read back by what is generated today.
 
 Each is generated for three targets — C++, Python and TypeScript — so a change to the
 templates can be checked against all of them.

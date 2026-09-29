@@ -22,6 +22,11 @@ MODELS = {
         about="the type system crossing namespaces: every composite shape with elements from two suppliers",
         cpp=["TestApp", "AttachmentPool"],
     ),
+    "compat-1.2": dict(
+        shape="mono", definitions="compat-1.2/definitions", namespace="Compat12", package="compat12",
+        about="a database written by the 1.2 runtime, read back by what is generated now; the model is frozen",
+        cpp=["Attachments"],
+    ),
     "namespaces": dict(
         shape="multi", definitions="namespaces/definitions", namespace="Topology", package="topology",
         about="namespace topology and nothing else: five namespaces, every edge kind",

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Une seule porte : les quatre sites, rendus et éprouvés.
+"""Une seule porte : les cinq sites, rendus et éprouvés.
 
 UNE VÉRIFICATION QU'IL FAUT SAVOIR LANCER N'EN EST PAS UNE. Il y a douze `run_test.sh` et
-quatre `generate.py` ; celui-ci les enchaîne et rend un verdict unique.
+cinq `generate.py` ; celui-ci les enchaîne et rend un verdict unique.
 
-    check.py                rend les quatre sites et lance toutes les épreuves
+    check.py                rend les cinq sites et lance toutes les épreuves
     check.py features       un seul site
     check.py --no-render    éprouve ce qui est déjà rendu, sans regénérer
 
@@ -24,7 +24,7 @@ le fait qu'il passe :
                un `map<Core::Grade, Parts::Colour>`, un `variant<Core::Colour, ...>`
                ne prouve rien sur le service ni sur les suites
 
-CE QU'AUCUN DES QUATRE NE PROUVE : qu'un développeur de la population visée trouve la sortie
+CE QU'AUCUN DES CINQ NE PROUVE : qu'un développeur de la population visée trouve la sortie
 utilisable. `pip install` et `tsc --strict` chez un consommateur extérieur sont éprouvés à la
 main pour l'instant, pas ici.
 """
@@ -36,12 +36,13 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 
 # Le nom du site, et ce que son `generate.py` attend en plus des drapeaux. `features` prend
-# son `.dsm` en positionnel ; les trois autres le lisent dans `definitions/`.
+# son `.dsm` en positionnel ; les autres le lisent dans `definitions/`.
 SITES = {
     "features": ["all.dsm"],
     "service": [],
     "namespaces": [],
     "crossing": [],
+    "compat-1.2": [],
 }
 LANGAGES = ("cpp", "python", "typescript")
 

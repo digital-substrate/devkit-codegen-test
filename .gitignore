@@ -54,3 +54,5 @@ crossing/Crossing.dsm.json
 
 # Un node_modules n'est jamais versionné, quel que soit le site.
 node_modules/
+compat-1.2/cpp/generated/
+compat-1.2/Compat12.dsm.json
