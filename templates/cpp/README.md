@@ -15,11 +15,18 @@ that no reading had produced:
 - **The interface graph is a clean DAG; every cycle is in the `.cpp`.** So
   `Data`/`Codec`/`Model`/`AnyConcept` are mutually dependent only at build time — but they
   are mutually dependent, so they are one feature, `Base`. There is no cut inside it.
-- **`Attachments` depends on `Database`, backwards.** `Attachments.cpp` includes `Db.hpp`, so
-  a project that wants attachments and no database cannot have them. Conceptually a database
-  *adds* operations to attachments, not the reverse. This is a template defect, recorded in
-  `features.json` rather than hidden by a hand-written `requires` that reads the way one
-  would prefer.
+- **`Attachments` depended on `Database`, backwards** -- `Attachments.cpp` included a
+  `Db.hpp` of two one-line helpers, so a project that wanted attachments and no database could
+  not have them. The helpers are now the bodies of the database overloads themselves, and the
+  `Database` feature is gone: writing to a database is two overloads of an attachment, and
+  the runtime provides everything they need.
+
+## Laboratory only
+
+`Test` and `TestApp` (`"laboratory": true` in `features.json`) test the generator -- every type
+round-tripped through each codec, every attachment through a database, every pool through the
+bridge. No project selects them: `red` and `ge` take neither. They stay in this laboratory and
+do not move into the pack.
 
 ## Still merged, and known to be wrong
 

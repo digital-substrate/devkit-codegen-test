@@ -24,9 +24,9 @@ So selection moves one level up. `features.json` maps a **feature** — what a p
 closure:
 
 ```
-$ ./resolve.py cpp Database
-features : Base Database
-  Data.cpp.stg  Codec.cpp.stg  Model.cpp.stg  AnyConcept.cpp.stg  ...  Db.hpp.stg
+$ ./resolve.py cpp Attachments
+features : Base Fields Attachments
+  Data.cpp.stg  Codec.cpp.stg  Model.cpp.stg  AnyConcept.cpp.stg  ...  Attachments.hpp.stg
 ```
 
 `kibo -t` accepts a single `.stg` as readily as a directory, so nothing in the generator had
