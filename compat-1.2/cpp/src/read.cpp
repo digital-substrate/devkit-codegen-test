@@ -92,14 +92,11 @@ int main(int argc, char ** argv) {
            Viper::Any{Viper::ValueAny::make(Viper::ValueString::make("any"))});
 
     // Une xarray ne se compare pas d'un bloc : ses positions sont nées dans la base. Ce qui
-    // doit survivre est l'ordre de ses éléments. Parcourue par ses positions -- la première
-    // est la sentinelle -- parce que `XArray::at(std::size_t)` ne compile pas en 1.2.
+    // doit survivre est l'ordre de ses éléments, lus par indice.
     std::vector<std::uint8_t> elements;
     if (auto const xarray{A::docXArray::get(db, probe)})
-        for (auto const & position : xarray->positions())
-            if (position != Viper::UUId::Invalid())
-                if (auto const element{xarray->at(position)})
-                    elements.push_back(*element);
+        for (std::size_t index{}; index < xarray->size(); ++index)
+            elements.push_back(xarray->at(index));
     expect("docXArray", std::optional{elements}, std::vector<std::uint8_t>{3, 1, 2});
 
     // Entities
