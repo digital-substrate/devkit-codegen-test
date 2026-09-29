@@ -132,14 +132,14 @@ def generate(namespace: str, dsm_path: str, template: str, output: str, *args):
 
 
 def generate_resource(definitions: DefinitionsConst, output: str):
-    """Le modèle, en octets, dans un namespace.
+    """Le modèle, en octets, sous un nom préfixé par le modèle.
 
     LE .DSM EMBARQUÉ TEL QUEL. Le générateur ne produit aucun code d'enregistrement de types :
     le document est embarqué et décodé au chargement. C'est aussi la réponse à « qui tient la
     liste des concepts connus » -- cette donnée-là.
 
     Ce n'est pas un texte écrit à la main : ce sont les octets que la chaîne de production
-    encode, enveloppés dans `<Namespace>::Resources` -- ce que les templates attendent.
+    encode, enveloppés dans `<Namespace>_Resources_definitions` -- ce que les templates attendent.
     """
     octets = bytes(definitions.encode().encoded())
     lignes = [", ".join(f"0x{b:02x}" for b in octets[i:i + 12]) for i in range(0, len(octets), 12)]
@@ -149,9 +149,9 @@ def generate_resource(definitions: DefinitionsConst, output: str):
         f"#ifndef {NAMESPACE}_Resources_hpp\n"
         f"#define {NAMESPACE}_Resources_hpp\n\n"
         f"#include <cstddef>\n\n"
-        f"namespace {NAMESPACE}::Resources {{\n\n"
-        f"inline constexpr unsigned char definitions[] = {{\n {corps}\n}};\n\n"
-        f"}} // namespace {NAMESPACE}::Resources\n\n"
+        f""
+        f"inline constexpr unsigned char {NAMESPACE}_Resources_definitions[] = {{\n {corps}\n}};\n\n"
+        f""
         f"#endif\n")
 
 

@@ -21,7 +21,7 @@ pool(p) ::= <<
 <preamble(p, "FunctionPool")>
 #include "Viper_Function.hpp"
 
-namespace <p.name;format="uf"> {
+namespace <p.name;format="lsc"> {
 
 namespace {
 
@@ -43,7 +43,7 @@ std::shared_ptr\<Viper::FunctionPool> pool() {
 
 <remote(p)>
 
-} // namespace <p.name;format="uf">
+} // namespace <p.name;format="lsc">
 >>
 
 // UN POOL D'ATTACHMENTS AGIT SUR DES DOCUMENTS, PAS SUR DES VALEURS SEULES : sa fonction
@@ -54,7 +54,7 @@ attachment_pool(p) ::= <<
 #include "Viper_AttachmentGettingFunction.hpp"
 #include "Viper_AttachmentMutatingFunction.hpp"
 
-namespace <p.name;format="uf"> {
+namespace <p.name;format="lsc"> {
 
 namespace {
 
@@ -75,7 +75,7 @@ std::shared_ptr\<Viper::AttachmentFunctionPool> pool() {
 
 <attachment_remote(p)>
 
-} // namespace <p.name;format="uf">
+} // namespace <p.name;format="lsc">
 >>
 
 // DE CHAQUE UNITÉ ATTEINTE, TROIS ARTEFACTS ET PAS UN. Les types pour les signatures, le
@@ -123,7 +123,7 @@ protected:
         <f.name;format="lsc">(<f.parameters:{a|<a.name>};separator=", ">);
         return Viper::ValueVoid::Instance();
 <else>
-        return <p.model.namespace>::Codec::encode(<f.name;format="lsc">(<f.parameters:{a|<a.name>};separator=", ">));
+        return <p.model.namespace;format="lsc">::codec::encode(<f.name;format="lsc">(<f.parameters:{a|<a.name>};separator=", ">));
 <endif>
     }
 };
@@ -148,7 +148,7 @@ protected:
         <f.name;format="lsc">(attachment<f.interfaceType><if(f.parameters)>, <f.parameters:{a|<a.name>};separator=", "><endif>);
         return Viper::ValueVoid::Instance();
 <else>
-        return <p.model.namespace>::Codec::encode(<f.name;format="lsc">(attachment<f.interfaceType><if(f.parameters)>, <f.parameters:{a|<a.name>};separator=", "><endif>));
+        return <p.model.namespace;format="lsc">::codec::encode(<f.name;format="lsc">(attachment<f.interfaceType><if(f.parameters)>, <f.parameters:{a|<a.name>};separator=", "><endif>));
 <endif>
     }
 };
@@ -159,7 +159,7 @@ protected:
 decode(a, p, i) ::= <<
         <decode_body(a, p, i)>
 >>
-decode_body(a, p, i) ::= <%auto const <a.name>{<p.model.namespace>::Codec::decode\<<a.type>>(args.at(<i>))};%>
+decode_body(a, p, i) ::= <%auto const <a.name>{<p.model.namespace;format="lsc">::codec::decode\<<a.type>>(args.at(<i>))};%>
 
 make(f) ::= <<
 <make_head(f)>
@@ -216,15 +216,15 @@ bool Remote::isAvailable() const {
 remote_call(f, p) ::= <<
 <remote_head(f)>
 <if(f.isVoid)>
-    _service->call(poolId, "<f.name;format="lsc">", {<f.parameters:{a|<p.model.namespace>::Codec::encode(<a.name>)};separator=", ">});
+    _service->call(poolId, "<f.name;format="lsc">", {<f.parameters:{a|<p.model.namespace;format="lsc">::codec::encode(<a.name>)};separator=", ">});
 <else>
     <remote_decode(f, p)>
-        _service->call(poolId, "<f.name;format="lsc">", {<f.parameters:{a|<p.model.namespace>::Codec::encode(<a.name>)};separator=", ">}));
+        _service->call(poolId, "<f.name;format="lsc">", {<f.parameters:{a|<p.model.namespace;format="lsc">::codec::encode(<a.name>)};separator=", ">}));
 <endif>
 }
 >>
 
-remote_decode(f, p) ::= <%return <p.model.namespace>::Codec::decode\<<f.type>>(%>
+remote_decode(f, p) ::= <%return <p.model.namespace;format="lsc">::codec::decode\<<f.type>>(%>
 remote_head(f) ::= <%<if(f.isVoid)>void<else><f.type><endif> Remote::<f.name;format="lsc">(<f.parameters:remote_param();separator=", ">) const {%>
 remote_param(a) ::= <%<a.type><a.passBy> <a.name>%>
 
@@ -245,10 +245,10 @@ bool Remote::isAvailable() const {
 attachment_remote_call(f, p) ::= <<
 <attachment_remote_head(f)>
 <if(f.isVoid)>
-    _service->call(attachmentMutating, poolId, "<f.name;format="lsc">", {<f.parameters:{a|<p.model.namespace>::Codec::encode(<a.name>)};separator=", ">});
+    _service->call(attachmentMutating, poolId, "<f.name;format="lsc">", {<f.parameters:{a|<p.model.namespace;format="lsc">::codec::encode(<a.name>)};separator=", ">});
 <else>
     <remote_decode(f, p)>
-        _service->call(attachmentMutating, poolId, "<f.name;format="lsc">", {<f.parameters:{a|<p.model.namespace>::Codec::encode(<a.name>)};separator=", ">}));
+        _service->call(attachmentMutating, poolId, "<f.name;format="lsc">", {<f.parameters:{a|<p.model.namespace;format="lsc">::codec::encode(<a.name>)};separator=", ">}));
 <endif>
 }
 >>

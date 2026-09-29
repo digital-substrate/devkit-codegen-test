@@ -14,22 +14,22 @@
 
 #include <iostream>
 
-namespace Tools {
+namespace tools {
 
 void reset() {}
 
 std::int64_t add(std::int64_t a, std::int64_t b) { return a + b; }
 
-} // namespace Tools
+} // namespace tools
 
-namespace Projector {
+namespace projector {
 
-void link(ModelA::MaterialKey const &, ModelB::MaterialKey const &) {}
+void link(model_a::MaterialKey const &, model_b::MaterialKey const &) {}
 
-} // namespace Projector
+} // namespace projector
 
-namespace LinkModel {
+namespace link_model {
 
-void clear(std::shared_ptr<Viper::AttachmentMutating> const &, Projection::LinkKey const &) {}
+void clear(std::shared_ptr<Viper::AttachmentMutating> const &, projection::LinkKey const &) {}
 
-} // namespace LinkModel
+} // namespace link_model

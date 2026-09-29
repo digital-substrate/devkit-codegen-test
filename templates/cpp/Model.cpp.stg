@@ -19,14 +19,14 @@ unit(u) ::= <<
 
 #include "Viper_Definitions.hpp"
 
-namespace <u.name> {
+namespace <u.name;format="lsc"> {
 
-namespace RuntimeIds {
+namespace runtime_ids {
 <u.concepts:runtime_id();separator="\n">
 <u.clubs:runtime_id();separator="\n">
 <u.enumerations:runtime_id();separator="\n">
 <u.structures:runtime_id();separator="\n">
-} // namespace RuntimeIds
+} // namespace runtime_ids
 
 <u.concepts:concept_type(u);separator="\n\n">
 
@@ -40,7 +40,7 @@ namespace RuntimeIds {
 
 <u.structures:structure_type(u);separator="\n\n">
 
-} // namespace <u.name>
+} // namespace <u.name;format="lsc">
 >>
 
 runtime_id(e) ::= <%Viper::UUId const <e.name>{Viper::UUId::parse("<e.runtimeId>")};%>
@@ -48,7 +48,7 @@ runtime_id(e) ::= <%Viper::UUId const <e.name>{Viper::UUId::parse("<e.runtimeId>
 concept_type(c, u) ::= <<
 <concept_type_head(c)>
     static std::shared_ptr\<Viper::Type> const instance{
-        <u.model.namespace>::Codec::definitions()->checkConcept(RuntimeIds::<c.name>)};
+        <u.model.namespace;format="lsc">::codec::definitions()->checkConcept(runtime_ids::<c.name>)};
     return instance;
 }
 >>
@@ -56,7 +56,7 @@ concept_type(c, u) ::= <<
 club_type(c, u) ::= <<
 <club_type_head(c)>
     static std::shared_ptr\<Viper::Type> const instance{
-        <u.model.namespace>::Codec::definitions()->checkClub(RuntimeIds::<c.name>)};
+        <u.model.namespace;format="lsc">::codec::definitions()->checkClub(runtime_ids::<c.name>)};
     return instance;
 }
 >>
@@ -80,7 +80,7 @@ club_key_type(c, u) ::= <<
 enumeration_type(e, u) ::= <<
 <plain_type_head(e)>
     static std::shared_ptr\<Viper::Type> const instance{
-        <u.model.namespace>::Codec::definitions()->checkEnumeration(RuntimeIds::<e.name>)};
+        <u.model.namespace;format="lsc">::codec::definitions()->checkEnumeration(runtime_ids::<e.name>)};
     return instance;
 }
 >>
@@ -88,7 +88,7 @@ enumeration_type(e, u) ::= <<
 structure_type(s, u) ::= <<
 <plain_type_head(s)>
     static std::shared_ptr\<Viper::Type> const instance{
-        <u.model.namespace>::Codec::definitions()->checkStructure(RuntimeIds::<s.name>)};
+        <u.model.namespace;format="lsc">::codec::definitions()->checkStructure(runtime_ids::<s.name>)};
     return instance;
 }
 >>

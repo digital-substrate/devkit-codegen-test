@@ -8,7 +8,7 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 //
-// One scope per attachment, `<u.name>::Attachments::\<Concept>::\<attachment>`. A concept
+// One scope per attachment, `<u.name;format="lsc">::attachments::\<Concept>::\<attachment>`. A concept
 // declared in another namespace is spelled `\<Namespace>_\<Concept>` there, so that
 // adding an attachment never renames another.
 //
@@ -58,7 +58,7 @@ unit(u) ::= <<
 // le modèle ait à découper quoi que ce soit.
 attachment(a, u) ::= <<
 <if(a.hasDocumentation)>/** <a.documentation> */
-<endif>namespace <u.name>::Attachments::<a.conceptScope>::<a.name> {
+<endif>namespace <u.name;format="lsc">::attachments::<a.conceptScope>::<a.name> {
 
 /// The identity of this attachment in the definitions.
 extern Viper::UUId const runtimeId;
@@ -96,7 +96,7 @@ bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.typeInNamespac
 <a:document_aggregate()>
 <endif>
 
-} // namespace <u.name>::Attachments::<a.conceptScope>::<a.name>
+} // namespace <u.name;format="lsc">::attachments::<a.conceptScope>::<a.name>
 >>
 
 // Un setter par champ du document -- l'unique consommateur des chemins de la couche 2.
@@ -131,9 +131,9 @@ void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> con
 
 field_xarray(sf, a) ::= <<
 /// Insert value at newPosition, before beforePosition, in the xarray `<sf.name>`.
-void insert<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <sf.field.elementType><sf.field.passBy> value);
+void insert<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <sf.field.elementTypeInNamespace><sf.field.passBy> value);
 /// Write value at position in the xarray `<sf.name>`.
-void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <sf.field.elementType><sf.field.passBy> value);
+void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <sf.field.elementTypeInNamespace><sf.field.passBy> value);
 /// Remove position from the xarray `<sf.name>`.
 void remove<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position);
 >>
@@ -149,7 +149,7 @@ field_subtract_map(sf, a) ::= <<
 /// Remove from the map `<sf.name>` the entries whose map key is in value.
 <field_subtract_map_decl(sf, a)>
 >>
-field_subtract_map_decl(sf, a) ::= <%void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<sf.field.keyType>> const & value);%>
+field_subtract_map_decl(sf, a) ::= <%void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<sf.field.keyTypeInNamespace>> const & value);%>
 
 // ── et les mêmes quand le document EST l'agrégat ──
 //
@@ -176,13 +176,13 @@ void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.key
 void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value);
 >>
 
-document_subtract_map(a) ::= <%void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<a.documentType.field.keyType>> const & value);%>
+document_subtract_map(a) ::= <%void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<a.documentType.field.keyTypeInNamespace>> const & value);%>
 
 document_xarray(a) ::= <<
 /// Insert value at newPosition, before beforePosition, in the xarray held at key.
-void insert(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <a.documentType.field.elementType><a.documentType.field.passBy> value);
+void insert(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <a.documentType.field.elementTypeInNamespace><a.documentType.field.passBy> value);
 /// Write value at position in the xarray held at key.
-void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <a.documentType.field.elementType><a.documentType.field.passBy> value);
+void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <a.documentType.field.elementTypeInNamespace><a.documentType.field.passBy> value);
 /// Remove position from the xarray held at key.
 void remove(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position);
 >>

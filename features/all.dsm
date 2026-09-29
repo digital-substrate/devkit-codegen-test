@@ -149,6 +149,11 @@ attachment<any_concept, any> propertiesAnyConceptAny;
 
 concept ConceptCoverage;
 
+// A concept named like its namespace -- `Graph` in `Graph`, as real models do. From inside
+// its attachments' scope, `Demo::X` would name the concept, not the namespace.
+concept Demo;
+attachment<Demo, StructureS> docNamedLikeItsNamespace;
+
 // A club with no member, and a structure with a single field: both are shapes
 // whose zero/one case the generator handles separately.
 club EmptyKlub;

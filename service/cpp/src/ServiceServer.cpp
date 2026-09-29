@@ -39,12 +39,12 @@ int main(int argc, char * argv[]) {
 
     auto const service{
         Viper::Service::make(
-            Service::Codec::definitions(),
+            service::codec::definitions(),
             {
-                Tools::pool(),
+                tools::pool(),
             },
             {
-                PlayerModel::pool()
+                player_model::pool()
             })
     };
 

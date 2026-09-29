@@ -8,13 +8,13 @@
 
 void use_l5() {
     // l'unité s'éprouve elle-même : une liste, et rien d'autre
-    ModelA::test();
+    model_a::test();
 
     // et n'importe quelle forme au-dessus de ses types, sans qu'elle ait rien déclaré --
     // le descripteur du conteneur se compose depuis celui de l'élément
-    Topology::Test::roundTrip<std::set<ModelA::Colour>>();
-    Topology::Test::roundTrip<std::map<ModelA::MaterialKey, ModelA::Colour>>();
+    topology::test::roundTrip<std::set<model_a::Colour>>();
+    topology::test::roundTrip<std::map<model_a::MaterialKey, model_a::Colour>>();
 
     // reproductible quand on le demande
-    Topology::Test::seed(42);
+    topology::test::seed(42);
 }

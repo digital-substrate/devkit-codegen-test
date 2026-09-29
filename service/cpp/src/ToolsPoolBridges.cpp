@@ -1,14 +1,15 @@
 #include "Tools_Pool.hpp"
+#include "Viper_ValueAny.hpp"
 #include <random>
 
 // MARK: - Tools
-namespace Tools {
+namespace tools {
 
 std::int64_t add(std::int64_t a, std::int64_t b) {
   return a + b;
 }
 
-Demo::Vector3 add_vector(Demo::Vector3 const & a, Demo::Vector3 const & b) {
+demo::Vector3 add_vector(demo::Vector3 const & a, demo::Vector3 const & b) {
   return {a.x + b.x, a.y + b.y, a.z + b.z};
 }
 
@@ -24,6 +25,10 @@ std::string random_string(std::uint32_t size) {
   return result;
 }
 
-} // namespace Service::FunctionPoolBridges::Tools
+bool is_greater(Viper::Any const & a, Viper::Any const & b) {
+  return Viper::isGreater(a.value()->compare(b.value()));
+}
+
+} // namespace tools
 
 // namespace SV::FunctionPoolBridges

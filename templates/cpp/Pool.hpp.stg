@@ -5,7 +5,7 @@
 pool(p) ::= <<
 <preamble(p, "FunctionPool", "")>
 
-namespace <p.name;format="uf"> {
+namespace <p.name;format="lsc"> {
 
 <p.functions:bridge();separator="\n">
 
@@ -13,7 +13,7 @@ std::shared_ptr\<Viper::FunctionPool> pool();
 
 <remote(p)>
 
-} // namespace <p.name;format="uf">
+} // namespace <p.name;format="lsc">
 
 #endif
 >>
@@ -21,7 +21,7 @@ std::shared_ptr\<Viper::FunctionPool> pool();
 attachment_pool(p) ::= <<
 <preamble(p, "AttachmentFunctionPool", "yes")>
 
-namespace <p.name;format="uf"> {
+namespace <p.name;format="lsc"> {
 
 <p.functions:attachment_bridge();separator="\n">
 
@@ -29,7 +29,7 @@ std::shared_ptr\<Viper::AttachmentFunctionPool> pool();
 
 <attachment_remote(p)>
 
-} // namespace <p.name;format="uf">
+} // namespace <p.name;format="lsc">
 
 #endif
 >>
@@ -53,6 +53,12 @@ preamble(p, kind, context) ::= <<
 
 #include "Viper_<kind>.hpp"
 #include "Viper_ServiceRemote.hpp"
+#include "Viper_Any.hpp"
+#include "Viper_Blob.hpp"
+#include "Viper_BlobId.hpp"
+#include "Viper_CommitId.hpp"
+#include "Viper_UUId.hpp"
+#include "Viper_XArray.hpp"
 <if(context)>
 
 #include "Viper_AttachmentGetting.hpp"

@@ -8,6 +8,8 @@
 
 #include "PlayerModel_Pool.hpp"
 #include "Tools_Pool.hpp"
+#include "Viper_ValueAny.hpp"
+#include "Viper_ValueInt64.hpp"
 
 #include "CLI11.hpp"
 
@@ -15,7 +17,7 @@
 
 #include "Demo_Attachments.hpp"
 
-using namespace Service;
+using namespace service;
 
 int main(int argc, char * argv[]) {
     CLI::App app{"the client for the service."};
@@ -47,27 +49,31 @@ int main(int argc, char * argv[]) {
             service = Viper::ServiceRemote::connect(inetAddress, inetPort, definitions);
         }
 
-        auto const tools{Tools::Remote{service}};
+        auto const tools{tools::Remote{service}};
         if (tools.isAvailable()) {
             auto const r{tools.add(32, 10)};
             std::cout << "add(32,10) -> " << r << '\n';
 
-            Demo::Vector3 const v1{1, 2, 3};
-            Demo::Vector3 const v2{10, 20, 30};
+            demo::Vector3 const v1{1, 2, 3};
+            demo::Vector3 const v2{10, 20, 30};
             auto const rv{tools.add_vector(v1, v2)};
             std::cout << "add_vector(v1,v2) -> (" << rv.x << "," << rv.y << "," << rv.z << ")" << '\n';
+
+            Viper::Any const five{Viper::ValueAny::make(Viper::ValueInt64::make(5))};
+            Viper::Any const three{Viper::ValueAny::make(Viper::ValueInt64::make(3))};
+            std::cout << "is_greater(5,3) -> " << tools.is_greater(five, three) << '\n';
         }
 
-        auto const playerModel{PlayerModel::Remote{service}};
+        auto const playerModel{player_model::Remote{service}};
         if (playerModel.isAvailable()) {
             auto state{Viper::CommitState::make(Viper::CommitId::Invalid(), definitions, {})};
             auto mutableState{Viper::CommitMutableState::make(state)};
             std::string nickname{"the shadow man"};
-            auto key{playerModel.create(mutableState, nickname, Demo::Level::Beginner)};
+            auto key{playerModel.create(mutableState, nickname, demo::Level::Beginner)};
             std::cout << "key is " << key.description() << '\n';
 
             if (auto const pk{playerModel.has_player(mutableState, nickname)}) {
-                if (auto const property{Demo::Attachments::Player::property::get(mutableState, *pk)}) {
+                if (auto const property{demo::attachments::Player::property::get(mutableState, *pk)}) {
                     std::cout << "nickname=" << property->nickname << ", level=" << static_cast<int>(property->level) << '\n';
                 }
             }

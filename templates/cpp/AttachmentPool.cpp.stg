@@ -57,7 +57,7 @@ model(m) ::= <<
 #include "Viper_ValueVoid.hpp"
 #include "Viper_ValueSetIter.hpp"
 
-namespace <m.namespace> {
+namespace <m.namespace;format="lsc"> {
 
 namespace {
 
@@ -180,7 +180,7 @@ std::shared_ptr\<Viper::AttachmentFunctionPool> attachments() {
         auto const pool = Viper::AttachmentFunctionPool::make(
             Viper::UUId::parse("00000000-0000-0000-0000-000000000000"), "Attachments");
 
-        for (auto const & a : Codec::definitions()->attachments()) {
+        for (auto const & a : codec::definitions()->attachments()) {
             addReading(pool, a);
             addWriting(pool, a);
             addFields(pool, a);
@@ -190,6 +190,6 @@ std::shared_ptr\<Viper::AttachmentFunctionPool> attachments() {
     return instance;
 }
 
-} // namespace <m.namespace>
+} // namespace <m.namespace;format="lsc">
 
 >>
