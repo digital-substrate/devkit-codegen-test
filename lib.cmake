@@ -25,16 +25,15 @@ else()
 endif()
 
 # The generated C++ of the kibo 2 line crosses from the static side to a Value, and hashes,
-# through viper's static vocabulary, which exists on viper's kibo-2-dev branch only. Built
-# against another line, it would fail deep in a generated header on a missing include; fail
-# here instead, naming what is needed.
+# through viper's static vocabulary, which viper's LTS-1.2 branch carries since 2026-09-30.
+# Built against an older checkout, it would fail deep in a generated header on a missing
+# include; fail here instead, naming what is needed.
 foreach(REQUIRED_HEADER Viper_StaticWriter.hpp Viper_StaticReader.hpp Viper_StaticHash.hpp)
     if (NOT EXISTS ${REPO_VIPER}/src/Viper/${REQUIRED_HEADER})
         message(FATAL_ERROR
-            "${REPO_VIPER} has no ${REQUIRED_HEADER}: this branch generates against viper's "
-            "kibo-2-dev branch. Point REPO_VIPER at a checkout of it -- a worktree keeps the "
-            "sibling checkout on its own branch: "
-            "git -C ${REPO_VIPER} worktree add ../${REPO_VIPER_NAME}-kibo-2-dev kibo-2-dev")
+            "${REPO_VIPER} has no ${REQUIRED_HEADER}: the generated code needs viper's static "
+            "vocabulary. Update the checkout to viper's LTS-1.2 branch, or point REPO_VIPER at "
+            "one that has it.")
     endif()
 endforeach()
 

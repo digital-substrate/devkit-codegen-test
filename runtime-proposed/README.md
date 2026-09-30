@@ -20,8 +20,9 @@ différemment, parce qu'il n'existe qu'une mise en page — celle que `ValueRead
 
 ## Le dépliage statique — déplacé dans viper
 
-`Viper_TypedCodec` a quitté ce dossier le 2026-09-29. Il vit désormais sur la branche
-`kibo-2-dev` de viper, à côté de ce qu'il déplie :
+`Viper_TypedCodec` a quitté ce dossier le 2026-09-29. Il vit désormais dans viper, à côté de
+ce qu'il déplie, et sur la branche `LTS-1.2` depuis le 2026-09-30 : c'est un ajout, qui ne
+touche ni aux types et valeurs, ni à la gouvernance DSM, ni au format sur disque.
 
 | viper | rôle |
 |---|---|
@@ -47,9 +48,9 @@ défauts du code d'ici, invisibles à un aller-retour :
 Chacun a été réintroduit pour vérifier que le test le rattrape — il le fait, par le cas qui le
 vise.
 
-**Ce que ça impose ici** : la branche `kibo-2-dev` de ce dépôt se construit contre celle de
-viper. `lib.cmake` le vérifie et échoue tôt sinon ; `REPO_VIPER` désigne le checkout, un
-worktree gardant l'arbre voisin sur sa propre branche.
+**Ce que ça impose ici** : la branche `kibo-2-dev` de ce dépôt se construit contre viper
+`LTS-1.2`, à jour. `lib.cmake` vérifie la présence des en-têtes et échoue tôt sinon ;
+`REPO_VIPER` désigne le checkout.
 
 ## `Viper_HashAccumulator.hpp` — déplacé dans viper, sous le nom `Viper_StaticHash`
 
@@ -66,7 +67,7 @@ revient à viper.
 Et le hachage des types générés est consommé : `red` range des `SurfaceKey` dans des
 `std::unordered_map`, `ge` des `VertexKey` et des `EdgeKey`.
 
-| viper, `kibo-2-dev` | |
+| viper, `LTS-1.2` | |
 |---|---|
 | `Viper_StaticHash.hpp/.cpp` | `Hasher`, `hash(Hasher &, T)` pour le vocabulaire et tous les conteneurs, `of(value)` |
 | `cpp-test-harness/Viper_StaticHash_test.cpp` | valeurs égales ⇒ empreintes égales ; formes distinctes ⇒ empreintes distinctes ; ADL depuis un conteneur |
