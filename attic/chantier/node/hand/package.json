@@ -1,6 +1,0 @@
-{
-    "name": "topology",
-    "private": true,
-    "type": "module",
-    "dependencies": { "@digitalsubstrate/dsviper": ">=1.2.8 <1.3.0" }
-}
