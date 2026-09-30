@@ -43,13 +43,6 @@ void write(Viper::StaticWriter::Writer & w, <e.name>Key const & value);
 <e.name>Key read(Viper::StaticReader::Reader & r, Viper::StaticType::tag\<<e.name>Key>);
 >>
 
-// `<%…%>` and not `<<…>>` for the two below: a `>>` in the emitted text closes a
-// `<<…>>` body, so `tag<Colour>` cannot be written there. Writing `tag<Colour >` works
-// and is valid C++, but it is a workaround leaking into the output.
-// UNE ÉNUMÉRATION SE PASSE PAR VALEUR. Elle tient dans un registre, et surtout : la
-// déclaration et la définition doivent s'accorder, sinon ce sont deux surcharges et
-// l'appel devient ambigu au lieu d'être introuvable -- un diagnostic qui ne dit pas ce
-// qui manque.
 enumeration(e) ::= <<
 void write(Viper::StaticWriter::Writer & w, <e.name> value);
 <plain_read(e)>
@@ -62,51 +55,6 @@ void write(Viper::StaticWriter::Writer & w, <e.name> const & value);
 
 plain_read(e) ::= <%<e.name> read(Viper::StaticReader::Reader & r, Viper::StaticType::tag\<<e.name>>);%>
 
-// ── et le socle, rendu une fois pour tout le modèle ──
-//
-// MÊME FICHIER, DEUX ENTRÉES. `unit(u)` sort une fois par namespace, `model(m)` une fois
-// pour le modèle, et kibo rend les deux : c'est précisément pour cela que la discrimination
-// se fait sur l'entrée déclarée. Le codec d'une unité et le socle qui le porte se lisent
-// ensemble, ce qui est où un lecteur les cherche.
-//
-// QUATRE DÉCLARATIONS, ET LE CRITÈRE EST LE MÊME POUR LES QUATRE : elles ont besoin du
-// modèle entier, donc aucun namespace ne peut en répondre. C'est tout ce que le socle est.
-// ENCODE ET DECODE SONT GÉNÉRIQUES. Le pack écrit le même corps de dix lignes une fois par
-// type, dont seul le suffixe change -- et ce qui change est exactement ce qu'une unité
-// implémente : `write`/`read` pour la valeur, `type` pour son descripteur, trouvés par ADL
-// sur l'argument ou sur le tag. Un template remplace toute la famille encode_X / decode_X.
-//
-// Les descripteurs des primitives et des conteneurs sont du runtime : le type d'une
-// primitive est un singleton, celui d'un conteneur se compose à partir de ses éléments.
-//
-// decode VÉRIFIE LE TYPE, ET CE N'EST PAS UNE PRÉCAUTION. Sans elle, une clé d'un autre
-// concept -- deux uuid, comme toute clé -- se lit sans erreur dans le mauvais type, et les
-// autres écarts n'échouent que par accident, sur un flux trop court, avec un message qui ne dit
-// pas ce qui manque. checkType est la règle du runtime, celle qu'il applique partout ailleurs.
-//
-// LE BLOB DE decode EST NOMMÉ, ET IL LE DOIT : passer le résultat de l'encodage directement
-// laisse mourir le temporaire à la fin de l'expression, et le décodeur lit dans le vide.
-// ── ce que la clé non typée ne peut pas porter elle-même ──
-//
-// LES DEUX SEULS MEMBRES DE L'AnyConceptKey GÉNÉRÉE QUI AVAIENT BESOIN DU MODÈLE. Les sept
-// autres sont deux uuid, leurs comparaisons et leur hachage. Fonctions libres, et non
-// membres : un seul membre aurait obligé la classe entière à être générée -- ce qu'elle
-// est aujourd'hui, pour ces deux lignes.
-
-// L'ENSEMBLE DES CONCEPTS CONNUS EST UN ARGUMENT, ET C'EST TOUT L'INTÉRÊT DE CES TROIS
-// FONCTIONS. Les poser sur `definitions()` -- les définitions du modèle, embarquées quand
-// kibo a tourné -- reviendrait exactement à l'énumération que le pack écrit : le même
-// ensemble, clos au même instant, interrogé autrement. Remplacer une liste par une requête
-// sur cette liste ne gagne rien.
-//
-// L'ensemble s'ouvre ailleurs. `Database::open` charge les définitions du fichier et vérifie
-// seulement qu'elles *contiennent* celles du modèle : ce que la base rend peut être
-// strictement plus large -- écrit par une version plus récente, ou par un autre modèle
-// partageant le fichier. Un pair en RPC est dans le même cas, et `extendConcepts` existe
-// pour cela.
-//
-// Une clé qui vient de là peut nommer un concept que le modèle embarqué ignore, et la seule
-// réponse utile est celle des définitions qu'on a en main.
 model(m) ::= <<
 // <m.namespace>::codec -- what needs the whole model: its definitions, and the bridge
 // between a C++ value and a Viper::Value.
@@ -150,35 +98,25 @@ namespace <m.namespace>::codec {
 
 using Viper::StaticType::tag;
 
-/// The model's definitions, decoded once from the embedded resource.
 std::shared_ptr\<Viper::Definitions const> const & definitions();
 
-/// The stream codec `encode` and `decode` cross through. Nothing it writes is persisted.
 std::shared_ptr\<Viper::StreamCodecInstancing> const & stream();
 
-/// `instanceId:Concept` as `definitions` name it, or the raw ids if they do not know it.
 std::string description(AnyConceptKey const & key,
                         std::shared_ptr\<Viper::Definitions const> const & definitions);
 
-/// Whether `definitions` know the concept `key` names.
 bool isKnown(AnyConceptKey const & key,
              std::shared_ptr\<Viper::Definitions const> const & definitions);
 
-/// Whether `key` names an instance of `concept_`, a concept derived from it, or -- when
-/// `concept_` is a club -- one of its members.
 bool isMember(AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_,
               std::shared_ptr\<Viper::Definitions const> const & definitions);
 
-/// The same against the embedded definitions. A key read from a database or a remote peer
-/// may name a concept they do not know; pass the definitions it came with instead.
 inline std::string description(AnyConceptKey const & key) { return description(key, definitions()); }
 inline bool isKnown(AnyConceptKey const & key) { return isKnown(key, definitions()); }
 inline bool isMember(AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_) {
     return isMember(key, concept_, definitions());
 }
 
-/// A C++ value to its Value, typed: a key gives a ValueKey, a structure a ValueStructure, a
-/// vector a ValueVector.
 template\<class T>
 std::shared_ptr\<Viper::StaticType::ValueOf\<T> > encode(T const & value) {
     auto const encoder = stream()->createEncoder();
@@ -189,13 +127,10 @@ std::shared_ptr\<Viper::StaticType::ValueOf\<T> > encode(T const & value) {
         Viper::ValueDecoder::decode(encoder->endEncoding(), stream(), type(tag\<T>{}), definitions()));
 }
 
-/// A Viper::Value back to a C++ value. Throws if the value's type is not `T`'s -- a key of
-/// another concept included -- as the runtime does wherever a value meets a type.
 template\<class T>
 T decode(std::shared_ptr\<Viper::Value const> const & value) {
     value->checkType("<m.namespace>::codec", "decode", type(tag\<T>{}).get());
 
-    // Named: `createDecoder` keeps a reference to the blob.
     auto const blob{Viper::ValueEncoder::encode(value, stream())};
     auto const decoder{stream()->createDecoder(blob)};
     Viper::StaticReader::Reader reader{decoder, definitions()};

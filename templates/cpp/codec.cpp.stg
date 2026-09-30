@@ -1,14 +1,3 @@
-// L'implémentation du pont d'une unité : trois fonctions par type, et rien d'autre.
-//
-// Le pack émet par unité sept artefacts de sérialisation, chacun avec une fonction par
-// type. Tout ce qu'ils font est une composition générique de `write`, `read` et `type`,
-// écrite une fois dans le module injecté ou dans le runtime -- ce qui laisse ici, par
-// unité, trois fonctions par type déclaré.
-//
-// Et aucune ne nomme son unité : c'est l'argument, ou le tag, qui décide où aller. C'est
-// ce qui remplace le suffixe de type, lequel disait dans un nom ce que la résolution de
-// surcharge sait déjà.
-
 unit(u) ::= <<
 // <u.name> codec -- the `write`, `read` and `type` of each type declared here.
 //
@@ -34,7 +23,6 @@ unit(u) ::= <<
 
 namespace <u.model.namespace>::<u.name;format="lsc"> {
 
-
 <u.concepts:keyed(u);separator="\n\n">
 
 <u.clubs:keyed(u);separator="\n\n">
@@ -46,13 +34,6 @@ namespace <u.model.namespace>::<u.name;format="lsc"> {
 } // namespace <u.model.namespace>::<u.name;format="lsc">
 >>
 
-
-
-
-
-// Une clé, sur le fil, c'est deux uuid : l'instance, et le concept qu'elle est réellement.
-// Le second est stocké et non déduit du type, parce qu'une clé peut nommer une instance
-// d'un concept dérivé, et c'est l'identité de celui-là qui doit traverser.
 keyed(c, u) ::= <<
 void write(Viper::StaticWriter::Writer & w, <c.name>Key const & value) {
     write(w, value.instanceId());
@@ -70,9 +51,6 @@ void write(Viper::StaticWriter::Writer & w, <c.name>Key const & value) {
 
 keyed_read_head(c) ::= <%<c.name>Key read(Viper::StaticReader::Reader & r, Viper::StaticType::tag\<<c.name>Key>) {%>
 
-// CE QUI TRAVERSE EST L'INDEX DE LA CASE, PAS SA VALEUR. Le modèle ordonne les cases et
-// c'est cet ordre qui est le contrat ; une valeur C++ explicite ferait dire au langage ce
-// que le modèle dit déjà, et les deux pourraient diverger.
 enumeration(e, u) ::= <<
 void write(Viper::StaticWriter::Writer & w, <e.name> value) {
     switch (value) {
@@ -93,8 +71,6 @@ void write(Viper::StaticWriter::Writer & w, <e.name> value) {
 
 >>
 
-// `i0` n'existe que dans une sous-template anonyme, d'où le passage explicite ci-dessus :
-// un template nommé ne le voit pas, et StringTemplate le dit -- tardivement.
 enumeration_write(m, e, i) ::= <<
         case <e.name>::<m.name;format="uf">: w.streamWriting->writeUInt8(<i>); break;
 >>
@@ -103,9 +79,6 @@ enumeration_read(m, e, i) ::= <<
         case <i>: return <e.name>::<m.name;format="uf">;
 >>
 
-// Une structure, c'est ses champs dans l'ordre, chacun confié à l'unité qui le possède --
-// `write(w, value.x)` part chez le runtime pour un entier et chez une autre unité pour une
-// clé étrangère, sans que rien ici ait à le savoir.
 structure(s, u) ::= <<
 void write(Viper::StaticWriter::Writer & w, <s.name> const & value) {
 <s.fields:field_write();separator="\n">
@@ -119,39 +92,10 @@ void write(Viper::StaticWriter::Writer & w, <s.name> const & value) {
 
 field_write(f) ::= <<    write(w, value.<f.name>);>>
 
-// PAS DE VARIABLE LOCALE PAR CHAMP, et ce n'est pas un raccourci. Nommer le local d'après
-// le champ -- ce que fait le pack, où le lecteur est `this` -- devient faux ici : le
-// lecteur est un paramètre, donc un champ nommé `r` produit `auto const r{read(r, …)}`,
-// qui lit sa propre variable non initialisée. Une liste d'initialisation entre accolades
-// évalue ses éléments de gauche à droite, garanti par le langage, donc l'ordre du modèle
-// est respecté sans nommer quoi que ce soit.
 field_read(f) ::= <%read(r, Viper::StaticType::tag\<<f.typeInNamespace>>{})%>
 
 plain_read_head(e) ::= <%<e.name> read(Viper::StaticReader::Reader & r, Viper::StaticType::tag\<<e.name>>) {%>
 
-// ── et le socle ──
-// LES DEUX SEULS MEMBRES DE L'AnyConceptKey GÉNÉRÉE QUI AVAIENT BESOIN DU MODÈLE, et la
-// question qu'ils posent : quelqu'un doit bien fournir l'ensemble des concepts connus.
-//
-// Quelqu'un le fait déjà. Le modèle enregistre chacun de ses concepts dans ses
-// `Definitions` au chargement -- c'est l'artefact d'enregistrement, qui existe de toute
-// façon, sans quoi rien du runtime ne fonctionnerait. Demander à cet enregistrement
-// revient à ne rien générer de plus.
-//
-// ET C'EST LA BONNE RÉPONSE, PAS SEULEMENT LA PLUS COURTE. Le pack fige la liste à la
-// génération : `isKnown()` compare l'identifiant à un ensemble clos au moment où le code a
-// été écrit. Or `Viper::Definitions::extendConcepts` existe -- un modèle apprend des
-// concepts en cours d'exécution, d'un pair ou d'un document plus récent. Une liste figée
-// répond alors « inconnu » pour un concept que le runtime connaît, et le pack le reconnaît
-// lui-même dans un commentaire sur `description`.
-//
-// Interroger le modèle donne la réponse d'aujourd'hui ; l'énumérer donne celle du jour de
-// la génération.
-//
-// LE MODÈLE EST UNE DONNÉE, PAS DU CODE. Rien n'enregistre les types un par un : le `.dsm`
-// est embarqué tel quel et décodé au premier appel. C'est ce qui rend le socle petit --
-// il n'y a pas d'artefact d'enregistrement à générer par unité -- et c'est aussi ce qui
-// répond à « qui tient la liste des concepts connus » : cette liste-là.
 model(m) ::= <<
 // <m.namespace>::codec -- the embedded definitions, the bridge's stream codec, and what an
 // untyped key names.
@@ -189,8 +133,6 @@ std::shared_ptr\<Viper::Definitions const> const & definitions() {
     return instance;
 }
 
-/// The bridge's codec. `StreamRaw` keeps the layout without the byte-order handling a
-/// portable format needs: nothing the bridge writes leaves the process.
 std::shared_ptr\<Viper::StreamCodecInstancing> const & stream() {
     static std::shared_ptr\<Viper::StreamCodecInstancing> const instance{
         Viper::StreamRawCodec::Instance()};
@@ -211,8 +153,6 @@ std::string description(AnyConceptKey const & key,
     return key.instanceId().uuidString() + ":" + concept_->representation();
 }
 
-/// Whether `key` names an instance of `concept_`: a concept derived from it or, for a
-/// club, one of its members -- the descriptor carries the difference.
 bool isMember(AnyConceptKey const & key, std::shared_ptr\<Viper::Type> const & concept_,
               std::shared_ptr\<Viper::Definitions const> const & definitions) {
     auto const instance = definitions->queryConcept(key.runtimeId());

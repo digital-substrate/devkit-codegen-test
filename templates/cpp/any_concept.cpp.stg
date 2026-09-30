@@ -1,12 +1,3 @@
-// L'implémentation de la clé non typée : quatre fonctions, et ce sont celles d'une clé.
-//
-// Rien n'y dépend du modèle, ce qui est toute la raison pour laquelle ce fichier pourra
-// disparaître le jour où le runtime porte le type.
-
-// QUATRE FONCTIONS, ET CE SONT CELLES D'UNE CLÉ. Sur le fil elle est deux uuid, comme
-// n'importe quelle clé ; son descripteur est celui que le runtime tient pour « n'importe
-// quel concept » ; son hachage combine les deux identifiants. Rien de cela ne dépend du
-// modèle, ce qui est toute la raison pour laquelle ce fichier pourra disparaître.
 model(m) ::= <<
 // <m.namespace>::AnyConceptKey -- its codec and hash.
 //

@@ -1,31 +1,3 @@
-// Les attachments du modèle, exposés au monde dynamique.
-//
-// LE PLUS GROS ARTEFACT DU PACK APRÈS LA BASE DE DONNÉES, ET IL N'A RIEN À GÉNÉRER. 764
-// lignes de template qui produisent 9 125 lignes pour un modèle réel, et pas une seule ne
-// nomme un type C++ : chaque corps caste ses arguments en `Viper::Value`, appelle
-// l'interface, et rend une Value. Ce qui varie d'un attachment à l'autre -- son
-// identifiant, les descripteurs de sa clé et de son document, le nom de ses fonctions --
-// est déjà dans les `Definitions`.
-//
-// Donc le fichier est rendu une fois par modèle et ne dépend d'aucun : il parcourt les
-// attachments et construit le pool. Il est ici pour la même raison que la clé non typée --
-// le runtime livré ne le porte pas encore -- et il migrera de la même façon.
-
-// TROIS FAMILLES, ET AUCUNE NE CONNAÎT UN TYPE DU MODÈLE :
-//
-//   sur l'attachment      keys, has, get          -- lecture
-//                         set, diff               -- écriture du document entier
-//   sur un champ          set\<Champ>              -- écriture partielle, par un chemin
-//   sur un champ agrégé   union, subtract, update -- même forme, autre appel du runtime
-//
-// La dernière famille n'est pas écrite ici : elle se distingue des précédentes par le
-// `TypeCode` du champ et par la méthode appelée, rien d'autre. Ce qui est écrit suffit à
-// montrer ce qui était en question -- que la génération n'apporte rien.
-//
-// LE CHEMIN SE FABRIQUE ICI, ET C'EST LE POINT. Le pack appelle `Path::Colour::r()`, une
-// fonction générée -- mais ce qu'elle rend est `Viper::Path::makeField("r")`, et le nom du
-// champ est dans le descripteur de la structure. La couche 2 sert le développeur ; le pont
-// dynamique n'en a pas besoin.
 model(m) ::= <<
 // <m.namespace> attachment pool -- built by walking the attachments of the definitions.
 //
@@ -68,7 +40,6 @@ using Attachment = std::shared_ptr\<Viper::Attachment>;
 using ValuePtr = std::shared_ptr\<Viper::Value>;
 using Args = std::vector\<ValuePtr>;
 
-/// A reading function, defined by what it does rather than what it acts on.
 class Getting final : public Viper::AttachmentGettingFunction {
 public:
     using Body = std::function\<ValuePtr(
@@ -113,10 +84,6 @@ private:
     Body _body;
 };
 
-/// A function's name: namespace, concept, attachment and operation, in snake case --
-/// `graph_vertex_visual_attributes_get`, the name a script or a peer calls it by. The rule is
-/// the runtime's own converter, specified by shared test vectors; no generated client calls
-/// these by name -- the bindings read and write the attachments directly.
 std::string named(Attachment const & a, std::string const & operation) {
     using Viper::StringHelper::snakeCase;
     return snakeCase(a->typeName.nameSpace.name) + "_" + snakeCase(a->keyTypeName().name) + "_"
@@ -171,8 +138,6 @@ void addWriting(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, At
         }));
 }
 
-/// The mutations of an aggregate -- a set, a map or an xarray -- at `path`: the document itself
-/// when `path` is the root, one of its fields otherwise. `suffix` names the field.
 void addAggregate(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, Attachment const & a,
                   std::shared_ptr\<Viper::Path const> const & path, std::shared_ptr\<Viper::Type> const & type,
                   std::string const & suffix) {
@@ -181,7 +146,6 @@ void addAggregate(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, 
     auto const uuid = [](Args const & args, std::size_t i) { return Viper::ValueUUId::cast(args.at(i))->value; };
     auto const add = [&](std::string const & op, std::vector\<P::Parameter> parameters, std::string documentation,
                          Mutating::Body body) {
-        // Parameter holds const members: build in order, it cannot be inserted at the front.
         std::vector\<P::Parameter> all{{"key", a->typeKey}};
         for (auto const & parameter : parameters)
             all.push_back(parameter);
@@ -205,7 +169,6 @@ void addAggregate(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, 
             break;
 
         case Viper::TypeCode::Map: {
-            // Subtracting from a map takes its keys, not its entries.
             auto const keys = Viper::TypeSet::make(Viper::TypeMap::cast(type)->keyType);
             add("union", {{"value", type}}, "add the entries of value, replacing the map keys already there.",
                 [=](auto const & m, auto const & at, auto const & args) -> ValuePtr {
@@ -252,9 +215,7 @@ void addAggregate(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, 
     }
 }
 
-/// Writing one field of a structure document, by its path.
 void addFields(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool, Attachment const & a) {
-    // `cast` throws on another type rather than answering null: ask first.
     if (a->documentType->typeCode != Viper::TypeCode::Structure)
         return;
     auto const structure = Viper::TypeStructure::cast(a->documentType);

@@ -1,8 +1,3 @@
-// POUR LE PYTHON EMBARQUÉ DANS UNE APPLICATION C++. Les scripts qui manipulent le modèle par
-// l'API dynamique de dsviper y trouvent ses types, ses attachments et ses chemins de champ
-// sous des noms constants -- `GRAPH_A_EDGE_TOPOLOGY` plutôt qu'un identifiant écrit à la
-// main --, le pendant de Fields pour ce monde-là. Les noms sont ceux du pack 1.2, pour que les
-// scripts existants ne changent pas.
 model(m) ::= <<
 // <m.namespace> Python definitions -- the model's types, attachments and field paths as
 // constants of an embedded Python module, for scripts using the dynamic API.
@@ -22,7 +17,6 @@ model(m) ::= <<
 
 namespace <m.namespace>::python_definitions {
 
-/// Add every constant to `module`.
 void fill(PyObject * module);
 
 } // namespace <m.namespace>::python_definitions

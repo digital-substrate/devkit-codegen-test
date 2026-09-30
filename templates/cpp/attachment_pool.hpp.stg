@@ -1,27 +1,3 @@
-// Les attachments du modèle, exposés au monde dynamique.
-//
-// LE PLUS GROS ARTEFACT DU PACK APRÈS LA BASE DE DONNÉES, ET IL N'A RIEN À GÉNÉRER. 764
-// lignes de template qui produisent 9 125 lignes pour un modèle réel, et pas une seule ne
-// nomme un type C++ : chaque corps caste ses arguments en `Viper::Value`, appelle
-// l'interface, et rend une Value. Ce qui varie d'un attachment à l'autre -- son
-// identifiant, les descripteurs de sa clé et de son document, le nom de ses fonctions --
-// est déjà dans les `Definitions`.
-//
-// Donc le fichier est rendu une fois par modèle et ne dépend d'aucun : il parcourt les
-// attachments et construit le pool. Il est ici pour la même raison que la clé non typée --
-// le runtime livré ne le porte pas encore -- et il migrera de la même façon.
-
-// LE PLUS GROS ARTEFACT DU PACK APRÈS LA BASE DE DONNÉES, ET IL N'A RIEN À GÉNÉRER. 764
-// lignes de template qui produisent 9 125 lignes pour un modèle réel, et pas une seule ne
-// nomme un type C++ : chaque corps caste ses arguments en `Viper::Value`, appelle
-// l'interface, et rend une Value. Ce qui varie d'un attachment à l'autre est l'identifiant
-// de l'attachment, les descripteurs de sa clé et de son document, et le nom de la fonction
-// -- trois choses que les `Definitions` portent déjà.
-//
-// Donc la question « que faut-il générer ici ? » a pour réponse : rien. Il faut parcourir
-// les attachments du modèle et construire le pool. C'est du code de runtime, identique pour
-// tout modèle, et il est ici pour la même raison que la clé non typée : le runtime livré ne
-// le porte pas encore.
 model(m) ::= <<
 // <m.namespace> attachment pool -- the model's attachments, exposed to the dynamic world.
 //
@@ -41,7 +17,6 @@ model(m) ::= <<
 
 namespace <m.namespace> {
 
-/// The pool of the model's attachments, built once from the definitions.
 std::shared_ptr\<Viper::AttachmentFunctionPool> attachment_pool();
 
 } // namespace <m.namespace>

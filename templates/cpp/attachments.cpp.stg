@@ -1,11 +1,3 @@
-// L'implémentation des attachments d'une unité.
-//
-// Elle tient en quelques lignes par attachment parce que trois modules se partagent le
-// travail, et que chacun est nommé une fois : l'unité fournit write/read/type pour ses
-// types, le module injecté fournit encode/decode et definitions(), le runtime fournit
-// tout le reste. Aucun nom plat par type n'apparaît, et ce n'est pas une convention de
-// nommage -- c'est l'argument qui désigne l'unité, par ADL.
-
 unit(u) ::= <<
 // <u.name> attachments -- the implementation of the attachments declared here.
 //
@@ -89,9 +81,6 @@ bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.type> const & 
 } // namespace <u.model.namespace>::<u.name;format="lsc">::attachments::<a.conceptScope>::<a.name>
 >>
 
-// Un setter par champ du document. Le chemin vient de la couche 2, la valeur du module
-// injecté, et le type du champ de la signature -- les trois liés en un seul endroit, ce
-// qu'une surcharge générique prenant (chemin, valeur) ne ferait pas.
 field(sf, a, u) ::= <<
 void set<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type><sf.passBy> value) {
     mutating->update(attachment(), encodeKey(key), <path(sf, a)>,
@@ -109,15 +98,9 @@ void set<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const 
 <endif>
 >>
 
-// L'ADRESSE EST LA SEULE VARIABLE ENTRE LES DEUX FAMILLES. Un champ a la sienne, un
-// document est à la racine, et les huit corps sont identiques par ailleurs.
-// `::` DEVANT : un concept peut porter le nom de son namespace -- `Graph` dans `Graph` --, et
-// depuis la portée de ses attachments, `graph::fields` désignerait alors le concept.
 path(sf, a) ::= <%::<u.model.namespace>::<a.documentType.structure.namespace;format="lsc">::fields::<a.documentType.structure.name>::<sf.name>Path()%>
 root() ::= <%Viper::Path::make()%>
 
-// PAS DE CAST : `encode` rend la classe de Value que le type C++ devient -- un `ValueSet` pour
-// un `std::set`, ce que le runtime demande ici. Le type dit ce que le cast affirmait.
 mutate(op, viper, address, value, u) ::= <%mutating-><op>(attachment(), encodeKey(key), <address>, <u.model.namespace>::codec::encode(<value>));%>
 
 field_set(sf, a, u) ::= <<
@@ -161,8 +144,6 @@ void remove<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> con
     mutating->removeInXArray(attachment(), encodeKey(key), <path(sf, a)>, position);
 }
 >>
-
-// ── et les mêmes quand le document EST l'agrégat ──
 
 document_aggregate(a, u) ::= <<
 <if(a.documentType.field.isSet)><a:document_set(u)><elseif(a.documentType.field.isMap)><a:document_map(u)><elseif(a.documentType.field.isXArray)><a:document_xarray(u)><endif>
@@ -209,12 +190,7 @@ void remove(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.key
 }
 >>
 
-// UN `>>` DANS LE TEXTE ÉMIS FERME UN CORPS `<<…>>`, et chaque type générique qui traverse
-// la sortie en produit un. `<%…%>` prend le texte tel quel, mais supprime aussi les blancs
-// de tête -- donc il ne sert que pour la ligne qui contient le `>>`, jamais pour un corps
-// indenté. D'où le découpage ci-dessous, qui n'a pas d'autre raison d'être.
 encode_key(a, u) ::= <<
-/// The key, encoded: `encode` of a key is a ValueKey.
 <encode_key_head(a)>
     return <u.model.namespace>::codec::encode(key);
 }

@@ -1,11 +1,3 @@
-// Des implémentations de remplacement pour les fonctions d'un pool.
-//
-// LE SITE features ÉPROUVE N'IMPORTE QUEL DOSSIER DE DÉFINITIONS, et un modèle qui déclare des
-// pools déclare des fonctions que seule son application implémente. Pour que le programme de
-// test se lie quand même, chaque fonction reçoit ici un corps qui rend la valeur par défaut de
-// son type. C'est le pont généré qui est éprouvé, pas le métier. Laboratoire seulement : un site
-// qui a ses vrais ponts ne sélectionne pas cette feature.
-
 pool(p) ::= <<
 <preamble(p)>
 

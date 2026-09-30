@@ -39,54 +39,26 @@ unit(u) ::= <<
 #endif
 >>
 
-// POURQUOI `descriptor()` EST PUBLIC. L'épreuve sur base et le pont dynamique le veulent
-// autant que les cinq opérations, et chacun le re-résoudrait depuis l'identifiant. Une
-// identité, un endroit.
-//
-// POURQUOI DEUX OPÉRATIONS DE BASE ET NON CINQ. `Viper::Database` hérite
-// d'`AttachmentGetting`, donc `keys`, `has` et `get` marchent déjà sur une base : ce sont les
-// mêmes fonctions virtuelles. Ce qu'une base ajoute est d'écrire en rendant un statut.
-//
-// LA SURFACE EST CELLE DU RUNTIME. Viper::AttachmentMutating offre set, diff et update,
-// et rien qui retire un document -- le premier jet déclarait un `remove` qui n'existe
-// nulle part. Ce que update permet de plus, c'est d'écrire un champ plutôt que le document
-// entier, et cela donne un setter par champ : lier le chemin et le type du champ dans une
-// même signature est ce qui rend le chemin sûr.
-//
-// `/** */` et non `///` : une documentation du modèle tient sur plusieurs lignes, et `///`
-// ne commente que la première -- le reste part dans le code. Un bloc le supporte sans que
-// le modèle ait à découper quoi que ce soit.
 attachment(a, u) ::= <<
 <if(a.hasDocumentation)>/** <a.documentation> */
 <endif>namespace <u.model.namespace>::<u.name;format="lsc">::attachments::<a.conceptScope>::<a.name> {
 
-/// The identity of this attachment in the definitions.
 extern Viper::UUId const runtimeId;
 
-/// The runtime descriptor of this attachment, resolved once.
 std::shared_ptr\<Viper::Attachment> const & descriptor();
 
-/// Every key that holds a document, taken now: a later write does not reach it.
 <keys(a)>
 
-/// Whether a document is held at key.
 bool has(std::shared_ptr\<Viper::AttachmentGetting> const & getting, <a.keyType.type> const & key);
 
-/// The document held at key, if any.
 <get(a)>
 
-/// Write value at key, replacing what was there.
 void set(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value);
 
-/// Write only what differs between value and the document held at key; `recursive`
-/// compares a structure field by field instead of replacing it whole.
 void diff(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value,
           bool recursive = false);
 
-/// Write value at key in a database, inside an open transaction; true once written.
 bool set(std::shared_ptr\<Viper::Database> const & db, <a.keyType.type> const & key, <a.documentType.type> const & value);
-/// Delete the document held at key in a database, inside an open transaction; true if
-/// it was there.
 bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.type> const & key);
 <if(a.documentType.isStructure)>
 
@@ -99,96 +71,59 @@ bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.type> const & 
 } // namespace <u.model.namespace>::<u.name;format="lsc">::attachments::<a.conceptScope>::<a.name>
 >>
 
-// Un setter par champ du document -- l'unique consommateur des chemins de la couche 2.
-//
-// ET LES MUTATIONS D'AGRÉGAT QUAND LE CHAMP EN EST UN. `set` remplace le champ ; celles-ci
-// ajoutent, retirent ou déplacent à l'intérieur, et deux écritures concurrentes sur le
-// même ensemble se fondent là où deux remplacements s'écrasent.
-//
-// LE NOM PORTE LE CHAMP. Un document peut avoir plusieurs champs agrégés, et `union_` ne
-// dirait pas lequel. C'est l'aplatissement contraint : une portée par champ ajouterait un
-// quatrième niveau sous l'attachment.
 field(sf, a) ::= <<
-/// Write field `<sf.name>` of the document held at key.
 void set<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type><sf.passBy> value);
 <if(sf.field.isSet)><sf:field_set(a)><elseif(sf.field.isMap)><sf:field_map(a)><elseif(sf.field.isXArray)><sf:field_xarray(a)><endif>
 >>
 
 field_set(sf, a) ::= <<
-/// Add the elements of value to the set `<sf.name>`.
 void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type> const & value);
 <field_subtract_set(sf, a)>
 >>
 
 field_map(sf, a) ::= <<
-/// Add the entries of value to the map `<sf.name>`, replacing the map keys already there.
 void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type> const & value);
 <field_subtract_map(sf, a)>
-/// Update the entries of the map `<sf.name>` for map keys already there; a map key only
-/// value carries is ignored.
 void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type> const & value);
 >>
 
 field_xarray(sf, a) ::= <<
-/// Insert value at newPosition, before beforePosition, in the xarray `<sf.name>`.
 void insert<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <sf.field.elementType><sf.field.passBy> value);
-/// Write value at position in the xarray `<sf.name>`.
 void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & position, <sf.field.elementType><sf.field.passBy> value);
-/// Remove position from the xarray `<sf.name>`.
 void remove<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & position);
 >>
 
-// Retirer d'une map, c'est retirer des clés : l'argument est un ensemble de clés et non une
-// map -- demander les valeurs pour effacer laisserait croire qu'elles comptent.
 field_subtract_set(sf, a) ::= <<
-/// Remove the elements of value from the set `<sf.name>`.
 <field_subtract_set_decl(sf, a)>
 >>
 field_subtract_set_decl(sf, a) ::= <%void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type> const & value);%>
 field_subtract_map(sf, a) ::= <<
-/// Remove from the map `<sf.name>` the entries whose map key is in value.
 <field_subtract_map_decl(sf, a)>
 >>
 field_subtract_map_decl(sf, a) ::= <%void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, std::set\<<sf.field.keyType>> const & value);%>
 
-// ── et les mêmes quand le document EST l'agrégat ──
-//
-// `union_` et non `union`, qui est un mot du langage. L'adresse est la racine au lieu de
-// celle d'un champ, et c'est la seule différence entre les deux familles.
 document_aggregate(a) ::= <<
 <if(a.documentType.field.isSet)><a:document_set()><elseif(a.documentType.field.isMap)><a:document_map()><elseif(a.documentType.field.isXArray)><a:document_xarray()><endif>
 >>
 
 document_set(a) ::= <<
-/// Add the elements of value to the set held at key.
 void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value);
-/// Remove the elements of value from the set held at key.
 void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value);
 >>
 
 document_map(a) ::= <<
-/// Add the entries of value to the map held at key, replacing the map keys already there.
 void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value);
-/// Remove from the map held at key the entries whose map key is in value.
 <document_subtract_map(a)>
-/// Update the entries of the map held at key for map keys already there; a map key only
-/// value carries is ignored.
 void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value);
 >>
 
 document_subtract_map(a) ::= <%void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, std::set\<<a.documentType.field.keyType>> const & value);%>
 
 document_xarray(a) ::= <<
-/// Insert value at newPosition, before beforePosition, in the xarray held at key.
 void insert(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <a.documentType.field.elementType><a.documentType.field.passBy> value);
-/// Write value at position in the xarray held at key.
 void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & position, <a.documentType.field.elementType><a.documentType.field.passBy> value);
-/// Remove position from the xarray held at key.
 void remove(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & position);
 >>
 
-
-// `<%…%>`, because a `>>` in the emitted text would close a `<<…>>` body. Every generic
-// type crossing into the output hits this.
 keys(a) ::= <%std::set\<<a.keyType.type>> keys(std::shared_ptr\<Viper::AttachmentGetting> const & getting);%>
 get(a) ::= <%std::optional\<<a.documentType.type>> get(std::shared_ptr\<Viper::AttachmentGetting> const & getting, <a.keyType.type> const & key);%>

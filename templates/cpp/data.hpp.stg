@@ -48,54 +48,31 @@ namespace <u.model.namespace>::<u.name;format="lsc"> {
 #endif
 >>
 
-// EXPLICITE, LÀ OÙ LE PACK LAISSAIT LA CONVERSION IMPLICITE. Toutes les clés du modèle ont
-// la même forme, donc une conversion implicite depuis `UUId` fait de n'importe quel
-// identifiant n'importe quelle clé, en silence -- ce que le typage des clés existe
-// justement pour empêcher.
-//
-// DEUX FORMES DE L'ÉLARGISSEMENT, ET LES DEUX SERVENT : l'implicite pour l'appelant qui
-// passe la clé, la nommée pour celui qui la range ou l'écrit dans une expression où la
-// conversion ne se déclencherait pas.
-//
-// `description` et `isKnown` lisent les définitions embarquées, celles du jour de la
-// génération : un descendant déclaré plus tard n'y est pas.
 concept(c) ::= <<
 <if(c.documentation)>/** <c.documentation> */
 <endif>class <c.name>Key final {
 public:
-    /// No instance, but this concept: the key a model stores for "none of these". It names
-    /// the concept as every other key does, so it equals the one read back from a database.
     <c.name>Key() noexcept;
     <c.name>Key(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
-    /// The key of instance `instanceId` of this concept. Explicit: an id becomes a key only
-    /// where the code says so.
     explicit <c.name>Key(Viper::UUId const & instanceId) noexcept;
 
-    /// The key of a new instance of this concept.
     static <c.name>Key create();
 
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
 
-    /// `instanceId:Concept`, the concept named by the embedded definitions.
     std::string description() const;
-    /// Whether the embedded definitions know the concept this key names.
     bool isKnown() const;
 
-    /// Whether the instance id is set; a default-constructed key is not valid.
     bool isValid() const noexcept;
 <if(c.dsmConcept.parent)>
-    /// Widen to the parent concept's key: wherever the parent is expected, this key passes.
     operator <c.parentNameInNamespace>Key() const noexcept;
 
-    /// The same widening, named, for where the conversion would not trigger.
     <c.parentNameInNamespace>Key toParentKey() const noexcept;
 <endif>
 
-    /// This key, untyped.
     <u.model.namespace>::AnyConceptKey toAny() const noexcept;
-    /// The typed key, if `key` names this concept or one derived from it.
     static std::optional\<<c.name>Key> from(<u.model.namespace>::AnyConceptKey const & key) noexcept;
 
 private:
@@ -110,11 +87,6 @@ bool operator\<(<c.name>Key const &, <c.name>Key const &) noexcept;
 void hash(Viper::StaticHash::Hasher & h, <c.name>Key const & value) noexcept;
 >>
 
-// UN CLUB EST UN ENSEMBLE NOMMÉ DE CONCEPTS, et sa clé peut désigner une instance de
-// n'importe lequel. Les conversions sont du côté du club et non du membre : un club
-// connaît ses membres, un membre n'a pas à connaître ses clubs -- et souvent il ne le peut
-// pas, ses membres pouvant vivre dans des unités qui ignorent celle du club et dont elle
-// dépend. Poser la conversion chez le membre inverserait l'arête du graphe.
 club(c, u) ::= <<
 <if(c.documentation)>/** <c.documentation> */
 <endif>class <c.name>Key final {
@@ -122,8 +94,6 @@ public:
     <c.name>Key() = default;
     <c.name>Key(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
-    /// The key of instance `instanceId` of this concept. Explicit: an id becomes a key only
-    /// where the code says so.
     explicit <c.name>Key(Viper::UUId const & instanceId) noexcept;
 
 <c.membersInNamespace:club_constructor(c);separator="\n">
@@ -133,16 +103,11 @@ public:
     Viper::UUId const & instanceId() const noexcept;
     Viper::UUId const & runtimeId() const noexcept;
 
-    /// `instanceId:Concept`, the concept named by the embedded definitions.
     std::string description() const;
-    /// Whether the embedded definitions know the concept this key names.
     bool isKnown() const;
-    /// Whether the instance id is set; a default-constructed key is not valid.
     bool isValid() const noexcept;
 
-    /// This key, untyped.
     <u.model.namespace>::AnyConceptKey toAny() const noexcept;
-    /// The club key, if `key` names one of its members.
     <club_from(c)>
 
 private:
@@ -157,19 +122,10 @@ bool operator\<(<c.name>Key const &, <c.name>Key const &) noexcept;
 void hash(Viper::StaticHash::Hasher & h, <c.name>Key const & value) noexcept;
 >>
 
-/// Depuis un membre : implicite, appartenir au club n'est pas une demande.
 club_constructor(cm, c) ::= <<
-    /// A member's key belongs to the club: the conversion is implicit.
     <c.name>Key(<cm.nameInNamespace>Key const & key) noexcept;>>
 
-/// Vers un membre : optionnel, l'instance pouvant relever d'un autre membre.
-///
-/// LE NOM DU GETTER PORTE L'UNITÉ DU MEMBRE QUAND CE N'EST PAS CELLE DU CLUB. Deux membres
-/// peuvent s'appeler pareil -- `Core::Thing` et `Parts::Thing` -- et un nom de fonction ne
-/// peut pas contenir `::`. C'est le préfixe plat, inévitable ici, et il ne dépend que du
-/// membre : ajouter un membre n'en renomme jamais un autre.
 club_getter(cm, c) ::= <<
-    /// This key as `<cm.nameInNamespace>Key`, if it names an instance of that member.
     <club_getter_body(cm)>
 >>
 club_getter_body(cm) ::= <%std::optional\<<cm.nameInNamespace>Key> as<cm.asNameInNamespace>Key() const noexcept;%>
@@ -189,21 +145,8 @@ bool operator\<(<s.name> const &, <s.name> const &) noexcept;
 void hash(Viper::StaticHash::Hasher & h, <s.name> const & value) noexcept;
 >>
 
-// LA VALEUR PAR DÉFAUT DU MODÈLE EST CELLE DU CHAMP. `CameraDepthRange{}` doit donner le `zFar`
-// que le DSM déclare, comme le runtime le fait pour la même structure : un champ initialisé à
-// `{}` là où le modèle dit `100.0`, c'est une caméra qui ne voit rien.
 field(f) ::= <<    <f.typeInNamespace> <f.name><f.defaultValue>;>>
 
-// LES STRUCTURES DANS L'ORDRE DE LEURS DÉPENDANCES, et non dans celui de leurs noms. Une
-// unité les émet dans un seul fichier, donc une structure qui en contient une autre a
-// besoin d'elle au-dessus -- `Bag` tient une `Colour`, et l'ordre alphabétique met `Bag`
-// en premier. C'est la troisième fois que la même chose se présente : le parent d'un
-// concept, puis les membres d'un club, maintenant les champs d'une structure.
-
-// `enum class` et non `enum` : le scope nomme déjà l'unité, et une énumération non scopée
-// verserait ses cases dans le namespace de l'unité, où elles heurteraient les noms des
-// autres. Aucune valeur explicite -- ce qui traverse le fil est l'index de la case, et le
-// modèle en est la source.
 enumeration(e) ::= <<
 <if(e.documentation)>/** <e.documentation> */
 <endif>enum class <e.name> {
@@ -213,25 +156,10 @@ enumeration(e) ::= <<
 void hash(Viper::StaticHash::Hasher & h, <e.name> value) noexcept;
 >>
 
-// Une sous-template nommée, et non `{m|    <m.name>}` : StringTemplate mange une espace
-// après le `|`, donc l'indentation sort à trois caractères sans que rien ne le signale.
 enumeration_case(m) ::= <<
     <m.name;format="uf">
 >>
 
-// UNE SEULE FORME DE SPÉCIALISATION, POUR TOUS LES TYPES. La première version en avait
-// deux -- une clé se hachait par sa méthode, une structure par une fonction libre -- et la
-// distinction n'avait aucune raison d'être. `hash(h, x)` est trouvé par ADL dans les deux
-// cas, et le runtime hache un conteneur de la même écriture.
-//
-// L'ACCUMULATEUR EN PREMIER ARGUMENT N'EST PAS UN ORNEMENT. `hash(x)` sur un std::uint8_t
-// ne peut pas marcher : un type fondamental n'a aucun namespace associé, donc l'ADL ne mène
-// nulle part et la recherche ordinaire s'arrête dans l'unité. Un argument porté par le
-// runtime la rétablit pour tous les types -- ce que `write(w, x)` obtient du Writer.
-//
-// La spécialisation est hors du namespace, donc le type doit être qualifié. `<%…%>` pour
-// la ligne d'ouverture seulement : un `>>` dans le texte émis fermerait un corps `<<…>>`,
-// et `<%…%>` mange les blancs de tête, donc la ligne indentée reste dans un `<<…>>`.
 std_hash(e, u) ::= <<
 <std_hash_head(e, u)>
     std::size_t operator()(<u.model.namespace>::<u.name;format="lsc">::<e.name>Key const & v) const noexcept { return Viper::StaticHash::of(v); }

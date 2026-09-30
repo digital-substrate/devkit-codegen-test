@@ -1,13 +1,3 @@
-// Le programme qui éprouve le modèle.
-//
-// LE SEUL ARTEFACT QUI ÉNUMÈRE LES UNITÉS, et c'est sa raison d'être. Tout le reste produit
-// du code par unité, qui ne connaît que lui-même ; quelqu'un doit dire qu'un modèle est fait
-// de celles-ci. C'est un assemblage, donc c'est du socle.
-//
-// LE PACK EN ÉCRIT QUATRE -- codec, base, base en fuzz, base distante -- qui ne diffèrent que
-// par les options acceptées et les appels lancés. Ici il y en a un, parce que ce qu'ils
-// lancent est devenu une liste et non sept familles de fonctions.
-
 model(m) ::= <<
 // <m.namespace> test programme -- runs every test of the model.
 //
@@ -34,7 +24,6 @@ model(m) ::= <<
 
 namespace {
 
-/// The model's namespaces, in declaration order.
 void testTypes() {
 <m.nameSpaces:call_test();separator="\n">
 }
@@ -50,8 +39,6 @@ void fuzzDatabase(std::shared_ptr\<Viper::Database> const & db, std::size_t coun
 } // namespace
 
 int main(int argc, char * argv[]) {
-    // An explicit seed makes the sequence reproducible; without one each run tests
-    // something else, which is the point.
     if (argc > 2 && std::string{argv[1]} == "--seed")
         <m.namespace>::test::seed(std::strtoull(argv[2], nullptr, 10));
 
@@ -60,28 +47,21 @@ int main(int argc, char * argv[]) {
 
         auto const db = Viper::Database::createInMemory();
 
-        // The model's definitions go into the database.
         db->extendDefinitions(<m.namespace>::codec::definitions());
 
-        // The database refuses to write outside a transaction.
         db->beginTransaction(Viper::DatabaseTransactionMode::Exclusive);
 
-        // What the database offers outside the model.
         <m.namespace>::test::testMetadata(db);
         <m.namespace>::test::testBlobCreate(db);
         <m.namespace>::test::testBlobStream(db);
         <m.namespace>::test::testBlobIO(db);
 
-        // A blob exists during the attachment tests: a document may hold a blob id, and the
-        // database refuses one that names no blob.
         <m.namespace>::test::withBlob(db);
         testDatabase(db);
         fuzzDatabase(db, 32);
         <m.namespace>::test::withoutBlob(db);
 <if(m.functionPools)>
 
-        // Every function of every pool, called through the dynamic bridge with arguments
-        // fuzzed from its prototype.
 <m.functionPools:call_pool();separator="\n">
 <endif>
 <if(m.attachmentFunctionPools)>
@@ -91,7 +71,7 @@ int main(int argc, char * argv[]) {
         db->commit();
         db->close();
     } catch (std::exception const & e) {
-        std::cerr \<\< "échec : " \<\< e.what() \<\< std::endl;
+        std::cerr \<\< "failure: " \<\< e.what() \<\< std::endl;
         return 1;
     }
 
@@ -100,8 +80,6 @@ int main(int argc, char * argv[]) {
 }
 >>
 
-// Une sous-template nommée : StringTemplate mange une espace après le `|` d'une anonyme, et
-// l'indentation sortirait à trois caractères sans que rien ne le signale.
 call_test(u) ::= <<
     <u.model.namespace>::<u.name;format="lsc">::test();
 >>

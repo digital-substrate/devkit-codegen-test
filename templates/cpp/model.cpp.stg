@@ -1,8 +1,3 @@
-// Les identifiants et les descripteurs de l'unité, résolus contre le modèle.
-//
-// Chaque descripteur est résolu une fois : les Definitions du modèle sont enregistrées au
-// chargement, donc la réponse ne change pas d'un appel à l'autre.
-
 unit(u) ::= <<
 // <u.name> model -- the identity of its types in the definitions.
 //
@@ -61,8 +56,6 @@ club_type(c, u) ::= <<
 }
 >>
 
-// La clé d'un concept est un type dérivé du concept, que le runtime fabrique -- et celle
-// d'un club se fabrique pareil, à partir du descripteur du club.
 concept_key_type(c, u) ::= <<
 <keyed_type_head(c)>
     static std::shared_ptr\<Viper::Type> const instance{Viper::TypeKey::make(conceptType(Viper::StaticType::tag\<<c.name>Key>{}))};

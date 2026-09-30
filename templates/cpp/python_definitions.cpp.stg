@@ -1,7 +1,3 @@
-// T : le type du concept, ce qu'une clé désigne ; K : le type de la clé ; E, S : énumération,
-// structure ; A : l'attachment ; P : le chemin d'un champ. Chaque constante est lue de ce que
-// le modèle généré porte déjà -- `type(tag<T>)`, le `descriptor()` d'un attachment, le chemin
-// de Fields -- et rien n'est recalculé ici.
 model(m) ::= <<
 // <m.namespace> Python definitions.
 //
@@ -32,7 +28,6 @@ void fill(PyObject * module) {
 >>
 
 namespace(u) ::= <<
-    // <u.name>
 <u.concepts:{c|<c:concept_type(u, "conceptType")>};separator="\n">
 <u.clubs:{c|<c:concept_type(u, "clubType")>};separator="\n">
 <u.enumerations:{e|<e:plain_type(u, "E")>};separator="\n">

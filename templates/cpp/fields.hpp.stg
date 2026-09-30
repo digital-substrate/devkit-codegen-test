@@ -1,6 +1,3 @@
-// No cross-unit include, whatever this namespace's structures hold: a path names a
-// position, not a type. Its types header includes the units it reaches; this one reaches
-// none.
 unit(u) ::= <<
 // <u.name> fields -- the name and path of every field of its structures, as constants, for
 // code that handles them through the dynamic API: `fields::Colour::r` completes, `"r"` does not.
@@ -36,8 +33,6 @@ namespace <u.model.namespace>::<u.name;format="lsc">::fields::<s.name> {
 } // namespace <u.model.namespace>::<u.name;format="lsc">::fields::<s.name>
 >>
 
-// A field name is a constant of the model, so it costs nothing at run time and can be
-// used in a constant expression.
 name(f) ::= <<inline constexpr std::string_view <f.name>{"<f.name>"};>>
 
 path(f) ::= <<std::shared_ptr\<Viper::Path const> const & <f.name>Path();>>

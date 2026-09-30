@@ -1,5 +1,3 @@
-// Un pool, vu d'un client : le miroir du pont.
-
 pool(p) ::= <<
 <preamble(p)>
 
@@ -7,7 +5,6 @@ namespace <p.model.namespace>::<p.name;format="lsc"> {
 
 namespace {
 
-/// The identity of this pool in the definitions.
 Viper::UUId const poolId{Viper::UUId::parse("<p.uuid>")};
 
 } // namespace
@@ -33,7 +30,6 @@ Viper::UUId const poolId{Viper::UUId::parse("<p.uuid>")};
 } // namespace <p.model.namespace>::<p.name;format="lsc">
 >>
 
-// DE CHAQUE UNITÉ ATTEINTE, LE CODEC : `Remote` encode ses arguments et décode son retour.
 preamble(p) ::= <<
 // <p.name> -- the same pool, seen from a client.
 //
@@ -54,9 +50,6 @@ preamble(p) ::= <<
 #include "Viper_ValueVoid.hpp"
 >>
 
-// LE MIROIR EXACT DU PONT. Là où `checkedCall` décode ses arguments et encode son retour,
-// `Remote` encode ses arguments et décode son retour : les deux sens du même passage, les
-// deux mêmes génériques, et le même contrat de format -- l'appel traverse un processus.
 remote(p) ::= <<
 Remote::Remote(std::shared_ptr\<Viper::ServiceRemote> service)
 : _service{std::move(service)} {}
@@ -83,9 +76,6 @@ remote_decode(f, p) ::= <%return <p.model.namespace>::codec::decode\<<f.type>>(%
 remote_head(f) ::= <%<if(f.isVoid)>void<else><f.type><endif> Remote::<f.name>(<f.parameters:remote_param();separator=", ">) const {%>
 remote_param(a) ::= <%<a.type><a.passBy> <a.name>%>
 
-
-// LE MIROIR DU PONT D'ATTACHMENT. Même passage que pour un pool ordinaire, avec l'état en
-// plus : `call` prend l'interface, l'emporte, et rapporte ce que le serveur en a fait.
 attachment_remote(p) ::= <<
 Remote::Remote(std::shared_ptr\<Viper::ServiceRemote> service)
 : _service{std::move(service)} {}

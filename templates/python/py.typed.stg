@@ -1,7 +1,1 @@
-// PEP 561 : ce fichier vide est ce qui rend le paquet typé aux yeux d'un vérificateur.
-//
-// SANS LUI, TOUTES LES ANNOTATIONS SONT INVISIBLES dès que le paquet est installé plutôt
-// que lu sur place -- et installé est le cas normal. Mesuré : `Stub file not found`, puis
-// `Type of "Scalars" is unknown`, et l'affectation fautive passe. Son contenu n'est jamais
-// lu (sauf le mot `partial`), donc il reste vide : un bandeau y serait du bruit.
 model(m) ::= <<>>

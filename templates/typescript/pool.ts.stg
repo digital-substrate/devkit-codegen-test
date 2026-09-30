@@ -1,22 +1,6 @@
-// Un pool, vu d'un client — et il n'y a que ce bord-là.
-//
-// LA LIAISON NODE N'EXPOSE AUCUNE CLASSE `FunctionPool`. Un pool n'y est atteignable que par un
-// `ServiceRemote`, donc à travers un fil. C++ construit le pool et l'expose ; Python le tient
-// en main et l'appelle ; Node ne peut que l'appeler à distance. Ce n'est pas une omission du
-// pack -- son dossier `typescript/` porte un `function_pool_remotes` et aucun `function_pools`.
-//
-// ET ÇA TRANCHE LA DÉCOUPE EN FONCTIONNALITÉS : `Service` et `ServiceClient` ne sont pas la
-// même chose, puisqu'une cible n'a que la seconde.
-//
-// LES MÉTHODES SONT ÉCRITES, PAS DÉDUITES. `functionPoolFunc(pool, "add").call(…)` marche sans
-// qu'on génère quoi que ce soit, et c'est pourquoi il faut les écrire : sans elles le nom
-// d'une fonction du modèle n'est qu'une chaîne, une faute de frappe n'est vue qu'à l'exécution,
-// et rien ne dit ce que l'appel prend ni ce qu'il rend.
-
 pool(p) ::= <<
 <preamble(p)>
 
-/** Le pool, vu d'un client. */
 export class Remote {
     private readonly service: dsviper.ServiceRemote;
 
@@ -32,12 +16,9 @@ export class Remote {
 }
 >>
 
-// UN POOL D'ATTACHMENTS AGIT SUR DES DOCUMENTS, donc son appel emporte l'état sur lequel il
-// porte. C'est la seule différence, et elle est dans la signature.
 attachment_pool(p) ::= <<
 <preamble(p)>
 
-/** Le pool d'attachments, vu d'un client. */
 export class Remote {
     private readonly service: dsviper.ServiceRemote;
 
@@ -61,7 +42,7 @@ preamble(p) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <p.model.generated>
 
-/** <p.name> — <if(p.hasDocumentation)><p.documentation;format="comment"><else>le pool, vu d'un client.<endif> */
+<if(p.hasDocumentation)>/** <p.documentation;format="comment"> */<endif>
 import dsviper from "@digitalsubstrate/dsviper";
 
 import { Mapping, Ordered, Sequence } from "../_codegen/container.js";
@@ -72,7 +53,6 @@ export const NAME = "<p.name>";
 export const UUID = dsviper.ValueUUId.create("<p.uuid>");
 >>
 
-// LA DOCUMENTATION DU MODÈLE EST LE JSDOC : l'éditeur la montre à la complétion.
 remote_call(f) ::= <<
 <doc(f)>    <f.name;format="lf">(<f.parameters:parameter();separator=", ">): <ret(f)> {
         <call(f)>

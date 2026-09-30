@@ -1,10 +1,3 @@
-// Un pool, vu d'un client.
-//
-// LE CÔTÉ CLIENT EST UNE FEATURE À PART, ET CE N'EST PAS DU RANGEMENT. Dans un seul fichier,
-// un client qui ne veut qu'appeler recevait aussi `pool()`, qui référence les fonctions que
-// seul un serveur implémente : le lieur les réclamait. Séparés, un client ne lie que ceci, et
-// un projet qui n'expose pas ses pools en service ne génère pas ce fichier du tout.
-
 pool(p) ::= <<
 <preamble(p, "")>
 
@@ -61,7 +54,6 @@ preamble(p, context) ::= <<
 >>
 
 remote(f) ::= <<
-/// The same pool, seen from a client.
 class Remote final {
 public:
     explicit Remote(std::shared_ptr\<Viper::ServiceRemote> service);
@@ -85,15 +77,7 @@ doc(f) ::= <<
 ret(f) ::= <%<if(f.isVoid)>void<else><f.type><endif>%>
 param(p) ::= <%<p.type><p.passBy> <p.name>%>
 
-
-// LE REMOTE D'UN POOL D'ATTACHMENTS PORTE L'ÉTAT, PAS SEULEMENT LES ARGUMENTS. Un appel
-// local agit sur l'interface qu'on lui donne ; à distance, cette interface est de ce
-// côté-ci du fil, donc l'appel emporte ses changements avec lui et rapporte ceux du
-// serveur. C'est pourquoi le contexte reste le premier paramètre -- et pourquoi c'est
-// toujours `AttachmentMutating`, même pour une fonction qui ne fait que lire : le runtime
-// n'a qu'une façon d'emporter un état, et elle est mutable.
 attachment_remote(f) ::= <<
-/// The same pool, seen from a client.
 class Remote final {
 public:
     explicit Remote(std::shared_ptr\<Viper::ServiceRemote> service);

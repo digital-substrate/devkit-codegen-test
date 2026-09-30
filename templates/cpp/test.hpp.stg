@@ -1,25 +1,3 @@
-// Ce qu'il faut savoir d'une unité pour l'éprouver, et ce qu'il faut du modèle pour
-// éprouver quoi que ce soit.
-//
-// SEPT ARTEFACTS DU PACK TIENNENT DANS L'ENTRÉE `model`, et ce n'est pas une compression :
-// c'est ce que leur propre source dit. `TestFuzz::fuzz_X()` vaut
-// `decode_X(TestValueFuzz::fuzz_X())`, `TestValueFuzz::fuzz_X()` vaut
-// `fuzzer()->fuzzType(type_X())`, et chaque `test_X` des trois codecs est un aller-retour
-// dont seul le suffixe change. Écrits en templates au-dessus de `type(tag\<T>{})`, il n'en
-// reste rien par type.
-//
-// ET UNE UNITÉ NE FABRIQUE RIEN. Le premier jet déclarait ici un `fuzz` par type déclaré,
-// en supposant qu'une unité seule sait fabriquer un des siens. Elle ne le sait pas mieux
-// que le runtime, qui part du descripteur de type -- et ce descripteur, elle le fournit
-// déjà. Il ne lui reste qu'une chose que personne d'autre ne sait : sa liste.
-
-// SÉPARÉ DE `test()` PARCE QU'IL DEMANDE QUELQUE CHOSE. Les codecs n'ont besoin de rien que
-// le modèle ne porte ; une base est un support qu'il faut ouvrir, et l'appelant décide
-// lequel.
-//
-// SÉPARÉ PARCE QU'IL NE VÉRIFIE PAS LA MÊME CHOSE. L'aller-retour dit qu'une écriture se
-// relit ; celui-ci dit que mille tiennent, et il n'assert rien d'autre que l'absence de
-// casse.
 unit(u) ::= <<
 // <u.name> tests -- what it takes to test this namespace.
 //
@@ -40,14 +18,10 @@ unit(u) ::= <<
 
 namespace <u.model.namespace>::<u.name;format="lsc"> {
 
-/// Round-trip every type declared here through each codec.
 void test();
 
-/// Round-trip every attachment declared here through `db`, which the caller opens.
 void testDatabase(std::shared_ptr\<Viper::Database> const & db);
 
-/// Write `count` random documents to every attachment declared here, then read them
-/// all back; it checks that nothing breaks, not what comes back.
 void fuzzDatabase(std::shared_ptr\<Viper::Database> const & db, std::size_t count);
 
 } // namespace <u.model.namespace>::<u.name;format="lsc">
@@ -55,58 +29,6 @@ void fuzzDatabase(std::shared_ptr\<Viper::Database> const & db, std::size_t coun
 #endif
 >>
 
-// SEPT ARTEFACTS DU PACK TIENNENT ICI, et ce n'est pas une compression : c'est ce que leur
-// propre source dit. `TestFuzz::fuzz_X()` vaut `decode_X(TestValueFuzz::fuzz_X())`,
-// `TestValueFuzz::fuzz_X()` vaut `fuzzer()->fuzzType(type_X())`, et chaque `test_X` des
-// trois codecs est un aller-retour dont seul le suffixe change. Une fois écrits en
-// fonctions template au-dessus de `type(tag\<T>{})`, il n'en reste rien par type.
-//
-// LE FUZZ N'EST PAS CELUI D'UNE UNITÉ, et c'est la correction que ce fichier apporte. Le
-// premier jet déclarait `fuzz(Rng&, tag\<T>)` dans chaque unité, en supposant qu'elle seule
-// sait comment fabriquer un de ses types. Elle ne le sait pas mieux que le runtime : celui-
-// ci part du descripteur de type, que l'unité fournit déjà. Une unité n'a donc rien à
-// implémenter pour être éprouvée.
-//
-// ── les trois allers-retours, un par codec ──
-//
-// Chacun est ce que le pack écrit une fois par type et par codec, avec le suffixe pour
-// seule variable. Écrits une fois ici, ils ne demandent plus qu'une liste de types.
-//
-// LE NOM DU TYPE DANS L'ÉCHEC, et ce n'est pas un confort de mise au point : une épreuve
-// qui dit « un aller-retour a échoué » sur soixante types oblige à les reprendre un par un.
-// `typeid` le donne sans que le modèle ait à le porter.
-//
-// ── et le même sur un support persistant ──
-//
-// LE CORPS DU PACK, MOT POUR MOT, SUR DEUX PARAMÈTRES. `TestDatabase` écrit ces quinze
-// lignes une fois par attachment, et la seule chose qui y varie est la portée appelée --
-// donc la clé, le document, et l'identifiant. Écrites une fois, elles ne demandent plus
-// qu'une liste, comme les allers-retours de codec au-dessus.
-//
-// LA LECTURE PASSE PAR L'ATTACHMENT, PAS PAR UNE COUCHE À PART. `Viper::Database` est une
-// `AttachmentGetting`, donc `keys`, `has` et `get` sont celles-là mêmes qu'en mémoire ; il
-// n'y a que l'écriture qui change, et c'est elle qui rend un statut.
-//
-// ── ce qu'une base offre hors du modèle ──
-//
-// AUCUNE DE CES ÉPREUVES NE NOMME UN TYPE DU MODÈLE, et c'est pourquoi elles sont ici et
-// non par unité. Le pack les écrit dans un artefact par modèle parce que tout y est par
-// modèle ; une fois qu'une unité existe, la question devient « qu'est-ce qui n'est à aucune
-// unité ? », et les métadonnées d'un fichier et son magasin de blobs n'y sont pas.
-//
-// C'EST LA SEULE ÉPREUVE QUI TRAVERSE LA FRONTIÈRE. Tout le reste éprouve un côté ou
-// l'autre ; celle-ci part d'une valeur dynamique, la fait passer par le pont, appelle la
-// fonction statique que le développeur a écrite, et récupère une valeur dynamique.
-//
-// ET ELLE NE NOMME AUCUNE FONCTION. Le prototype dit quels types une fonction prend ; le
-// fuzzer en fabrique un jeu ; l'appel se fait. Aucune ligne par fonction, et un pool qui
-// gagne une fonction est éprouvé sans que rien ne change.
-//
-// UNE BASE N'EST PAS UNE INTERFACE MUTANTE, et c'est une distinction du runtime qu'on ne
-// voit qu'en essayant : `Viper::Database` hérite d'`AttachmentGetting` et pas
-// d'`AttachmentMutating`, que seul un état de commit implémente. La moitié lecture d'un
-// pool s'éprouve donc avec une base, la moitié écriture demande un état -- et celle-là
-// reste à écrire.
 model(m) ::= <<
 // <m.namespace>::test -- round trips for any type of the model, knowing none of them.
 //
@@ -148,11 +70,9 @@ model(m) ::= <<
 
 namespace <m.namespace>::test {
 
-/// The value fuzzer, built once over the model; `seed` makes its sequence reproducible.
 std::shared_ptr\<Viper::Fuzzer> const & fuzzer();
 void seed(std::uint64_t value);
 
-/// A random value of T: `fuzzValue` as a Viper::Value, `fuzz` as the C++ value.
 template\<class T>
 std::shared_ptr\<Viper::Value> fuzzValue() {
     return fuzzer()->fuzzType(type(Viper::StaticType::tag\<T>{}));
@@ -163,9 +83,6 @@ T fuzz() {
     return codec::decode\<T>(fuzzValue\<T>());
 }
 
-
-/// Write a random T with the static writer, read it back with the static reader, compare;
-/// a failure names the type.
 template\<class T>
 std::string const & named() {
     static std::string const instance{std::string{"Test."} + typeid(T).name()};
@@ -180,7 +97,6 @@ void roundTripStream() {
     Viper::StaticWriter::Writer writer{encoder};
     write(writer, value);
 
-    // Named: `createDecoder` keeps a reference to the blob.
     auto const blob{encoder->endEncoding()};
     auto const decoder{codec::stream()->createDecoder(blob)};
     Viper::StaticReader::Reader reader{decoder, codec::definitions()};
@@ -188,7 +104,6 @@ void roundTripStream() {
     VIPER_ASSERT(named\<T>(), read(reader, Viper::StaticType::tag\<T>{}) == value);
 }
 
-/// Decode a random Viper::Value of T's type to T, encode it back, compare.
 template\<class T>
 void roundTripValue() {
     auto const value{fuzzValue\<T>()};
@@ -197,7 +112,6 @@ void roundTripValue() {
     VIPER_ASSERT(named\<T>(), value->equal(back));
 }
 
-/// Encode a random Viper::Value of T's type to JSON, decode it, compare.
 template\<class T>
 void roundTripJson() {
     auto const value{fuzzValue\<T>()};
@@ -208,7 +122,6 @@ void roundTripJson() {
     VIPER_ASSERT(named\<T>(), value->equal(back));
 }
 
-/// The three round trips for T.
 template\<class T>
 void roundTrip() {
     roundTripStream\<T>();
@@ -216,12 +129,6 @@ void roundTrip() {
     roundTripJson\<T>();
 }
 
-/// A field the model gives a default value has it in a default-constructed structure, as the
-/// runtime gives it to the same structure built from the definitions.
-///
-/// ONLY THE FIELDS THAT DECLARE ONE. A key field has no declared default, and there the two
-/// disagree on purpose: a generated key names its concept even when it names no instance, as a
-/// 1.2 application wrote it, where the runtime leaves the concept empty.
 template\<class T, class F>
 void defaultFieldIsTheModels(F T::* field, char const * fieldName) {
     auto const name{"<m.namespace>.Test"};
@@ -233,8 +140,6 @@ void defaultFieldIsTheModels(F T::* field, char const * fieldName) {
     VIPER_ASSERT(name, T{}.*field == expected.*field);
 }
 
-/// A default concept key names no instance, but its concept -- as a 1.2 database stores the
-/// key for "none of these", so that the two compare equal.
 template\<class K>
 void defaultKeyNamesItsConcept() {
     auto const name{"<m.namespace>.Test"};
@@ -244,9 +149,6 @@ void defaultKeyNamesItsConcept() {
     VIPER_ASSERT(name, none == codec::decode\<K>(codec::encode(none)));
 }
 
-
-/// Set, read, replace and delete a random document of an attachment, and check that
-/// nothing is left.
 template\<class Key, class Document>
 void roundTripAttachment(std::shared_ptr\<Viper::Database> const & db,
                          std::shared_ptr\<Viper::Attachment> const & attachment) {
@@ -258,7 +160,6 @@ void roundTripAttachment(std::shared_ptr\<Viper::Database> const & db,
     VIPER_ASSERT(name, db->set(attachment, key, codec::encode(fuzz\<Document>())));
     VIPER_ASSERT(name, !db->get(attachment, key)->isNil());
 
-    // replace: the same key, another document
     VIPER_ASSERT(name, db->set(attachment, key, codec::encode(fuzz\<Document>())));
     VIPER_ASSERT(name, !db->get(attachment, key)->isNil());
 
@@ -269,7 +170,6 @@ void roundTripAttachment(std::shared_ptr\<Viper::Database> const & db,
     VIPER_ASSERT(name, db->keys(attachment)->empty());
 }
 
-/// Write `count` random documents to an attachment, then read every key back.
 template\<class Key, class Document>
 void fuzzAttachment(std::shared_ptr\<Viper::Database> const & db,
                     std::shared_ptr\<Viper::Attachment> const & attachment, std::size_t count) {
@@ -277,7 +177,6 @@ void fuzzAttachment(std::shared_ptr\<Viper::Database> const & db,
         db->set(attachment, codec::encode(fuzz\<Key>()),
                 codec::encode(fuzz\<Document>()));
 
-    // Rebuild each key from its identity: the set yields const keys, `get` takes a mutable one.
     for (Viper::ValueSetIter it{db->keys(attachment)}; it.hasNext(); it.next()) {
         auto const read{Viper::ValueKey::cast(it.value())};
         Viper::Key const stored{read->instanceId, read->typeConcept->runtimeId};
@@ -285,29 +184,19 @@ void fuzzAttachment(std::shared_ptr\<Viper::Database> const & db,
     }
 }
 
-
-/// Check the metadata the database reports about itself.
 void testMetadata(std::shared_ptr\<Viper::Database> const & db);
 
-/// Create a blob, read it back, delete it, and check that nothing is left.
 void testBlobCreate(std::shared_ptr\<Viper::Database> const & db);
 
-/// The same, written in chunks.
 void testBlobStream(std::shared_ptr\<Viper::Database> const & db);
 
-/// The same, read back in chunks at a given offset.
 void testBlobIO(std::shared_ptr\<Viper::Database> const & db);
 
-/// Create a blob for the duration of the attachment tests, and delete it: a document may
-/// hold a blob id, and the database refuses one that names no blob.
 std::shared_ptr\<Viper::Database> withBlob(std::shared_ptr\<Viper::Database> const & db);
 void withoutBlob(std::shared_ptr\<Viper::Database> const & db);
 
-/// Call every function of `pool` with fuzzed arguments, through the dynamic bridge.
 void testPool(std::shared_ptr\<Viper::FunctionPool> const & pool);
 
-/// The same for an attachment pool, reading through `getting`. A database is not an
-/// `AttachmentMutating`, so the pool's writing half is not exercised here.
 void testPool(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool,
               std::shared_ptr\<Viper::AttachmentGetting> const & getting);
 

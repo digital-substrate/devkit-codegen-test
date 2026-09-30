@@ -1,17 +1,5 @@
-// Le point d'entrée d'un pool, et seulement lui.
-//
-// À PART DE CELUI DES UNITÉS : dans `index.ts.stg`, il rendait un module par pool même quand
-// `Base` seul était demandé, et ce module réexportait un `pool.js` absent. Il ne vient plus
-// qu'avec la feature `Pool`. Même nom de sortie, `index.ts` : d'où son propre dossier.
-
 pool(p) ::= <<
 <preamble(p.model)>
-/**
- * <p.name> — ce que ce pool expose.
- *
- * Un pool est une unité, donc un module, et son point d'entrée ne porte que des réexports
- * comme celui de n'importe quelle autre.
- */
 export * from "./pool.js";
 >>
 

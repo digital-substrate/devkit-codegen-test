@@ -1,16 +1,3 @@
-// L'identité d'une unité dans le modèle : ses identifiants d'exécution, et les
-// descripteurs de type que le runtime lui rend.
-//
-// UN ARTEFACT QUE LE DÉCOUPAGE N'AVAIT PAS PRÉVU. Ces déclarations étaient rangées avec le
-// codec, parce que c'est le codec qui les demandait. Mais `create()` a besoin de
-// l'identifiant du concept et `from()` de son descripteur, et la couche des types n'a rien
-// à voir avec la sérialisation. Ce ne sont pas des fonctions de codec : c'est ce qu'une
-// unité sait d'elle-même vis-à-vis du modèle, et plusieurs couches s'en servent.
-//
-// DANS <u.name> ET NON DANS <u.model.namespace>::<u.name;format="lsc">::Model : `type(tag\<T>)` doit être trouvable par ADL
-// depuis le module injecté, et l'ADL sur `tag\<<u.model.namespace>::<u.name;format="lsc">::X>` associe <u.name>, pas ses
-// sous-portées. La séparation est le fichier, pas le namespace.
-
 unit(u) ::= <<
 // <u.name> model -- the identity of its types in the definitions.
 //
@@ -33,7 +20,6 @@ unit(u) ::= <<
 
 namespace <u.model.namespace>::<u.name;format="lsc"> {
 
-/// The runtime id of each type declared here.
 namespace runtime_ids {
 <u.concepts:runtime_id();separator="\n">
 <u.clubs:runtime_id();separator="\n">
@@ -41,20 +27,15 @@ namespace runtime_ids {
 <u.structures:runtime_id();separator="\n">
 } // namespace runtime_ids
 
-/// The concept type of each key -- what narrowing compares.
 <u.concepts:concept_type();separator="\n">
 
-/// The club type of each club key. Membership is not inheritance; the descriptor carries
-/// the difference.
 <u.clubs:club_type();separator="\n">
 
-/// The runtime type of each type declared here, for `encode`, `decode` and the fuzzer.
 <u.concepts:keyed_type();separator="\n">
 <u.clubs:keyed_type();separator="\n">
 <u.enumerations:plain_type();separator="\n">
 <u.structures:plain_type();separator="\n">
 
-/// The Value class each type becomes -- what `encode` returns and the dynamic side holds.
 <u.concepts:keyed_value();separator="\n">
 <u.clubs:keyed_value();separator="\n">
 <u.enumerations:{e|<e:plain_value("ValueEnumeration")>};separator="\n">
