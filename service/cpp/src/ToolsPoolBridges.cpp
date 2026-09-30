@@ -9,11 +9,11 @@ std::int64_t add(std::int64_t a, std::int64_t b) {
   return a + b;
 }
 
-service::demo::Vector3 add_vector(service::demo::Vector3 const & a, service::demo::Vector3 const & b) {
+service::demo::Vector3 addVector(service::demo::Vector3 const & a, service::demo::Vector3 const & b) {
   return {a.x + b.x, a.y + b.y, a.z + b.z};
 }
 
-std::string random_string(std::uint32_t size) {
+std::string randomString(std::uint32_t size) {
   static std::string const alphabet{"abcdefghijklmnopqrstuvwxyz"};
   std::random_device rd;
   std::default_random_engine e(rd());
@@ -25,7 +25,7 @@ std::string random_string(std::uint32_t size) {
   return result;
 }
 
-bool is_greater(Viper::Any const & a, Viper::Any const & b) {
+bool isGreater(Viper::Any const & a, Viper::Any const & b) {
   return Viper::isGreater(a.value()->compare(b.value()));
 }
 

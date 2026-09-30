@@ -25,7 +25,7 @@ if (tools.isAvailable()) {
 
     const v1 = new Vector3({ x: 1, y: 2, z: 3 });
     const v2 = new Vector3({ x: 10, y: 20, z: 30 });
-    console.log(`add_vector(v1,v2) -> ${tools.addVector(v1, v2)}`);
+    console.log(`addVector(v1,v2) -> ${tools.addVector(v1, v2)}`);
 }
 
 const playerModel = new PlayerModelRemote(serviceRemote);

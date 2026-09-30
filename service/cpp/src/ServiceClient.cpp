@@ -56,12 +56,12 @@ int main(int argc, char * argv[]) {
 
             service::demo::Vector3 const v1{1, 2, 3};
             service::demo::Vector3 const v2{10, 20, 30};
-            auto const rv{tools.add_vector(v1, v2)};
-            std::cout << "add_vector(v1,v2) -> (" << rv.x << "," << rv.y << "," << rv.z << ")" << '\n';
+            auto const rv{tools.addVector(v1, v2)};
+            std::cout << "addVector(v1,v2) -> (" << rv.x << "," << rv.y << "," << rv.z << ")" << '\n';
 
             Viper::Any const five{Viper::ValueAny::make(Viper::ValueInt64::make(5))};
             Viper::Any const three{Viper::ValueAny::make(Viper::ValueInt64::make(3))};
-            std::cout << "is_greater(5,3) -> " << tools.is_greater(five, three) << '\n';
+            std::cout << "isGreater(5,3) -> " << tools.isGreater(five, three) << '\n';
         }
 
         auto const playerModel{service::player_model::Remote{service}};
@@ -72,7 +72,7 @@ int main(int argc, char * argv[]) {
             auto key{playerModel.create(mutableState, nickname, service::demo::Level::Beginner)};
             std::cout << "key is " << key.description() << '\n';
 
-            if (auto const pk{playerModel.has_player(mutableState, nickname)}) {
+            if (auto const pk{playerModel.hasPlayer(mutableState, nickname)}) {
                 if (auto const property{service::demo::attachments::Player::property::get(mutableState, *pk)}) {
                     std::cout << "nickname=" << property->nickname << ", level=" << static_cast<int>(property->level) << '\n';
                 }

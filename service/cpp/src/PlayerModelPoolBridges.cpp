@@ -13,7 +13,7 @@ PlayerKey create(std::shared_ptr<Viper::AttachmentMutating> const & mutating, st
     return key;
 }
 
-std::optional<PlayerKey> has_player(std::shared_ptr<Viper::AttachmentGetting> const & getting, std::string const & nickname) {
+std::optional<PlayerKey> hasPlayer(std::shared_ptr<Viper::AttachmentGetting> const & getting, std::string const & nickname) {
   for (auto const & key : attachments::Player::property::keys(getting))
     if (auto const property{attachments::Player::property::get(getting, key)})
         if (property->nickname == nickname)

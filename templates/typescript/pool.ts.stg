@@ -88,5 +88,5 @@ parameter(a) ::= <%<a.name;format="lf">: <a.bindingType.annotation>%>
 ret(f) ::= <%<if(f.isVoid)>void<else><f.returnBindingType.annotation><endif>%>
 argument(a) ::= <%unwrap(<a.name;format="lf">)%>
 
-call(f) ::= <%<if(f.isVoid)>this.service.functionPoolFunc(NAME, "<f.name;format="lsc">").call(<f.parameters:argument();separator=", ">);<else>return wrap(this.service.functionPoolFunc(NAME, "<f.name;format="lsc">").call(<f.parameters:argument();separator=", ">));<endif>%>
-attachment_call(f) ::= <%<if(f.isVoid)>this.service.attachmentFunctionPoolFunc(NAME, "<f.name;format="lsc">").call(state<if(f.parameters)>, <endif><f.parameters:argument();separator=", ">);<else>return wrap(this.service.attachmentFunctionPoolFunc(NAME, "<f.name;format="lsc">").call(state<if(f.parameters)>, <endif><f.parameters:argument();separator=", ">));<endif>%>
+call(f) ::= <%<if(f.isVoid)>this.service.functionPoolFunc(NAME, "<f.name>").call(<f.parameters:argument();separator=", ">);<else>return wrap(this.service.functionPoolFunc(NAME, "<f.name>").call(<f.parameters:argument();separator=", ">));<endif>%>
+attachment_call(f) ::= <%<if(f.isVoid)>this.service.attachmentFunctionPoolFunc(NAME, "<f.name>").call(state<if(f.parameters)>, <endif><f.parameters:argument();separator=", ">);<else>return wrap(this.service.attachmentFunctionPoolFunc(NAME, "<f.name>").call(state<if(f.parameters)>, <endif><f.parameters:argument();separator=", ">));<endif>%>
