@@ -21,7 +21,7 @@ unit(u) ::= <<
 /** <u.name> — les attachments que ce namespace déclare. */
 import dsviper from "@digitalsubstrate/dsviper";
 
-import { AttachmentProxy } from "../_codegen/attachment.js";
+import { AttachmentProxy, type Mutating } from "../_codegen/attachment.js";
 import { Mapping, Ordered, Sequence } from "../_codegen/container.js";
 import { AnyConceptKey } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
@@ -37,31 +37,107 @@ import { <u.exported:{e|<e>};separator=", "> } from "./data.js";
 // une autre unité -- `Annotations::note` est porté par `ModelA::Material` -- et c'est alors le
 // nom de l'unité d'origine qui nomme la classe, faute de quoi deux attachments homonymes sur
 // deux concepts homonymes se heurteraient.
+// L'ÉCRITURE EST CELLE DU C++, DANS L'IDIOME DE TYPESCRIPT. `attachments::Graph::selection::
+// unionVertexKeys` s'écrit `Graph.selection.unionVertexKeys` : la classe est le concept, avec
+// la casse du type, l'attribut statique est l'attachment et la méthode l'opération.
+//
+// LES OPÉRATIONS D'UN DOCUMENT SONT GÉNÉRÉES, UNE MÉTHODE PAR CHAMP, pour que le code métier
+// se complète et se vérifie à la compilation. Leur classe est exportée parce que l'émission des
+// déclarations refuse une classe anonyme qui a des membres protégés ; son nom commence par `_`
+// parce qu'on ne l'écrit jamais -- on écrit `Graph.selection`.
 by_concept(s, u) ::= <<
+<s.attachments:own_class(s);separator="">
 /** Les attachments portés par <s.keyType.type>. */
 export class <s.name> {
 <s.attachments:one(s);separator="\n\n">
 }
 >>
 
-// LE `>>` D'UN GÉNÉRIQUE FERME LE CORPS D'UN TEMPLATE. `AttachmentProxy<K, D>(` finit par
-// l'accolade de l'expression suivie de celle du générique, et StringTemplate y voit la fin du
-// `<<…>>` : le fichier rendu s'arrête au milieu d'une déclaration et les sous-templates
-// suivantes deviennent introuvables. Le diagnostic nomme les disparues, jamais la cause. Un
-// `<%…%>` n'a pas ce problème, parce qu'il se ferme sur `%>`.
+// UN ATTACHMENT SANS OPÉRATION PROPRE N'A PAS DE CLASSE À LUI : un document scalaire n'offre
+// que ce que le runtime offre déjà à tous. La condition est écrite en ligne, deux fois,
+// parce qu'une invocation de template rend une chaîne -- vide, mais présente -- et qu'un
+// `if` sur elle serait toujours vrai.
 one(a, s) ::= <<
-    static readonly <a.name;format="lf"> = new AttachmentProxy<generics(a, s)>(
+    static readonly <a.name;format="lf"> = new <if(a.documentType.isStructure)><opsClass(a, s)><elseif(a.documentType.field.isNotBox)><opsClass(a, s)><else>AttachmentProxy\<<generics(a, s)>\><endif>(
         dsviper.ValueUUId.create("<a.runtimeId>"),
         definitions, <s.keyType.bindingType.annotation>, <documentClass(a)>);
 >>
 
-// LA CLÉ ET LE DOCUMENT SONT NOMMÉS DEUX FOIS, ET PAS POUR RIEN : une fois comme paramètre de
-// type -- ce que le vérificateur lit -- et une fois comme valeur, parce que **nommer une
-// classe force son import**, et que c'est l'import qui remplit la table des classes.
-//
-// ET LES NOMS DE CETTE UNITÉ SONT IMPORTÉS UN PAR UN, plutôt que le module entier sous un
-// alias. L'orthographe que le modèle donne est celle « vue de l'unité » : nue pour ce que
-// l'unité déclare, préfixée du module pour le reste. Importer nommément est ce qui rend cette
-// orthographe-là juste ici aussi, dans un module voisin qui n'est pas `data`.
-generics(a, s) ::= <%\<<s.keyType.bindingType.annotation>, <a.documentType.bindingType.annotation>>%>
+opsClass(a, s) ::= <%_<s.name>_<a.name;format="lf">%>
+
+own_class(a, s) ::= <%<if(a.documentType.isStructure)><own_class_body(a, s)><elseif(a.documentType.field.isNotBox)><own_class_body(a, s)><endif>%>
+
+own_class_body(a, s) ::= <<
+/** <s.keyType.type> -> <a.documentType.bindingType.annotation>, avec ses opérations. S'écrit `<s.name>.<a.name;format="lf">`. */
+export class <opsClass(a, s)> extends AttachmentProxy\<<generics(a, s)>\> {
+    <if(a.documentType.isStructure)><a.documentType.structure.fields:field(s);separator="\n\n"><else><document(a, s)><endif>
+}
+
+
+>>
+
+field(sf, s) ::= <<
+/** Écrire le champ `<sf.name>` du document tenu à `key`. */
+set<sf.name;format="uf">(mutating: Mutating, key: <key(s)>, value: <sf.bindingType.annotation>): void {
+    this.updateField(mutating, key, "<sf.name>", value);
+}<if(sf.field.isSet)>
+
+<set_ops(sf.field, s, {"<sf.name>"}, {<sf.name;format="uf">}, sf.name)><elseif(sf.field.isMap)>
+
+<map_ops(sf.field, s, {"<sf.name>"}, {<sf.name;format="uf">}, sf.name)><elseif(sf.field.isXArray)>
+
+<xarray_ops(sf.field, s, {"<sf.name>"}, {<sf.name;format="uf">}, sf.name)><endif>
+>>
+
+document(a, s) ::= <%<if(a.documentType.field.isSet)><set_ops(a.documentType.field, s, "undefined", "", false)><elseif(a.documentType.field.isMap)><map_ops(a.documentType.field, s, "undefined", "", false)><elseif(a.documentType.field.isXArray)><xarray_ops(a.documentType.field, s, "undefined", "", false)><endif>%>
+
+key(s) ::= <%<s.keyType.bindingType.annotation>%>
+
+set_ops(t, s, path, suffix, label) ::= <<
+/** Ajouter des éléments au set<if(label)> `<label>`<endif>. */
+union<suffix>(mutating: Mutating, key: <key(s)>, value: Iterable\<<t.bindingElementType.annotation>\>): void {
+    this.unionInSet(mutating, key, <path>, Array.from(value));
+}
+
+/** Retirer des éléments du set<if(label)> `<label>`<endif>. */
+subtract<suffix>(mutating: Mutating, key: <key(s)>, value: Iterable\<<t.bindingElementType.annotation>\>): void {
+    this.subtractInSet(mutating, key, <path>, Array.from(value));
+}
+>>
+
+map_ops(t, s, path, suffix, label) ::= <<
+/** Ajouter des entrées à la map<if(label)> `<label>`<endif>, en remplaçant les clés déjà là. */
+union<suffix>(mutating: Mutating, key: <key(s)>, value: ReadonlyMap\<<t.bindingKeyType.annotation>, <t.bindingElementType.annotation>\>): void {
+    this.unionInMap(mutating, key, <path>, value);
+}
+
+/** Retirer de la map<if(label)> `<label>`<endif> les entrées dont la clé est donnée. */
+subtract<suffix>(mutating: Mutating, key: <key(s)>, value: Iterable\<<t.bindingKeyType.annotation>\>): void {
+    this.subtractInMap(mutating, key, <path>, Array.from(value));
+}
+
+/** Mettre à jour les entrées de la map<if(label)> `<label>`<endif> dont la clé est déjà là ; les autres sont ignorées. */
+update<suffix>(mutating: Mutating, key: <key(s)>, value: ReadonlyMap\<<t.bindingKeyType.annotation>, <t.bindingElementType.annotation>\>): void {
+    this.updateInMap(mutating, key, <path>, value);
+}
+>>
+
+xarray_ops(t, s, path, suffix, label) ::= <<
+/** Insérer dans la xarray<if(label)> `<label>`<endif> ; `ValueUUId.INVALID` comme `beforePosition` ajoute à la fin. */
+insert<suffix>(mutating: Mutating, key: <key(s)>, beforePosition: dsviper.ValueUUId, newPosition: dsviper.ValueUUId, value: <t.bindingElementType.annotation>): void {
+    this.insertInXArray(mutating, key, <path>, beforePosition, newPosition, value);
+}
+
+/** Écrire l'élément à `position` dans la xarray<if(label)> `<label>`<endif>. */
+update<suffix>(mutating: Mutating, key: <key(s)>, position: dsviper.ValueUUId, value: <t.bindingElementType.annotation>): void {
+    this.updateInXArray(mutating, key, <path>, position, value);
+}
+
+/** Retirer l'élément à `position` de la xarray<if(label)> `<label>`<endif>. */
+remove<suffix>(mutating: Mutating, key: <key(s)>, position: dsviper.ValueUUId): void {
+    this.removeInXArray(mutating, key, <path>, position);
+}
+>>
+
+generics(a, s) ::= <%<s.keyType.bindingType.annotation>, <a.documentType.bindingType.annotation>%>
 documentClass(a) ::= <%<if(a.documentType.bindingType.isNamed)><a.documentType.bindingType.annotation><else>undefined<endif>%>

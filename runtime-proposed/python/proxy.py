@@ -35,7 +35,7 @@ class Proxy:
         self._value = value
 
     @property
-    def value(self):
+    def vpr_value(self):
         """La valeur du runtime. C'est la donnée ; la classe n'en est que la lecture."""
         return self._value
 
@@ -235,21 +235,21 @@ class AnyConceptKey(Proxy):
         super().__init__(value)
 
     def instance_id(self) -> dsviper.ValueUUId:
-        return self.value.instance_id()
+        return self._value.instance_id()
 
     def runtime_id(self) -> dsviper.ValueUUId:
-        return self.value.type_concept().runtime_id()
+        return self._value.type_concept().runtime_id()
 
     def is_valid(self) -> bool:
-        return self.value.instance_id().is_valid()
+        return self._value.instance_id().is_valid()
 
     def description(self) -> str:
         """L'instance et le concept qu'elle désigne, dits comme le modèle les nomme."""
-        return (f"{self.value.instance_id().encoded()}:AnyConceptKey"
-                f"({self.value.type_concept().representation()}Key)")
+        return (f"{self._value.instance_id().encoded()}:AnyConceptKey"
+                f"({self._value.type_concept().representation()}Key)")
 
     def is_known(self) -> bool:
-        return is_known(self.value)
+        return is_known(self._value)
 
     @classmethod
     def decode(cls, blob, definitions=None, **kwargs) -> "AnyConceptKey":
@@ -259,7 +259,7 @@ class AnyConceptKey(Proxy):
 
     def as_(self, cls):
         """La clé vue comme celle d'un concept donné, ou `None` si elle n'en est pas une."""
-        return cls(self.value) if self.value.type() == cls.type() else None
+        return cls(self._value) if self._value.type() == cls.type() else None
 
     def __repr__(self) -> str:
         return self.description()

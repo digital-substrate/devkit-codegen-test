@@ -63,19 +63,19 @@ ok &= check("une clé est hachable", {k1: a}[k1] is a)
 #  et non `is` : le runtime rend un nouvel objet Python à chaque appel pour le même
 # type du modèle. Une identité d'objet ne dit rien ici, une égalité de type si.
 ok &= check("la classe enveloppe une Value du runtime",
-            a.value.type() == a.type())
+            a.vpr_value.type() == a.type())
 
 # Et les clés des deux unités ne se confondent pas.
 ka, kb = modela.MaterialKey.create(), modelb.MaterialKey.create()
 ok &= check("les clés des deux unités ont des types distincts",
-            ka.value.type() != kb.value.type())
+            ka.vpr_value.type() != kb.vpr_value.type())
 
 # ── un attachment, sur un état en mémoire ──
 #
 # C'est l'épreuve que la référence C++ passe par `CommitMutableState`, et elle se dit ici
 # dans les mêmes termes : le contexte est le premier argument, et c'est lui qui dit sur quoi
 # l'appel porte.
-colour = modela_attachments.material.colour
+colour = modela_attachments.Material.colour
 state = dsviper.CommitState(definitions())
 mutable = dsviper.CommitMutableState(state)
 mutating = mutable.attachment_mutating()
@@ -88,10 +88,10 @@ ok &= check("après écriture, la clé est connue", colour.has(mutating, key))
 ok &= check("et le document revient tel quel", colour.get(mutating, key) == modela.Colour(r=1, g=2, b=3))
 ok &= check("les clés de l'attachment sont typées", colour.keys(mutating) == {key})
 
-# Un champ seul, adressé par son nom -- ce que le pack appelle un chemin et met dans un
-# module à lui.
-colour.update(mutating, key, "r", 9)
-ok &= check("un seul champ s'écrit par son nom", colour.get(mutating, key).r == 9)
+# Un champ seul, par une méthode générée pour lui : le nom se complète et une faute de
+# frappe se voit à l'import, pas à l'appel.
+colour.set_r(mutating, key, 9)
+ok &= check("un seul champ s'écrit par sa méthode", colour.get(mutating, key).r == 9)
 
 ok &= check("une clé absente rend None", colour.get(mutating, modela.MaterialKey.create()) is None)
 
@@ -119,8 +119,8 @@ database.close()
 # déclenché tout le chantier. Le pack les distingue par `modela_material_colour_get` contre
 # `modelb_material_colour_get` ; ici rien ne se touche.
 ok &= check("deux attachments homonymes ont des descripteurs distincts",
-            modela_attachments.material.colour.descriptor.runtime_id()
-            != modelb_attachments.material.colour.descriptor.runtime_id())
+            modela_attachments.Material.colour.descriptor.runtime_id()
+            != modelb_attachments.Material.colour.descriptor.runtime_id())
 
 # ── un conteneur rend ses éléments avec leurs noms ──
 #
@@ -133,17 +133,17 @@ else:
     link = projection.LinkKey.create()
     a, b = modela.MaterialKey.create(), modelb.MaterialKey.create()
 
-    projection_attachments.link.mapping.set(mutating, link, {a: b})
-    mapping = projection_attachments.link.mapping.get(mutating, link)
+    projection_attachments.Link.mapping.set(mutating, link, {a: b})
+    mapping = projection_attachments.Link.mapping.get(mutating, link)
     ok &= check("un document map se relit comme une correspondance", len(mapping) == 1)
     ok &= check("et sa clé porte la classe de son unité",
                 type(next(iter(mapping))) is modela.MaterialKey)
     ok &= check("et sa valeur celle de la sienne", type(mapping[a]) is modelb.MaterialKey)
 
     marker = model_c.MarkerKey.create()
-    projection_attachments.link.marker.set(mutating, link, marker)
+    projection_attachments.Link.marker.set(mutating, link, marker)
     ok &= check("un document clé revient typé",
-                projection_attachments.link.marker.get(mutating, link) == marker)
+                projection_attachments.Link.marker.get(mutating, link) == marker)
 
 ok &= check("un pool porte son identité du modèle",
             tools.Pool.UUID.encoded() == "17e63428-03e1-41d7-ad9d-60c5665bbd66")

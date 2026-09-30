@@ -174,7 +174,7 @@ test("Structure: pack sized decode", () => {
 
 test("Key: vprValue encode", () => {
   const key = ConceptAKey.create();
-  const vpr = key.value;
+  const vpr = key.vprValue;
   const blob = dsviper.Value.encode(vpr);
   assert.ok(blob instanceof dsviper.ValueBlob);
 });

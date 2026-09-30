@@ -30,10 +30,10 @@ import { definitionsOf, unwrap, wrap } from "./registry.js";
  * même valeur derrière.
  */
 export class View {
-    readonly value: dsviper.Value;
+    readonly vprValue: dsviper.Value;
 
     constructor(value: dsviper.Value) {
-        this.value = value;
+        this.vprValue = value;
 
         // LA VUE NE CHOISIT PAS CE QUI PASSE. Un ensemble a `isdisjoint`, `union`, `min` ; un
         // xarray a `positionOf`, `toVector`, `disablePosition` ; les nommer un par un
@@ -54,13 +54,13 @@ export class View {
                         return arm;
                     }
                 }
-                const inner = (view.value as unknown as Record<string, unknown>)[name];
+                const inner = (view.vprValue as unknown as Record<string, unknown>)[name];
                 if (typeof inner !== "function") {
                     return inner === undefined ? undefined : wrap(inner as dsviper.OutputValue);
                 }
                 return (...args: unknown[]) => {
                     const result = (inner as (...a: unknown[]) => unknown)
-                        .apply(view.value, args.map(unwrap));
+                        .apply(view.vprValue, args.map(unwrap));
                     return result instanceof dsviper.Value ? wrap(result) : result;
                 };
             },
@@ -68,50 +68,50 @@ export class View {
     }
 
     type(): dsviper.Type {
-        return this.value.type();
+        return this.vprValue.type();
     }
 
     hash(): bigint {
-        return this.value.hash();
+        return this.vprValue.hash();
     }
 
     hashKey(): bigint {
-        return this.value.hashKey();
+        return this.vprValue.hashKey();
     }
 
     equals(other: unknown): boolean {
-        const compared = other instanceof View ? other.value : other;
+        const compared = other instanceof View ? other.vprValue : other;
         // NE PAS DEMANDER AU RUNTIME CE QU'IL NE PEUT PAS RÉPONDRE. Comparer une suite à un
         // entier le fait lever, et une question deviendrait une erreur.
         if (compared === null || compared === undefined) {
             return false;
         }
         try {
-            return this.value.equals(compared);
+            return this.vprValue.equals(compared);
         } catch {
             return false;
         }
     }
 
     encode(streamCodecInstancing?: dsviper.StreamCodecInstancing): dsviper.ValueBlob {
-        return dsviper.Value.encode(this.value, streamCodecInstancing);
+        return dsviper.Value.encode(this.vprValue, streamCodecInstancing);
     }
 
     hexdigest(): string {
-        return dsviper.Value.hexdigest(this.value);
+        return dsviper.Value.hexdigest(this.vprValue);
     }
 
     copy(): this {
         return new (this.constructor as new (value: dsviper.Value) => this)(
-            (this.value as unknown as { copy(): dsviper.Value }).copy());
+            (this.vprValue as unknown as { copy(): dsviper.Value }).copy());
     }
 
     toJSON(): dsviper.NativeValue {
-        return this.value.toJSON();
+        return this.vprValue.toJSON();
     }
 
     toString(): string {
-        return this.value.toString();
+        return this.vprValue.toString();
     }
 }
 
@@ -127,7 +127,7 @@ interface Suite extends Iterable<dsviper.OutputValue> {
 /** Une suite du runtime — vector, set, vec, tuple — dont les éléments portent leurs noms. */
 export class Sequence<E> extends View {
     private get suite(): Suite {
-        return this.value as unknown as Suite;
+        return this.vprValue as unknown as Suite;
     }
 
     get size(): number {
@@ -148,7 +148,7 @@ export class Sequence<E> extends View {
     }
 
     *[Symbol.iterator](): Iterator<E> {
-        const type = this.value.type() as unknown as { columns?(): number; rows?(): number };
+        const type = this.vprValue.type() as unknown as { columns?(): number; rows?(): number };
         if (typeof type.columns === "function" && typeof type.rows === "function") {
             // UNE MATRICE EST UNE SUITE DE COLONNES, et non une suite de nombres : la parcourir
             // à plat perdrait la forme que le modèle lui donne.
@@ -178,7 +178,7 @@ export class Sequence<E> extends View {
      * évite une transposition silencieuse.
      */
     row(index: number): unknown[] {
-        const type = this.value.type() as unknown as { rows(): number };
+        const type = this.vprValue.type() as unknown as { rows(): number };
         const held: unknown[] = [];
         for (let position = 0; position < type.rows(); position += 1) {
             held.push(this.at(index, position));
@@ -187,7 +187,7 @@ export class Sequence<E> extends View {
     }
 
     setRow(index: number, elements: unknown[]): void {
-        const inner = this.value as unknown as { set(c: number, r: number, v: unknown): void };
+        const inner = this.vprValue as unknown as { set(c: number, r: number, v: unknown): void };
         elements.forEach((element, position) => inner.set(index, position, unwrap(element)));
     }
 
@@ -210,7 +210,7 @@ export class Sequence<E> extends View {
  */
 export class Mapping<K, V> extends View {
     private get map(): dsviper.ValueMap {
-        return this.value as dsviper.ValueMap;
+        return this.vprValue as dsviper.ValueMap;
     }
 
     get size(): number {
@@ -287,7 +287,7 @@ export class Mapping<K, V> extends View {
  */
 export class Ordered<E> extends View {
     private get ordered(): dsviper.ValueXArray {
-        return this.value as dsviper.ValueXArray;
+        return this.vprValue as dsviper.ValueXArray;
     }
 
     static readonly END = dsviper.ValueXArray.END;
@@ -413,7 +413,7 @@ export class Ordered<E> extends View {
  */
 export class Optional<E> extends View {
     private get optional(): dsviper.ValueOptional {
-        return this.value as dsviper.ValueOptional;
+        return this.vprValue as dsviper.ValueOptional;
     }
 
     isNil(): boolean {
@@ -443,7 +443,7 @@ export class Optional<E> extends View {
 /** L'une de plusieurs alternatives, et celle qui est tenue. */
 export class Variant<E> extends View {
     private get variant(): dsviper.ValueVariant {
-        return this.value as dsviper.ValueVariant;
+        return this.vprValue as dsviper.ValueVariant;
     }
 
     unwrap(): E {
@@ -508,11 +508,11 @@ function armName(type: dsviper.Type): string {
 }
 
 function forward(view: View, name: string, args: unknown[]): unknown {
-    const inner = (view.value as unknown as Record<string, unknown>)[name];
+    const inner = (view.vprValue as unknown as Record<string, unknown>)[name];
     if (typeof inner !== "function") {
-        throw new TypeError(`ni la vue ni ${view.value.type().representation()} n'ont '${name}'`);
+        throw new TypeError(`ni la vue ni ${view.vprValue.type().representation()} n'ont '${name}'`);
     }
-    const result = (inner as (...a: unknown[]) => unknown).apply(view.value, args.map(unwrap));
+    const result = (inner as (...a: unknown[]) => unknown).apply(view.vprValue, args.map(unwrap));
     return result instanceof dsviper.Value ? wrap(result) : result;
 }
 

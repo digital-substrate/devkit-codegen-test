@@ -174,7 +174,7 @@ def check_report(report):
     if report.has_error():
         for err in report.errors():
             print(repr(err))
-        exit(0)
+        exit(1)
 
 
 def save_dsm_definitions(dsm_definitions: DSMDefinitions, dsm_path: str):

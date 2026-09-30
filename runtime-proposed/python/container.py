@@ -53,7 +53,7 @@ class View:
         self._value = value
 
     @property
-    def value(self):
+    def vpr_value(self):
         return self._value
 
     def _unwrap(self):
@@ -78,7 +78,7 @@ class View:
         qu'il ne connaît pas transformerait une question en erreur, et `in` deviendrait
         impraticable.
         """
-        other_value = other.value if isinstance(other, View) else other
+        other_value = other.vpr_value if isinstance(other, View) else other
         if not hasattr(other_value, "type_code") and not isinstance(
                 other_value, (list, tuple, set, dict)):
             # NE PAS DEMANDER AU RUNTIME CE QU'IL NE PEUT PAS RÉPONDRE. Comparer une suite à un
@@ -632,16 +632,16 @@ def _alternative_name(type_) -> str:
 
 def _forward(view: View, name: str) -> typing.Any:
     """Transmettre à la valeur ce que la vue ne nomme pas, en enveloppant ce qui revient."""
-    inner: typing.Any = getattr(view.value, name, None)
+    inner: typing.Any = getattr(view.vpr_value, name, None)
     if inner is None:
-        raise AttributeError(f"ni la vue ni {view.value.type().representation()} n'ont '{name}'")
+        raise AttributeError(f"ni la vue ni {view.vpr_value.type().representation()} n'ont '{name}'")
     if not callable(inner):
         return wrap(inner)
 
     def forwarded(*args, **kwargs) -> typing.Any:
         result: typing.Any = inner(*[unwrap(a) for a in args], **kwargs)
         if hasattr(result, "type_code"):
-            return type(view)(result) if result.type() == view.value.type() else wrap(result)
+            return type(view)(result) if result.type() == view.vpr_value.type() else wrap(result)
         if isinstance(result, tuple):
             return tuple(wrap(r) if hasattr(r, "type_code") else r for r in result)
         return result

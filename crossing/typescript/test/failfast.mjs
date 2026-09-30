@@ -32,7 +32,7 @@ refuses("un champ refuse la Colour d'une autre unité",
 refuses("un conteneur refuse un élément du mauvais type",
         () => { new core.Bag().tints = [new parts.Colour()]; });
 refuses("une clé refuse l'identifiant d'un autre concept",
-        () => new core.ThingKey(core.OtherKey.create().value));
+        () => new core.ThingKey(core.OtherKey.create().vprValue));
 refuses("un attachment refuse une clé d'un autre concept",
         () => Thing.colour.set(mutating, core.OtherKey.create(), new core.Colour()));
 refuses("un attachment refuse un document du mauvais type",

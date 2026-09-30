@@ -81,7 +81,7 @@ concept(c, u) ::= <<
         NE PERD RIEN ET NE PEUT PAS ÉCHOUER : l'identifiant d'exécution reste celui du concept
         réel, et c'est ce qui permet d'en revenir ensuite.
         """
-        return <c.parentBindingInNamespace>(self.value)
+        return <c.parentBindingInNamespace>(self._value)
 <endif>
 >>
 
@@ -120,7 +120,7 @@ class <c.name>Key(Proxy):
         return dsviper.TypeKey(cls.club())
 
     def __init__(self, key):
-        value = key.value if isinstance(key, Proxy) else key
+        value = key._value if isinstance(key, Proxy) else key
         if not isinstance(value, dsviper.ValueKey):
             raise TypeError("cette valeur n'est pas une clé")
         if not self.club().is_member(value.type_concept()):
@@ -128,17 +128,17 @@ class <c.name>Key(Proxy):
         super().__init__(value.to_club_key(self.club()))
 
     def instance_id(self) -> dsviper.ValueUUId:
-        return self.value.instance_id()
+        return self._value.instance_id()
 
     def runtime_id(self) -> dsviper.ValueUUId:
-        return self.value.type_concept().runtime_id()
+        return self._value.type_concept().runtime_id()
 
     def is_valid(self) -> bool:
-        return self.value.instance_id().is_valid()
+        return self._value.instance_id().is_valid()
 
     # La clé, vue sans son type.
     def to_any_concept_key(self) -> AnyConceptKey:
-        return AnyConceptKey(self.value.to_any_concept_key())
+        return AnyConceptKey(self._value.to_any_concept_key())
 
     @classmethod
     def from_any_concept_key(cls, key) -> <c.name>Key | None:
@@ -147,7 +147,7 @@ class <c.name>Key(Proxy):
         LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
         question dont la réponse est dans l'identifiant que la valeur porte.
         """
-        value = key.value if isinstance(key, Proxy) else key
+        value = key._value if isinstance(key, Proxy) else key
         return cls(value) if value.type_concept().runtime_id() == <c.name;format="usc"> else None
 
     def description(self) -> str:
@@ -157,10 +157,10 @@ class <c.name>Key(Proxy):
         est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
         tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
         """
-        return f"{self.value.instance_id().encoded()}:<u.name>::<c.name>Key"
+        return f"{self._value.instance_id().encoded()}:<u.name>::<c.name>Key"
 
     def is_known(self) -> bool:
-        return is_known(self.value)
+        return is_known(self._value)
 
 <c.membersInNamespace:club_from(c);separator="\n\n">
 
@@ -169,7 +169,7 @@ class <c.name>Key(Proxy):
     def as_(self, cls):
         """La clé vue comme celle d'un membre, ou `None` si l'instance n'en est pas un."""
         concept = cls.concept()
-        return cls(self.value.to_member_key(concept)) if self.value.is_member(concept) else None
+        return cls(self._value.to_member_key(concept)) if self._value.is_member(concept) else None
 
     def __repr__(self) -> str:
         return self.description()
@@ -236,17 +236,17 @@ class <c.name>Key(Proxy):
         return cls(dsviper.ValueUUId.create())
 
     def instance_id(self) -> dsviper.ValueUUId:
-        return self.value.instance_id()
+        return self._value.instance_id()
 
     def runtime_id(self) -> dsviper.ValueUUId:
-        return self.value.type_concept().runtime_id()
+        return self._value.type_concept().runtime_id()
 
     def is_valid(self) -> bool:
-        return self.value.instance_id().is_valid()
+        return self._value.instance_id().is_valid()
 
     # La clé, vue sans son type.
     def to_any_concept_key(self) -> AnyConceptKey:
-        return AnyConceptKey(self.value.to_any_concept_key())
+        return AnyConceptKey(self._value.to_any_concept_key())
 
     @classmethod
     def from_any_concept_key(cls, key) -> <c.name>Key | None:
@@ -255,7 +255,7 @@ class <c.name>Key(Proxy):
         LE CHEMIN DE RETOUR, ET IL PEUT ÉCHOUER. Élargir ne perd rien ; rétrécir pose une
         question dont la réponse est dans l'identifiant que la valeur porte.
         """
-        value = key.value if isinstance(key, Proxy) else key
+        value = key._value if isinstance(key, Proxy) else key
         return cls(value) if value.type_concept().runtime_id() == <c.name;format="usc"> else None
 
     def description(self) -> str:
@@ -265,10 +265,10 @@ class <c.name>Key(Proxy):
         est juste et n'est pas ce qu'un lecteur cherche. Ici c'est le nom de la classe qu'il
         tient, et `__repr__` rend la même chose — deux façons de demander, une réponse.
         """
-        return f"{self.value.instance_id().encoded()}:<u.name>::<c.name>Key"
+        return f"{self._value.instance_id().encoded()}:<u.name>::<c.name>Key"
 
     def is_known(self) -> bool:
-        return is_known(self.value)
+        return is_known(self._value)
 
     def __repr__(self) -> str:
         return self.description()
@@ -396,11 +396,11 @@ class <s.name>(Proxy):
 // objet Python ; il n'y a de conversion à écrire que pour les types qui ont une classe.
 field(f, s) ::= <<
     @property
-    def <f.name>(self) -> <hint(f)>:
+    def <f.name;format="snake">(self) -> <hint(f)>:
         <read(f)>
 
-    @<f.name>.setter
-    def <f.name>(self, value: <hint(f)>) -> None:
+    @<f.name;format="snake">.setter
+    def <f.name;format="snake">(self, value: <hint(f)>) -> None:
         <write(f)>
 >>
 
@@ -409,9 +409,9 @@ field(f, s) ::= <<
 // pas à distinguer ici une structure d'un `vector<Colour>`, et aucune classe de conteneur
 // n'a à être générée. `unwrap` fait le chemin inverse et accepte aussi bien une classe qu'une
 // liste Python.
-read(f) ::= <%<if(f.bindingType.useProxy)>return wrap(self.value.at("<f.name>", encoded=False))<else>return self.value.at("<f.name>")<endif>%>
-write(f) ::= <%self.value.set("<f.name>", <if(f.bindingType.useProxy)>unwrap(value)<else>value<endif>)%>
-repr_field(f) ::= <%<f.name>={self.<f.name>}%>
+read(f) ::= <%<if(f.bindingType.useProxy)>return wrap(self._value.at("<f.name>", encoded=False))<else>return self._value.at("<f.name>")<endif>%>
+write(f) ::= <%self._value.set("<f.name>", <if(f.bindingType.useProxy)>unwrap(value)<else>value<endif>)%>
+repr_field(f) ::= <%<f.name;format="snake">={self.<f.name;format="snake">}%>
 
 // L'ANNOTATION EST LA FORME ENTIÈRE, ET LE MODÈLE LA DONNE. `Sequence[Colour]`,
 // `MaterialKey | None`, `Mapping[MaterialKey, MaterialKey]` : le pack obtient la même chose
@@ -434,5 +434,5 @@ club_from(cm, c) ::= <<
     @classmethod
     def from_<cm.asNameInNamespace;format="lsc">_key(cls, key) -> <c.name>Key:
         """La clé d'un membre, vue comme celle du club."""
-        return cls(key.value if isinstance(key, Proxy) else key)
+        return cls(key._value if isinstance(key, Proxy) else key)
 >>

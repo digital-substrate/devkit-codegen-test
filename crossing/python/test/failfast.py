@@ -45,7 +45,7 @@ refuses("un champ refuse la Colour d'une autre unité",
 refuses("un conteneur refuse un élément du mauvais type",
         lambda: setattr(core.Bag(), "tints", [parts.Colour()]))
 refuses("une clé refuse l'identifiant d'un autre concept",
-        lambda: core.ThingKey(core.OtherKey.create().value))
+        lambda: core.ThingKey(core.OtherKey.create().vpr_value))
 refuses("un attachment refuse une clé d'un autre concept",
         lambda: a.Thing.colour.set(mutating, core.OtherKey.create(), core.Colour()))
 refuses("un attachment refuse un document du mauvais type",
@@ -56,7 +56,7 @@ refuses("un attachment refuse un document du mauvais type",
 # rattraper et qui se découvre bien plus loin, sur un attribut absent.
 saved = proxy._CLASSES.pop(core.data.COLOUR.encoded())
 refuses("wrap échoue si une unité n'est pas importée, au lieu de rendre la valeur nue",
-        lambda: wrap(core.Colour(r=1, g=2, b=3).value))
+        lambda: wrap(core.Colour(r=1, g=2, b=3).vpr_value))
 proxy._CLASSES[core.data.COLOUR.encoded()] = saved
 
 raise SystemExit(0 if ok else 1)

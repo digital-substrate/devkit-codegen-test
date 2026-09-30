@@ -211,11 +211,11 @@ class TestKeyVprValue(unittest.TestCase):
 
     def test_vpr_value_is_value_key(self):
         key = ConceptAKey.create()
-        self.assertIsInstance(key.value, dsviper.ValueKey)
+        self.assertIsInstance(key.vpr_value, dsviper.ValueKey)
 
     def test_vpr_value_roundtrip(self):
         key1 = ConceptAKey.create()
-        vpr = key1.value
+        vpr = key1.vpr_value
         key2 = ConceptAKey(vpr)
         self.assertEqual(key1, key2)
 

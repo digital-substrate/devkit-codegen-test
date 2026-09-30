@@ -218,12 +218,12 @@ test("none_raises_type_error", () => {
 
 test("vpr_value_is_value_key", () => {
   const key = ConceptAKey.create();
-  assert.ok(key.value instanceof dsviper.ValueKey);
+  assert.ok(key.vprValue instanceof dsviper.ValueKey);
 });
 
 test("vpr_value_roundtrip", () => {
   const key1 = ConceptAKey.create();
-  const vpr = key1.value;
+  const vpr = key1.vprValue;
   const key2 = new ConceptAKey(vpr);
   assert.ok(key1.equals(key2));
 });

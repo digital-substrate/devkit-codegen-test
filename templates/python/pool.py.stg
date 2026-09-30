@@ -122,18 +122,18 @@ from .._codegen import AnyConceptKey, Mapping, Ordered, Sequence, wrap
 >>
 
 function(f) ::= <<
-    def <f.name;format="lsc">(self<if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>) -> <ret(f)>:
+    def <f.name;format="snake">(self<if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>) -> <ret(f)>:
         <call(f)>
 >>
 
 attachment_function(f) ::= <<
-    def <f.name;format="lsc">(self, attachment_<f.interfaceType;format="lsc">: dsviper.Attachment<f.interfaceType><if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>) -> <ret(f)>:
+    def <f.name;format="snake">(self, attachment_<f.interfaceType;format="lsc">: dsviper.Attachment<f.interfaceType><if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>) -> <ret(f)>:
         <attachment_call(f)>
 >>
 
-parameter(a) ::= <%<a.name;format="lsc">: <hint(a.bindingType)>%>
+parameter(a) ::= <%<a.name;format="snake">: <hint(a.bindingType)>%>
 ret(f) ::= <%<if(f.isVoid)>None<else><hint(f.returnBindingType)><endif>%>
-argument(a) ::= <%<if(a.bindingType.isNamed)><a.name;format="lsc">._unwrap()<else><a.name;format="lsc"><endif>%>
+argument(a) ::= <%<if(a.bindingType.isNamed)><a.name;format="snake">._unwrap()<else><a.name;format="snake"><endif>%>
 
 // DEUX APPELS ET NON UN PARAMÉTRÉ. Le contexte d'un pool d'attachments n'existe que sur une
 // fonction d'attachment, et StringTemplate évalue une propriété même sous un `if` qui

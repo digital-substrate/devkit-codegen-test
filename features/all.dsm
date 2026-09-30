@@ -31,6 +31,12 @@ struct StructureT {
   StructureS field_structure_s;
 };
 
+"""A field named as the generated class's own accessor to its runtime value."""
+struct StructureValueField {
+  int64 value;
+  StructureS nested;
+};
+
 struct StructureU {
   // Numbers
   bool f_bool;

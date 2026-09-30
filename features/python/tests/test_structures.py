@@ -204,8 +204,8 @@ class TestStructureUEnumeration(unittest.TestCase):
     def test_field_enumeration(self):
         u = StructureU()
         e = EnumerationE.A
-        u.f_E = e
-        retrieved = u.f_E
+        u.f_e = e
+        retrieved = u.f_e
         # Compare underlying values since the proxy returns the same enum
         self.assertEqual(retrieved, e)
 
@@ -384,15 +384,15 @@ class TestStructureVEnumAndStructureFields(unittest.TestCase):
         self.v = StructureV()
 
     def test_field_enumeration(self):
-        self.v.f_E = EnumerationE.B
-        retrieved = self.v.f_E
+        self.v.f_e = EnumerationE.B
+        retrieved = self.v.f_e
         self.assertEqual(retrieved, EnumerationE.B)
         self.assertEqual(retrieved.value, "b")
 
     def test_field_structure_s(self):
         s = StructureS({"f_float": 1.5, "f_string": "nested"})
-        self.v.f_S = s
-        retrieved = self.v.f_S
+        self.v.f_s = s
+        retrieved = self.v.f_s
         self.assertAlmostEqual(retrieved.f_float, 1.5, places=5)
         self.assertEqual(retrieved.f_string, "nested")
 
@@ -401,8 +401,8 @@ class TestStructureVEnumAndStructureFields(unittest.TestCase):
         t.field_string = "level1"
         inner_s = StructureS({"f_float": 2.5, "f_string": "level2"})
         t.field_structure_s = inner_s
-        self.v.f_T = t
-        retrieved = self.v.f_T
+        self.v.f_t = t
+        retrieved = self.v.f_t
         self.assertEqual(retrieved.field_string, "level1")
         self.assertAlmostEqual(retrieved.field_structure_s.f_float, 2.5, places=5)
 
@@ -424,10 +424,10 @@ class TestStructureVCopy(unittest.TestCase):
 
     def test_copy_preserves_nested_structures(self):
         v1 = StructureV()
-        v1.f_S = StructureS({"f_float": 3.14, "f_string": "pi"})
+        v1.f_s = StructureS({"f_float": 3.14, "f_string": "pi"})
         v2 = v1.copy()
-        self.assertAlmostEqual(v2.f_S.f_float, 3.14, places=5)
-        self.assertEqual(v2.f_S.f_string, "pi")
+        self.assertAlmostEqual(v2.f_s.f_float, 3.14, places=5)
+        self.assertEqual(v2.f_s.f_string, "pi")
 
 
 class TestStructureVSerialization(unittest.TestCase):
@@ -457,13 +457,13 @@ class TestStructureVSerialization(unittest.TestCase):
 
     def test_encode_decode_with_nested_structures(self):
         v1 = StructureV()
-        v1.f_S = StructureS({"f_float": 2.718, "f_string": "euler"})
-        v1.f_E = EnumerationE.C
+        v1.f_s = StructureS({"f_float": 2.718, "f_string": "euler"})
+        v1.f_e = EnumerationE.C
         blob = v1.encode()
         v2 = StructureV.decode(blob)
-        self.assertAlmostEqual(v2.f_S.f_float, 2.718, places=3)
-        self.assertEqual(v2.f_S.f_string, "euler")
-        self.assertEqual(v2.f_E, EnumerationE.C)
+        self.assertAlmostEqual(v2.f_s.f_float, 2.718, places=3)
+        self.assertEqual(v2.f_s.f_string, "euler")
+        self.assertEqual(v2.f_e, EnumerationE.C)
 
 
 class TestStructureCopy(unittest.TestCase):
@@ -504,11 +504,11 @@ class TestStructureVprValue(unittest.TestCase):
 
     def test_vpr_value_is_value_structure(self):
         s = StructureS()
-        self.assertIsInstance(s.value, dsviper.ValueStructure)
+        self.assertIsInstance(s.vpr_value, dsviper.ValueStructure)
 
     def test_vpr_value_roundtrip(self):
         s1 = StructureS({"f_float": 2.5, "f_string": "test"})
-        vpr = s1.value
+        vpr = s1.vpr_value
         s2 = StructureS(vpr)
         self.assertEqual(s1.f_float, s2.f_float)
         self.assertEqual(s1.f_string, s2.f_string)
@@ -516,3 +516,22 @@ class TestStructureVprValue(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFieldNamedValue(unittest.TestCase):
+    """A field may be named `value`, like the proxy's own accessor to its runtime value."""
+
+    def test_the_field_reads_and_writes(self):
+        from features.demo import StructureValueField
+        w = StructureValueField(value=42)
+        self.assertEqual(w.value, 42)
+        w.value = 7
+        self.assertEqual(w.value, 7)
+
+    def test_the_other_fields_still_reach_the_runtime_value(self):
+        from features.demo import StructureValueField
+        w = StructureValueField(value=1)
+        w.nested = StructureS({"f_string": "inner"})
+        self.assertEqual(w.nested.f_string, "inner")
+        self.assertIsInstance(w.vpr_value, dsviper.ValueStructure)
+        self.assertEqual(StructureValueField.decode(w.encode()), w)

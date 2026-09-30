@@ -11,38 +11,38 @@ import { Set_uint8, Set_Demo_ConceptAKey, Vector_uint8, Vector_int8, Optional_De
 // --- Constructor rejects a runtime value of another type ---
 
 test("struct rejects other struct", () => {
-  assert.throws(() => new StructureS(new StructureT().value), TypeError);
+  assert.throws(() => new StructureS(new StructureT().vprValue), TypeError);
 });
 
 test("concept key rejects other concept", () => {
-  assert.throws(() => new ConceptAKey(ConceptBKey.create().value), TypeError);
+  assert.throws(() => new ConceptAKey(ConceptBKey.create().vprValue), TypeError);
 });
 
 test("set rejects other element type", () => {
-  assert.throws(() => new Set_uint8(new Set_Demo_ConceptAKey().value), TypeError);
+  assert.throws(() => new Set_uint8(new Set_Demo_ConceptAKey().vprValue), TypeError);
 });
 
 test("vector rejects other element type", () => {
-  assert.throws(() => new Vector_uint8(new Vector_int8([1]).value), TypeError);
+  assert.throws(() => new Vector_uint8(new Vector_int8([1]).vprValue), TypeError);
 });
 
 test("optional rejects other element type", () => {
-  assert.throws(() => new Optional_Demo_ConceptAKey(new Optional_Demo_ConceptBKey().value), TypeError);
+  assert.throws(() => new Optional_Demo_ConceptAKey(new Optional_Demo_ConceptBKey().vprValue), TypeError);
 });
 
 test("enum rejects non-enum value", () => {
-  assert.throws(() => new EnumerationE(new StructureS().value), TypeError);
+  assert.throws(() => new EnumerationE(new StructureS().vprValue), TypeError);
 });
 
 // --- Constructor accepts a correctly-typed runtime value ---
 
 test("struct accepts same type", () => {
-  const s = new StructureS(new StructureS().value);
+  const s = new StructureS(new StructureS().vprValue);
   assert.ok(s instanceof StructureS);
 });
 
 test("set accepts same type", () => {
-  const a = new Set_uint8(new Set_uint8([1, 2]).value);
+  const a = new Set_uint8(new Set_uint8([1, 2]).vprValue);
   assert.equal(a.size, 2);
 });
 

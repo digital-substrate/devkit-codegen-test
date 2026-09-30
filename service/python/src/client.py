@@ -37,5 +37,5 @@ if player_model.is_available():
     print(f"key is {key}")
 
     if found := player_model.has_player(mutating, nickname):
-        if player := attachments.player.property.get(mutating, found):
+        if player := attachments.Player.property.get(mutating, found):
             print(f"nickname={player.nickname}, level={player.level}")

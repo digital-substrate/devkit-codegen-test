@@ -1,20 +1,19 @@
-"""L'accesseur typé d'un attachment — écrit une fois, pour tous.
+"""L'accesseur typé d'un attachment : ce qui est commun à tous, écrit une fois.
 
-CE FICHIER NE NOMME AUCUN TYPE DU MODÈLE, ET C'EST TOUT SON PROPOS. Le pack Python écrit
-188 lignes de template qui rendent 2 454 lignes pour `features` : une famille de fonctions
-par attachment, `modela_material_colour_get`, `..._set`, `..._keys`, `..._diff`. Pas une
-seule ne fait autre chose que passer le descripteur de l'attachment à `AttachmentGetting` ou
-`AttachmentMutating`. Ce qui varie d'un attachment à l'autre — son identifiant, la classe de
-sa clé, la classe de son document — sont trois valeurs, pas trois cents lignes.
+CE FICHIER NE NOMME AUCUN TYPE DU MODÈLE. Ce qui ne dépend que de l'identité d'un
+attachment — lire, écrire, énumérer, comparer le document entier — ne fait que passer le
+descripteur à `AttachmentGetting` ou `AttachmentMutating`, et vit ici une fois.
 
-Donc c'est un objet paramétré par ces trois valeurs. Une unité en déclare un par attachment
-qu'elle porte, et n'écrit rien d'autre. C'est l'équivalent Python du `Viper_TypedCodec`
-du C++ : la place de ce fichier est dans le runtime, pas dans le code généré.
+CE QUI DÉPEND DU DOCUMENT EST GÉNÉRÉ, ET C'EST VOULU. `union_vertex_keys`, `set_color` : ce
+sont les opérations avec lesquelles s'écrivent les fonctions métier, et elles doivent se
+compléter, se typer et échouer à l'import plutôt qu'à l'appel. Une unité en déclare donc une
+classe par attachment, dont chaque méthode appelle l'une des primitives protégées d'ici.
 """
 
 from __future__ import annotations
 
 import functools
+import typing
 from typing import Callable
 
 import dsviper
@@ -22,7 +21,11 @@ import dsviper
 from .proxy import unwrap as _unwrap, wrap as _wrap
 
 
-class AttachmentProxy:
+K = typing.TypeVar("K")
+D = typing.TypeVar("D")
+
+
+class AttachmentProxy(typing.Generic[K, D]):
     """Un attachment du modèle, vu depuis l'unité qui le déclare.
 
     `AttachmentProxy` ET NON `Attachment`, PARCE QUE `dsviper.Attachment` EXISTE ET N'EST PAS
@@ -70,30 +73,31 @@ class AttachmentProxy:
     # Le contexte est le premier paramètre, et il est le seul que l'appelant ne pourrait pas
     # deviner : c'est lui qui dit sur quoi l'appel porte — un état en mémoire, une base.
 
-    def keys(self, getting: dsviper.AttachmentGetting) -> set:
+    def keys(self, getting: dsviper.AttachmentGetting) -> set[K]:
         return {_wrap(key) for key in getting.keys(self.descriptor)}
 
-    def has(self, getting: dsviper.AttachmentGetting, key) -> bool:
-        return getting.has(self.descriptor, key.value)
+    def has(self, getting: dsviper.AttachmentGetting, key: K) -> bool:
+        return getting.has(self.descriptor, key.vpr_value)
 
-    def get(self, getting: dsviper.AttachmentGetting, key):
+    def get(self, getting: dsviper.AttachmentGetting, key: K) -> D | None:
         """Le document, ou `None` — et non un `Optional` enveloppé.
 
         LE PACK REND UN `Optional_Colour`, UN PROXY DE PLUS À NOMMER ET À GÉNÉRER. Python a
         déjà `None` et `if x is None`, qui disent la même chose sans qu'une classe existe
         pour ça. C'est l'écart le plus visible avec la sortie du pack, et il est délibéré.
         """
-        document = getting.get(self.descriptor, key.value)
+        document = getting.get(self.descriptor, key.vpr_value)
         return None if document.is_nil() else _wrap(document.unwrap())
 
-    def enumerate(self, getting, *, encoded: bool = True):
+    def enumerate(self, getting, *, encoded: bool = True) -> list[tuple[K, D]]:
         """Les paires clé/document, telles que le runtime les rend."""
         # UNE BASE N'ÉNUMÈRE PAS ELLE-MÊME : elle offre l'interface de lecture qui le fait.
         source = getting if hasattr(getting, "enumerate") else getting.attachment_getting()
         return [(_wrap(key), _wrap(document) if isinstance(document, dsviper.Value) else document)
                 for key, document in source.enumerate(self.descriptor, encoded=encoded)]
 
-    def diff_keys(self, current: dsviper.AttachmentGetting, other: dsviper.AttachmentGetting):
+    def diff_keys(self, current: dsviper.AttachmentGetting, other: dsviper.AttachmentGetting
+                  ) -> tuple[set[K], set[K], set[K], set[K]]:
         added, removed, different, same = dsviper.AttachmentGetting.diff_keys(
             current, other, self.descriptor)
         return tuple({_wrap(key) for key in group}
@@ -101,63 +105,66 @@ class AttachmentProxy:
 
     # ── écrire ──
 
-    def set(self, mutating: dsviper.AttachmentMutating | dsviper.Database, key, value):
+    def set(self, mutating: dsviper.AttachmentMutating | dsviper.Database, key: K, value: D):
         """Poser le document.
 
         Rend ce que le contexte rend : rien pour un état en mémoire, un statut pour une
         base — un enregistrement peut échouer là où un changement en mémoire ne le peut pas.
         """
-        return mutating.set(self.descriptor, key.value, _unwrap(value))
+        return mutating.set(self.descriptor, key.vpr_value, _unwrap(value))
 
-    def delete(self, database: dsviper.Database, key) -> bool:
+    def delete(self, database: dsviper.Database, key: K) -> bool:
         """Retirer le document. La seule opération qu'une base ajoute."""
-        return database.delete(self.descriptor, key.value)
+        return database.delete(self.descriptor, key.vpr_value)
 
-    def diff(self, mutating: dsviper.AttachmentMutating, key, value, *, recursive: bool = False) -> None:
-        mutating.diff(self.descriptor, key.value, _unwrap(value), recursive=recursive)
+    def diff(self, mutating: dsviper.AttachmentMutating, key: K, value: D, *, recursive: bool = False) -> None:
+        mutating.diff(self.descriptor, key.vpr_value, _unwrap(value), recursive=recursive)
 
-    def update(self, mutating: dsviper.AttachmentMutating, key, field: str, value) -> None:
-        """Écrire un seul champ.
+    # ── les primitives des méthodes générées ──
+    #
+    # UNE PAR OPÉRATION DU RUNTIME, ET AUCUNE N'EST PUBLIQUE. Le champ est nommé comme le
+    # modèle le déclare, parce que c'est le nom du chemin ; `None` désigne la racine, pour un
+    # document qui est lui-même un set, une map ou une xarray. Une unité les appelle depuis
+    # des méthodes qui portent le nom et les types de chaque champ — c'est là que l'appelant
+    # trouve la complétion, pas ici.
 
-        LE CHEMIN SE FAIT DEPUIS LE NOM DU CHAMP, ICI ET MAINTENANT. Le pack en fait un
-        module entier — `Path_Colour.r`, une constante par champ de chaque structure du
-        modèle — alors que `Path.from_field("r")` ne dépend que du nom, que l'appelant vient
-        d'écrire. La mémoïsation rend le coût nul et la génération inutile.
-        """
-        mutating.update(self.descriptor, key.value, _path(field), _unwrap(value))
+    def _update(self, mutating: dsviper.AttachmentMutating, key, field: str, value) -> None:
+        mutating.update(self.descriptor, key.vpr_value, _path(field), _unwrap(value))
 
-    def __getattr__(self, name: str):
-        """`set_<champ>`, `union_<champ>`, `subtract_<champ>` — dérivés du type du document.
+    def _union_in_set(self, mutating: dsviper.AttachmentMutating, key, field: str | None, value) -> None:
+        mutating.union_in_set(self.descriptor, key.vpr_value, _path(field), _unwrap(value))
 
-        LE PACK EN ÉMET UN PAR CHAMP DE CHAQUE DOCUMENT DE CHAQUE ATTACHMENT. Ici le document
-        connaît ses champs : l'objet répond au nom qu'on lui demande s'il correspond à l'un
-        d'eux, et lève sinon -- ce qui est le même fail-fast qu'un attribut absent, avec un
-        message qui dit ce qui existe.
-        """
-        for prefix, operation in (("set_", "update"),
-                                  ("union_", "union_in_set"),
-                                  ("subtract_", "subtract_in_set")):
-            if not name.startswith(prefix):
-                continue
-            field = name[len(prefix):]
-            document = self.descriptor.document_type()
-            query = getattr(document, "query", None)
-            if query is None or query(field) is None:
-                break
+    def _subtract_in_set(self, mutating: dsviper.AttachmentMutating, key, field: str | None, value) -> None:
+        mutating.subtract_in_set(self.descriptor, key.vpr_value, _path(field), _unwrap(value))
 
-            def bound(mutating, key, value, _field=field, _operation=operation):
-                getattr(mutating, _operation)(
-                    self.descriptor, _unwrap(key), _path(_field), _unwrap(value))
+    def _union_in_map(self, mutating: dsviper.AttachmentMutating, key, field: str | None, value) -> None:
+        mutating.union_in_map(self.descriptor, key.vpr_value, _path(field), _unwrap(value))
 
-            return bound
+    def _subtract_in_map(self, mutating: dsviper.AttachmentMutating, key, field: str | None, value) -> None:
+        mutating.subtract_in_map(self.descriptor, key.vpr_value, _path(field), _unwrap(value))
 
-        raise AttributeError(
-            f"{self.descriptor.representation()} n'a pas de champ pour '{name}'")
+    def _update_in_map(self, mutating: dsviper.AttachmentMutating, key, field: str | None, value) -> None:
+        mutating.update_in_map(self.descriptor, key.vpr_value, _path(field), _unwrap(value))
+
+    def _insert_in_xarray(self, mutating: dsviper.AttachmentMutating, key, field: str | None,
+                          before_position: dsviper.ValueUUId, new_position: dsviper.ValueUUId,
+                          value) -> None:
+        mutating.insert_in_xarray(self.descriptor, key.vpr_value, _path(field),
+                                  before_position, new_position, _unwrap(value))
+
+    def _update_in_xarray(self, mutating: dsviper.AttachmentMutating, key, field: str | None,
+                          position: dsviper.ValueUUId, value) -> None:
+        mutating.update_in_xarray(self.descriptor, key.vpr_value, _path(field), position, _unwrap(value))
+
+    def _remove_in_xarray(self, mutating: dsviper.AttachmentMutating, key, field: str | None,
+                          position: dsviper.ValueUUId) -> None:
+        mutating.remove_in_xarray(self.descriptor, key.vpr_value, _path(field), position)
 
     def __repr__(self) -> str:
         return f"AttachmentProxy({self.descriptor.representation()})"
 
 
 @functools.cache
-def _path(field: str) -> dsviper.PathConst:
-    return dsviper.Path.from_field(field).const()
+def _path(field: str | None) -> dsviper.PathConst:
+    """Le chemin d'un champ, ou la racine ; construit une fois par nom."""
+    return (dsviper.Path() if field is None else dsviper.Path.from_field(field)).const()

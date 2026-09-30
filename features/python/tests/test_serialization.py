@@ -169,7 +169,7 @@ class TestVprValueEncode(unittest.TestCase):
 
     def test_key_vpr_value_encode(self):
         key = ConceptAKey.create()
-        vpr = key.value
+        vpr = key.vpr_value
         blob = dsviper.Value.encode(vpr)
         self.assertIsInstance(blob, dsviper.ValueBlob)
 

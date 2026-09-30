@@ -14,10 +14,10 @@ import dsviper from "@digitalsubstrate/dsviper";
 import { definitionsOf, isKnown } from "./registry.js";
 
 export abstract class Proxy<V extends dsviper.Value> {
-    readonly value: V;
+    readonly vprValue: V;
 
     protected constructor(value: V) {
-        this.value = value;
+        this.vprValue = value;
     }
 
     /** L'égalité porte sur la valeur et sur la classe.
@@ -29,7 +29,7 @@ export abstract class Proxy<V extends dsviper.Value> {
     equals(other: unknown): boolean {
         return other instanceof Proxy
             && other.constructor === this.constructor
-            && this.value.equals(other.value);
+            && this.vprValue.equals(other.vprValue);
     }
 
     /** UN JETON UTILISABLE COMME CLÉ DE `Map` OU DE `Set`.
@@ -41,11 +41,11 @@ export abstract class Proxy<V extends dsviper.Value> {
      * Python, où `__hash__` et `__eq__` font le travail.
      */
     hashKey(): bigint {
-        return this.value.hashKey();
+        return this.vprValue.hashKey();
     }
 
     toJSON(): dsviper.NativeValue {
-        return this.value.toJSON();
+        return this.vprValue.toJSON();
     }
 
     /** Ce qui vient de la valeur et ne dépend d'aucun type : l'encodage, la copie, l'empreinte.
@@ -56,28 +56,28 @@ export abstract class Proxy<V extends dsviper.Value> {
      * vecteur le sait serait une asymétrie que rien ne justifie.
      */
     encode(streamCodecInstancing?: dsviper.StreamCodecInstancing): dsviper.ValueBlob {
-        return dsviper.Value.encode(this.value, streamCodecInstancing);
+        return dsviper.Value.encode(this.vprValue, streamCodecInstancing);
     }
 
     hexdigest(): string {
-        return dsviper.Value.hexdigest(this.value);
+        return dsviper.Value.hexdigest(this.vprValue);
     }
 
     copy(): this {
         return new (this.constructor as new (value: V) => this)(
-            (this.value as unknown as { copy(): V }).copy());
+            (this.vprValue as unknown as { copy(): V }).copy());
     }
 
     type(): dsviper.Type {
-        return this.value.type();
+        return this.vprValue.type();
     }
 
     hash(): bigint {
-        return this.value.hash();
+        return this.vprValue.hash();
     }
 
     toString(): string {
-        return this.value.toString();
+        return this.vprValue.toString();
     }
 }
 
@@ -99,19 +99,19 @@ export class AnyConceptKey extends Proxy<dsviper.ValueKey> {
     }
 
     instanceId(): dsviper.ValueUUId {
-        return this.value.instanceId();
+        return this.vprValue.instanceId();
     }
 
     runtimeId(): dsviper.ValueUUId {
-        return this.value.typeConcept().runtimeId();
+        return this.vprValue.typeConcept().runtimeId();
     }
 
     isValid(): boolean {
-        return this.value.instanceId().isValid();
+        return this.vprValue.instanceId().isValid();
     }
 
     isKnown(): boolean {
-        return isKnown(this.value);
+        return isKnown(this.vprValue);
     }
 
     static decode(blob: dsviper.ValueBlob): AnyConceptKey {
@@ -120,13 +120,13 @@ export class AnyConceptKey extends Proxy<dsviper.ValueKey> {
     }
 
     description(): string {
-        return `${this.value.instanceId().encoded()}:AnyConceptKey`
-             + `(${this.value.typeConcept().representation()}Key)`;
+        return `${this.vprValue.instanceId().encoded()}:AnyConceptKey`
+             + `(${this.vprValue.typeConcept().representation()}Key)`;
     }
 
     /** La clé vue comme celle d'un concept donné, ou `undefined` si elle n'en est pas une. */
     as<K>(concept: { type(): dsviper.TypeKey; wrap(value: dsviper.Value): K }): K | undefined {
-        return this.value.type().equals(concept.type()) ? concept.wrap(this.value) : undefined;
+        return this.vprValue.type().equals(concept.type()) ? concept.wrap(this.vprValue) : undefined;
     }
 
     override toString(): string {

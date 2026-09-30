@@ -141,10 +141,18 @@ export function isKnown(value: dsviper.ValueKey): boolean {
 
 export function unwrap(value: unknown): dsviper.InputValue {
     if (value instanceof Proxy || value instanceof View) {
-        return value.value;
+        return value.vprValue;
     }
     if (Array.isArray(value)) {
         return value.map(unwrap) as dsviper.InputValue;
+    }
+    // UN `Set` OU UNE `Map` DE JAVASCRIPT PEUT CONTENIR DES PROXIES, comme un tableau : ce que
+    // l'appelant écrit naturellement pour `unionVertexKeys(m, key, new Set([k]))`.
+    if (value instanceof Set) {
+        return Array.from(value, unwrap) as dsviper.InputValue;
+    }
+    if (value instanceof Map) {
+        return new Map(Array.from(value, ([k, v]) => [unwrap(k), unwrap(v)])) as unknown as dsviper.InputValue;
     }
     return value as dsviper.InputValue;
 }

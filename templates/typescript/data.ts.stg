@@ -119,42 +119,42 @@ export class <c.name>Key extends Proxy\<dsviper.ValueKey> {
     }
 
     instanceId(): dsviper.ValueUUId {
-        return this.value.instanceId();
+        return this.vprValue.instanceId();
     }
 
     runtimeId(): dsviper.ValueUUId {
-        return this.value.typeConcept().runtimeId();
+        return this.vprValue.typeConcept().runtimeId();
     }
 
     isValid(): boolean {
-        return this.value.instanceId().isValid();
+        return this.vprValue.instanceId().isValid();
     }
 
     /** Un ordre total sur les clés — ce qui permet de trier, que JavaScript ne déduit pas. */
     compareTo(other: <c.name>Key | dsviper.ValueKey): number {
-        return this.value.compare(other instanceof Proxy ? other.value : other);
+        return this.vprValue.compare(other instanceof Proxy ? other.vprValue : other);
     }
 
     /** L'instance et son type, dits comme le modèle les nomme. */
     description(): string {
-        return `${this.value.instanceId().encoded()}:<u.name>::<c.name>Key`;
+        return `${this.vprValue.instanceId().encoded()}:<u.name>::<c.name>Key`;
     }
 
     isKnown(): boolean {
-        return isKnown(this.value);
+        return isKnown(this.vprValue);
     }
 
 <if(c.parent)>
     /** Élargir vers le parent. Ne perd rien : l'identifiant d'exécution reste celui du concept
      *  réel, et c'est ce qui permet d'en revenir ensuite. */
     toParentKey(): <c.parentBindingInNamespace> {
-        return new <c.parentBindingInNamespace>(this.value);
+        return new <c.parentBindingInNamespace>(this.vprValue);
     }
 
 <endif>
     /** La clé, vue sans son type. */
     toAnyConceptKey(): AnyConceptKey {
-        return new AnyConceptKey(this.value.toAnyConceptKey());
+        return new AnyConceptKey(this.vprValue.toAnyConceptKey());
     }
 
     /** La clé non typée, retypée — ou `undefined` si elle ne désigne pas ce concept.
@@ -163,7 +163,7 @@ export class <c.name>Key extends Proxy\<dsviper.ValueKey> {
      * question dont la réponse est dans l'identifiant que la valeur porte.
      */
     static fromAnyConceptKey(key: AnyConceptKey | dsviper.ValueKey): <c.name>Key | undefined {
-        const value = key instanceof AnyConceptKey ? key.value : key;
+        const value = key instanceof AnyConceptKey ? key.vprValue : key;
         return value.typeConcept().runtimeId().equals(<c.name;format="usc">)
             ? new <c.name>Key(value) : undefined;
     }
@@ -192,7 +192,7 @@ export class <c.name>Key extends Proxy\<dsviper.ValueKey> {
     }
 
     constructor(key: Proxy\<dsviper.ValueKey> | dsviper.ValueKey) {
-        const value = key instanceof Proxy ? key.value : key;
+        const value = key instanceof Proxy ? key.vprValue : key;
         if (!<c.name>Key.club().isMember(value.typeConcept())) {
             throw new TypeError("cette clé ne désigne pas un membre de <u.name>::<c.name>");
         }
@@ -209,23 +209,23 @@ export class <c.name>Key extends Proxy\<dsviper.ValueKey> {
     }
 
     instanceId(): dsviper.ValueUUId {
-        return this.value.instanceId();
+        return this.vprValue.instanceId();
     }
 
     runtimeId(): dsviper.ValueUUId {
-        return this.value.typeConcept().runtimeId();
+        return this.vprValue.typeConcept().runtimeId();
     }
 
     isValid(): boolean {
-        return this.value.instanceId().isValid();
+        return this.vprValue.instanceId().isValid();
     }
 
     description(): string {
-        return `${this.value.instanceId().encoded()}:<u.name>::<c.name>Key`;
+        return `${this.vprValue.instanceId().encoded()}:<u.name>::<c.name>Key`;
     }
 
     isKnown(): boolean {
-        return isKnown(this.value);
+        return isKnown(this.vprValue);
     }
 
     /** La clé vue comme celle d'un membre, ou `undefined` si l'instance n'en est pas un. */
@@ -235,7 +235,7 @@ export class <c.name>Key extends Proxy\<dsviper.ValueKey> {
 
     as\<K>(member: { concept(): dsviper.TypeConcept; wrap(value: dsviper.Value): K }): K | undefined {
         const concept = member.concept();
-        return this.value.isMember(concept) ? member.wrap(this.value.toMemberKey(concept)) : undefined;
+        return this.vprValue.isMember(concept) ? member.wrap(this.vprValue.toMemberKey(concept)) : undefined;
     }
 
     override toString(): string {
@@ -362,12 +362,12 @@ field(f, s) ::= <<
     }
 >>
 
-read(f) ::= <%<if(f.bindingType.useProxy)>return wrap(this.value.at("<f.name>", false));<else>return this.value.at("<f.name>") as <f.bindingType.annotation>;<endif>%>
+read(f) ::= <%<if(f.bindingType.useProxy)>return wrap(this.vprValue.at("<f.name>", false));<else>return this.vprValue.at("<f.name>") as <f.bindingType.annotation>;<endif>%>
 // LA CONVERSION EXPLICITE EST POUR `any`. Un champ du modèle déclaré `any` s'annote `unknown`
 // -- le mot qui dit « je ne sais pas » sans ouvrir la porte à tout, contrairement à `any` --
 // et `unknown` ne s'assigne à rien sans être affirmé. Les autres primitifs la traversent sans
 // rien changer.
-write(f) ::= <%setField(this.value, "<f.name>", value);%>
+write(f) ::= <%setField(this.vprValue, "<f.name>", value);%>
 
 // LE PACK NOMME CHAQUE ENTRÉE ET CHAQUE SORTIE D'UN CLUB. `as_(cls)` dit la même chose pour
 // tous les membres, y compris ceux qu'un modèle ajoutera ; les noms restent parce qu'ils se

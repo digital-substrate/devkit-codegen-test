@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
-import { StructureS, StructureT, StructureU, StructureV, EnumerationE } from "../generated/dist/demo/data.js";
+import { StructureS, StructureT, StructureU, StructureV, StructureValueField, EnumerationE } from "../generated/dist/demo/data.js";
 import { Vec_uint8_2, Mat_uint8_2_2, Mat_uint8_2_3, Tuple_uint8_string, Optional_uint8, Vector_uint8, Set_uint8, Map_uint8_to_string, XArray_uint8 } from "../generated/dist/containers.js";
 
 // --- StructureS construction and field access ---
@@ -541,13 +541,29 @@ test("Structure: unequal structures", () => {
 
 test("Structure: vprValue is ValueStructure", () => {
   const s = new StructureS();
-  assert.ok(s.value instanceof dsviper.ValueStructure);
+  assert.ok(s.vprValue instanceof dsviper.ValueStructure);
 });
 
 test("Structure: vprValue roundtrip", () => {
   const s1 = new StructureS({ f_float: 2.5, f_string: "test" });
-  const vpr = s1.value;
+  const vpr = s1.vprValue;
   const s2 = new StructureS(vpr);
   assert.equal(s1.f_float, s2.f_float);
   assert.equal(s1.f_string, s2.f_string);
+});
+
+// --- a field named like the proxy's own accessor ---
+
+test("Structure: a field named value reads and writes", () => {
+  const w = new StructureValueField({ value: 42n });
+  assert.equal(w.value, 42n);
+  w.value = 7n;
+  assert.equal(w.value, 7n);
+});
+
+test("Structure: beside a field named value, the runtime value stays reachable", () => {
+  const w = new StructureValueField({ value: 1n });
+  w.nested = new StructureS({ f_string: "inner" });
+  assert.equal(w.nested.f_string, "inner");
+  assert.ok(w.vprValue instanceof dsviper.ValueStructure);
 });
