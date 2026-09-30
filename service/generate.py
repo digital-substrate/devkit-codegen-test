@@ -237,7 +237,7 @@ if not (arguments.cpp | arguments.python | arguments.typescript):
 if arguments.cpp:
     print('** Render Cpp')
     render('cpp', NAMESPACE, DSM_PATH,
-           resolve.templates('cpp', ['Pool', 'AttachmentPool', 'Test']), CPP_OUT)
+           resolve.templates('cpp', ['Pool', 'PoolRemote', 'AttachmentPool', 'Test']), CPP_OUT)
     generate_resource(definitions=DEFINITIONS, output=f'{CPP_OUT}/{NAMESPACE}_resources.hpp')
 
 if arguments.python:

@@ -15,7 +15,7 @@ MODELS = {
     "service": dict(
         shape="mono", definitions="service/definitions/Service", namespace="service", package="service",
         about="pools and the remote, one namespace",
-        cpp=["Pool", "AttachmentPool", "Test"],
+        cpp=["Pool", "PoolRemote", "AttachmentPool", "Test"],
     ),
     "crossing": dict(
         shape="multi", definitions="crossing/definitions", namespace="crossing", package="crossing",
@@ -30,6 +30,6 @@ MODELS = {
     "namespaces": dict(
         shape="multi", definitions="namespaces/definitions", namespace="topology", package="topology",
         about="namespace topology and nothing else: five namespaces, every edge kind",
-        cpp=["TestApp", "AttachmentPool"],
+        cpp=["TestApp", "AttachmentPool", "PoolRemote"],
     ),
 }

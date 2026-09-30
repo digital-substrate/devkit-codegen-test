@@ -52,10 +52,20 @@
       ]
     },
     "Pool": {
-      "doc": "A function pool. Still holds its own remote side -- see cpp/README.md.",
+      "doc": "A function pool, server side: the functions the application implements, and the pool that registers them.",
       "templates": [
         "Pool.cpp.stg",
         "Pool.hpp.stg"
+      ],
+      "requires": [
+        "Base"
+      ]
+    },
+    "PoolRemote": {
+      "doc": "A function pool, client side: `Remote`, which calls the pool through a service. Selectable without Pool, so a client does not link the functions only a server implements.",
+      "templates": [
+        "Remote.cpp.stg",
+        "Remote.hpp.stg"
       ],
       "requires": [
         "Base"

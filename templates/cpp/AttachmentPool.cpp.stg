@@ -114,7 +114,9 @@ private:
 };
 
 /// A function's name: namespace, concept, attachment and operation, in snake case --
-/// `graph_vertex_visual_attributes_get`, the names Python and remote clients call.
+/// `graph_vertex_visual_attributes_get`, the name a script or a peer calls it by. The rule is
+/// the runtime's own converter, specified by shared test vectors; no generated client calls
+/// these by name -- the bindings read and write the attachments directly.
 std::string named(Attachment const & a, std::string const & operation) {
     using Viper::StringHelper::snakeCase;
     return snakeCase(a->typeName.nameSpace.name) + "_" + snakeCase(a->keyTypeName().name) + "_"

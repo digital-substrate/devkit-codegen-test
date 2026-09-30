@@ -1,7 +1,9 @@
 #include "topology_model_b_data.hpp"
 #include "topology_model_a_attachments.hpp"
 #include "topology_tools_pool.hpp"
+#include "topology_tools_remote.hpp"
 #include "topology_projector_pool.hpp"
+#include "topology_projector_remote.hpp"
 #include "topology_model_a_fields.hpp"
 
 void use_l4(std::shared_ptr<Viper::AttachmentGetting> const & g,

@@ -97,7 +97,7 @@ class Remote:
             raise RuntimeError(f"le service ne porte pas le pool {Pool.NAME}")
         return self._queried
 
-<p.functions:attachment_function();separator="\n\n">
+<p.functions:attachment_remote_function();separator="\n\n">
 >>
 
 preamble(p) ::= <<
@@ -131,6 +131,16 @@ attachment_function(f) ::= <<
         <attachment_call(f)>
 >>
 
+// À DISTANCE, LE CONTEXTE EST TOUJOURS `AttachmentMutating`, MÊME POUR UNE LECTURE. L'appel
+// emporte l'état de ce côté-ci du fil et rapporte ce que le serveur en a fait ; le runtime n'a
+// qu'une façon de l'emporter, et elle est mutable. Le `Remote` C++ le dit depuis le début ; ici
+// la signature du pool local était reprise telle quelle, et une lecture distante annonçait un
+// `AttachmentGetting` que le service refuse à l'appel.
+attachment_remote_function(f) ::= <<
+    def <f.name;format="snake">(self, attachment_mutating: dsviper.AttachmentMutating<if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>) -> <ret(f)>:
+        <attachment_invoke(f, "attachment_mutating")>
+>>
+
 parameter(a) ::= <%<a.name;format="snake">: <hint(a.bindingType)>%>
 ret(f) ::= <%<if(f.isVoid)>None<else><hint(f.returnBindingType)><endif>%>
 argument(a) ::= <%<if(a.bindingType.isNamed)><a.name;format="snake">._unwrap()<else><a.name;format="snake"><endif>%>
@@ -140,7 +150,8 @@ argument(a) ::= <%<if(a.bindingType.isNamed)><a.name;format="snake">._unwrap()<e
 // l'écarte : un seul template partagé chercherait `interfaceType` sur une fonction ordinaire
 // et le diagnostic ne nommerait que la propriété.
 call(f) ::= <%<if(f.isVoid)>self._funcs["<f.name>"](<f.parameters:argument();separator=", ">)<else>return <wrap(f)>self._funcs["<f.name>"](<f.parameters:argument();separator=", ">)<unwrap(f)><endif>%>
-attachment_call(f) ::= <%<if(f.isVoid)>self._funcs["<f.name>"](attachment_<f.interfaceType;format="lsc"><if(f.parameters)>, <endif><f.parameters:argument();separator=", ">)<else>return <wrap(f)>self._funcs["<f.name>"](attachment_<f.interfaceType;format="lsc"><if(f.parameters)>, <endif><f.parameters:argument();separator=", ">)<unwrap(f)><endif>%>
+attachment_call(f) ::= <%<attachment_invoke(f, {attachment_<f.interfaceType;format="lsc">})>%>
+attachment_invoke(f, context) ::= <%<if(f.isVoid)>self._funcs["<f.name>"](<context><if(f.parameters)>, <endif><f.parameters:argument();separator=", ">)<else>return <wrap(f)>self._funcs["<f.name>"](<context><if(f.parameters)>, <endif><f.parameters:argument();separator=", ">)<unwrap(f)><endif>%>
 // TOUT RETOUR PASSE PAR LE REGISTRE, ET RIEN N'Y ÉCHAPPE. Envelopper seulement les types
 // nommés laissait mentir l'annotation : `has_player` promettait `PlayerKey | None` et
 // rendait un `ValueOptional` brut -- un consommateur qui suit la signature reçoit un

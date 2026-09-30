@@ -6,8 +6,8 @@
 #include "Viper_ServiceRemote.hpp"
 #include "Viper_StringHelper.hpp"
 
-#include "service_player_model_pool.hpp"
-#include "service_tools_pool.hpp"
+#include "service_player_model_remote.hpp"
+#include "service_tools_remote.hpp"
 #include "Viper_ValueAny.hpp"
 #include "Viper_ValueInt64.hpp"
 
