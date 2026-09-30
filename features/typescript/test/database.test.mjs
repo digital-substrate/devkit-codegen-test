@@ -2,7 +2,7 @@ import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
 import { ConceptAKey, ConceptBKey, ConceptCKey, StructureV, StructureT, StructureU } from "../generated/dist/demo/data.js";
-import { Set_int8, Map_int8_to_string, XArray_int8 } from "../generated/dist/containers.js";
+import { Set_of_int8, Map_of_int8_to_string, XArray_of_int8 } from "../generated/dist/containers.js";
 import { definitions } from "../generated/dist/index.js";
 import * as db from "../generated/dist/demo/attachments.js";
 
@@ -187,7 +187,7 @@ test("negative_int8", () => {
 test("set_get_set_int8", () => {
   const database = createDatabase();
   const key = ConceptAKey.create();
-  const value = new Set_int8([1, 2, 3]);
+  const value = new Set_of_int8([1, 2, 3]);
 
   database.beginTransaction();
   db.ConceptA.propertiesSeInt8.set(database, key, value);
@@ -203,7 +203,7 @@ test("set_get_set_int8", () => {
 test("set_get_map", () => {
   const database = createDatabase();
   const key = ConceptAKey.create();
-  const value = new Map_int8_to_string([[1, "one"], [2, "two"]]);
+  const value = new Map_of_int8_to_string([[1, "one"], [2, "two"]]);
 
   database.beginTransaction();
   db.ConceptA.propertiesMapInt8String.set(database, key, value);
@@ -220,7 +220,7 @@ test("set_get_map", () => {
 test("set_get_xarray", () => {
   const database = createDatabase();
   const key = ConceptAKey.create();
-  const value = new XArray_int8([10, 20, 30, 40]);
+  const value = new XArray_of_int8([10, 20, 30, 40]);
 
   database.beginTransaction();
   db.ConceptA.propertiesXArray.set(database, key, value);

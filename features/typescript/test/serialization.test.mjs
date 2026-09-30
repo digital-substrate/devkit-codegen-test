@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
 import { ConceptAKey, ConceptBKey, StructureS, StructureT, StructureV } from "../generated/dist/demo/data.js";
-import { Optional_uint8, Vector_uint8, Set_uint8, Map_int8_to_string } from "../generated/dist/containers.js";
+import { Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_int8_to_string } from "../generated/dist/containers.js";
 import { AnyConceptKey } from "../generated/dist/_codegen/registry.js";
 
 // --- key encode/decode roundtrip ---
@@ -70,31 +70,31 @@ test("StructureV: encode/decode roundtrip", () => {
 // --- container encode/decode roundtrip ---
 
 test("Optional: nil roundtrip", () => {
-  const opt1 = new Optional_uint8();
+  const opt1 = new Optional_of_uint8();
   const blob = opt1.encode();
-  const opt2 = Optional_uint8.decode(blob);
+  const opt2 = Optional_of_uint8.decode(blob);
   assert.ok(opt2.isNil());
 });
 
 test("Optional: value roundtrip", () => {
-  const opt1 = new Optional_uint8(42);
+  const opt1 = new Optional_of_uint8(42);
   const blob = opt1.encode();
-  const opt2 = Optional_uint8.decode(blob);
+  const opt2 = Optional_of_uint8.decode(blob);
   assert.ok(!opt2.isNil());
   assert.equal(opt2.unwrap(), 42);
 });
 
 test("Vector: roundtrip", () => {
-  const v1 = new Vector_uint8([1, 2, 3, 4, 5]);
+  const v1 = new Vector_of_uint8([1, 2, 3, 4, 5]);
   const blob = v1.encode();
-  const v2 = Vector_uint8.decode(blob);
+  const v2 = Vector_of_uint8.decode(blob);
   assert.deepEqual([...v1], [...v2]);
 });
 
 test("Set: roundtrip", () => {
-  const s1 = new Set_uint8([1, 2, 3]);
+  const s1 = new Set_of_uint8([1, 2, 3]);
   const blob = s1.encode();
-  const s2 = Set_uint8.decode(blob);
+  const s2 = Set_of_uint8.decode(blob);
   assert.equal(s1.size, s2.size);
   for (const x of s1) {
     assert.ok(s2.contains(x));
@@ -102,9 +102,9 @@ test("Set: roundtrip", () => {
 });
 
 test("Map: roundtrip", () => {
-  const m1 = new Map_int8_to_string([[1, "one"], [2, "two"], [3, "three"]]);
+  const m1 = new Map_of_int8_to_string([[1, "one"], [2, "two"], [3, "three"]]);
   const blob = m1.encode();
-  const m2 = Map_int8_to_string.decode(blob);
+  const m2 = Map_of_int8_to_string.decode(blob);
   assert.equal(m1.at(1), m2.at(1));
   assert.equal(m1.at(2), m2.at(2));
   assert.equal(m1.at(3), m2.at(3));

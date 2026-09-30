@@ -134,18 +134,28 @@ ok &= check("two homonymous attachments have distinct descriptors",
 
 # ── a container returns its elements with their names ──
 #
-# The pack gets this by generating one class per shape. Here no container class is
-# generated: the value carries its type, a table maps each identifier to its class, and the
-# view wraps on read. The difference must be invisible from here.
+# Every container shape is a class of the package's `containers` module, named after what it
+# holds. A map crossing two units belongs to neither: it is declared there, and a read returns it.
 if projection is None:
     print("  --   containers: not in this package, these assertions do not run")
 else:
     link = projection.LinkKey.create()
     a, b = modela.MaterialKey.create(), modelb.MaterialKey.create()
 
-    projection_attachments.Link.mapping.set(mutating, link, {a: b})
+    from topology.containers import Map_of_ModelA_MaterialKey_to_ModelB_MaterialKey
+    try:
+        projection_attachments.Link.mapping.set(mutating, link, {a: b})
+        refused = False
+    except TypeError:
+        refused = True
+    ok &= check("a native map of generated keys is refused", refused)
+
+    typed = Map_of_ModelA_MaterialKey_to_ModelB_MaterialKey()
+    typed[a] = b
+    projection_attachments.Link.mapping.set(mutating, link, typed)
     mapping = projection_attachments.Link.mapping.get(mutating, link)
-    ok &= check("a map document reads back as a mapping", len(mapping) == 1)
+    ok &= check("a map document reads back as its declared class",
+                type(mapping) is Map_of_ModelA_MaterialKey_to_ModelB_MaterialKey and len(mapping) == 1)
     ok &= check("and its key carries its unit's class",
                 type(next(iter(mapping))) is modela.MaterialKey)
     ok &= check("and its value that of its own", type(mapping[a]) is modelb.MaterialKey)

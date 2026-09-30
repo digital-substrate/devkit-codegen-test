@@ -4,7 +4,7 @@
 import unittest
 import dsviper
 from features.demo import StructureS, StructureT, StructureU, StructureV, EnumerationE
-from features.containers import Vec_uint8_2, Mat_uint8_2_2, Mat_uint8_2_3, Tuple_uint8_string, Optional_uint8, Vector_uint8, Set_uint8, Map_uint8_to_string, XArray_uint8
+from features.containers import Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string, Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_uint8_to_string, XArray_of_uint8
 
 
 class TestStructureSConstruction(unittest.TestCase):
@@ -144,55 +144,55 @@ class TestStructureUContainerFields(unittest.TestCase):
         self.u = StructureU()
 
     def test_field_vec(self):
-        vec = Vec_uint8_2([10, 20])
+        vec = Vec2_of_uint8([10, 20])
         self.u.f_vec = vec
         retrieved = self.u.f_vec
         self.assertEqual(retrieved[0], 10)
         self.assertEqual(retrieved[1], 20)
 
     def test_field_mat(self):
-        mat = Mat_uint8_2_2([[1, 2], [3, 4]])
+        mat = Mat2x2_of_uint8([[1, 2], [3, 4]])
         self.u.f_mat = mat
         retrieved = self.u.f_mat
         self.assertEqual(retrieved[0, 0], 1)
         self.assertEqual(retrieved[1, 1], 4)
 
     def test_field_tuple(self):
-        tup = Tuple_uint8_string((42, "answer"))
+        tup = Tuple_of_uint8_and_string((42, "answer"))
         self.u.f_tuple = tup
         retrieved = self.u.f_tuple
         self.assertEqual(retrieved[0], 42)
         self.assertEqual(retrieved[1], "answer")
 
     def test_field_optional_nil(self):
-        opt = Optional_uint8()
+        opt = Optional_of_uint8()
         self.u.f_optional = opt
         retrieved = self.u.f_optional
         self.assertIsNone(retrieved)
 
     def test_field_optional_value(self):
-        opt = Optional_uint8(42)
+        opt = Optional_of_uint8(42)
         self.u.f_optional = opt
         retrieved = self.u.f_optional
         self.assertIsNotNone(retrieved)
         self.assertEqual(retrieved, 42)
 
     def test_field_vector(self):
-        vec = Vector_uint8([1, 2, 3, 4, 5])
+        vec = Vector_of_uint8([1, 2, 3, 4, 5])
         self.u.f_vector = vec
         retrieved = self.u.f_vector
         self.assertEqual(len(retrieved), 5)
         self.assertEqual(list(retrieved), [1, 2, 3, 4, 5])
 
     def test_field_set(self):
-        s = Set_uint8([1, 2, 3])
+        s = Set_of_uint8([1, 2, 3])
         self.u.f_set = s
         retrieved = self.u.f_set
         self.assertEqual(len(retrieved), 3)
         self.assertIn(1, [x for x in retrieved])
 
     def test_field_xarray(self):
-        xa = XArray_uint8([10, 20, 30])
+        xa = XArray_of_uint8([10, 20, 30])
         self.u.f_xarray = xa
         retrieved = self.u.f_xarray
         self.assertEqual(len(retrieved), 3)
@@ -310,15 +310,15 @@ class TestStructureVFixedContainerFields(unittest.TestCase):
         self.v = StructureV()
 
     def test_field_vec(self):
-        vec = Vec_uint8_2([10, 20])
+        vec = Vec2_of_uint8([10, 20])
         self.v.f_vec = vec
         retrieved = self.v.f_vec
         self.assertEqual(retrieved[0], 10)
         self.assertEqual(retrieved[1], 20)
 
     def test_field_mat(self):
-        # Mat_uint8_2_3 is 2 rows x 3 cols
-        mat = Mat_uint8_2_3([[1, 2, 3], [4, 5, 6]])
+        # Mat2x3_of_uint8 is 2 rows x 3 cols
+        mat = Mat2x3_of_uint8([[1, 2, 3], [4, 5, 6]])
         self.v.f_mat = mat
         retrieved = self.v.f_mat
         self.assertEqual(retrieved[0, 0], 1)
@@ -326,7 +326,7 @@ class TestStructureVFixedContainerFields(unittest.TestCase):
         self.assertEqual(retrieved[1, 1], 5)
 
     def test_field_tuple(self):
-        tup = Tuple_uint8_string((42, "answer"))
+        tup = Tuple_of_uint8_and_string((42, "answer"))
         self.v.f_tuple = tup
         retrieved = self.v.f_tuple
         self.assertEqual(retrieved[0], 42)
@@ -340,27 +340,27 @@ class TestStructureVDynamicContainerFields(unittest.TestCase):
         self.v = StructureV()
 
     def test_field_optional_nil(self):
-        opt = Optional_uint8()
+        opt = Optional_of_uint8()
         self.v.f_optional = opt
         retrieved = self.v.f_optional
         self.assertIsNone(retrieved)
 
     def test_field_optional_value(self):
-        opt = Optional_uint8(42)
+        opt = Optional_of_uint8(42)
         self.v.f_optional = opt
         retrieved = self.v.f_optional
         self.assertIsNotNone(retrieved)
         self.assertEqual(retrieved, 42)
 
     def test_field_vector(self):
-        vec = Vector_uint8([1, 2, 3, 4, 5])
+        vec = Vector_of_uint8([1, 2, 3, 4, 5])
         self.v.f_vector = vec
         retrieved = self.v.f_vector
         self.assertEqual(len(retrieved), 5)
         self.assertEqual(list(retrieved), [1, 2, 3, 4, 5])
 
     def test_field_set(self):
-        s = Set_uint8([1, 2, 3])
+        s = Set_of_uint8([1, 2, 3])
         self.v.f_set = s
         retrieved = self.v.f_set
         self.assertEqual(len(retrieved), 3)
@@ -369,7 +369,7 @@ class TestStructureVDynamicContainerFields(unittest.TestCase):
         self.assertTrue(3 in retrieved)
 
     def test_field_map(self):
-        m = Map_uint8_to_string({1: "one", 2: "two"})
+        m = Map_of_uint8_to_string({1: "one", 2: "two"})
         self.v.f_map = m
         retrieved = self.v.f_map
         self.assertEqual(len(retrieved), 2)
@@ -446,9 +446,9 @@ class TestStructureVSerialization(unittest.TestCase):
 
     def test_encode_decode_with_containers(self):
         v1 = StructureV()
-        v1.f_vector = Vector_uint8([10, 20, 30])
-        v1.f_set = Set_uint8([1, 2, 3])
-        v1.f_map = Map_uint8_to_string({1: "a", 2: "b"})
+        v1.f_vector = Vector_of_uint8([10, 20, 30])
+        v1.f_set = Set_of_uint8([1, 2, 3])
+        v1.f_map = Map_of_uint8_to_string({1: "a", 2: "b"})
         blob = v1.encode()
         v2 = StructureV.decode(blob)
         self.assertEqual(list(v2.f_vector), [10, 20, 30])

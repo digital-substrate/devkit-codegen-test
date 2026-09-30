@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import { StructureS, StructureT, ConceptAKey, ConceptBKey, EnumerationE } from "../generated/dist/demo/data.js";
-import { Set_uint8, Set_Demo_ConceptAKey, Vector_uint8, Vector_int8, Optional_Demo_ConceptAKey, Optional_Demo_ConceptBKey, Variant_string_uint8_Demo_StructureS } from "../generated/dist/containers.js";
+import { Set_of_uint8, Set_of_Demo_ConceptAKey, Vector_of_uint8, Vector_of_int8, Optional_of_Demo_ConceptAKey, Optional_of_Demo_ConceptBKey, Variant_of_string_or_uint8_or_Demo_StructureS } from "../generated/dist/containers.js";
 
 // --- Constructor rejects a runtime value of another type ---
 
@@ -19,15 +19,15 @@ test("concept key rejects other concept", () => {
 });
 
 test("set rejects other element type", () => {
-  assert.throws(() => new Set_uint8(new Set_Demo_ConceptAKey().vprValue), TypeError);
+  assert.throws(() => new Set_of_uint8(new Set_of_Demo_ConceptAKey().vprValue), TypeError);
 });
 
 test("vector rejects other element type", () => {
-  assert.throws(() => new Vector_uint8(new Vector_int8([1]).vprValue), TypeError);
+  assert.throws(() => new Vector_of_uint8(new Vector_of_int8([1]).vprValue), TypeError);
 });
 
 test("optional rejects other element type", () => {
-  assert.throws(() => new Optional_Demo_ConceptAKey(new Optional_Demo_ConceptBKey().vprValue), TypeError);
+  assert.throws(() => new Optional_of_Demo_ConceptAKey(new Optional_of_Demo_ConceptBKey().vprValue), TypeError);
 });
 
 test("enum rejects non-enum value", () => {
@@ -42,19 +42,19 @@ test("struct accepts same type", () => {
 });
 
 test("set accepts same type", () => {
-  const a = new Set_uint8(new Set_uint8([1, 2]).vprValue);
+  const a = new Set_of_uint8(new Set_of_uint8([1, 2]).vprValue);
   assert.equal(a.size, 2);
 });
 
 // --- Variant arm getter precondition ---
 
 test("variant get wrong arm throws", () => {
-  const v = new Variant_string_uint8_Demo_StructureS("hello");
+  const v = new Variant_of_string_or_uint8_or_Demo_StructureS("hello");
   assert.ok(v.isString());
   assert.throws(() => v.getUint8(), Error);
 });
 
 test("variant get right arm returns", () => {
-  const v = new Variant_string_uint8_Demo_StructureS("hello");
+  const v = new Variant_of_string_or_uint8_or_Demo_StructureS("hello");
   assert.equal(v.getString(), "hello");
 });

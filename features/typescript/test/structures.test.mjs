@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
 import { StructureS, StructureT, StructureU, StructureV, StructureValueField, EnumerationE } from "../generated/dist/demo/data.js";
-import { Vec_uint8_2, Mat_uint8_2_2, Mat_uint8_2_3, Tuple_uint8_string, Optional_uint8, Vector_uint8, Set_uint8, Map_uint8_to_string, XArray_uint8 } from "../generated/dist/containers.js";
+import { Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string, Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_uint8_to_string, XArray_of_uint8 } from "../generated/dist/containers.js";
 
 // --- StructureS construction and field access ---
 
@@ -164,7 +164,7 @@ test("StructureU: blob field", () => {
 
 test("StructureU: vec field", () => {
   const u = new StructureU();
-  u.f_vec = new Vec_uint8_2([10, 20]);
+  u.f_vec = new Vec2_of_uint8([10, 20]);
   const retrieved = u.f_vec;
   assert.equal(retrieved.at(0), 10);
   assert.equal(retrieved.at(1), 20);
@@ -172,7 +172,7 @@ test("StructureU: vec field", () => {
 
 test("StructureU: mat field", () => {
   const u = new StructureU();
-  u.f_mat = new Mat_uint8_2_2([[1, 2], [3, 4]]);
+  u.f_mat = new Mat2x2_of_uint8([[1, 2], [3, 4]]);
   const retrieved = u.f_mat;
   assert.equal(retrieved.at(0, 0), 1);
   assert.equal(retrieved.at(1, 1), 4);
@@ -180,7 +180,7 @@ test("StructureU: mat field", () => {
 
 test("StructureU: tuple field", () => {
   const u = new StructureU();
-  u.f_tuple = new Tuple_uint8_string([42, "answer"]);
+  u.f_tuple = new Tuple_of_uint8_and_string([42, "answer"]);
   const retrieved = u.f_tuple;
   assert.equal(retrieved.at(0), 42);
   assert.equal(retrieved.at(1), "answer");
@@ -188,14 +188,14 @@ test("StructureU: tuple field", () => {
 
 test("StructureU: optional nil field", () => {
   const u = new StructureU();
-  u.f_optional = new Optional_uint8();
+  u.f_optional = new Optional_of_uint8();
   const retrieved = u.f_optional;
   assert.ok((retrieved === undefined));
 });
 
 test("StructureU: optional value field", () => {
   const u = new StructureU();
-  u.f_optional = new Optional_uint8(42);
+  u.f_optional = new Optional_of_uint8(42);
   const retrieved = u.f_optional;
   assert.ok(!(retrieved === undefined));
   assert.equal(retrieved, 42);
@@ -203,7 +203,7 @@ test("StructureU: optional value field", () => {
 
 test("StructureU: vector field", () => {
   const u = new StructureU();
-  u.f_vector = new Vector_uint8([1, 2, 3, 4, 5]);
+  u.f_vector = new Vector_of_uint8([1, 2, 3, 4, 5]);
   const retrieved = u.f_vector;
   assert.equal(retrieved.size, 5);
   assert.deepEqual([...retrieved], [1, 2, 3, 4, 5]);
@@ -211,7 +211,7 @@ test("StructureU: vector field", () => {
 
 test("StructureU: set field", () => {
   const u = new StructureU();
-  u.f_set = new Set_uint8([1, 2, 3]);
+  u.f_set = new Set_of_uint8([1, 2, 3]);
   const retrieved = u.f_set;
   assert.equal(retrieved.size, 3);
   assert.ok([...retrieved].includes(1));
@@ -219,7 +219,7 @@ test("StructureU: set field", () => {
 
 test("StructureU: xarray field", () => {
   const u = new StructureU();
-  u.f_xarray = new XArray_uint8([10, 20, 30]);
+  u.f_xarray = new XArray_of_uint8([10, 20, 30]);
   const retrieved = u.f_xarray;
   assert.equal(retrieved.size, 3);
 });
@@ -347,7 +347,7 @@ test("StructureV: uuid field", () => {
 
 test("StructureV: vec field", () => {
   const v = new StructureV();
-  v.f_vec = new Vec_uint8_2([10, 20]);
+  v.f_vec = new Vec2_of_uint8([10, 20]);
   const retrieved = v.f_vec;
   assert.equal(retrieved.at(0), 10);
   assert.equal(retrieved.at(1), 20);
@@ -355,8 +355,8 @@ test("StructureV: vec field", () => {
 
 test("StructureV: mat field", () => {
   const v = new StructureV();
-  // Mat_uint8_2_3 is 2 rows x 3 cols
-  v.f_mat = new Mat_uint8_2_3([[1, 2, 3], [4, 5, 6]]);
+  // Mat2x3_of_uint8 is 2 rows x 3 cols
+  v.f_mat = new Mat2x3_of_uint8([[1, 2, 3], [4, 5, 6]]);
   const retrieved = v.f_mat;
   assert.equal(retrieved.at(0, 0), 1);
   assert.equal(retrieved.at(0, 2), 3);
@@ -365,7 +365,7 @@ test("StructureV: mat field", () => {
 
 test("StructureV: tuple field", () => {
   const v = new StructureV();
-  v.f_tuple = new Tuple_uint8_string([42, "answer"]);
+  v.f_tuple = new Tuple_of_uint8_and_string([42, "answer"]);
   const retrieved = v.f_tuple;
   assert.equal(retrieved.at(0), 42);
   assert.equal(retrieved.at(1), "answer");
@@ -375,14 +375,14 @@ test("StructureV: tuple field", () => {
 
 test("StructureV: optional nil field", () => {
   const v = new StructureV();
-  v.f_optional = new Optional_uint8();
+  v.f_optional = new Optional_of_uint8();
   const retrieved = v.f_optional;
   assert.ok((retrieved === undefined));
 });
 
 test("StructureV: optional value field", () => {
   const v = new StructureV();
-  v.f_optional = new Optional_uint8(42);
+  v.f_optional = new Optional_of_uint8(42);
   const retrieved = v.f_optional;
   assert.ok(!(retrieved === undefined));
   assert.equal(retrieved, 42);
@@ -390,7 +390,7 @@ test("StructureV: optional value field", () => {
 
 test("StructureV: vector field", () => {
   const v = new StructureV();
-  v.f_vector = new Vector_uint8([1, 2, 3, 4, 5]);
+  v.f_vector = new Vector_of_uint8([1, 2, 3, 4, 5]);
   const retrieved = v.f_vector;
   assert.equal(retrieved.size, 5);
   assert.deepEqual([...retrieved], [1, 2, 3, 4, 5]);
@@ -398,7 +398,7 @@ test("StructureV: vector field", () => {
 
 test("StructureV: set field", () => {
   const v = new StructureV();
-  v.f_set = new Set_uint8([1, 2, 3]);
+  v.f_set = new Set_of_uint8([1, 2, 3]);
   const retrieved = v.f_set;
   assert.equal(retrieved.size, 3);
   assert.ok(retrieved.contains(1));
@@ -408,7 +408,7 @@ test("StructureV: set field", () => {
 
 test("StructureV: map field", () => {
   const v = new StructureV();
-  v.f_map = new Map_uint8_to_string([[1, "one"], [2, "two"]]);
+  v.f_map = new Map_of_uint8_to_string([[1, "one"], [2, "two"]]);
   const retrieved = v.f_map;
   assert.equal(retrieved.size, 2);
   assert.equal(retrieved.at(1), "one");
@@ -483,9 +483,9 @@ test("StructureV: encode/decode roundtrip", () => {
 
 test("StructureV: encode/decode with containers", () => {
   const v1 = new StructureV();
-  v1.f_vector = new Vector_uint8([10, 20, 30]);
-  v1.f_set = new Set_uint8([1, 2, 3]);
-  v1.f_map = new Map_uint8_to_string([[1, "a"], [2, "b"]]);
+  v1.f_vector = new Vector_of_uint8([10, 20, 30]);
+  v1.f_set = new Set_of_uint8([1, 2, 3]);
+  v1.f_map = new Map_of_uint8_to_string([[1, "a"], [2, "b"]]);
   const blob = v1.encode();
   const v2 = StructureV.decode(blob);
   assert.deepEqual([...v2.f_vector], [10, 20, 30]);

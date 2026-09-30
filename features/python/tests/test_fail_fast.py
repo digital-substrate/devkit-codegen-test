@@ -9,7 +9,7 @@ under `python -O` (where asserts are stripped) — see the `-O` note in each cla
 
 import unittest
 from features.demo import StructureS, StructureT, ConceptAKey, ConceptBKey, EnumerationE
-from features.containers import Set_uint8, Set_Demo_ConceptAKey, Vector_uint8, Vector_int8, Optional_Demo_ConceptAKey, Optional_Demo_ConceptBKey, Variant_string_uint8_Demo_StructureS
+from features.containers import Set_of_uint8, Set_of_Demo_ConceptAKey, Vector_of_uint8, Vector_of_int8, Optional_of_Demo_ConceptAKey, Optional_of_Demo_ConceptBKey, Variant_of_string_or_uint8_or_Demo_StructureS
 
 
 class TestConstructorRejectsWrongRuntimeValue(unittest.TestCase):
@@ -30,15 +30,15 @@ class TestConstructorRejectsWrongRuntimeValue(unittest.TestCase):
 
     def test_set_rejects_other_element_type(self):
         with self.assertRaises(TypeError):
-            Set_uint8(Set_Demo_ConceptAKey().vpr_value)
+            Set_of_uint8(Set_of_Demo_ConceptAKey().vpr_value)
 
     def test_vector_rejects_other_element_type(self):
         with self.assertRaises(TypeError):
-            Vector_uint8(Vector_int8([1]).vpr_value)
+            Vector_of_uint8(Vector_of_int8([1]).vpr_value)
 
     def test_optional_rejects_other_element_type(self):
         with self.assertRaises(TypeError):
-            Optional_Demo_ConceptAKey(Optional_Demo_ConceptBKey().vpr_value)
+            Optional_of_Demo_ConceptAKey(Optional_of_Demo_ConceptBKey().vpr_value)
 
     def test_enum_rejects_non_enum_value(self):
         with self.assertRaises(TypeError):
@@ -53,7 +53,7 @@ class TestConstructorAcceptsCorrectRuntimeValue(unittest.TestCase):
         self.assertIsInstance(s, StructureS)
 
     def test_set_accepts_same_type(self):
-        a = Set_uint8(Set_uint8([1, 2]).vpr_value)
+        a = Set_of_uint8(Set_of_uint8([1, 2]).vpr_value)
         self.assertEqual(len(a), 2)
 
 
@@ -65,13 +65,13 @@ class TestVariantArmGetterPrecondition(unittest.TestCase):
     """
 
     def test_get_wrong_arm_raises(self):
-        v = Variant_string_uint8_Demo_StructureS("hello")
+        v = Variant_of_string_or_uint8_or_Demo_StructureS("hello")
         self.assertTrue(v.is_string())
         with self.assertRaises(ValueError):
             v.get_uint8()
 
     def test_get_right_arm_returns(self):
-        v = Variant_string_uint8_Demo_StructureS("hello")
+        v = Variant_of_string_or_uint8_or_Demo_StructureS("hello")
         self.assertEqual(v.get_string(), "hello")
 
 

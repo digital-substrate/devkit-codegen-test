@@ -4,7 +4,7 @@
 import unittest
 import dsviper
 from features.demo import ConceptAKey, ConceptBKey, StructureS, StructureT, StructureU, StructureV
-from features.containers import Optional_uint8, Vector_uint8, Set_uint8, Map_int8_to_string
+from features.containers import Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_int8_to_string
 from features import AnyConceptKey
 
 
@@ -71,36 +71,36 @@ class TestContainerEncodeDecode(unittest.TestCase):
     """Test container encode/decode roundtrip."""
 
     def test_optional_nil_roundtrip(self):
-        opt1 = Optional_uint8()
+        opt1 = Optional_of_uint8()
         blob = opt1.encode()
-        opt2 = Optional_uint8.decode(blob)
+        opt2 = Optional_of_uint8.decode(blob)
         self.assertTrue(opt2.is_nil())
 
     def test_optional_value_roundtrip(self):
-        opt1 = Optional_uint8(42)
+        opt1 = Optional_of_uint8(42)
         blob = opt1.encode()
-        opt2 = Optional_uint8.decode(blob)
+        opt2 = Optional_of_uint8.decode(blob)
         self.assertFalse(opt2.is_nil())
         self.assertEqual(opt2.unwrap(), 42)
 
     def test_vector_roundtrip(self):
-        v1 = Vector_uint8([1, 2, 3, 4, 5])
+        v1 = Vector_of_uint8([1, 2, 3, 4, 5])
         blob = v1.encode()
-        v2 = Vector_uint8.decode(blob)
+        v2 = Vector_of_uint8.decode(blob)
         self.assertEqual(list(v1), list(v2))
 
     def test_set_roundtrip(self):
-        s1 = Set_uint8([1, 2, 3])
+        s1 = Set_of_uint8([1, 2, 3])
         blob = s1.encode()
-        s2 = Set_uint8.decode(blob)
+        s2 = Set_of_uint8.decode(blob)
         self.assertEqual(len(s1), len(s2))
         for x in s1:
             self.assertIn(x, s2)
 
     def test_map_roundtrip(self):
-        m1 = Map_int8_to_string({1: "one", 2: "two", 3: "three"})
+        m1 = Map_of_int8_to_string({1: "one", 2: "two", 3: "three"})
         blob = m1.encode()
-        m2 = Map_int8_to_string.decode(blob)
+        m2 = Map_of_int8_to_string.decode(blob)
         self.assertEqual(m1[1], m2[1])
         self.assertEqual(m1[2], m2[2])
         self.assertEqual(m1[3], m2[3])

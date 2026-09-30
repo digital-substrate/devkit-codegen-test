@@ -7,7 +7,7 @@ from features import definitions
 from features.demo import data as md
 from features.demo import attachments as db
 from features.demo import ConceptAKey, ConceptBKey, ConceptCKey, StructureV, StructureT, StructureU
-from features.containers import Set_int8, Map_int8_to_string, XArray_int8
+from features.containers import Set_of_int8, Map_of_int8_to_string, XArray_of_int8
 
 
 def create_database() -> dsviper.Database:
@@ -206,7 +206,7 @@ class TestAttachmentSetInt8(unittest.TestCase):
 
     def test_set_get_set_int8(self):
         key = ConceptAKey.create()
-        value = Set_int8([1, 2, 3])
+        value = Set_of_int8([1, 2, 3])
 
         self.database.begin_transaction()
         db.ConceptA.properties_se_int_8.set(self.database, key, value)
@@ -226,7 +226,7 @@ class TestAttachmentMapInt8String(unittest.TestCase):
 
     def test_set_get_map(self):
         key = ConceptAKey.create()
-        value = Map_int8_to_string({1: "one", 2: "two"})
+        value = Map_of_int8_to_string({1: "one", 2: "two"})
 
         self.database.begin_transaction()
         db.ConceptA.properties_map_int_8_string.set(self.database, key, value)
@@ -247,7 +247,7 @@ class TestAttachmentXArray(unittest.TestCase):
 
     def test_set_get_xarray(self):
         key = ConceptAKey.create()
-        value = XArray_int8([10, 20, 30, 40])
+        value = XArray_of_int8([10, 20, 30, 40])
 
         self.database.begin_transaction()
         db.ConceptA.properties_x_array.set(self.database, key, value)

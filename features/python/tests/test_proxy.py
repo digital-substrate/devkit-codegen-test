@@ -3,7 +3,7 @@
 
 import unittest
 from features.demo import StructureS
-from features.containers import Set_uint8, Vector_uint8
+from features.containers import Set_of_uint8, Vector_of_uint8
 
 
 class TestProxyEqualityWithForeignOperand(unittest.TestCase):
@@ -27,12 +27,12 @@ class TestProxyEqualityWithForeignOperand(unittest.TestCase):
         self.assertFalse(s == "StructureS")
 
     def test_membership_in_heterogeneous_list(self):
-        s = Set_uint8([1])
+        s = Set_of_uint8([1])
         self.assertFalse(s in [1, 2, "three"])
 
     def test_eq_across_proxy_types(self):
-        a = Set_uint8([1])
-        b = Vector_uint8([1])
+        a = Set_of_uint8([1])
+        b = Vector_of_uint8([1])
         self.assertFalse(a == b)
 
 
@@ -40,13 +40,13 @@ class TestProxyEqualityWithSameType(unittest.TestCase):
     """The foreign-operand fix must not weaken same-type comparison."""
 
     def test_equal_values_compare_equal(self):
-        self.assertTrue(Set_uint8([1, 2]) == Set_uint8([1, 2]))
+        self.assertTrue(Set_of_uint8([1, 2]) == Set_of_uint8([1, 2]))
 
     def test_different_values_compare_unequal(self):
-        self.assertFalse(Set_uint8([1, 2]) == Set_uint8([1, 3]))
+        self.assertFalse(Set_of_uint8([1, 2]) == Set_of_uint8([1, 3]))
 
     def test_hash_is_stable_for_equal_values(self):
-        self.assertEqual(hash(Set_uint8([1, 2])), hash(Set_uint8([1, 2])))
+        self.assertEqual(hash(Set_of_uint8([1, 2])), hash(Set_of_uint8([1, 2])))
 
 
 if __name__ == "__main__":
