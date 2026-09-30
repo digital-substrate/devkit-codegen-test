@@ -46,8 +46,8 @@ preamble(p, kind, context) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <p.model.generated>
 
-#ifndef <p.name>_Pool_hpp
-#define <p.name>_Pool_hpp
+#ifndef <p.guard.Pool>
+#define <p.guard.Pool>
 
 <p.dependencies.functions:{d|#include "<d.include.Data>"};separator="\n">
 

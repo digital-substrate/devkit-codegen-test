@@ -4,14 +4,14 @@
 # unique, et il se paie ici, en une ligne explicite.
 file(GLOB FEATURES_HEADERS generated/*.hpp)
 file(GLOB FEATURES_SOURCES generated/*.cpp)
-list(FILTER FEATURES_SOURCES EXCLUDE REGEX "_TestApp\\.cpp$")
+list(FILTER FEATURES_SOURCES EXCLUDE REGEX "_test_app\\.cpp$")
 
 add_library(features STATIC
     ${FEATURES_HEADERS} ${FEATURES_SOURCES})
 target_include_directories(features PUBLIC generated)
 target_link_libraries(features PUBLIC viper)
 
-add_executable(features_test generated/features_TestApp.cpp)
+add_executable(features_test generated/features_test_app.cpp)
 target_link_libraries(features_test features cli11)
 
 # src/ est écrit à la main : le contrat du pont, vu d'un développeur.

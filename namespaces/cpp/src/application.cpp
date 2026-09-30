@@ -5,12 +5,12 @@
 // 43 objets du modèle rendu, les seuls symboles qui manquaient étaient ces quatre-là, et
 // l'implémentation des deux ajouts au runtime.
 
-#include "ModelA_Data.hpp"
-#include "ModelB_Data.hpp"
-#include "Projection_Data.hpp"
-#include "Projector_Pool.hpp"
-#include "Tools_Pool.hpp"
-#include "LinkModel_Pool.hpp"
+#include "topology_model_a_data.hpp"
+#include "topology_model_b_data.hpp"
+#include "topology_projection_data.hpp"
+#include "topology_projector_pool.hpp"
+#include "topology_tools_pool.hpp"
+#include "topology_link_model_pool.hpp"
 
 #include <iostream>
 

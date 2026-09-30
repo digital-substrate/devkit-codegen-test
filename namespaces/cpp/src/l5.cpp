@@ -1,8 +1,8 @@
 // Ce que la couche 5 permet, vérifié par le compilateur.
-#include "ModelA_Test.hpp"
-#include "ModelA_Codec.hpp"
-#include "ModelA_Model.hpp"
-#include "Topology_Test.hpp"
+#include "topology_model_a_test.hpp"
+#include "topology_model_a_codec.hpp"
+#include "topology_model_a_model.hpp"
+#include "topology_test.hpp"
 
 #include <set>
 

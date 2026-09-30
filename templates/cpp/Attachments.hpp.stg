@@ -16,8 +16,8 @@ unit(u) ::= <<
 // as they read anything else; writing to one goes through the `set` and `del` overloads
 // that take it, inside an open transaction.
 
-#ifndef <u.name>_Attachments_hpp
-#define <u.name>_Attachments_hpp
+#ifndef <u.guard.Attachments>
+#define <u.guard.Attachments>
 
 #include "<u.include.Data>"
 <u.dependencies.attachments:{d|#include "<d.include.Data>"};separator="\n">

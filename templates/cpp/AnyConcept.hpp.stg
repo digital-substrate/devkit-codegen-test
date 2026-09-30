@@ -33,8 +33,8 @@ model(m) ::= <<
 // distributed under LicenseRef-DigitalSubstrate-Commercial-1.2.
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
-#ifndef <m.namespace>_AnyConcept_hpp
-#define <m.namespace>_AnyConcept_hpp
+#ifndef <m.guard.AnyConcept>
+#define <m.guard.AnyConcept>
 #include "Viper_StaticWriter.hpp"
 #include "Viper_StaticReader.hpp"
 #include "Viper_StaticHash.hpp"

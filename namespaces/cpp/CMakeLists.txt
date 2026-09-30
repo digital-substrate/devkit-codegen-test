@@ -5,7 +5,7 @@
 # bibliothèque les fait compiler *et* lier, ce qu'un simple `-fsyntax-only` ne dirait pas.
 file(GLOB TOPOLOGY_HEADERS generated/*.hpp)
 file(GLOB TOPOLOGY_SOURCES generated/*.cpp)
-list(FILTER TOPOLOGY_SOURCES EXCLUDE REGEX "_TestApp\\.cpp$")
+list(FILTER TOPOLOGY_SOURCES EXCLUDE REGEX "_test_app\\.cpp$")
 file(GLOB TOPOLOGY_CONSUMERS src/*.cpp)
 
 add_library(topology STATIC
@@ -13,5 +13,5 @@ add_library(topology STATIC
 target_include_directories(topology PUBLIC generated)
 target_link_libraries(topology PUBLIC viper)
 
-add_executable(topology_test generated/topology_TestApp.cpp)
+add_executable(topology_test generated/topology_test_app.cpp)
 target_link_libraries(topology_test topology cli11)

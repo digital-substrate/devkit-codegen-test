@@ -4,8 +4,8 @@
 // aller-retour ne montre pas : le type que rend `encode`, et le refus de `decode` quand une
 // valeur n'est pas du type demandé -- une clé d'un autre concept d'abord, qui a la même forme
 // que la bonne et passerait sans lui.
-#include "features_Codec.hpp"
-#include "features_AttachmentPool.hpp"
+#include "features_codec.hpp"
+#include "features_attachment_pool.hpp"
 
 #include "Viper_AttachmentFunction.hpp"
 #include "Viper_FunctionPrototype.hpp"

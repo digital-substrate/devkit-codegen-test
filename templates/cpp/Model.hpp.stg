@@ -21,8 +21,8 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 
-#ifndef <u.name>_Model_hpp
-#define <u.name>_Model_hpp
+#ifndef <u.guard.Model>
+#define <u.guard.Model>
 
 #include "<u.include.Data>"
 

@@ -12,7 +12,7 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#include "<m.namespace>_Python_Definitions.hpp"
+#include "<m.include.Python_Definitions>"
 <m.nameSpaces:{u|#include "<u.include.Model>"
 #include "<u.include.Attachments>"
 #include "<u.include.Fields>"};separator="\n">

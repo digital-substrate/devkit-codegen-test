@@ -6,8 +6,8 @@
 #include "Viper_ServiceRemote.hpp"
 #include "Viper_StringHelper.hpp"
 
-#include "PlayerModel_Pool.hpp"
-#include "Tools_Pool.hpp"
+#include "service_player_model_pool.hpp"
+#include "service_tools_pool.hpp"
 #include "Viper_ValueAny.hpp"
 #include "Viper_ValueInt64.hpp"
 
@@ -15,7 +15,7 @@
 
 #include <iostream>
 
-#include "Demo_Attachments.hpp"
+#include "service_demo_attachments.hpp"
 
 using namespace service;
 

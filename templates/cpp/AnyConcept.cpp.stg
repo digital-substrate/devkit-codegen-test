@@ -17,7 +17,7 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#include "<m.namespace>_AnyConcept.hpp"
+#include "<m.include.AnyConcept>"
 
 #include "Viper_StreamReading.hpp"
 #include "Viper_StreamWriting.hpp"

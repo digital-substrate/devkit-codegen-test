@@ -163,9 +163,9 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#include "<m.namespace>_Codec.hpp"
+#include "<m.include.Codec>"
 
-#include "<m.namespace>_Resources.hpp"      // the definitions, as bytes
+#include "<m.include.Resources>"      // the definitions, as bytes
 
 #include "Viper_Definitions.hpp"
 #include "Viper_StreamRawCodec.hpp"
@@ -182,8 +182,8 @@ namespace <m.namespace>::codec {
 std::shared_ptr\<Viper::Definitions const> const & definitions() {
     static std::shared_ptr\<Viper::Definitions const> instance;
     if (!instance) {
-        Viper::Blob blob(sizeof(::<m.namespace>_Resources_definitions));
-        std::memcpy(blob.storage.data(), ::<m.namespace>_Resources_definitions, blob.size());
+        Viper::Blob blob(sizeof(::<m.namespace>_resources_definitions));
+        std::memcpy(blob.storage.data(), ::<m.namespace>_resources_definitions, blob.size());
         instance = Viper::DefinitionsDecoder::decode(blob, Viper::StreamTokenBinaryCodec::Instance());
     }
     return instance;

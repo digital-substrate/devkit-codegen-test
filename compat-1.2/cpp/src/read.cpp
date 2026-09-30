@@ -6,7 +6,7 @@
 // développeur lirait, et c'est ce qui doit rester vrai d'une version à l'autre.
 //
 // Les valeurs sont celles que `write_1_2.py` a écrites ; les deux se lisent côte à côte.
-#include "Compat_Attachments.hpp"
+#include "compat12_compat_attachments.hpp"
 
 #include "Viper_Database.hpp"
 #include "Viper_ValueAny.hpp"

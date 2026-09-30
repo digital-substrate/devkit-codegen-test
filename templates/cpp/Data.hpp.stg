@@ -8,8 +8,8 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 
-#ifndef <u.name>_Data_hpp
-#define <u.name>_Data_hpp
+#ifndef <u.guard.Data>
+#define <u.guard.Data>
 
 <u.dependencies.types:{d|#include "<d.include.Data>"};separator="\n">
 

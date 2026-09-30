@@ -38,13 +38,13 @@ CPP_OUT = HERE / "cpp" / "generated"
 
 
 def resources_hpp():
-    """Le modèle, en octets, dans `<Namespace>_Resources_definitions` -- ce que les templates attendent."""
+    """Le modèle, en octets, dans `<Namespace>_resources_definitions` -- ce que les templates attendent."""
     octets = bytes(definitions.encode().encoded())
     lignes = [", ".join(f"0x{b:02x}" for b in octets[i:i + 12]) for i in range(0, len(octets), 12)]
     ns = SPEC["namespace"]
-    (CPP_OUT / f"{ns}_Resources.hpp").write_text(
-        f"#ifndef {ns}_Resources_hpp\n#define {ns}_Resources_hpp\n\n#include <cstddef>\n\n"
-        f"inline constexpr unsigned char {ns}_Resources_definitions[] = {{\n "
+    (CPP_OUT / f"{ns}_resources.hpp").write_text(
+        f"#ifndef {ns}_resources_hpp\n#define {ns}_resources_hpp\n\n#include <cstddef>\n\n"
+        f"inline constexpr unsigned char {ns}_resources_definitions[] = {{\n "
         + ",\n ".join(lignes) + f"\n}};\n\n#endif\n")
 
 

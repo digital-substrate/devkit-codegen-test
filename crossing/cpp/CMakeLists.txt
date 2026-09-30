@@ -3,12 +3,12 @@
 # Parts::Colour>`, un `variant<Core::Colour, Parts::Colour>`. Le compilateur est le juge.
 file(GLOB CROSSING_HEADERS generated/*.hpp)
 file(GLOB CROSSING_SOURCES generated/*.cpp)
-list(FILTER CROSSING_SOURCES EXCLUDE REGEX "_TestApp\\.cpp$")
+list(FILTER CROSSING_SOURCES EXCLUDE REGEX "_test_app\\.cpp$")
 
 add_library(crossing STATIC
     ${CROSSING_HEADERS} ${CROSSING_SOURCES})
 target_include_directories(crossing PUBLIC generated)
 target_link_libraries(crossing PUBLIC viper)
 
-add_executable(crossing_test generated/crossing_TestApp.cpp)
+add_executable(crossing_test generated/crossing_test_app.cpp)
 target_link_libraries(crossing_test crossing cli11)

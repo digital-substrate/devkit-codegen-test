@@ -1,6 +1,6 @@
-#include "ModelA_Codec.hpp"
-#include "ModelB_Codec.hpp"
-#include "Projection_Codec.hpp"
+#include "topology_model_a_codec.hpp"
+#include "topology_model_b_codec.hpp"
+#include "topology_projection_codec.hpp"
 
 void use_bridge(Viper::StaticWriter::Writer & w) {
     // la map qui enjambe : aucune fonction générée, le template + ADL suffisent

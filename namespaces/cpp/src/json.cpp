@@ -4,9 +4,9 @@
 // dynamique suivi d'une transition que le runtime possède déjà. Un développeur les écrit en
 // une ligne, et reçoit d'office toute transition que le runtime ajoutera -- le XML compris,
 // qu'aucune génération n'avait jamais couvert.
-#include "ModelA_Codec.hpp"
-#include "ModelA_Model.hpp"
-#include "Topology_Codec.hpp"
+#include "topology_model_a_codec.hpp"
+#include "topology_model_a_model.hpp"
+#include "topology_codec.hpp"
 
 #include "Viper_HashSHA1.hpp"
 #include "Viper_JsonValueDecoder.hpp"

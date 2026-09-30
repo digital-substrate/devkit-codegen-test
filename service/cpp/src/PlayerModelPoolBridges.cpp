@@ -1,5 +1,5 @@
-#include "PlayerModel_Pool.hpp"
-#include "Demo_Attachments.hpp"
+#include "service_player_model_pool.hpp"
+#include "service_demo_attachments.hpp"
 
 using namespace service::demo;
 

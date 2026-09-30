@@ -84,7 +84,7 @@ model(m) ::= <<
 // distributed under LicenseRef-DigitalSubstrate-Commercial-1.2.
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
-#include "<m.namespace>_Test.hpp"
+#include "<m.include.Test>"
 
 #include "Viper_AttachmentGettingFunction.hpp"
 #include "Viper_Databasing.hpp"

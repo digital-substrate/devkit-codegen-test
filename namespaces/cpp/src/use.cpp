@@ -1,6 +1,6 @@
-#include "ModelA_Data.hpp"
-#include "ModelB_Data.hpp"
-#include "Projection_Data.hpp"
+#include "topology_model_a_data.hpp"
+#include "topology_model_b_data.hpp"
+#include "topology_projection_data.hpp"
 #include <map>
 #include <unordered_map>
 
@@ -25,8 +25,8 @@ void use() {
     (void)ca; (void)cb; (void)p; (void)widened; (void)ordered; (void)hashed;
 }
 
-#include "ModelA_Fields.hpp"
-#include "Projection_Fields.hpp"
+#include "topology_model_a_fields.hpp"
+#include "topology_projection_fields.hpp"
 
 void use_fields() {
     // le nom, utilisable en expression constante

@@ -14,8 +14,8 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#ifndef <m.namespace>_Python_Definitions_hpp
-#define <m.namespace>_Python_Definitions_hpp
+#ifndef <m.guard.Python_Definitions>
+#define <m.guard.Python_Definitions>
 
 #define PY_SSIZE_T_CLEAN
 #include \<Python.h>
