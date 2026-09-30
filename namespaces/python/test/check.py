@@ -95,6 +95,19 @@ ok &= check("un seul champ s'écrit par sa méthode", colour.get(mutating, key).
 
 ok &= check("une clé absente rend None", colour.get(mutating, modela.MaterialKey.create()) is None)
 
+# UN CONCEPT NOMMÉ COMME LA CLÉ D'UN AUTRE. `MaterialKey` est la clé de Material et un concept à
+# lui ; ses attachments forment une classe de ce nom dans le module, et la clé de Material doit
+# rester le type qu'on y écrit -- ce que le module masquait tant qu'il importait les noms nus.
+note_key = modela.MaterialKeyKey.create()
+modela_attachments.MaterialKey.note.set(mutating, note_key, modela.MaterialKeyNote(material=key))
+ok &= check("un concept nommé comme la clé d'un autre ne masque pas cette clé",
+            modela_attachments.MaterialKey.note.get(mutating, note_key).material == key)
+# Et les annotations -- ce que lisent un vérificateur de types et l'éditeur -- désignent bien la
+# clé : `key: MaterialKey` résolu dans le module donnait la classe des attachments.
+import typing                                                           # noqa: E402
+hints = typing.get_type_hints(type(modela_attachments.Material.colour).set_r)
+ok &= check("l'annotation d'une clé désigne la clé, pas un scope homonyme", hints["key"] is modela.MaterialKey)
+
 # ── et le même attachment, sur une base ──
 #
 # LES MÊMES APPELS, SANS UNE LIGNE DE PLUS. La base porte `keys`, `has`, `get` et `set` ;

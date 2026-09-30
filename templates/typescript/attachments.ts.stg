@@ -26,9 +26,7 @@ import { Mapping, Ordered, Sequence } from "../_codegen/container.js";
 import { AnyConceptKey } from "../_codegen/registry.js";
 import { definitions } from "../index.js";
 <u.dependencies.attachments:{d|import * as <d.name;format="lsc"> from "../<d.name;format="lsc">/data.js";};separator="\n">
-<if(u.exported)>
-import { <u.exported:{e|<e>};separator=", "> } from "./data.js";
-<endif>
+import * as <u.name;format="lsc"> from "./data.js";
 
 <u.attachmentScopes:by_concept(u);separator="\n\n">
 >>
@@ -60,7 +58,7 @@ export class <s.name> {
 one(a, s) ::= <<
     static readonly <a.name;format="lf"> = new <if(a.documentType.isStructure)><opsClass(a, s)><elseif(a.documentType.field.isNotBox)><opsClass(a, s)><else>AttachmentProxy\<<generics(a, s)>\><endif>(
         dsviper.ValueUUId.create("<a.runtimeId>"),
-        definitions, <s.keyType.bindingType.annotation>, <documentClass(a)>);
+        definitions, <s.keyType.bindingType.qualified>, <documentClass(a)>);
 >>
 
 opsClass(a, s) ::= <%_<s.name>_<a.name;format="lf">%>
@@ -68,7 +66,7 @@ opsClass(a, s) ::= <%_<s.name>_<a.name;format="lf">%>
 own_class(a, s) ::= <%<if(a.documentType.isStructure)><own_class_body(a, s)><elseif(a.documentType.field.isNotBox)><own_class_body(a, s)><endif>%>
 
 own_class_body(a, s) ::= <<
-/** <s.keyType.type> -> <a.documentType.bindingType.annotation>, avec ses opérations. S'écrit `<s.name>.<a.name;format="lf">`. */
+/** <s.keyType.type> -> <a.documentType.bindingType.qualified>, avec ses opérations. S'écrit `<s.name>.<a.name;format="lf">`. */
 export class <opsClass(a, s)> extends AttachmentProxy\<<generics(a, s)>\> {
     <if(a.documentType.isStructure)><a.documentType.structure.fields:field(s);separator="\n\n"><else><document(a, s)><endif>
 }
@@ -78,7 +76,7 @@ export class <opsClass(a, s)> extends AttachmentProxy\<<generics(a, s)>\> {
 
 field(sf, s) ::= <<
 /** Écrire le champ `<sf.name>` du document tenu à `key`. */
-set<sf.name;format="uf">(mutating: Mutating, key: <key(s)>, value: <sf.bindingType.annotation>): void {
+set<sf.name;format="uf">(mutating: Mutating, key: <key(s)>, value: <sf.bindingType.qualified>): void {
     this.updateField(mutating, key, "<sf.name>", value);
 }<if(sf.field.isSet)>
 
@@ -91,45 +89,45 @@ set<sf.name;format="uf">(mutating: Mutating, key: <key(s)>, value: <sf.bindingTy
 
 document(a, s) ::= <%<if(a.documentType.field.isSet)><set_ops(a.documentType.field, s, "undefined", "", false)><elseif(a.documentType.field.isMap)><map_ops(a.documentType.field, s, "undefined", "", false)><elseif(a.documentType.field.isXArray)><xarray_ops(a.documentType.field, s, "undefined", "", false)><endif>%>
 
-key(s) ::= <%<s.keyType.bindingType.annotation>%>
+key(s) ::= <%<s.keyType.bindingType.qualified>%>
 
 set_ops(t, s, path, suffix, label) ::= <<
 /** Ajouter des éléments au set<if(label)> `<label>`<endif>. */
-union<suffix>(mutating: Mutating, key: <key(s)>, value: Iterable\<<t.bindingElementType.annotation>\>): void {
+union<suffix>(mutating: Mutating, key: <key(s)>, value: Iterable\<<t.bindingElementType.qualified>\>): void {
     this.unionInSet(mutating, key, <path>, Array.from(value));
 }
 
 /** Retirer des éléments du set<if(label)> `<label>`<endif>. */
-subtract<suffix>(mutating: Mutating, key: <key(s)>, value: Iterable\<<t.bindingElementType.annotation>\>): void {
+subtract<suffix>(mutating: Mutating, key: <key(s)>, value: Iterable\<<t.bindingElementType.qualified>\>): void {
     this.subtractInSet(mutating, key, <path>, Array.from(value));
 }
 >>
 
 map_ops(t, s, path, suffix, label) ::= <<
 /** Ajouter des entrées à la map<if(label)> `<label>`<endif>, en remplaçant les clés déjà là. */
-union<suffix>(mutating: Mutating, key: <key(s)>, value: ReadonlyMap\<<t.bindingKeyType.annotation>, <t.bindingElementType.annotation>\>): void {
+union<suffix>(mutating: Mutating, key: <key(s)>, value: ReadonlyMap\<<t.bindingKeyType.qualified>, <t.bindingElementType.qualified>\>): void {
     this.unionInMap(mutating, key, <path>, value);
 }
 
 /** Retirer de la map<if(label)> `<label>`<endif> les entrées dont la clé est donnée. */
-subtract<suffix>(mutating: Mutating, key: <key(s)>, value: Iterable\<<t.bindingKeyType.annotation>\>): void {
+subtract<suffix>(mutating: Mutating, key: <key(s)>, value: Iterable\<<t.bindingKeyType.qualified>\>): void {
     this.subtractInMap(mutating, key, <path>, Array.from(value));
 }
 
 /** Mettre à jour les entrées de la map<if(label)> `<label>`<endif> dont la clé est déjà là ; les autres sont ignorées. */
-update<suffix>(mutating: Mutating, key: <key(s)>, value: ReadonlyMap\<<t.bindingKeyType.annotation>, <t.bindingElementType.annotation>\>): void {
+update<suffix>(mutating: Mutating, key: <key(s)>, value: ReadonlyMap\<<t.bindingKeyType.qualified>, <t.bindingElementType.qualified>\>): void {
     this.updateInMap(mutating, key, <path>, value);
 }
 >>
 
 xarray_ops(t, s, path, suffix, label) ::= <<
 /** Insérer dans la xarray<if(label)> `<label>`<endif> ; `ValueUUId.INVALID` comme `beforePosition` ajoute à la fin. */
-insert<suffix>(mutating: Mutating, key: <key(s)>, beforePosition: dsviper.ValueUUId, newPosition: dsviper.ValueUUId, value: <t.bindingElementType.annotation>): void {
+insert<suffix>(mutating: Mutating, key: <key(s)>, beforePosition: dsviper.ValueUUId, newPosition: dsviper.ValueUUId, value: <t.bindingElementType.qualified>): void {
     this.insertInXArray(mutating, key, <path>, beforePosition, newPosition, value);
 }
 
 /** Écrire l'élément à `position` dans la xarray<if(label)> `<label>`<endif>. */
-update<suffix>(mutating: Mutating, key: <key(s)>, position: dsviper.ValueUUId, value: <t.bindingElementType.annotation>): void {
+update<suffix>(mutating: Mutating, key: <key(s)>, position: dsviper.ValueUUId, value: <t.bindingElementType.qualified>): void {
     this.updateInXArray(mutating, key, <path>, position, value);
 }
 
@@ -139,5 +137,5 @@ remove<suffix>(mutating: Mutating, key: <key(s)>, position: dsviper.ValueUUId): 
 }
 >>
 
-generics(a, s) ::= <%<s.keyType.bindingType.annotation>, <a.documentType.bindingType.annotation>%>
-documentClass(a) ::= <%<if(a.documentType.bindingType.isNamed)><a.documentType.bindingType.annotation><else>undefined<endif>%>
+generics(a, s) ::= <%<s.keyType.bindingType.qualified>, <a.documentType.bindingType.qualified>%>
+documentClass(a) ::= <%<if(a.documentType.bindingType.isNamed)><a.documentType.bindingType.qualified><else>undefined<endif>%>

@@ -22,4 +22,16 @@ enum Finish {
 
 attachment<Material, Colour> colour;
 
+"""A concept named as another concept's key: `MaterialKey` is the key of Material, and here
+also a concept of its own, whose key is `MaterialKeyKey`. A real model has one
+(`TimelineTriggerKey`). Its attachments open a scope `attachments::MaterialKey`, and a
+document naming Material's key must still reach the type, not that scope."""
+concept MaterialKey;
+
+struct MaterialKeyNote {
+  key<Material> material;
+};
+
+attachment<MaterialKey, MaterialKeyNote> note;
+
 }; // ns

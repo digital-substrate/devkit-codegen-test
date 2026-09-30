@@ -56,26 +56,26 @@ std::shared_ptr\<Viper::Attachment> const & attachment() { return descriptor(); 
 
 <keys(a, u)>
 
-bool has(std::shared_ptr\<Viper::AttachmentGetting> const & getting, <a.keyType.typeInNamespace> const & key) {
+bool has(std::shared_ptr\<Viper::AttachmentGetting> const & getting, <a.keyType.type> const & key) {
     return getting->has(attachment(), encodeKey(key));
 }
 
 <get(a, u)>
 
-void set(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value) {
+void set(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value) {
     mutating->set(attachment(), encodeKey(key), <u.model.namespace>::codec::encode(value));
 }
 
-void diff(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value,
+void diff(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value,
           bool recursive) {
     mutating->diff(attachment(), encodeKey(key), <u.model.namespace>::codec::encode(value), recursive);
 }
 
-bool set(std::shared_ptr\<Viper::Database> const & db, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value) {
+bool set(std::shared_ptr\<Viper::Database> const & db, <a.keyType.type> const & key, <a.documentType.type> const & value) {
     return db->set(attachment(), encodeKey(key), <u.model.namespace>::codec::encode(value));
 }
 
-bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.typeInNamespace> const & key) {
+bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.type> const & key) {
     return db->del(attachment(), encodeKey(key));
 }
 <if(a.documentType.isStructure)>
@@ -93,7 +93,7 @@ bool del(std::shared_ptr\<Viper::Database> const & db, <a.keyType.typeInNamespac
 // injecté, et le type du champ de la signature -- les trois liés en un seul endroit, ce
 // qu'une surcharge générique prenant (chemin, valeur) ne ferait pas.
 field(sf, a, u) ::= <<
-void set<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace><sf.passBy> value) {
+void set<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type><sf.passBy> value) {
     mutating->update(attachment(), encodeKey(key), <path(sf, a)>,
                     <u.model.namespace>::codec::encode(value));
 }
@@ -121,17 +121,17 @@ root() ::= <%Viper::Path::make()%>
 mutate(op, viper, address, value, u) ::= <%mutating-><op>(attachment(), encodeKey(key), <address>, <u.model.namespace>::codec::encode(<value>));%>
 
 field_set(sf, a, u) ::= <<
-void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value) {
+void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type> const & value) {
     <mutate("unionInSet", "ValueSet", path(sf, a), "value", u)>
 }
 
-void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value) {
+void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type> const & value) {
     <mutate("subtractInSet", "ValueSet", path(sf, a), "value", u)>
 }
 >>
 
 field_map(sf, a, u) ::= <<
-void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value) {
+void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type> const & value) {
     <mutate("unionInMap", "ValueMap", path(sf, a), "value", u)>
 }
 
@@ -139,25 +139,25 @@ void union<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> cons
     <mutate("subtractInMap", "ValueSet", path(sf, a), "value", u)>
 }
 
-void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <sf.typeInNamespace> const & value) {
+void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <sf.type> const & value) {
     <mutate("updateInMap", "ValueMap", path(sf, a), "value", u)>
 }
 >>
 
-field_subtract_map_head(sf, a) ::= <%void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<sf.field.keyTypeInNamespace>> const & value) {%>
+field_subtract_map_head(sf, a) ::= <%void subtract<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, std::set\<<sf.field.keyType>> const & value) {%>
 
 field_xarray(sf, a, u) ::= <<
-void insert<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <sf.field.elementTypeInNamespace><sf.field.passBy> value) {
+void insert<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <sf.field.elementType><sf.field.passBy> value) {
     mutating->insertInXArray(attachment(), encodeKey(key), <path(sf, a)>,
                             beforePosition, newPosition, <u.model.namespace>::codec::encode(value));
 }
 
-void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <sf.field.elementTypeInNamespace><sf.field.passBy> value) {
+void update<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & position, <sf.field.elementType><sf.field.passBy> value) {
     mutating->updateInXArray(attachment(), encodeKey(key), <path(sf, a)>,
                             position, <u.model.namespace>::codec::encode(value));
 }
 
-void remove<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position) {
+void remove<sf.name;format="uf">(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & position) {
     mutating->removeInXArray(attachment(), encodeKey(key), <path(sf, a)>, position);
 }
 >>
@@ -169,17 +169,17 @@ document_aggregate(a, u) ::= <<
 >>
 
 document_set(a, u) ::= <<
-void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value) {
+void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value) {
     <mutate("unionInSet", "ValueSet", root(), "value", u)>
 }
 
-void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value) {
+void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value) {
     <mutate("subtractInSet", "ValueSet", root(), "value", u)>
 }
 >>
 
 document_map(a, u) ::= <<
-void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value) {
+void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value) {
     <mutate("unionInMap", "ValueMap", root(), "value", u)>
 }
 
@@ -187,24 +187,24 @@ void union_(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.key
     <mutate("subtractInMap", "ValueSet", root(), "value", u)>
 }
 
-void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, <a.documentType.typeInNamespace> const & value) {
+void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, <a.documentType.type> const & value) {
     <mutate("updateInMap", "ValueMap", root(), "value", u)>
 }
 >>
 
-document_subtract_map_head(a) ::= <%void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, std::set\<<a.documentType.field.keyTypeInNamespace>> const & value) {%>
+document_subtract_map_head(a) ::= <%void subtract(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, std::set\<<a.documentType.field.keyType>> const & value) {%>
 
 document_xarray(a, u) ::= <<
-void insert(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <a.documentType.field.elementTypeInNamespace><a.documentType.field.passBy> value) {
+void insert(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & beforePosition, Viper::UUId const & newPosition, <a.documentType.field.elementType><a.documentType.field.passBy> value) {
     mutating->insertInXArray(attachment(), encodeKey(key), <root()>,
                             beforePosition, newPosition, <u.model.namespace>::codec::encode(value));
 }
 
-void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position, <a.documentType.field.elementTypeInNamespace><a.documentType.field.passBy> value) {
+void update(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & position, <a.documentType.field.elementType><a.documentType.field.passBy> value) {
     mutating->updateInXArray(attachment(), encodeKey(key), <root()>, position, <u.model.namespace>::codec::encode(value));
 }
 
-void remove(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.typeInNamespace> const & key, Viper::UUId const & position) {
+void remove(std::shared_ptr\<Viper::AttachmentMutating> const & mutating, <a.keyType.type> const & key, Viper::UUId const & position) {
     mutating->removeInXArray(attachment(), encodeKey(key), <root()>, position);
 }
 >>
@@ -220,20 +220,20 @@ encode_key(a, u) ::= <<
 }
 >>
 
-encode_key_head(a) ::= <%std::shared_ptr\<Viper::ValueKey> encodeKey(<a.keyType.typeInNamespace> const & key) {%>
+encode_key_head(a) ::= <%std::shared_ptr\<Viper::ValueKey> encodeKey(<a.keyType.type> const & key) {%>
 
 keys(a, u) ::= <<
 <keys_head(a)>
     <keys_result(a)>
     for (Viper::ValueSetIter it{getting->keys(attachment())}; it.hasNext(); it.next())
-        result.insert(<decode_call(a.keyType.typeInNamespace, u)>(it.value()));
+        result.insert(<decode_call(a.keyType.type, u)>(it.value()));
 
     return result;
 }
 >>
 
-keys_head(a) ::= <%std::set\<<a.keyType.typeInNamespace>> keys(std::shared_ptr\<Viper::AttachmentGetting> const & getting) {%>
-keys_result(a) ::= <%std::set\<<a.keyType.typeInNamespace>> result;%>
+keys_head(a) ::= <%std::set\<<a.keyType.type>> keys(std::shared_ptr\<Viper::AttachmentGetting> const & getting) {%>
+keys_result(a) ::= <%std::set\<<a.keyType.type>> result;%>
 
 get(a, u) ::= <<
 <get_head(a)>
@@ -241,10 +241,10 @@ get(a, u) ::= <<
     if (document->isNil())
         return std::nullopt;
 
-    return <decode_call(a.documentType.typeInNamespace, u)>(document->unwrap());
+    return <decode_call(a.documentType.type, u)>(document->unwrap());
 }
 >>
 
-get_head(a) ::= <%std::optional\<<a.documentType.typeInNamespace>> get(std::shared_ptr\<Viper::AttachmentGetting> const & getting, <a.keyType.typeInNamespace> const & key) {%>
+get_head(a) ::= <%std::optional\<<a.documentType.type>> get(std::shared_ptr\<Viper::AttachmentGetting> const & getting, <a.keyType.type> const & key) {%>
 
 decode_call(type, u) ::= <%<u.model.namespace>::codec::decode\<<type>>%>

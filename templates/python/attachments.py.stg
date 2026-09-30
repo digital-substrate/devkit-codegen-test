@@ -30,10 +30,8 @@ from .. import definitions
 import typing
 
 from .._codegen import AnyConceptKey, AttachmentProxy, Mapping, Ordered, Sequence
+from .. import <u.name;format="lsc">
 <u.dependencies.attachments:{d|from .. import <d.name;format="lsc">};separator="\n">
-<if(u.attachments)>
-from .data import *
-<endif>
 
 
 <u.attachmentScopes:by_concept(u);separator="\n\n">
@@ -65,7 +63,7 @@ plain(a, s) ::= <<
 
 own(a, s) ::= <<
     class _<a.name;format="uf">(AttachmentProxy[<generics(a, s)>]):
-        """<s.keyType.type> -> <a.documentType.bindingType.annotation>, avec ses opérations."""
+        """<s.keyType.type> -> <a.documentType.bindingType.qualified>, avec ses opérations."""
 
         <if(a.documentType.isStructure)><a.documentType.structure.fields:field(a, s);separator="\n\n"><else><document(a, s)><endif>
 
@@ -73,13 +71,13 @@ own(a, s) ::= <<
         <arguments(a, s)>)
 >>
 
-generics(a, s) ::= <%<s.keyType.bindingType.typeInNamespace>, <a.documentType.bindingType.annotation>%>
-arguments(a, s) ::= <%dsviper.ValueUUId.create("<a.runtimeId>"), definitions, <s.keyType.bindingType.typeInNamespace>, <documentClass(a)>%>
+generics(a, s) ::= <%<s.keyType.bindingType.qualified>, <a.documentType.bindingType.qualified>%>
+arguments(a, s) ::= <%dsviper.ValueUUId.create("<a.runtimeId>"), definitions, <s.keyType.bindingType.qualified>, <documentClass(a)>%>
 
 // LE DOCUMENT N'A UNE CLASSE QUE SI UNE UNITÉ LE DÉCLARE. Une structure, une énumération,
 // une clé en ont une ; un `string`, un `map<…>` ou un `xarray<…>` n'en ont pas et n'en ont
 // pas besoin — le runtime les rend déjà comme objets Python.
-documentClass(a) ::= <%<if(a.documentType.bindingType.isNamed)><a.documentType.bindingType.typeInNamespace><else>None<endif>%>
+documentClass(a) ::= <%<if(a.documentType.bindingType.isNamed)><a.documentType.bindingType.qualified><else>None<endif>%>
 
 // ── un champ du document ──
 //
@@ -88,7 +86,7 @@ documentClass(a) ::= <%<if(a.documentType.bindingType.isNamed)><a.documentType.b
 // là où deux remplacements s'écrasent. Le chemin garde le nom du modèle : c'est celui du
 // runtime.
 field(sf, a, s) ::= <<
-def set_<sf.name;format="snake">(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.typeInNamespace>, value: <sf.bindingType.annotation>) -> None:
+def set_<sf.name;format="snake">(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.qualified>, value: <sf.bindingType.qualified>) -> None:
     """Écrire le champ `<sf.name>` du document tenu à `key`."""
     self._update(mutating, key, "<sf.name>", value)<if(sf.field.isSet)>
 
@@ -105,11 +103,11 @@ def set_<sf.name;format="snake">(self, mutating: dsviper.AttachmentMutating, key
 document(a, s) ::= <%<if(a.documentType.field.isSet)><set_ops(a.documentType.field, s, "None", "", false)><elseif(a.documentType.field.isMap)><map_ops(a.documentType.field, s, "None", "", false)><elseif(a.documentType.field.isXArray)><xarray_ops(a.documentType.field, s, "None", "", false)><endif>%>
 
 set_ops(t, s, path, suffix, label) ::= <<
-def union<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.typeInNamespace>, value: typing.Iterable[<t.bindingElementType.annotation>]) -> None:
+def union<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.qualified>, value: typing.Iterable[<t.bindingElementType.qualified>]) -> None:
     """Ajouter des éléments au set<if(label)> `<label>`<endif>."""
     self._union_in_set(mutating, key, <path>, value)
 
-def subtract<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.typeInNamespace>, value: typing.Iterable[<t.bindingElementType.annotation>]) -> None:
+def subtract<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.qualified>, value: typing.Iterable[<t.bindingElementType.qualified>]) -> None:
     """Retirer des éléments du set<if(label)> `<label>`<endif>."""
     self._subtract_in_set(mutating, key, <path>, value)
 >>
@@ -117,29 +115,29 @@ def subtract<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType
 // Retirer d'une map, c'est retirer des clés : l'argument est un ensemble de clés et non une
 // map -- demander les valeurs pour effacer laisserait croire qu'elles comptent.
 map_ops(t, s, path, suffix, label) ::= <<
-def union<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.typeInNamespace>, value: typing.Mapping[<t.bindingKeyType.annotation>, <t.bindingElementType.annotation>]) -> None:
+def union<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.qualified>, value: typing.Mapping[<t.bindingKeyType.qualified>, <t.bindingElementType.qualified>]) -> None:
     """Ajouter des entrées à la map<if(label)> `<label>`<endif>, en remplaçant les clés déjà là."""
     self._union_in_map(mutating, key, <path>, value)
 
-def subtract<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.typeInNamespace>, value: typing.Iterable[<t.bindingKeyType.annotation>]) -> None:
+def subtract<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.qualified>, value: typing.Iterable[<t.bindingKeyType.qualified>]) -> None:
     """Retirer de la map<if(label)> `<label>`<endif> les entrées dont la clé est donnée."""
     self._subtract_in_map(mutating, key, <path>, value)
 
-def update<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.typeInNamespace>, value: typing.Mapping[<t.bindingKeyType.annotation>, <t.bindingElementType.annotation>]) -> None:
+def update<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.qualified>, value: typing.Mapping[<t.bindingKeyType.qualified>, <t.bindingElementType.qualified>]) -> None:
     """Mettre à jour les entrées de la map<if(label)> `<label>`<endif> dont la clé est déjà là ; les autres sont ignorées."""
     self._update_in_map(mutating, key, <path>, value)
 >>
 
 xarray_ops(t, s, path, suffix, label) ::= <<
-def insert<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.typeInNamespace>, before_position: dsviper.ValueUUId, new_position: dsviper.ValueUUId, value: <t.bindingElementType.annotation>) -> None:
+def insert<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.qualified>, before_position: dsviper.ValueUUId, new_position: dsviper.ValueUUId, value: <t.bindingElementType.qualified>) -> None:
     """Insérer dans la xarray<if(label)> `<label>`<endif> ; `ValueUUId.INVALID` comme `before_position` ajoute à la fin."""
     self._insert_in_xarray(mutating, key, <path>, before_position, new_position, value)
 
-def update<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.typeInNamespace>, position: dsviper.ValueUUId, value: <t.bindingElementType.annotation>) -> None:
+def update<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.qualified>, position: dsviper.ValueUUId, value: <t.bindingElementType.qualified>) -> None:
     """Écrire l'élément à `position` dans la xarray<if(label)> `<label>`<endif>."""
     self._update_in_xarray(mutating, key, <path>, position, value)
 
-def remove<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.typeInNamespace>, position: dsviper.ValueUUId) -> None:
+def remove<suffix>(self, mutating: dsviper.AttachmentMutating, key: <s.keyType.bindingType.qualified>, position: dsviper.ValueUUId) -> None:
     """Retirer l'élément à `position` de la xarray<if(label)> `<label>`<endif>."""
     self._remove_in_xarray(mutating, key, <path>, position)
 >>
