@@ -122,6 +122,8 @@ model(m) ::= <<
 
 #include "<m.include.codec>"
 
+#include \<iostream>
+
 #include "Viper_Attachment.hpp"
 #include "Viper_AttachmentFunctionPool.hpp"
 #include "Viper_AttachmentMutating.hpp"
@@ -212,6 +214,34 @@ void roundTrip() {
     roundTripStream\<T>();
     roundTripValue\<T>();
     roundTripJson\<T>();
+}
+
+/// A field the model gives a default value has it in a default-constructed structure, as the
+/// runtime gives it to the same structure built from the definitions.
+///
+/// ONLY THE FIELDS THAT DECLARE ONE. A key field has no declared default, and there the two
+/// disagree on purpose: a generated key names its concept even when it names no instance, as a
+/// 1.2 application wrote it, where the runtime leaves the concept empty.
+template\<class T, class F>
+void defaultFieldIsTheModels(F T::* field, char const * fieldName) {
+    auto const name{"<m.namespace>.Test"};
+    auto const modelType{type(Viper::StaticType::tag\<T>{})};
+    auto const expected{codec::decode\<T>(Viper::Value::create(modelType))};
+    if (!(T{}.*field == expected.*field))
+        std::cerr \<\< "the default of " \<\< modelType->representation() \<\< "." \<\< fieldName
+                  \<\< " is not the model's\\n";
+    VIPER_ASSERT(name, T{}.*field == expected.*field);
+}
+
+/// A default concept key names no instance, but its concept -- as a 1.2 database stores the
+/// key for "none of these", so that the two compare equal.
+template\<class K>
+void defaultKeyNamesItsConcept() {
+    auto const name{"<m.namespace>.Test"};
+    K const none{};
+    VIPER_ASSERT(name, !none.isValid());
+    VIPER_ASSERT(name, none.runtimeId() == K::create().runtimeId());
+    VIPER_ASSERT(name, none == codec::decode\<K>(codec::encode(none)));
 }
 
 

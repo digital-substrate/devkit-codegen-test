@@ -63,7 +63,9 @@ concept(c) ::= <<
 <if(c.documentation)>/** <c.documentation> */
 <endif>class <c.name>Key final {
 public:
-    <c.name>Key() = default;
+    /// No instance, but this concept: the key a model stores for "none of these". It names
+    /// the concept as every other key does, so it equals the one read back from a database.
+    <c.name>Key() noexcept;
     <c.name>Key(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept;
 
     /// The key of instance `instanceId` of this concept. Explicit: an id becomes a key only
@@ -187,7 +189,10 @@ bool operator\<(<s.name> const &, <s.name> const &) noexcept;
 void hash(Viper::StaticHash::Hasher & h, <s.name> const & value) noexcept;
 >>
 
-field(f) ::= <<    <f.typeInNamespace> <f.name>{};>>
+// LA VALEUR PAR DÉFAUT DU MODÈLE EST CELLE DU CHAMP. `CameraDepthRange{}` doit donner le `zFar`
+// que le DSM déclare, comme le runtime le fait pour la même structure : un champ initialisé à
+// `{}` là où le modèle dit `100.0`, c'est une caméra qui ne voit rien.
+field(f) ::= <<    <f.typeInNamespace> <f.name><f.defaultValue>;>>
 
 // LES STRUCTURES DANS L'ORDRE DE LEURS DÉPENDANCES, et non dans celui de leurs noms. Une
 // unité les émet dans un seul fichier, donc une structure qui en contient une autre a

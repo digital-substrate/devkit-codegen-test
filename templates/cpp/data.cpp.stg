@@ -39,6 +39,9 @@ concept(c, u) ::= <<
 <c.name>Key::<c.name>Key(Viper::UUId const & instanceId, Viper::UUId const & runtimeId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtimeId} {}
 
+<c.name>Key::<c.name>Key() noexcept
+: _runtimeId{runtime_ids::<c.name>} {}
+
 <c.name>Key::<c.name>Key(Viper::UUId const & instanceId) noexcept
 : _instanceId{instanceId}, _runtimeId{runtime_ids::<c.name>} {}
 

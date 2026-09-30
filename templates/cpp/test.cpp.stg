@@ -29,6 +29,8 @@ namespace <u.model.namespace>::<u.name;format="lsc"> {
 
 void test() {
 <u.concepts:keyed(u);separator="\n">
+<u.concepts:default_key(u);separator="\n">
+<u.structures:default_structure(u);separator="\n">
 <u.clubs:keyed(u);separator="\n">
 <u.enumerations:plain(u);separator="\n">
 <u.structures:plain(u);separator="\n">
@@ -251,3 +253,17 @@ void testPool(std::shared_ptr\<Viper::AttachmentFunctionPool> const & pool,
 } // namespace <m.namespace>::test
 
 >>
+
+default_key(e, u) ::= <<
+    <default_key_body(e, u)>
+>>
+default_key_body(e, u) ::= <%<u.model.namespace>::test::defaultKeyNamesItsConcept\<<e.name>Key>();%>
+
+default_structure(e, u) ::= <<
+<e.fields:{f|<if(f.hasDefaultValue)><default_field(e, f, u)><endif>};separator="">
+>>
+default_field(e, f, u) ::= <<
+    <default_field_body(e, f, u)>
+
+>>
+default_field_body(e, f, u) ::= <%<u.model.namespace>::test::defaultFieldIsTheModels(&<e.name>::<f.name>, "<f.name>");%>
