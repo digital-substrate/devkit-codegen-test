@@ -121,6 +121,15 @@ def main() -> int:
             else:
                 print(f"   {VERT}{langage:11} {resultat(sortie)}{NEUTRE}")
 
+    # LA SÉLECTION, EN PLUS DES SITES. Aucun site ne rend `Base` sans `Pool` sur un modèle qui
+    # déclare des pools ; c'est pourtant ce que demande une application Python pure.
+    print("\n── sélection des features")
+    code, sortie = lancer([sys.executable, "tools/selection.py"], HERE)
+    for ligne in sortie.splitlines():
+        print(f"   {VERT if 'ok' in ligne else ROUGE}{ligne.strip()}{NEUTRE}")
+    if code:
+        echecs.append("sélection")
+
     print()
     if echecs:
         print(f"{ROUGE}{len(echecs)} échec(s) : {', '.join(echecs)}{NEUTRE}")

@@ -134,12 +134,12 @@
     "Pool": {
       "doc": "A function pool and its client edge. Most projects have none: a pool is a service surface, not a consequence of having a model.",
       "templates": [
+        "pool/__init__.py.stg",
         "pool.py.stg"
       ],
       "requires": [
         "Base"
-      ],
-      "note": "Selecting Base alone leaves out pool.py.stg, but not the pool's own entry point: __init__.py.stg declares the `pool` entry itself, so kibo still renders a package directory for every pool. Expressing \"no pools\" fully means moving that entry out of __init__.py.stg, not choosing differently here. Measured, not assumed."
+      ]
     },
     "Wheel": {
       "doc": "What makes the package installable, and therefore typed.",
@@ -167,12 +167,12 @@
     "Pool": {
       "doc": "A function pool and its client edge. Most projects have none: a pool is a service surface, not a consequence of having a model.",
       "templates": [
+        "pool/index.ts.stg",
         "pool.ts.stg"
       ],
       "requires": [
         "Base"
-      ],
-      "note": "Selecting Base alone leaves out pool.ts.stg, but not the pool's own entry point: index.ts.stg declares the `pool` entry itself, so kibo still renders a package directory for every pool. Expressing \"no pools\" fully means moving that entry out of index.ts.stg, not choosing differently here. Measured, not assumed."
+      ]
     }
   }
 }
