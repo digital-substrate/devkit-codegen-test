@@ -131,11 +131,11 @@ class TestCommitDiffKeys(unittest.TestCase):
         value = StructureV()
         value.f_string = "test"
 
-        # État "before" : vide
+        # "before" state: empty
         mutable_before = dsviper.CommitMutableState(self.state)
         before = mutable_before.attachment_getting()
 
-        # État "after" : avec une entrée ajoutée
+        # "after" state: one entry added
         mutable_after = dsviper.CommitMutableState(self.state)
         ma.ConceptA.properties.set(mutable_after.attachment_mutating(), key, value)
         after = mutable_after.attachment_getting()
@@ -154,12 +154,12 @@ class TestCommitDiffKeys(unittest.TestCase):
         value = StructureV()
         value.f_string = "test"
 
-        # État "before" : avec entrée
+        # "before" state: one entry
         mutable_before = dsviper.CommitMutableState(self.state)
         ma.ConceptA.properties.set(mutable_before.attachment_mutating(), key, value)
         before = mutable_before.attachment_getting()
 
-        # État "after" : vide
+        # "after" state: empty
         mutable_after = dsviper.CommitMutableState(self.state)
         after = mutable_after.attachment_getting()
 
@@ -175,14 +175,14 @@ class TestCommitDiffKeys(unittest.TestCase):
         """Test diff_keys detects keys with different values."""
         key = ConceptAKey.create()
 
-        # État "before" : key -> "first"
+        # "before" state: key -> "first"
         mutable_before = dsviper.CommitMutableState(self.state)
         value1 = StructureV()
         value1.f_string = "first"
         ma.ConceptA.properties.set(mutable_before.attachment_mutating(), key, value1)
         before = mutable_before.attachment_getting()
 
-        # État "after" : key -> "second"
+        # "after" state: key -> "second"
         mutable_after = dsviper.CommitMutableState(self.state)
         value2 = StructureV()
         value2.f_string = "second"
@@ -203,12 +203,12 @@ class TestCommitDiffKeys(unittest.TestCase):
         value = StructureV()
         value.f_string = "unchanged"
 
-        # État "before" : key -> value
+        # "before" state: key -> value
         mutable_before = dsviper.CommitMutableState(self.state)
         ma.ConceptA.properties.set(mutable_before.attachment_mutating(), key, value)
         before = mutable_before.attachment_getting()
 
-        # État "after" : key -> même value
+        # "after" state: key -> same value
         mutable_after = dsviper.CommitMutableState(self.state)
         ma.ConceptA.properties.set(mutable_after.attachment_mutating(), key, value)
         after = mutable_after.attachment_getting()

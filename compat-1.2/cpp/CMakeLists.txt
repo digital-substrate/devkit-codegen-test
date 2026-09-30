@@ -1,4 +1,4 @@
-# generated/ est à kibo ; src/read.cpp est écrit à la main, et c'est l'épreuve.
+# generated/ belongs to kibo; src/read.cpp is hand-written and is the test.
 file(GLOB COMPAT_SOURCES generated/*.cpp)
 
 add_executable(compat_read ${COMPAT_SOURCES} src/read.cpp)

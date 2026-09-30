@@ -1,32 +1,30 @@
 #!/usr/bin/env python3
-"""Une seule porte : les cinq sites, rendus et éprouvés.
+"""One entry point: the five sites, rendered and tested.
 
-UNE VÉRIFICATION QU'IL FAUT SAVOIR LANCER N'EN EST PAS UNE. Il y a douze `run_test.sh` et
-cinq `generate.py` ; celui-ci les enchaîne et rend un verdict unique.
+There are twelve `run_test.sh` and five `generate.py`; this runs them all and gives a
+single verdict.
 
-    check.py                rend les cinq sites et lance toutes les épreuves
-    check.py features       un seul site
-    check.py --no-render    éprouve ce qui est déjà rendu, sans regénérer
+    check.py                render the five sites and run every test
+    check.py features       one site only
+    check.py --no-render    test what is already rendered, without regenerating
 
-CE QUE CHAQUE SITE PROUVE, ET CE QU'IL NE PROUVE PAS -- c'est le tableau qui compte, plus que
-le fait qu'il passe :
+What each site proves, and what it does not:
 
-  features     tout le système de types dans un namespace, et les deux suites du projet
-               474 tests Python, 465 TypeScript, écrits avant ce chantier et portés une fois
-               ne prouve rien sur les pools : le modèle n'en déclare aucun
-  service      deux pools, et un service qui tourne : un serveur C++, trois clients
-               la seule épreuve où le code généré traverse un fil
-               ne prouve rien sur les homonymes : un seul namespace utile
-  namespaces   six namespaces et leurs arêtes ; deux déclarent le même nom
-               la plus petite formulation de ce chantier
-               ne prouve rien sur les composites : ses types ne se croisent pas
-  crossing     la référence qui traverse un namespace À L'INTÉRIEUR d'un composite
-               un `map<Core::Grade, Parts::Colour>`, un `variant<Core::Colour, ...>`
-               ne prouve rien sur le service ni sur les suites
+  features     the whole type system in one namespace, and the project's two suites
+               474 Python tests, 465 TypeScript, written before this work and ported once
+               proves nothing about pools: the model declares none
+  service      two pools, and a running service: a C++ server, three clients
+               the only test where generated code crosses a wire
+               proves nothing about homonyms: only one meaningful namespace
+  namespaces   six namespaces and their edges; two declare the same name
+               the smallest statement of this work
+               proves nothing about composites: its types do not cross
+  crossing     a reference crossing a namespace INSIDE a composite
+               a `map<Core::Grade, Parts::Colour>`, a `variant<Core::Colour, ...>`
+               proves nothing about the service or the suites
 
-CE QU'AUCUN DES CINQ NE PROUVE : qu'un développeur de la population visée trouve la sortie
-utilisable. `pip install` et `tsc --strict` chez un consommateur extérieur sont éprouvés à la
-main pour l'instant, pas ici.
+None of the five proves that a developer of the target audience finds the output usable.
+`pip install` and `tsc --strict` in an outside consumer are tested by hand for now, not here.
 """
 import argparse
 import subprocess
@@ -35,8 +33,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 
-# Le nom du site, et ce que son `generate.py` attend en plus des drapeaux. `features` prend
-# son `.dsm` en positionnel ; les autres le lisent dans `definitions/`.
+# The site name, and what its `generate.py` expects besides the flags. `features` takes its
+# `.dsm` as a positional argument; the others read it from `definitions/`.
 SITES = {
     "features": ["all.dsm"],
     "service": [],
@@ -44,97 +42,97 @@ SITES = {
     "crossing": [],
     "compat-1.2": [],
 }
-LANGAGES = ("cpp", "python", "typescript")
+LANGUAGES = ("cpp", "python", "typescript")
 
-VERT, ROUGE, GRIS, NEUTRE = "\033[32m", "\033[31m", "\033[90m", "\033[0m"
+GREEN, RED, GREY, RESET = "\033[32m", "\033[31m", "\033[90m", "\033[0m"
 
 
-def resultat(sortie: str) -> str:
-    """Ce que l'épreuve a dit, en quelques mots.
+def result(output: str) -> str:
+    """What the test said, in a few words.
 
-    CHAQUE SUITE PARLE SA LANGUE, et deviner mal est pire que ne rien dire : un programme C++
-    qui imprime `ok` une fois n'a pas passé « 1 assertion », il a compilé, lié et tourné.
-    Les formes sont donc reconnues explicitement, et ce qui n'est reconnu par rien le dit.
+    Each suite reports in its own format, and a wrong guess is worse than none: a C++ program
+    that prints `ok` once has not passed "1 assertion", it compiled, linked and ran. The formats
+    are therefore recognised explicitly, and anything unrecognised says so.
     """
-    lignes = [l.strip() for l in sortie.splitlines() if l.strip()]
+    lines = [l.strip() for l in output.splitlines() if l.strip()]
 
-    if any(l.startswith("add(32,10)") for l in lignes):
-        return "client ↔ serveur"
+    if any(l.startswith("add(32,10)") for l in lines):
+        return "client ↔ server"
 
-    for ligne in lignes:
-        if ligne.startswith("Ran ") and "test" in ligne:
-            return f"{ligne.split()[1]} tests du projet"
-        if ligne.startswith("ℹ pass "):
-            return f"{ligne.split()[-1]} tests"
+    for line in lines:
+        if line.startswith("Ran ") and "test" in line:
+            return f"{line.split()[1]} project tests"
+        if line.startswith("ℹ pass "):
+            return f"{line.split()[-1]} tests"
 
-    if lignes and lignes[-1] == "ok":
-        return "compile, lie, tourne"
+    if lines and lines[-1] == "ok":
+        return "compiles, links, runs"
 
-    oks = sum(1 for l in lignes if l.startswith("ok"))
+    oks = sum(1 for l in lines if l.startswith("ok"))
     if oks:
         return f"{oks} assertions"
-    return f"passe, sans résumé reconnu ({lignes[-1][:28]})" if lignes else "silencieux"
+    return f"passes, no recognised summary ({lines[-1][:28]})" if lines else "silent"
 
 
-def lancer(commande, dossier):
-    r = subprocess.run(commande, cwd=dossier, capture_output=True, text=True)
+def run(command, directory):
+    r = subprocess.run(command, cwd=directory, capture_output=True, text=True)
     return r.returncode, r.stdout + r.stderr
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("site", nargs="?", choices=sorted(SITES), help="n'éprouver que celui-là")
+    parser.add_argument("site", nargs="?", choices=sorted(SITES), help="test only this site")
     parser.add_argument("--no-render", action="store_true",
-                        help="éprouver ce qui est déjà rendu")
+                        help="test what is already rendered")
     arguments = parser.parse_args()
 
     sites = [arguments.site] if arguments.site else list(SITES)
-    echecs = []
+    failures = []
 
     for site in sites:
         print(f"\n── {site}")
-        dossier = HERE / site
+        directory = HERE / site
 
         if not arguments.no_render:
-            code, sortie = lancer([sys.executable, "generate.py", *SITES[site], "-c", "-p", "-t"],
-                                  dossier)
+            code, output = run([sys.executable, "generate.py", *SITES[site], "-c", "-p", "-t"],
+                               directory)
             if code:
-                print(f"   {ROUGE}rendu       échoue{NEUTRE}")
-                for ligne in sortie.splitlines()[-6:]:
-                    print(f"      {ligne}")
-                echecs.append(f"{site}/rendu")
+                print(f"   {RED}render      fails{RESET}")
+                for line in output.splitlines()[-6:]:
+                    print(f"      {line}")
+                failures.append(f"{site}/render")
                 continue
 
-        for langage in LANGAGES:
-            script = dossier / langage / "run_test.sh"
+        for language in LANGUAGES:
+            script = directory / language / "run_test.sh"
             if not script.exists():
-                print(f"   {GRIS}{langage:11} pas d'épreuve{NEUTRE}")
+                print(f"   {GREY}{language:11} no test{RESET}")
                 continue
 
-            code, sortie = lancer(["./run_test.sh"], script.parent)
+            code, output = run(["./run_test.sh"], script.parent)
             if code:
-                print(f"   {ROUGE}{langage:11} ÉCHEC{NEUTRE}")
-                for ligne in sortie.splitlines()[-8:]:
-                    print(f"      {ligne}")
-                echecs.append(f"{site}/{langage}")
+                print(f"   {RED}{language:11} FAILED{RESET}")
+                for line in output.splitlines()[-8:]:
+                    print(f"      {line}")
+                failures.append(f"{site}/{language}")
             else:
-                print(f"   {VERT}{langage:11} {resultat(sortie)}{NEUTRE}")
+                print(f"   {GREEN}{language:11} {result(output)}{RESET}")
 
-    # LA SÉLECTION, EN PLUS DES SITES. Aucun site ne rend `Base` sans `Pool` sur un modèle qui
-    # déclare des pools ; c'est pourtant ce que demande une application Python pure.
-    print("\n── sélection des features")
-    code, sortie = lancer([sys.executable, "tools/selection.py"], HERE)
-    for ligne in sortie.splitlines():
-        print(f"   {VERT if 'ok' in ligne else ROUGE}{ligne.strip()}{NEUTRE}")
+    # The feature selection, in addition to the sites. No site renders `Base` without `Pool` on
+    # a model that declares pools, yet that is what a pure Python application asks for.
+    print("\n── feature selection")
+    code, output = run([sys.executable, "tools/selection.py"], HERE)
+    for line in output.splitlines():
+        print(f"   {GREEN if 'ok' in line else RED}{line.strip()}{RESET}")
     if code:
-        echecs.append("sélection")
+        failures.append("selection")
 
     print()
-    if echecs:
-        print(f"{ROUGE}{len(echecs)} échec(s) : {', '.join(echecs)}{NEUTRE}")
+    if failures:
+        print(f"{RED}{len(failures)} failure(s): {', '.join(failures)}{RESET}")
         return 1
-    print(f"{VERT}{'tout passe':>42}{NEUTRE}")
+    print(f"{GREEN}{'all pass':>42}{RESET}")
     return 0
 
 

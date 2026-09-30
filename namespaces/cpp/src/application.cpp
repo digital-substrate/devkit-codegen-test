@@ -1,9 +1,8 @@
-// Ce qu'une application écrit, et que le générateur ne produit pas.
+// What an application writes, and the generator does not produce.
 //
-// LA FRONTIÈRE EST EXACTEMENT LÀ. Le générateur déclare les fonctions d'un pool ; c'est le
-// développeur qui les écrit. L'éditeur de liens le dit mieux qu'un commentaire : sur les
-// 43 objets du modèle rendu, les seuls symboles qui manquaient étaient ces quatre-là, et
-// l'implémentation des deux ajouts au runtime.
+// The generator declares a pool's functions; the developer implements them. The linker
+// confirms the boundary: across the 43 objects of the rendered model, the only missing
+// symbols were these four, plus the implementation of the two runtime additions.
 
 #include "topology_model_a_data.hpp"
 #include "topology_model_b_data.hpp"

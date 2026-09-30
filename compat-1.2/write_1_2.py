@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
-"""Écrire la base de référence, sous un runtime 1.2 -- une fois, pas à chaque épreuve.
+"""Write the reference database under a 1.2 runtime -- once, not on every test run.
 
-La base qu'elle produit, `Compat-1.2.cdb`, est versionnée : c'est elle que les épreuves
-relisent, et c'est parce qu'elle ne bouge pas qu'elle dit quelque chose. La réécrire n'a de
-sens que pour y ajouter une forme, et toujours sous un dsviper 1.2 -- sinon ce ne serait plus
-une base 1.2.
+The database it produces, `Compat-1.2.cdb`, is committed: the tests read it back, and it is
+meaningful because it does not change. Rewrite it only to add a shape, and always under
+dsviper 1.2 -- otherwise it would no longer be a 1.2 database.
 
-LE RUNTIME, PAS UN CODE GÉNÉRÉ. Ce qu'une base contient -- ses définitions, ses `Value`, son
-codec -- est l'affaire du runtime seul ; un code généré ne fait que bâtir des `Value` que le
-runtime vérifie contre les définitions. Écrire ici par dsviper, c'est fixer ce qu'une base 1.2
-est, sans dépendre d'aucune génération, ancienne ou nouvelle.
+The database is written by the runtime, not by generated code. What a database holds -- its
+definitions, its `Value`s, its codec -- is the runtime's business; generated code only builds
+`Value`s the runtime checks against the definitions. Writing through dsviper pins what a 1.2
+database is without depending on any generation, old or new.
 
-Les valeurs sont celles que `cpp/src/read.cpp` attend. Chacune est choisie pour qu'une erreur
-se lise : des octets tous différents, une mat non carrée aux cases toutes distinctes, une
-alternative de variant qui n'est pas la première.
+The values are those `cpp/src/read.cpp` expects. Each is chosen to make a mistake visible:
+bytes that all differ, a non-square mat with distinct cells, a variant alternative that is
+not the first.
 """
 from pathlib import Path
 
@@ -24,7 +23,7 @@ from dsviper import (Database, DSMBuilder, BlobLayout, TypeConcept, TypeKey, Typ
 HERE = Path(__file__).resolve().parent
 BASE = HERE / "Compat-1.2.cdb"
 
-# Les clés sont fixées : l'épreuve les reconstruit sans rien lire d'autre que ce fichier.
+# The keys are fixed: the test rebuilds them without reading anything but this file.
 PROBE = "c0a7c0de-0001-4000-8000-000000000001"
 OTHER = "c0a7c0de-0002-4000-8000-000000000002"
 OTHER_BIS = "c0a7c0de-0003-4000-8000-000000000003"
@@ -32,7 +31,7 @@ OTHER_BIS = "c0a7c0de-0003-4000-8000-000000000003"
 
 def main() -> int:
     if dsviper.version()[:2] != (1, 2):
-        print(f"dsviper {dsviper.version()} : une base de référence s'écrit sous un runtime 1.2")
+        print(f"dsviper {dsviper.version()}: a reference database must be written under a 1.2 runtime")
         return 1
 
     report, _, definitions = DSMBuilder.assemble(str(HERE / "definitions")).parse()
@@ -67,11 +66,11 @@ def main() -> int:
         "docDouble": -2.25,
         "docUUId": ValueUUId("0f1e2d3c-4b5a-4968-8778-a695b4c3d2e1"),
         "docCommitId": ValueCommitId("0123456789abcdef0123456789abcdef01234567"),
-        "docString": "Écrit par la 1.2",
+        "docString": "Written by 1.2",
         "docBlob": ValueBlob(bytes([0x00, 0x01, 0x7F, 0x80, 0xFE, 0xFF])),
         "docVec": [1, -2, 0x01020304],
         "docMat": [[1, 2, 3], [4, 5, 6]],
-        "docTuple": (7, "sept"),
+        "docTuple": (7, "seven"),
         "docOptional": 0x0102,
         "docVectorMat": [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]],
         "docSet": {"alpha", "beta", "gamma"},
@@ -88,19 +87,19 @@ def main() -> int:
     }
 
     BASE.unlink(missing_ok=True)
-    db = Database.create(str(BASE), documentation="Compat 1.2 -- base de référence")
+    db = Database.create(str(BASE), documentation="Compat 1.2 -- reference database")
     db.extend_definitions(definitions)
     db.begin_transaction()
-    # Un blob_id désigne un blob que la base tient : il y entre d'abord.
+    # A blob_id designates a blob the database holds: store the blob first.
     values["docBlobId"] = db.create_blob(BlobLayout(), ValueBlob(bytes([1, 2, 3, 4, 5])))
     for name, value in values.items():
         attachment = attachments[name]
         if not db.set(attachment, attachment.create_key(ValueUUId(PROBE)), value):
-            print(f"{name} : refusé")
+            print(f"{name}: rejected")
             return 1
     db.commit()
     db.close()
-    print(f"{BASE.name} : {len(values)} attachments, codec {Database.open(str(BASE), True).codec_name()}")
+    print(f"{BASE.name}: {len(values)} attachments, codec {Database.open(str(BASE), True).codec_name()}")
     return 0
 
 

@@ -1,13 +1,12 @@
-// Le client du service, porté sur les nouveaux templates.
+// The service client, ported to the new templates.
 //
-// Ce fichier n'est pas généré : il est ce qu'un développeur écrit en face du pool. Les seuls
-// changements par rapport à la version précédente sont les noms que les templates ont
-// déplacés sous ses pieds -- un namespace est devenu un module, et les deux bords d'un pool
-// tiennent dans un seul.
+// This file is not generated: it is what a developer writes against the pool. The only
+// changes from the previous version are names the templates moved: a namespace became a
+// module, and both sides of a pool now live in one.
 import dsviper from "@digitalsubstrate/dsviper";
 import { Vector3, Level } from "../generated/dist/demo/index.js";
-// Les attachments ne sont pas réexportés par le point d'entrée de l'unité, et c'est voulu :
-// deux unités liées par un attachment deviendraient un cycle d'import.
+// Attachments are deliberately not re-exported by the unit's entry point: two units linked
+// by an attachment would become an import cycle.
 import { Player } from "../generated/dist/demo/attachments.js";
 import { Remote as ToolsRemote } from "../generated/dist/tools/pool.js";
 import { Remote as PlayerModelRemote } from "../generated/dist/player_model/pool.js";

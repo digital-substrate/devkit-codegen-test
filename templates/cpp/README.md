@@ -28,14 +28,13 @@ round-tripped through each codec, every attachment through a database, every poo
 bridge. No project selects them: `red` and `ge` take neither. They stay in this laboratory and
 do not move into the pack.
 
-## Still merged, and known to be wrong
+## JSON, XML and hashing are the runtime's
 
-- **The JSON codec is inside `Codec`.** The pack keeps `Json` selectable on its own.
+The codec generates the bridge between the C++ types and a `Value`, and nothing that composes
+that bridge with a runtime transition: JSON, XML and a hexdigest are one call on what `encode`
+returns.
 
-It was merged while exploring, and merging it was a mistake: a real project
-(`com.digitalsubstrate.red`) selects 10 of 17 features and refuses exactly this.
-
-`Pool` and its remote side were merged the same way, and are split again: `Pool` is the server
-side, `PoolRemote` the client side (`remote.hpp.stg`/`remote.cpp.stg`). Most projects do not expose their
-pools as a service, and a client must not link the functions only a server implements -- the
-`service` site's client now links without them.
+`Pool` is the server side of a function pool, `PoolRemote` its client side
+(`remote.hpp.stg`/`remote.cpp.stg`). Most projects do not expose their pools as a service, and a
+client must not link the functions only a server implements -- the `service` site's client links
+without them.

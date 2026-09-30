@@ -1,8 +1,8 @@
-# generated/ est à kibo ; src/ est écrit à la main.
+# generated/ belongs to kibo; src/ is written by hand.
 #
-# LES SIX FICHIERS DE src/ N'ONT PAS DE main() : chacun éprouve une facette de la surface
-# générée -- les champs, le codec, le json, un attachment lu, un pool. Les mettre dans la
-# bibliothèque les fait compiler *et* lier, ce qu'un simple `-fsyntax-only` ne dirait pas.
+# The six files in src/ have no main(): each exercises one facet of the generated surface --
+# fields, codec, json, an attachment read, a pool. Putting them in the library makes them
+# compile *and* link, which a plain `-fsyntax-only` would not check.
 file(GLOB TOPOLOGY_HEADERS generated/*.hpp)
 file(GLOB TOPOLOGY_SOURCES generated/*.cpp)
 list(FILTER TOPOLOGY_SOURCES EXCLUDE REGEX "_test_app\\.cpp$")

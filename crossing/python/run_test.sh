@@ -1,5 +1,5 @@
 #!/bin/bash
-# Les épreuves reçoivent le paquet rendu : elles ne devinent pas où il est.
+# The tests are given the rendered package: they do not guess where it is.
 set -e
 cd "$(dirname "${BASH_SOURCE[0]}")"
 for t in test/*.py; do

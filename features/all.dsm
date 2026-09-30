@@ -196,8 +196,8 @@ attachment<ConceptCoverage, any> docAny;
 // Vec & Mat
 attachment<ConceptCoverage, vec<uint8,2>> docVec;
 attachment<ConceptCoverage, mat<uint8,2,2>> docMat;
-// Non carrée, et dans un conteneur : son type vient de la forme C++, pas des définitions,
-// si bien qu'une inversion colonnes/lignes s'y voit -- une 2×2 ne la montrerait pas.
+// Non-square and inside a container: its type comes from the C++ shape, not from the
+// definitions, so a column/row inversion shows up here -- a 2x2 would hide it.
 attachment<ConceptCoverage, vector<mat<uint8,2,3>>> docVectorMat;
 
 // Containers

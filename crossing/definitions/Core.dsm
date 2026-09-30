@@ -1,36 +1,36 @@
-// Le namespace qui porte les types sans dépendance : tout ce que le système de types
-// offre et qui ne peut traverser aucune frontière -- les nombres, les identifiants, les
-// chaînes, les formes de taille fixe. Il ne référence personne.
+// The namespace holding the types with no dependency: everything the type system offers
+// that cannot cross a boundary -- numbers, identifiers, strings, fixed-size shapes. It
+// references no other namespace.
 namespace Core {b1d0f2a4-3c17-4e6a-9f05-2a7c81d94e30} {
 
-"""Ce sur quoi on accroche des choses."""
+"""What things are attached to."""
 concept Thing;
 
-"""Un dérivé, dans le même namespace : le cas facile de l'héritage."""
+"""A derived concept in the same namespace: the easy case of inheritance."""
 concept SubThing is a Thing;
 
 concept Other;
 
-"""Un club, dont les membres vivent ici."""
+"""A club whose members live here."""
 club Klub;
 membership Klub SubThing;
 membership Klub Other;
 
-"""Une énumération, que d'autres namespaces vont référencer."""
+"""An enumeration that other namespaces reference."""
 enum Grade {
   low ,
   high
 };
 
-"""Le même nom que Parts::Colour, un type différent -- la collision de re-export."""
+"""Same name as Parts::Colour, a different type -- the re-export collision."""
 struct Colour {
   uint8 r;
   uint8 g;
   uint8 b;
 };
 
-"""Toutes les formes scalaires du langage, dans le namespace qui n'en référence aucun
-autre. Ce qui ne peut pas traverser une frontière est couvert ici, une fois."""
+"""Every scalar shape of the language, in the namespace that references no other.
+What cannot cross a boundary is covered here, once."""
 struct Scalars {
   bool f_bool;
 
@@ -59,7 +59,7 @@ struct Scalars {
   mat<uint8,2,2> f_mat;
 };
 
-"""Les valeurs par défaut, qui sont un chemin de code à part."""
+"""Default values, which are a separate code path."""
 struct Defaults {
   uint8 f_uint8 = 8;
   float f_float = 42.419998;
@@ -70,21 +70,21 @@ struct Defaults {
   Colour f_colour = {1, 2, 3};
 };
 
-"""Une structure à un seul champ : le cas zéro/un que le générateur traite à part."""
+"""A single-field structure: the zero/one case the generator handles separately."""
 struct Single {
   uint8 f_single;
 };
 
 attachment<Thing, Colour> colour;
 
-"""Un document qui EST un agrégat : ses opérations ne sont pas celles d'un document
-ordinaire, puisqu'on peut y ajouter et en retirer sans l'écraser."""
+"""A document that is itself an aggregate: its operations differ from an ordinary
+document's, since elements can be added and removed without overwriting it."""
 attachment<Thing, set<key<Thing>>> related;
 attachment<Thing, map<key<Thing>, Colour>> palette;
 attachment<Thing, xarray<Colour>> history;
 
-"""Et un document ordinaire dont un champ est un agrégat : les mêmes opérations, à une
-adresse au lieu de la racine."""
+"""An ordinary document with an aggregate field: the same operations, at a path
+instead of the root."""
 struct Bag {
   set<key<Thing>> members;
   map<key<Thing>, Colour> tints;

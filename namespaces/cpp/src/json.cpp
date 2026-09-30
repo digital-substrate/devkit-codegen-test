@@ -1,9 +1,9 @@
-// Ce que JSON et l'empreinte permettent, vérifié par le compilateur -- en composant le pont.
+// What JSON and hashing allow, checked by the compiler -- by composing the bridge.
 //
-// Le pack ne génère ni `jsonEncode` ni `hexdigest` : ce ne sont que le pont statique ⇄
-// dynamique suivi d'une transition que le runtime possède déjà. Un développeur les écrit en
-// une ligne, et reçoit d'office toute transition que le runtime ajoutera -- le XML compris,
-// qu'aucune génération n'avait jamais couvert.
+// The pack generates neither `jsonEncode` nor `hexdigest`: they are just the static ⇄
+// dynamic bridge followed by a transition the runtime already has. A developer writes each
+// in one line, and gets any transition the runtime adds for free -- including XML, which no
+// generation had ever covered.
 #include "topology_model_a_codec.hpp"
 #include "topology_model_a_model.hpp"
 #include "topology_codec.hpp"
@@ -31,14 +31,14 @@ void use_json() {
     using namespace topology::codec;
     topology::model_a::Colour const c{1, 2, 3};
 
-    // un type d'unité : le pont, puis la transition du runtime
+    // a unit type: the bridge, then the runtime's transition
     auto const j = Viper::JsonValueEncoder::json_encode(encode(c));
     auto const back = decode<topology::model_a::Colour>(
         Viper::JsonValueDecoder::json_decode(j, type(tag<topology::model_a::Colour>{}), definitions()));
     auto const h = hexdigest(encode(c));
     auto const x = Viper::XmlValueEncoder::to_string(encode(c));
 
-    // et n'importe quelle forme au-dessus, sans qu'aucune unité ait rien déclaré
+    // and any shape built on top, without any unit declaring anything
     std::map<topology::model_a::MaterialKey, topology::model_a::Colour> m;
     auto const jm = Viper::JsonValueEncoder::json_encode(encode(m));
     auto const hm = hexdigest(encode(m));

@@ -1,11 +1,10 @@
-// Relire une base écrite par le runtime 1.2, avec ce que la génération produit aujourd'hui.
+// Read back a database written by the 1.2 runtime, with the code the generation produces today.
 //
-// CHAQUE VALEUR EST COMPARÉE, PAS SEULEMENT DÉCODÉE. Une mat transposée se décode sans
-// erreur -- six cases lues pour six écrites -- et ne se voit qu'à la comparaison. Les
-// attentes sont écrites en C++, dans les types que la génération donne : c'est ce qu'un
-// développeur lirait, et c'est ce qui doit rester vrai d'une version à l'autre.
+// Every value is compared, not merely decoded: a transposed mat decodes without error (six
+// cells read for six written) and only shows on comparison. The expectations are written in
+// the C++ types the generation gives, which is what must stay true from one version to the next.
 //
-// Les valeurs sont celles que `write_1_2.py` a écrites ; les deux se lisent côte à côte.
+// The values are those `write_1_2.py` wrote; read the two side by side.
 #include "compat12_compat_attachments.hpp"
 
 #include "Viper_Database.hpp"
@@ -27,7 +26,7 @@ void expect(char const * name, std::optional<T> const & got, T const & expected)
         std::cout << "ok " << name << "\n";
         return;
     }
-    std::cout << (got ? "DIFFÈRE " : "ABSENT ") << name << "\n";
+    std::cout << (got ? "DIFFERS " : "ABSENT ") << name << "\n";
     ++failures;
 }
 
@@ -69,17 +68,17 @@ int main(int argc, char ** argv) {
            Viper::BlobId{Viper::BlobLayout{}, Viper::Blob{std::vector<std::uint8_t>{1, 2, 3, 4, 5}}});
     expect("docCommitId", A::docCommitId::get(db, probe),
            Viper::CommitId::parse("0123456789abcdef0123456789abcdef01234567"));
-    expect("docString", A::docString::get(db, probe), std::string{"Écrit par la 1.2"});
+    expect("docString", A::docString::get(db, probe), std::string{"Written by 1.2"});
     expect("docBlob", A::docBlob::get(db, probe),
            Viper::Blob{std::vector<std::uint8_t>{0x00, 0x01, 0x7F, 0x80, 0xFE, 0xFF}});
 
-    // Vec & Mat -- la mat se lit colonne par colonne : mat[1][2] est la troisième ligne de la
-    // seconde colonne, 6.
+    // Vec & Mat -- the mat reads column by column: mat[1][2] is the third row of the second
+    // column, 6.
     expect("docVec", A::docVec::get(db, probe), std::array<std::int32_t, 3>{1, -2, 0x01020304});
     expect("docMat", A::docMat::get(db, probe), mat);
 
     // Containers
-    expect("docTuple", A::docTuple::get(db, probe), std::tuple<std::uint8_t, std::string>{7, "sept"});
+    expect("docTuple", A::docTuple::get(db, probe), std::tuple<std::uint8_t, std::string>{7, "seven"});
     expect("docOptional", A::docOptional::get(db, probe), std::optional<std::uint16_t>{0x0102});
     expect("docVectorMat", A::docVectorMat::get(db, probe),
            std::vector<std::array<std::array<std::uint8_t, 3>, 2>>{mat, {{{7, 8, 9}, {10, 11, 12}}}});
@@ -91,8 +90,8 @@ int main(int argc, char ** argv) {
     expect("docAny", A::docAny::get(db, probe),
            Viper::Any{Viper::ValueAny::make(Viper::ValueString::make("any"))});
 
-    // Une xarray ne se compare pas d'un bloc : ses positions sont nées dans la base. Ce qui
-    // doit survivre est l'ordre de ses éléments, lus par indice.
+    // An xarray is not compared as a whole: its positions were created in the database. What
+    // must survive is the order of its elements, read by index.
     std::vector<std::uint8_t> elements;
     if (auto const xarray{A::docXArray::get(db, probe)})
         for (std::size_t index{}; index < xarray->size(); ++index)
@@ -111,7 +110,7 @@ int main(int argc, char ** argv) {
            std::map<OtherKey, std::vector<Record>>{{other, {record}}, {otherBis, {record, bis}}});
 
     if (failures) {
-        std::cout << failures << " attachment(s) relu(s) autrement qu'écrit(s)\n";
+        std::cout << failures << " attachment(s) read back differently from what was written\n";
         return 1;
     }
     return 0;

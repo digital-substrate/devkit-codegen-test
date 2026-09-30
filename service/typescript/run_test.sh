@@ -1,6 +1,6 @@
 #!/bin/bash
-# L'épreuve : le client TypeScript parle au serveur C++. Un seul serveur pour les trois
-# langages -- c'est l'intérêt, le protocole ne connaît pas le langage de ses bords.
+# The TypeScript client talks to the C++ server. One server for all three languages: the
+# protocol does not depend on the language of either side.
 set -e
 cd "$(dirname "${BASH_SOURCE[0]}")"
 ROOT="$(cd ../.. && pwd)"

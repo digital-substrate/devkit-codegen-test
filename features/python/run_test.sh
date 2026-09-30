@@ -1,4 +1,4 @@
 #!/bin/bash
-# Le paquet généré est sous generated/ ; il n'est pas installé, on le met sur le chemin.
+# The generated package is under generated/; it is not installed, so it is put on the path.
 cd "$(dirname "${BASH_SOURCE[0]}")"
 PYTHONPATH="$PWD/generated" python3 -m unittest discover tests

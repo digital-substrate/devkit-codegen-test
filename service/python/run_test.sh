@@ -1,6 +1,6 @@
 #!/bin/bash
-# L'épreuve : le client Python parle au serveur C++. Le serveur est celui de cpp/, il n'y en
-# a qu'un -- c'est tout l'intérêt, le protocole ne connaît pas le langage de ses bords.
+# The Python client talks to the C++ server from cpp/. There is only one server: the
+# protocol does not depend on the language of either side.
 set -e
 cd "$(dirname "${BASH_SOURCE[0]}")"
 ROOT="$(cd ../.. && pwd)"

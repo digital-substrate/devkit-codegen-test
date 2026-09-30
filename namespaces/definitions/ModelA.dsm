@@ -12,9 +12,9 @@ struct Colour {
   uint8 b;
 };
 
-"""Un type énuméré, pour que les templates en rencontrent un. Aucun autre namespace
-n'en déclare, et c'est voulu : ce qui est testé ici est la topologie, pas le système de
-types -- mais une couche qui ne sait pas sérialiser une énumération est incomplète."""
+"""An enumeration, so the templates meet one. No other namespace declares one, on
+purpose: what is tested here is the topology, not the type system -- but a layer that
+cannot serialise an enumeration is incomplete."""
 enum Finish {
   matte ,
   gloss

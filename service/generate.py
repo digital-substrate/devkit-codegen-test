@@ -82,15 +82,15 @@ TEMPLATES = os.environ.get("KIBO_TEMPLATES") or str(SIBLING_TEMPLATES)
 _check_templates(TEMPLATES)
 KIBO = ['java', '-jar', JAR]
 
-# LA SÉLECTION EST UNE FEATURE. `templates/features.json` dit quels `.stg` chacune demande et
-# ce qu'elle entraîne ; `resolve` calcule la clôture. Ce site les prend toutes -- il est là
-# pour éprouver la surface entière -- mais un vrai projet en nomme deux ou trois.
+# Templates are selected by feature. `templates/features.json` says which `.stg` files each
+# feature needs and which features it implies; `resolve` computes the closure. This site takes
+# them all, to exercise the whole surface; a real project names two or three.
 sys.path.insert(0, TEMPLATES)
 import resolve                                                          # noqa: E402
 
 RUNTIME = Path(__file__).resolve().parent.parent / "runtime-proposed"
-# Les typages Node vivent dans le node_modules du site : le paquet généré est compilé
-# là où ses dépendances sont installées, pas ailleurs.
+# The Node typings live in this site's node_modules: the generated package is compiled
+# where its dependencies are installed.
 NODE_TYPES = Path(__file__).resolve().parent / "typescript" / "node_modules" / "@types"
 
 TSCONFIG = {
@@ -104,8 +104,8 @@ TSCONFIG = {
 }
 
 CPP_OUT = 'cpp/generated'
-PY_PROJECT = Path('python/generated')          # ce que `pip install` reçoit
-PY_PACKAGE = PY_PROJECT / 'service'           # ce que `import` trouve
+PY_PROJECT = Path('python/generated')          # what `pip install` receives
+PY_PACKAGE = PY_PROJECT / 'service'           # what `import` finds
 TS_PACKAGE = Path('typescript/generated')
 
 
@@ -129,25 +129,25 @@ def generate(namespace: str, dsm_path: str, template:str, output:str, *args):
     subprocess.run(cmd)
 
 def generate_resource(definitions: DefinitionsConst, output: str):
-    """Le modèle, en octets, sous un nom préfixé par le modèle.
+    """The model, as bytes, under a name prefixed by the model.
 
-    LE .DSM EMBARQUÉ TEL QUEL. Le générateur ne produit aucun code d'enregistrement de types :
-    le document est embarqué et décodé au chargement. C'est aussi la réponse à « qui tient la
-    liste des concepts connus » -- cette donnée-là.
+    The definitions are embedded as-is: the generator emits no type-registration code; the
+    document is embedded and decoded at load time. This data is also what holds the list of
+    known concepts.
 
-    Ce n'est pas un texte écrit à la main : ce sont les octets que la chaîne de production
-    encode, enveloppés dans `<Namespace>_resources_definitions` -- ce que les templates attendent.
+    The bytes are the encoded definitions, wrapped in `<Namespace>_resources_definitions`,
+    which is what the templates expect.
     """
-    octets = bytes(definitions.encode().encoded())
-    lignes = [", ".join(f"0x{b:02x}" for b in octets[i:i + 12]) for i in range(0, len(octets), 12)]
-    corps = ",\n ".join(lignes)
+    data = bytes(definitions.encode().encoded())
+    lines = [", ".join(f"0x{b:02x}" for b in data[i:i + 12]) for i in range(0, len(data), 12)]
+    body = ",\n ".join(lines)
     Path(output).parent.mkdir(parents=True, exist_ok=True)
     Path(output).write_text(
         f"#ifndef {NAMESPACE}_resources_hpp\n"
         f"#define {NAMESPACE}_resources_hpp\n\n"
         f"#include <cstddef>\n\n"
         f""
-        f"inline constexpr unsigned char {NAMESPACE}_resources_definitions[] = {{\n {corps}\n}};\n\n"
+        f"inline constexpr unsigned char {NAMESPACE}_resources_definitions[] = {{\n {body}\n}};\n\n"
         f""
         f"#endif\n")
 
@@ -216,7 +216,7 @@ def generate_typescript(name: str, dsm_path: str, definitions: DefinitionsConst,
 PROJECT = 'Service'
 DSM_SOURCE = f'definitions/Service'
 DSM_PATH = f'{PROJECT}.dsm.json'
-# Le namespace C++ de l'infrastructure générée (-n) : pris tel quel par kibo.
+# The C++ namespace of the generated infrastructure (-n), taken as-is by kibo.
 NAMESPACE = 'service'
 
 if not os.path.exists(JAR):
@@ -244,15 +244,15 @@ if arguments.python:
     print('** Render Python Package')
     base = resolve.templates('python', ['Base', 'Pool'])
     render('python', NAMESPACE, DSM_PATH, base, PY_PACKAGE)
-    # La roue n'atterrit pas au même endroit : py.typed dans le paquet, pyproject.toml un
-    # cran au-dessus. Sans py.typed, toutes les annotations sont invisibles au consommateur.
+    # The wheel files land in two places: py.typed in the package, pyproject.toml one level
+    # above. Without py.typed, all annotations are invisible to the consumer.
     for stg in resolve.templates('python', ['Wheel']):
         if stg in base:
             continue
         render('python', NAMESPACE, DSM_PATH, [stg],
                PY_PACKAGE if stg.name.startswith('py.typed') else PY_PROJECT)
-    # Ce qui ne sort pas des templates : les octets du modèle, et le runtime que la liaison
-    # devrait porter et ne porte pas encore.
+    # What does not come from the templates: the model bytes, and the runtime the binding
+    # should carry but does not yet.
     blob = DEFINITIONS.encode()
     (PY_PACKAGE / 'resources.py').write_text(
         f"B64_DEFINITIONS = {base64.b64encode(zlib.compress(blob))}")
@@ -271,9 +271,9 @@ if arguments.typescript:
     shutil.rmtree(source / '_codegen', ignore_errors=True)
     shutil.copytree(RUNTIME / 'node', source / '_codegen',
                     ignore=shutil.ignore_patterns('*.md'))
-    # Le calage du projet. Il n'y a pas encore de template pour ça : `templates/typescript`
-    # n'a pas de feature `Project`, contrairement au pack. Écrit ici en attendant, et c'est
-    # une dette, pas un choix -- un paquet npm n'est pas au projet de l'inventer.
+    # The project setup. There is no template for it yet: `templates/typescript` has no
+    # `Project` feature. Written here in the meantime; this is a known debt, not a design
+    # choice.
     (TS_PACKAGE / 'package.json').write_text(json.dumps(
         {"name": NAMESPACE.lower(), "private": True, "type": "module"}, indent=4) + "\n")
     (TS_PACKAGE / 'tsconfig.json').write_text(json.dumps(TSCONFIG, indent=4) + "\n")

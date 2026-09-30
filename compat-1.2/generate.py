@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Rendre le modèle figé, pour relire la base 1.2 avec ce que la génération produit aujourd'hui.
+"""Render the frozen model, to read the 1.2 database back with what the generation produces today.
 
-Seul le C++ est rendu pour l'instant ; -p et -t sont acceptés, pour que `check.py` passe le
-même appel à tous les sites, et disent qu'il n'y a encore rien à rendre.
+Only C++ is rendered for now; -p and -t are accepted so that `check.py` can pass the same
+call to every site, and they report that there is nothing to render yet.
 """
 import argparse, subprocess, sys
 from pathlib import Path
@@ -18,8 +18,8 @@ SPEC = MODELS["compat-1.2"]
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("-c", "--cpp", action="store_true", help="Generate C++")
-parser.add_argument("-p", "--python", action="store_true", help="(pas encore)")
-parser.add_argument("-t", "--typescript", action="store_true", help="(pas encore)")
+parser.add_argument("-p", "--python", action="store_true", help="(not yet)")
+parser.add_argument("-t", "--typescript", action="store_true", help="(not yet)")
 arguments = parser.parse_args()
 
 report, dsm, definitions = DSMBuilder.assemble(str(HERE / "definitions")).parse()
@@ -38,14 +38,14 @@ CPP_OUT = HERE / "cpp" / "generated"
 
 
 def resources_hpp():
-    """Le modèle, en octets, dans `<Namespace>_resources_definitions` -- ce que les templates attendent."""
-    octets = bytes(definitions.encode().encoded())
-    lignes = [", ".join(f"0x{b:02x}" for b in octets[i:i + 12]) for i in range(0, len(octets), 12)]
+    """The model, as bytes, in `<Namespace>_resources_definitions` -- what the templates expect."""
+    encoded = bytes(definitions.encode().encoded())
+    lines = [", ".join(f"0x{b:02x}" for b in encoded[i:i + 12]) for i in range(0, len(encoded), 12)]
     ns = SPEC["namespace"]
     (CPP_OUT / f"{ns}_resources.hpp").write_text(
         f"#ifndef {ns}_resources_hpp\n#define {ns}_resources_hpp\n\n#include <cstddef>\n\n"
         f"inline constexpr unsigned char {ns}_resources_definitions[] = {{\n "
-        + ",\n ".join(lignes) + f"\n}};\n\n#endif\n")
+        + ",\n ".join(lines) + f"\n}};\n\n#endif\n")
 
 
 if arguments.cpp:
@@ -58,6 +58,6 @@ if arguments.cpp:
                         "-d", str(DSM_PATH), "-t", str(stg), "-o", str(CPP_OUT)], check=True)
     resources_hpp()
 
-for langage, voulu in (("python", arguments.python), ("typescript", arguments.typescript)):
-    if voulu:
-        print(f"** {langage} : pas encore -- la relecture commence par le C++")
+for language, requested in (("python", arguments.python), ("typescript", arguments.typescript)):
+    if requested:
+        print(f"** {language}: not yet -- reading back starts with C++")

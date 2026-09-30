@@ -1,4 +1,4 @@
-// Ce que la couche 5 permet, vérifié par le compilateur.
+// What layer 5 allows, checked by the compiler.
 #include "topology_model_a_test.hpp"
 #include "topology_model_a_codec.hpp"
 #include "topology_model_a_model.hpp"
@@ -7,14 +7,14 @@
 #include <set>
 
 void use_l5() {
-    // l'unité s'éprouve elle-même : une liste, et rien d'autre
+    // the unit tests itself: one list, and nothing else
     topology::model_a::test();
 
-    // et n'importe quelle forme au-dessus de ses types, sans qu'elle ait rien déclaré --
-    // le descripteur du conteneur se compose depuis celui de l'élément
+    // and any shape built on its types, without it declaring anything --
+    // the container's descriptor is composed from the element's
     topology::test::roundTrip<std::set<topology::model_a::Colour>>();
     topology::test::roundTrip<std::map<topology::model_a::MaterialKey, topology::model_a::Colour>>();
 
-    // reproductible quand on le demande
+    // reproducible on request
     topology::test::seed(42);
 }

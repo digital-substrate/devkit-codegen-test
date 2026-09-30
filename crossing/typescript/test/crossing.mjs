@@ -1,8 +1,8 @@
-/** Les conteneurs, éprouvés sur le rendu de `Crossing`.
+/** Containers, tested on the rendering of `Crossing`.
  *
- * AUCUNE UNITÉ DE LA RÉFÉRENCE N'A DE CHAMP CONTENEUR, et lui en ajouter reviendrait à écrire
- * à la main ce que les templates produisent déjà. `Crossing` porte toutes les formes du
- * système de types traversant deux unités : c'est là que la question se pose vraiment.
+ * No unit of the reference has a container field, and adding one would mean hand-writing
+ * what the templates already produce. `Crossing` carries every shape of the type system
+ * across two units, which is where the question really arises.
  */
 import { Composites } from "../generated/dist/woven/data.js";
 import * as core from "../generated/dist/core/data.js";
@@ -10,37 +10,37 @@ import * as parts from "../generated/dist/parts/data.js";
 
 let ok = true;
 const check = (label, condition) => {
-    console.log(`  ${condition ? "ok  " : "ÉCHEC"} ${label}`);
+    console.log(`  ${condition ? "ok  " : "FAIL "} ${label}`);
     ok &&= condition;
 };
 
 const c = new Composites();
 
 c.f_vector = [new parts.Colour({ r: 1, g: 2, b: 3 }), new parts.Colour({ r: 4, g: 5, b: 6 })];
-check("un vector rend une suite", c.f_vector.length === 2);
-check("et ses éléments portent leur classe",
+check("a vector yields a sequence", c.f_vector.length === 2);
+check("and its elements carry their class",
       c.f_vector.at(0) instanceof parts.Colour && c.f_vector.at(0).r === 1);
 
 c.f_optional = core.ThingKey.create();
-check("un optional rend la valeur", c.f_optional instanceof core.ThingKey);
+check("an optional yields the value", c.f_optional instanceof core.ThingKey);
 
 c.f_map_enum = [[core.Grade.LOW, new parts.Colour({ r: 7, g: 8, b: 9 })]];
-// ITÉRER UNE MAP REND LES CLÉS, comme une `Map` de JavaScript ; les paires se demandent par
-// `entries()`, qui est le mot que les deux langages voisins emploient aussi.
+// Iterating a map yields its keys, like a JavaScript `Map`; pairs are obtained through
+// `entries()`, the same word the two sibling languages use.
 const [key, value] = c.f_map_enum.entries()[0];
-check("une map rend une correspondance", c.f_map_enum.size === 1);
-check("dont la clé est l'énumération du modèle", key === "low");
-check("et la valeur porte sa classe", value instanceof parts.Colour && value.r === 7);
+check("a map yields a mapping", c.f_map_enum.size === 1);
+check("whose key is the model's enumeration", key === "low");
+check("and the value carries its class", value instanceof parts.Colour && value.r === 7);
 
 c.f_variant = new core.Colour({ r: 1, g: 1, b: 1 });
-check("un variant rend l'alternative tenue", c.f_variant instanceof core.Colour);
+check("a variant yields the held alternative", c.f_variant instanceof core.Colour);
 
 c.f_set = [core.ThingKey.create(), core.ThingKey.create()];
-check("un set rend une suite de clés typées",
+check("a set yields a sequence of typed keys",
       c.f_set.length === 2 && c.f_set.at(0) instanceof core.ThingKey);
 
-// Deux Colour homonymes, dans deux unités, à travers un conteneur : le cas fondateur.
-check("deux Colour homonymes ne se confondent pas dans un conteneur",
+// Two homonymous Colours, in two units, through a container: the founding case.
+check("two homonymous Colours are not confused inside a container",
       c.f_vector.at(0) instanceof parts.Colour && !(c.f_vector.at(0) instanceof core.Colour));
 
 process.exit(ok ? 0 : 1);

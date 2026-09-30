@@ -20,8 +20,8 @@ from models import MODELS
 
 ROOT = Path(__file__).resolve().parent.parent
 KIBO = ROOT.parent / "kibo"
-# LE PACK DU BAC À SABLE, DANS CE DÉPÔT. `kibo-template-viper` reste la destination, mais
-# tant que la ligne n'est pas arrêtée elle vit ici, à côté des sites qui la jugent.
+# The sandbox pack, in this repository. `kibo-template-viper` remains the destination, but
+# until the line is settled it lives here, next to the sites that test it.
 TEMPLATES = Path(os.environ.get("KIBO_TEMPLATES") or ROOT / "templates")
 BANNER = re.compile(r"by kibo-[0-9.]+\.jar")
 

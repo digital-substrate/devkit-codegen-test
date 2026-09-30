@@ -8,10 +8,9 @@ the runtime, so the runtime's fail-fast is inherited rather than re-implemented 
 type annotations are what replaces the type the passage dissolves, for the reader and the
 IDE, not as a second line of checking.
 
-## Open
+## The runtime
 
-- **`_codegen/` is vendored into every generated package.** The proxy, the container views
-  and the attachment wrapper are runtime code; copying them per package lets them drift from
-  the installed `dsviper`. They belong in `dsviper`, and until they are there this package is
-  not something to hand a developer.
-- **The generated prose is in French.** It lands in the reader's source tree.
+`_codegen/` (the proxy base, the container views, the attachment accessor) is copied into every
+generated package from `../../runtime-proposed/python`. It is the template pack's, not
+`dsviper`'s: see `runtime-proposed/README.md`. The generated package requires
+`dsviper >= 1.2.27, < 1.3`.

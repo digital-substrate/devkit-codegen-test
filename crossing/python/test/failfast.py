@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
-"""Le fail-fast, éprouvé sur le rendu.
+"""Fail-fast, tested on the rendered package.
 
-UN PROXY NE DÉTIENT RIEN : c'est une boîte vide devant une `Value`. Toute écriture atteint
-donc le runtime, qui lève son exception typée -- le fail-fast est hérité, pas implémenté. Ce
-qu'il faut vérifier n'est pas qu'on l'a écrit, mais que rien dans la couche générée ne
-l'intercepte ni ne le contourne.
+A proxy holds nothing: it is an empty box around a `Value`, so every write reaches the
+runtime, which raises its typed exception -- fail-fast is inherited, not implemented. What
+must be checked is that nothing in the generated layer intercepts or bypasses it.
 
-ET LES DEUX SORTES D'ERREUR COMPTENT. `ViperError` vient du runtime, quand une valeur du
-mauvais type l'atteint. `TypeError` vient du code généré, quand un constructeur refuse une
-`Value` qui n'est pas la sienne -- avant même qu'une écriture ait lieu. Le pack pin la seconde
-dans `test_fail_fast.py` : ce sont des `raise` et non des `assert`, donc le contrat tient
-aussi sous `python -O`, où les assertions disparaissent.
+Both kinds of error count. `ViperError` comes from the runtime, when a value of the wrong
+type reaches it. `TypeError` comes from the generated code, when a constructor rejects a
+`Value` that is not its own, before any write happens. The pack pins the latter in
+`test_fail_fast.py`: these are `raise`, not `assert`, so the contract also holds under
+`python -O`, where assertions are stripped.
 """
 import sys
 from pathlib import Path
@@ -32,30 +31,30 @@ def refuses(label, fn):
     global ok
     try:
         fn()
-        print(f"  ÉCHEC {label} -- passe sans erreur")
+        print(f"  FAIL {label} -- passes without error")
         ok = False
     except (dsviper.ViperError, TypeError):
         print(f"  ok   {label}")
 
 
-refuses("un champ refuse une chaîne là où un nombre est attendu",
-        lambda: setattr(core.Colour(), "r", "rouge"))
-refuses("un champ refuse la Colour d'une autre unité",
+refuses("a field rejects a string where a number is expected",
+        lambda: setattr(core.Colour(), "r", "red"))
+refuses("a field rejects the Colour of another unit",
         lambda: setattr(core.Defaults(), "f_colour", parts.Colour()))
-refuses("un conteneur refuse un élément du mauvais type",
+refuses("a container rejects an element of the wrong type",
         lambda: setattr(core.Bag(), "tints", [parts.Colour()]))
-refuses("une clé refuse l'identifiant d'un autre concept",
+refuses("a key rejects the identifier of another concept",
         lambda: core.ThingKey(core.OtherKey.create().vpr_value))
-refuses("un attachment refuse une clé d'un autre concept",
+refuses("an attachment rejects a key of another concept",
         lambda: a.Thing.colour.set(mutating, core.OtherKey.create(), core.Colour()))
-refuses("un attachment refuse un document du mauvais type",
+refuses("an attachment rejects a document of the wrong type",
         lambda: a.Thing.colour.set(mutating, core.ThingKey.create(), parts.Colour()))
 
-# ET LE SEUL REPLI QUE J'AVAIS INTRODUIT. `wrap` rendait la valeur nue quand un type n'avait
-# pas de classe enregistrée -- un mensonge contre l'annotation, que le typage ne peut pas
-# rattraper et qui se découvre bien plus loin, sur un attribut absent.
+# `wrap` must not fall back to returning the bare value when a type has no registered class:
+# that would contradict the annotation, which type checking cannot catch, and would only
+# surface much later as a missing attribute.
 saved = proxy._CLASSES.pop(core.data.COLOUR.encoded())
-refuses("wrap échoue si une unité n'est pas importée, au lieu de rendre la valeur nue",
+refuses("wrap fails if a unit is not imported, instead of returning the bare value",
         lambda: wrap(core.Colour(r=1, g=2, b=3).vpr_value))
 proxy._CLASSES[core.data.COLOUR.encoded()] = saved
 

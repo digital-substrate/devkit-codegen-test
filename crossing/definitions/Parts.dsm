@@ -1,18 +1,18 @@
-// Le second fournisseur : les mêmes noms que Core, des types différents, et aucune
-// dépendance non plus. Il existe pour que Woven ait deux côtés à faire se rencontrer.
+// The second supplier: the same names as Core, different types, and no dependency
+// either. It exists so that Woven has two sides to bring together.
 namespace Parts {c4e91b73-8a52-4d1f-b6c8-5e3f0a92d716} {
 
-"""Le même nom que Core::Thing, et rien de commun."""
+"""Same name as Core::Thing, nothing in common."""
 concept Thing;
 
-"""Le même nom que Core::Colour, en virgule flottante."""
+"""Same name as Core::Colour, in floating point."""
 struct Colour {
   float r;
   float g;
   float b;
 };
 
-"""Le même nom que Core::Grade, des cases différentes."""
+"""Same name as Core::Grade, different cases."""
 enum Grade {
   soft ,
   hard

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Compile le paquet généré, puis lance la suite contre le résultat compilé.
+# Compiles the generated package, then runs the suite against the compiled output.
 set -e
 cd "$(dirname "${BASH_SOURCE[0]}")"
 ./node_modules/.bin/tsc -p generated/tsconfig.json

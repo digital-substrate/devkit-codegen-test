@@ -1,8 +1,8 @@
 namespace Compat {f966a89e-f39c-4579-bd0e-5bd3812e39c1} {
 
-// FIGÉ. Ce modèle est celui qu'une base 1.2 a enregistré en elle-même ; le changer ferait
-// relire une base par un modèle qui n'est plus le sien. Une forme de plus se déclare ici
-// seulement avec une base réécrite par write_1_2.py, sous un runtime 1.2.
+// FROZEN. This is the model a 1.2 database recorded in itself; changing it would read the
+// database with a model that is no longer its own. A new shape is declared here only together
+// with a database rewritten by write_1_2.py under a 1.2 runtime.
 
 concept Probe;
 concept Other;
@@ -18,8 +18,8 @@ struct Point {
   double y;
 };
 
-// Une structure qui en contient une autre, une mat non carrée et une énumération : le type
-// de chaque champ vient des définitions.
+// A structure holding another structure, a non-square mat and an enumeration: the type of
+// each field comes from the definitions.
 struct Record {
   string name;
   Point origin;
@@ -28,7 +28,7 @@ struct Record {
   vector<int16> samples;
 };
 
-// Numbers -- des valeurs dont chaque octet diffère, pour qu'un ordre d'octets inversé se lise.
+// Numbers -- values whose bytes all differ, so that a reversed byte order shows.
 attachment<Probe, bool> docBool;
 attachment<Probe, uint8> docUInt8;
 attachment<Probe, uint16> docUInt16;
@@ -48,11 +48,11 @@ attachment<Probe, commit_id> docCommitId;
 attachment<Probe, string> docString;
 attachment<Probe, blob> docBlob;
 
-// Vec & Mat -- non carrée, pour qu'une transposition se lise.
+// Vec & Mat -- non-square, so that a transposition shows.
 attachment<Probe, vec<int32,3>> docVec;
 attachment<Probe, mat<uint8,2,3>> docMat;
 
-// Containers -- leur type se déduit de la forme C++, pas des définitions.
+// Containers -- their type is deduced from the C++ shape, not from the definitions.
 attachment<Probe, tuple<uint8, string>> docTuple;
 attachment<Probe, optional<uint16>> docOptional;
 attachment<Probe, vector<mat<uint8,2,3>>> docVectorMat;

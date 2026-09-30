@@ -39,15 +39,15 @@ JAR = jar()
 print(f"using kibo: {Path(JAR).name}")
 
 
-# LA SÉLECTION EST UNE FEATURE, PAS UN DOSSIER. `templates/features.json` dit quels `.stg`
-# chacune demande et ce qu'elle entraîne ; `resolve` calcule la clôture. `kibo -t` prend un
-# `.stg` seul aussi bien qu'un dossier, donc les templates restent à plat.
+# Selection is by feature, not by directory. `templates/features.json` says which `.stg` each
+# feature needs and what it pulls in; `resolve` computes the closure. `kibo -t` takes a single
+# `.stg` as well as a directory, so the templates stay flat.
 sys.path.insert(0, str(TEMPLATES))
 import resolve                                                          # noqa: E402
 
 RUNTIME = HERE.parent / "runtime-proposed"
-# Les typages Node vivent dans le node_modules du site : le paquet généré est compilé là
-# où ses dépendances sont installées.
+# The Node typings live in the site's node_modules: the generated package is compiled
+# where its dependencies are installed.
 NODE_TYPES = HERE / "typescript" / "node_modules" / "@types"
 
 TSCONFIG = {
@@ -60,8 +60,8 @@ TSCONFIG = {
     "include": ["src/**/*.ts"],
 }
 CPP_OUT = HERE / "cpp" / "generated"
-PY_PROJECT = HERE / "python" / "generated"          # ce que `pip install` reçoit
-PY_PACKAGE = PY_PROJECT / SPEC["package"]           # ce que `import` trouve
+PY_PROJECT = HERE / "python" / "generated"          # what `pip install` receives
+PY_PACKAGE = PY_PROJECT / SPEC["package"]           # what `import` finds
 TS_SOURCE = HERE / "typescript" / "generated" / "src"
 
 
@@ -74,14 +74,14 @@ def kibo(target, stgs, output):
 
 
 def resources_hpp():
-    """Le modèle, en octets, dans `<Namespace>_resources_definitions` -- ce que les templates attendent."""
-    octets = bytes(definitions.encode().encoded())
-    lignes = [", ".join(f"0x{b:02x}" for b in octets[i:i + 12]) for i in range(0, len(octets), 12)]
+    """The model, as bytes, in `<Namespace>_resources_definitions` -- what the templates expect."""
+    data = bytes(definitions.encode().encoded())
+    lines = [", ".join(f"0x{b:02x}" for b in data[i:i + 12]) for i in range(0, len(data), 12)]
     ns = SPEC["namespace"]
     (CPP_OUT / f"{ns}_resources.hpp").write_text(
         f"#ifndef {ns}_resources_hpp\n#define {ns}_resources_hpp\n\n#include <cstddef>\n\n"
         f"inline constexpr unsigned char {ns}_resources_definitions[] = {{\n "
-        + ",\n ".join(lignes) + f"\n}};\n\n#endif\n")
+        + ",\n ".join(lines) + f"\n}};\n\n#endif\n")
 
 
 if arguments.cpp:
@@ -93,8 +93,8 @@ if arguments.python:
     print("** Render Python Package")
     base = resolve.templates("python", ["Base", "Pool"])
     kibo("python", base, PY_PACKAGE)
-    # La roue n'atterrit pas au même endroit : py.typed dans le paquet, pyproject.toml un cran
-    # au-dessus. Sans py.typed, toutes les annotations sont invisibles au consommateur.
+    # The wheel files land in different places: py.typed in the package, pyproject.toml one
+    # level up. Without py.typed, every annotation is invisible to the consumer.
     for stg in resolve.templates("python", ["Wheel"]):
         if stg not in base:
             kibo("python", [stg], PY_PACKAGE if stg.name.startswith("py.typed") else PY_PROJECT)
@@ -111,8 +111,8 @@ if arguments.typescript:
         f'export const B64_DEFINITIONS = "{base64.b64encode(definitions.encode().encoded()).decode("ascii")}";\n')
     shutil.rmtree(TS_SOURCE / "_codegen", ignore_errors=True)
     shutil.copytree(RUNTIME / "node", TS_SOURCE / "_codegen", ignore=shutil.ignore_patterns("*.md"))
-    # Le calage du projet. Pas de template pour ça : `templates/typescript` n'a pas de feature
-    # `Project`, contrairement au pack. Écrit ici en attendant, et c'est une dette.
+    # The project scaffolding. No template for it: `templates/typescript` has no `Project`
+    # feature, unlike the pack. Written here in the meantime; this is a known debt.
     (TS_SOURCE.parent / "package.json").write_text(json.dumps(
         {"name": SPEC["package"], "private": True, "type": "module"}, indent=4) + "\n")
     (TS_SOURCE.parent / "tsconfig.json").write_text(json.dumps(TSCONFIG, indent=4) + "\n")

@@ -94,5 +94,5 @@ for a in d["attachments"]:
 check("two attachments needing their key namespace to tell them apart", clashing, "; ".join(clashing))
 
 for line in ok:  print(f"  ok    {line}")
-for line in bad: print(f"  MANQUE {line}")
+for line in bad: print(f"  MISSING {line}")
 sys.exit(1 if bad else 0)

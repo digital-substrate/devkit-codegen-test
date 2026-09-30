@@ -1,27 +1,27 @@
-// LE POINT DE CE MODÈLE. Chaque forme composite du langage, avec ses éléments pris dans
-// deux autres namespaces -- et chacune deux fois, comme champ de structure et comme type
-// de document d'attachment, parce que ce sont deux chemins de code différents.
+// Every composite shape of the language, with its elements taken from two other
+// namespaces -- each one twice, as a structure field and as an attachment document type,
+// because those are two different code paths.
 //
-// C'est ce que `features/all.dsm` couvre dans un seul namespace, et ce que `namespaces`
-// couvre avec trois formes de types. Ici les deux se croisent.
+// `features/all.dsm` covers the shapes in a single namespace, and `namespaces` covers
+// three kinds of types across namespaces. Here the two cross.
 namespace Woven {f7a3c518-2e64-4b90-8d17-9c05b6e2f483} {
 
-"""Un concept dont le parent vit ailleurs."""
+"""A concept whose parent lives elsewhere."""
 concept Derived is a Core::Thing;
 
-"""Ce sur quoi les attachments de ce namespace sont accrochés."""
+"""What this namespace's attachments are attached to."""
 concept Knot;
 
-"""Un club dont les membres viennent de deux fournisseurs ET PORTENT LE MÊME NOM : le nom
-du getter ne peut pas être `asThingKey` des deux côtés, et un nom de fonction ne peut pas
-contenir `::`. C'est le cas que Core::Klub ne montre pas, ses membres étant chez lui."""
+"""A club whose members come from two suppliers and share the same name: the getter
+cannot be `asThingKey` on both sides, and a function name cannot contain `::`. Core::Klub
+does not show this case, since its members are local."""
 club Weave;
 membership Weave Core::Thing;
 membership Weave Parts::Thing;
 
-// ── les formes composites, côté champ ──
+// ── composite shapes, as fields ──
 
-"""Chaque conteneur, avec des éléments des deux fournisseurs."""
+"""Every container, with elements from both suppliers."""
 struct Composites {
   tuple<Core::Colour, Parts::Colour> f_tuple;
   optional<key<Core::Thing>> f_optional;
@@ -33,7 +33,7 @@ struct Composites {
   variant<Core::Colour, Parts::Colour, string> f_variant;
 };
 
-"""Les entités des deux fournisseurs, nues, comme champs."""
+"""The entities of both suppliers, bare, as fields."""
 struct Entities {
   Core::Grade f_core_grade;
   Parts::Grade f_parts_grade;
@@ -47,13 +47,13 @@ struct Entities {
   key<any_concept> f_any_concept;
 };
 
-"""Une structure d'ici qui contient une structure d'ici : la profondeur reste locale."""
+"""A local structure containing local structures: the nesting stays local."""
 struct Nested {
   Composites f_composites;
   Entities f_entities;
 };
 
-// ── les mêmes formes, côté document d'attachment ──
+// ── the same shapes, as attachment documents ──
 
 attachment<Knot, tuple<Core::Colour, Parts::Colour>> docTuple;
 attachment<Knot, optional<key<Core::Thing>>> docOptional;
@@ -72,8 +72,8 @@ attachment<Knot, key<Core::Klub>> docKlubKey;
 attachment<Knot, key<any_concept>> docAnyConceptKey;
 attachment<Knot, Composites> docComposites;
 
-// Un attachment sur un concept d'un autre namespace, dont le document vient d'un
-// troisième : les trois coins à la fois.
+// An attachment on a concept from another namespace, whose document comes from a
+// third: all three corners at once.
 attachment<Core::Thing, Parts::Colour> mark;
 attachment<Parts::Thing, Core::Colour> mark;
 

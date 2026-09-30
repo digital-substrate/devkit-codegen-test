@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Ce que la référence Python permet, exécuté.
+"""What the Python reference allows, executed.
 
-Le C++ était vérifié par un compilateur contre des stubs ; ici le vrai runtime est
-importable, donc la référence tourne réellement. Une assertion qui passe vaut mieux qu'une
-signature qui compile.
+The C++ was checked by a compiler against stubs; here the real runtime is importable, so
+the reference actually runs. A passing assertion is worth more than a signature that compiles.
 """
 import shutil
 import sys
@@ -12,8 +11,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 TARGET = HERE.parent
 
-# Le paquet à éprouver est celui que `generate.py` vient de rendre, un cran au-dessus. Il
-# porte déjà son `_codegen` : le site le dépose, ce harnais n'a plus à le faire.
+# The package under test is the one `generate.py` has just rendered, one level up. It
+# already carries its `_codegen`: the site places it, this harness no longer has to.
 package = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else TARGET / "generated"
 sys.path.insert(0, str(package))
 
@@ -23,11 +22,11 @@ from topology import definitions, tools
 from topology import model_a as modela, model_b as modelb
 from topology.model_a import attachments as modela_attachments
 from topology.model_b import attachments as modelb_attachments
-# LA RÉFÉRENCE N'ÉCRIT PAS TOUT LE MODÈLE, ET N'A PAS À LE FAIRE. Elle porte les deux unités
-# qui posent les questions de conception -- deux types homonymes, deux attachments homonymes.
-# Les conteneurs en posent une autre, et il faut pour elle un document qui en soit un : c'est
-# `Projection`, que les templates rendent et que personne n'a écrit à la main. Ces
-# assertions-là ne tournent donc que sur un rendu, et l'annoncent quand elles ne tournent pas.
+# The reference does not write the whole model, and need not. It carries the two units that
+# raise the design questions -- two homonymous types, two homonymous attachments. Containers
+# raise another, which needs a real document: `Projection`, rendered by the templates and
+# written by no one by hand. Those assertions therefore only run on a rendered package, and
+# say so when they do not.
 try:
     from topology import model_c, projection
     from topology.projection import attachments as projection_attachments
@@ -36,129 +35,127 @@ except ImportError:
 
 
 def check(label, condition):
-    print(f"  {'ok  ' if condition else 'ÉCHEC'} {label}")
+    print(f"  {'ok  ' if condition else 'FAIL'} {label}")
     return condition
 
 
 ok = True
 
-# Les mêmes noms, deux namespaces, aucun renommage -- ce qui a tout déclenché.
+# The same names, two namespaces, no renaming -- what started it all.
 a = modela.Colour(r=1, g=2, b=3)
 b = modelb.Colour(r=0.5, g=0.5, b=0.5)
-ok &= check("deux Colour homonymes coexistent", type(a) is not type(b))
-ok &= check("et gardent leurs types du modèle",
+ok &= check("two homonymous Colour types coexist", type(a) is not type(b))
+ok &= check("and keep their model types",
             a.type().representation() == "ModelA::Colour"
             and b.type().representation() == "ModelB::Colour")
 
-# Les champs sont des propriétés : le nom et l'accès sont la même chose.
+# Fields are properties: the name and the access are the same thing.
 a.r = 9
-ok &= check("un champ se lit et s'écrit par son nom", a.r == 9)
+ok &= check("a field is read and written by its name", a.r == 9)
 
-# Une clé est une poignée, et elle se compare et se hache.
+# A key is a handle, and it compares and hashes.
 k1, k2 = modela.MaterialKey.create(), modela.MaterialKey.create()
-ok &= check("deux clés neuves diffèrent", k1 != k2)
-ok &= check("une clé est hachable", {k1: a}[k1] is a)
+ok &= check("two new keys differ", k1 != k2)
+ok &= check("a key is hashable", {k1: a}[k1] is a)
 
-# La valeur générée EST la valeur du runtime : rien à encoder.
-#  et non `is` : le runtime rend un nouvel objet Python à chaque appel pour le même
-# type du modèle. Une identité d'objet ne dit rien ici, une égalité de type si.
-ok &= check("la classe enveloppe une Value du runtime",
+# The generated value IS the runtime value: nothing to encode.
+# `==` and not `is`: the runtime returns a new Python object on each call for the same
+# model type. Object identity says nothing here; type equality does.
+ok &= check("the class wraps a runtime Value",
             a.vpr_value.type() == a.type())
 
-# Et les clés des deux unités ne se confondent pas.
+# And the keys of the two units are not confused.
 ka, kb = modela.MaterialKey.create(), modelb.MaterialKey.create()
-ok &= check("les clés des deux unités ont des types distincts",
+ok &= check("the keys of the two units have distinct types",
             ka.vpr_value.type() != kb.vpr_value.type())
 
-# ── un attachment, sur un état en mémoire ──
+# ── an attachment, on an in-memory state ──
 #
-# C'est l'épreuve que la référence C++ passe par `CommitMutableState`, et elle se dit ici
-# dans les mêmes termes : le contexte est le premier argument, et c'est lui qui dit sur quoi
-# l'appel porte.
+# The C++ reference runs this test through `CommitMutableState`, and it reads the same here:
+# the context is the first argument, and it says what the call operates on.
 colour = modela_attachments.Material.colour
 state = dsviper.CommitState(definitions())
 mutable = dsviper.CommitMutableState(state)
 mutating = mutable.attachment_mutating()
 
 key = modela.MaterialKey.create()
-ok &= check("un attachment neuf ne connaît pas la clé", not colour.has(mutating, key))
+ok &= check("a new attachment does not know the key", not colour.has(mutating, key))
 
 colour.set(mutating, key, modela.Colour(r=1, g=2, b=3))
-ok &= check("après écriture, la clé est connue", colour.has(mutating, key))
-ok &= check("et le document revient tel quel", colour.get(mutating, key) == modela.Colour(r=1, g=2, b=3))
-ok &= check("les clés de l'attachment sont typées", colour.keys(mutating) == {key})
+ok &= check("after a write, the key is known", colour.has(mutating, key))
+ok &= check("and the document comes back unchanged", colour.get(mutating, key) == modela.Colour(r=1, g=2, b=3))
+ok &= check("the attachment's keys are typed", colour.keys(mutating) == {key})
 
-# Un champ seul, par une méthode générée pour lui : le nom se complète et une faute de
-# frappe se voit à l'import, pas à l'appel.
+# A single field, through a method generated for it: the name completes, and a typo
+# shows at import, not at call time.
 colour.set_r(mutating, key, 9)
-ok &= check("un seul champ s'écrit par sa méthode", colour.get(mutating, key).r == 9)
+ok &= check("a single field is written through its method", colour.get(mutating, key).r == 9)
 
-ok &= check("une clé absente rend None", colour.get(mutating, modela.MaterialKey.create()) is None)
+ok &= check("a missing key returns None", colour.get(mutating, modela.MaterialKey.create()) is None)
 
-# UN CONCEPT NOMMÉ COMME LA CLÉ D'UN AUTRE. `MaterialKey` est la clé de Material et un concept à
-# lui ; ses attachments forment une classe de ce nom dans le module, et la clé de Material doit
-# rester le type qu'on y écrit -- ce que le module masquait tant qu'il importait les noms nus.
+# A concept named like another's key. `MaterialKey` is Material's key and a concept of its
+# own; its attachments form a class of that name in the module, and Material's key must stay
+# the type written there -- which the module hid while it imported bare names.
 note_key = modela.MaterialKeyKey.create()
 modela_attachments.MaterialKey.note.set(mutating, note_key, modela.MaterialKeyNote(material=key))
-ok &= check("un concept nommé comme la clé d'un autre ne masque pas cette clé",
+ok &= check("a concept named like another's key does not hide that key",
             modela_attachments.MaterialKey.note.get(mutating, note_key).material == key)
-# Et les annotations -- ce que lisent un vérificateur de types et l'éditeur -- désignent bien la
-# clé : `key: MaterialKey` résolu dans le module donnait la classe des attachments.
+# And the annotations -- what a type checker and the editor read -- do name the key:
+# `key: MaterialKey` resolved in the module gave the attachments class.
 import typing                                                           # noqa: E402
 hints = typing.get_type_hints(type(modela_attachments.Material.colour).set_r)
-ok &= check("l'annotation d'une clé désigne la clé, pas un scope homonyme", hints["key"] is modela.MaterialKey)
+ok &= check("a key's annotation names the key, not a homonymous scope", hints["key"] is modela.MaterialKey)
 
-# ── et le même attachment, sur une base ──
+# ── and the same attachment, on a database ──
 #
-# LES MÊMES APPELS, SANS UNE LIGNE DE PLUS. La base porte `keys`, `has`, `get` et `set` ;
-# seul `delete` lui est propre. Le pack écrit un second module entier pour ce cas.
+# The same calls, not one line more. The database carries `keys`, `has`, `get` and `set`;
+# only `delete` is its own. The pack writes a whole second module for this case.
 database = dsviper.Database.create_in_memory()
 database.extend_definitions(definitions())
 database.begin_transaction()
-ok &= check("l'écriture sur base rend un statut",
+ok &= check("a write to the database returns a status",
             colour.set(database, key, modela.Colour(r=4, g=5, b=6)) is True)
-ok &= check("et se relit par les mêmes appels", colour.get(database, key) == modela.Colour(r=4, g=5, b=6))
-ok &= check("le retrait est la seule opération que la base ajoute", colour.delete(database, key) is True)
-ok &= check("après retrait, la clé n'est plus connue", not colour.has(database, key))
+ok &= check("and reads back through the same calls", colour.get(database, key) == modela.Colour(r=4, g=5, b=6))
+ok &= check("delete is the only operation the database adds", colour.delete(database, key) is True)
+ok &= check("after delete, the key is no longer known", not colour.has(database, key))
 database.commit()
 database.close()
 
-# ── un pool ──
+# ── a pool ──
 #
-# Rien à éprouver de plus ici : `dsviper` n'offre pas de quoi construire un pool depuis
-# Python, donc la classe est le bord client et son identité est tout ce qu'elle affirme
-# hors connexion.
-# Deux attachments homonymes, sur deux concepts homonymes, dans deux unités : le cas qui a
-# déclenché tout le chantier. Le pack les distingue par `modela_material_colour_get` contre
-# `modelb_material_colour_get` ; ici rien ne se touche.
-ok &= check("deux attachments homonymes ont des descripteurs distincts",
+# Nothing more to test here: `dsviper` offers no way to build a pool from Python, so the
+# class is the client edge and its identity is all it asserts offline.
+# Two homonymous attachments, on two homonymous concepts, in two units: the case that
+# started this whole work. The pack tells them apart as `modela_material_colour_get` versus
+# `modelb_material_colour_get`; here nothing collides.
+ok &= check("two homonymous attachments have distinct descriptors",
             modela_attachments.Material.colour.descriptor.runtime_id()
             != modelb_attachments.Material.colour.descriptor.runtime_id())
 
-# ── un conteneur rend ses éléments avec leurs noms ──
+# ── a container returns its elements with their names ──
 #
-# C'EST CE QUE LE PACK OBTIENT EN GÉNÉRANT UNE CLASSE PAR FORME. Ici aucune classe de
-# conteneur n'est générée : la valeur porte son type, une table dit quelle classe va avec
-# quel identifiant, et la vue enveloppe en lisant. La différence doit être invisible d'ici.
+# The pack gets this by generating one class per shape. Here no container class is
+# generated: the value carries its type, a table maps each identifier to its class, and the
+# view wraps on read. The difference must be invisible from here.
 if projection is None:
-    print("  --   les conteneurs : pas dans ce paquet, ces assertions ne tournent pas")
+    print("  --   containers: not in this package, these assertions do not run")
 else:
     link = projection.LinkKey.create()
     a, b = modela.MaterialKey.create(), modelb.MaterialKey.create()
 
     projection_attachments.Link.mapping.set(mutating, link, {a: b})
     mapping = projection_attachments.Link.mapping.get(mutating, link)
-    ok &= check("un document map se relit comme une correspondance", len(mapping) == 1)
-    ok &= check("et sa clé porte la classe de son unité",
+    ok &= check("a map document reads back as a mapping", len(mapping) == 1)
+    ok &= check("and its key carries its unit's class",
                 type(next(iter(mapping))) is modela.MaterialKey)
-    ok &= check("et sa valeur celle de la sienne", type(mapping[a]) is modelb.MaterialKey)
+    ok &= check("and its value that of its own", type(mapping[a]) is modelb.MaterialKey)
 
     marker = model_c.MarkerKey.create()
     projection_attachments.Link.marker.set(mutating, link, marker)
-    ok &= check("un document clé revient typé",
+    ok &= check("a key document comes back typed",
                 projection_attachments.Link.marker.get(mutating, link) == marker)
 
-ok &= check("un pool porte son identité du modèle",
+ok &= check("a pool carries its model identity",
             tools.Pool.UUID.encoded() == "17e63428-03e1-41d7-ad9d-60c5665bbd66")
 
 print()

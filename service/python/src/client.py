@@ -1,9 +1,8 @@
-"""Le client du service, porté sur les nouveaux templates.
+"""The service client, ported to the new templates.
 
-Ce fichier n'est pas généré : il est ce qu'un développeur écrit en face du pool. Les seuls
-changements par rapport à la version précédente sont les noms que les templates ont déplacés
-sous ses pieds -- un namespace est devenu un module, et les deux bords d'un pool tiennent
-dans un seul.
+This file is not generated: it is what a developer writes against the pool. The only
+changes from the previous version are names the templates moved: a namespace became a
+module, and both sides of a pool now live in one.
 """
 import sys
 
@@ -21,9 +20,9 @@ service_remote = dsviper.ServiceRemote.connect(address, port, defs)
 
 tools = ToolsRemote(service_remote)
 if tools.is_available():
-    # LA DOCUMENTATION DU MODÈLE TRAVERSE TOUT. Le serveur C++ l'enregistre avec la fonction,
-    # le client la lit à distance, et la méthode générée la porte en docstring -- sur plusieurs
-    # lignes et avec des guillemets, ce qu'un littéral C++ non échappé ne compilerait pas.
+    # The model's documentation goes end to end: the C++ server registers it with the function,
+    # the client reads it remotely, and the generated method carries it as its docstring --
+    # multi-line and with quotes, which an unescaped C++ literal would not compile.
     documented = 'Return a random string of "size" letters.\nThe letters are lower case.'
     remote_tools = next(p for p in service_remote.function_pools() if p.name() == "Tools")
     assert remote_tools.documentation() == "This pool provides access to the various utility functions."

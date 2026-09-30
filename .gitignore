@@ -34,15 +34,6 @@ CLAUDE.md
 build/
 cmake-build*/
 
-# Le paquet que la liaison devrait porter, déposé dans la référence par `python/check.py`.
-# La source est `runtime-proposed/dsviper_codegen/`.
-namespaces/target/python/hand/topology/_codegen/
-
-# Le paquet que la liaison devrait porter, déposé dans la référence Node.
-# La source est `namespaces/target/runtime-proposed/node/`.
-namespaces/target/node/hand/src/_codegen/
-namespaces/target/node/hand/dist/
-
 namespaces/cpp/generated/
 namespaces/python/generated/
 namespaces/typescript/generated/
@@ -52,7 +43,7 @@ crossing/python/generated/
 crossing/typescript/generated/
 crossing/crossing.dsm.json
 
-# Un node_modules n'est jamais versionné, quel que soit le site.
+# A node_modules is never versioned, whatever the site.
 node_modules/
 compat-1.2/cpp/generated/
 compat-1.2/compat12.dsm.json

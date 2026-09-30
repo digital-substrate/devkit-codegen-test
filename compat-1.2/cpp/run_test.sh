@@ -1,5 +1,5 @@
 #!/bin/bash
-# La base est ouverte en lecture seule : l'épreuve ne la modifie jamais.
+# The database is opened read-only: the test never modifies it.
 set -e
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cmake -S "$ROOT" -B "$ROOT/build" > /dev/null

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Compile le paquet généré, puis lance les épreuves contre le résultat compilé.
+# Compile the generated package, then run the tests against the compiled output.
 set -e
 cd "$(dirname "${BASH_SOURCE[0]}")"
 ./node_modules/.bin/tsc -p generated/tsconfig.json

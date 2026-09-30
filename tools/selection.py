@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Ce que la sélection des features rend -- et ce qu'elle ne rend pas.
+"""What the feature selection renders -- and what it does not.
 
-UN MODÈLE QUI DÉCLARE DES POOLS N'IMPOSE PAS DE POOLS AU CODE GÉNÉRÉ. Une application Python
-pure ne peut pas construire de pool : elle sélectionne `Base`, et doit recevoir un paquet sans
-un seul dossier de pool. Tant que le point d'entrée d'un pool vivait dans le template des
-unités, elle en recevait un par pool, qui importait un module absent. Ce script rend le modèle
-`namespaces` -- trois pools -- avec `Base` seul puis avec `Pool`, dans chaque binding.
+A model that declares pools does not impose pools on the generated code. A pure Python
+application cannot build a pool: it selects `Base`, and must receive a package without a
+single pool directory. While a pool's entry point lived in the unit template, it received one
+per pool, importing a missing module. This script renders the `namespaces` model -- three
+pools -- with `Base` alone and then with `Pool`, in each binding.
 """
 import json
 import re
@@ -49,8 +49,8 @@ def main() -> int:
         with_pool = rendered(language, ["Base", "Pool"], dsm, jar_path) & expected
         good = not alone and with_pool == expected
         ok &= good
-        print(f"  {'ok  ' if good else 'ÉCHEC'} {language}: Base seul -> {sorted(alone) or 'aucun pool'}, "
-              f"avec Pool -> {sorted(with_pool)}")
+        print(f"  {'ok  ' if good else 'FAIL'} {language}: Base alone -> {sorted(alone) or 'no pool'}, "
+              f"with Pool -> {sorted(with_pool)}")
     return 0 if ok else 1
 
 

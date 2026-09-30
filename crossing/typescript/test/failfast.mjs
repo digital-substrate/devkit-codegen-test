@@ -1,9 +1,8 @@
-/** Le fail-fast, éprouvé sur le rendu.
+/** Fail-fast, tested on the rendered package.
  *
- * UN PROXY NE DÉTIENT RIEN : c'est une boîte vide devant une `Value`. Toute écriture atteint
- * donc le runtime, qui lève son exception typée — le fail-fast est hérité, pas implémenté. Ce
- * qu'il faut vérifier n'est pas qu'on l'a écrit, mais que rien dans la couche générée ne
- * l'intercepte ni ne le contourne.
+ * A proxy holds nothing: it is an empty box around a `Value`, so every write reaches the
+ * runtime, which raises its typed exception — fail-fast is inherited, not implemented. What
+ * must be checked is that nothing in the generated layer intercepts or bypasses it.
  */
 import dsviper from "@digitalsubstrate/dsviper";
 
@@ -18,24 +17,24 @@ const mutating = new dsviper.CommitMutableState(new dsviper.CommitState(definiti
 const refuses = (label, fn) => {
     try {
         fn();
-        console.log(`  ÉCHEC ${label} — passe sans erreur`);
+        console.log(`  FAIL ${label} — passes without error`);
         ok = false;
     } catch {
         console.log(`  ok   ${label}`);
     }
 };
 
-refuses("un champ refuse une chaîne là où un nombre est attendu",
-        () => { new core.Colour().r = "rouge"; });
-refuses("un champ refuse la Colour d'une autre unité",
+refuses("a field rejects a string where a number is expected",
+        () => { new core.Colour().r = "red"; });
+refuses("a field rejects the Colour of another unit",
         () => { new core.Defaults().f_colour = new parts.Colour(); });
-refuses("un conteneur refuse un élément du mauvais type",
+refuses("a container rejects an element of the wrong type",
         () => { new core.Bag().tints = [new parts.Colour()]; });
-refuses("une clé refuse l'identifiant d'un autre concept",
+refuses("a key rejects the identifier of another concept",
         () => new core.ThingKey(core.OtherKey.create().vprValue));
-refuses("un attachment refuse une clé d'un autre concept",
+refuses("an attachment rejects a key of another concept",
         () => Thing.colour.set(mutating, core.OtherKey.create(), new core.Colour()));
-refuses("un attachment refuse un document du mauvais type",
+refuses("an attachment rejects a document of the wrong type",
         () => Thing.colour.set(mutating, core.ThingKey.create(), new parts.Colour()));
 
 process.exit(ok ? 0 : 1);

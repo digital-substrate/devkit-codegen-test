@@ -41,6 +41,8 @@ compiling it. That measurement is also how the one backwards edge was found — 
 
 | | shape |
 |---|---|
-| `cpp/*.stg` | flat, 20 templates, 8 features |
-| `python/package/*.stg` | flat, one feature — a package is a single artefact |
-| `typescript/*.stg` | flat, one feature |
+| `cpp/*.stg` | flat, 24 templates, 7 features and 3 for the laboratory only (`Test`, `TestApp`, `TestBridges`) |
+| `python/*.stg` | flat, 3 features: `Base`, `Pool`, `Wheel` |
+| `typescript/*.stg` | flat, 2 features: `Base`, `Pool` |
+
+A generated file carries a header and the documentation the model declares, and no other prose.

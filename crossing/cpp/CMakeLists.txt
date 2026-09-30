@@ -1,6 +1,6 @@
-# generated/ est à kibo. Ce site n'a pas de src/ : ce qu'il éprouve, ce sont les références
-# qui traversent un namespace à l'intérieur d'un composite -- un `map<Core::Grade,
-# Parts::Colour>`, un `variant<Core::Colour, Parts::Colour>`. Le compilateur est le juge.
+# generated/ belongs to kibo. This site has no src/: what it tests is references that
+# cross a namespace inside a composite -- a `map<Core::Grade, Parts::Colour>`, a
+# `variant<Core::Colour, Parts::Colour>`. The compiler is the judge.
 file(GLOB CROSSING_HEADERS generated/*.hpp)
 file(GLOB CROSSING_SOURCES generated/*.cpp)
 list(FILTER CROSSING_SOURCES EXCLUDE REGEX "_test_app\\.cpp$")

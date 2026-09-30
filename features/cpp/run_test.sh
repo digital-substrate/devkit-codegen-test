@@ -1,5 +1,5 @@
 #!/bin/bash
-# Construit la bibliothèque générée et lance le programme d'épreuve.
+# Builds the generated library and runs the test programs.
 set -e
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 BUILD="$ROOT/build"
