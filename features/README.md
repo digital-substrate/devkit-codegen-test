@@ -4,8 +4,8 @@
 except the pools: those are `service/`'s job. Concepts, clubs, enumerations, structures, the
 full container tree, attachments, the database.
 
-Generated from `../templates`, the sandbox pack — not from a sibling `kibo-template-viper`
-checkout. Set `KIBO_TEMPLATES` to point elsewhere deliberately.
+Generated from the template pack, the sibling `kibo-template-viper` checkout (or
+`KIBO_TEMPLATES`), plus the laboratory's own test templates in `../templates`.
 
 ```
 features/
@@ -48,13 +48,9 @@ naming (`Test_StructureS`). They now name what the templates produce (`features.
 
 ## Debts, visible on purpose
 
-- **`_codegen/` is copied into every generated package** (Python and TypeScript). None of it
-  names a model type or varies between models: it belongs in the runtime. Until it moves, each
-  package carries a copy that can drift from the `dsviper` installed beside it. The C++ side
-  has none left: what it carried is now viper's.
-- **The TypeScript project files are written by `generate.py`**, not rendered: there is no
-  `Project` feature in `templates/typescript` yet. Inventing a `package.json` is not the
-  project's job.
+- **`_codegen/` is copied into every generated package** (Python and TypeScript): the pack's
+  runtime, its exposition rather than `dsviper`'s, versioned with the templates. Each package
+  carries its own copy. The C++ side carries none: its static layer is viper's.
 - **The C++ test programme is generated.** In Python and TypeScript the tests are
   hand-written; here the developer receives a programme they did not write, which can only
   check what the generator already knows how to state.

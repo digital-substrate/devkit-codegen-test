@@ -11,7 +11,7 @@ from dsviper import DSMBuilder
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
 from models import MODELS
-from render import jar, TEMPLATES
+from render import jar, TEMPLATES, LAB_FEATURES
 
 HERE = Path(__file__).resolve().parent
 SPEC = MODELS["namespaces"]
@@ -39,13 +39,12 @@ JAR = jar()
 print(f"using kibo: {Path(JAR).name}")
 
 
-# Selection is by feature, not by directory. `templates/features.json` says which `.stg` each
+# Selection is by feature, not by directory. the pack's `features.json` says which `.stg` each
 # feature needs and what it pulls in; `resolve` computes the closure. `kibo -t` takes a single
 # `.stg` as well as a directory, so the templates stay flat.
 sys.path.insert(0, str(TEMPLATES))
 import resolve                                                          # noqa: E402
 
-RUNTIME = HERE.parent / "runtime-proposed"
 CPP_OUT = HERE / "cpp" / "generated"
 PY_PROJECT = HERE / "python" / "generated"          # what `pip install` receives
 PY_PACKAGE = PY_PROJECT / SPEC["package"]           # what `import` finds
@@ -73,7 +72,7 @@ def resources_hpp():
 
 if arguments.cpp:
     print("** Render C++")
-    kibo("cpp", resolve.templates("cpp", SPEC["cpp"]), CPP_OUT)
+    kibo("cpp", resolve.templates("cpp", SPEC["cpp"], extra=[LAB_FEATURES]), CPP_OUT)
     resources_hpp()
 
 if arguments.python:
@@ -88,7 +87,7 @@ if arguments.python:
     (PY_PACKAGE / "resources.py").write_text(
         f"B64_DEFINITIONS = {base64.b64encode(zlib.compress(definitions.encode()))}")
     shutil.rmtree(PY_PACKAGE / "_codegen", ignore_errors=True)
-    shutil.copytree(RUNTIME / "python", PY_PACKAGE / "_codegen",
+    shutil.copytree(TEMPLATES / "python" / "runtime", PY_PACKAGE / "_codegen",
                     ignore=shutil.ignore_patterns("__pycache__", "*.md"))
 
 if arguments.typescript:
@@ -97,7 +96,7 @@ if arguments.typescript:
     (TS_SOURCE / "resources.ts").write_text(
         f'export const B64_DEFINITIONS = "{base64.b64encode(definitions.encode().encoded()).decode("ascii")}";\n')
     shutil.rmtree(TS_SOURCE / "_codegen", ignore_errors=True)
-    shutil.copytree(RUNTIME / "node", TS_SOURCE / "_codegen", ignore=shutil.ignore_patterns("*.md"))
+    shutil.copytree(TEMPLATES / "typescript" / "runtime", TS_SOURCE / "_codegen", ignore=shutil.ignore_patterns("*.md"))
     # The package files -- package.json and tsconfig.json -- at the package root.
     kibo("typescript", [stg for stg in resolve.templates("typescript", ["Package"])
             if stg not in resolve.templates("typescript", ["Base"])], TS_SOURCE.parent)

@@ -20,9 +20,10 @@ from models import MODELS
 
 ROOT = Path(__file__).resolve().parent.parent
 KIBO = ROOT.parent / "kibo"
-# The sandbox pack, in this repository. `kibo-template-viper` remains the destination, but
-# until the line is settled it lives here, next to the sites that test it.
-TEMPLATES = Path(os.environ.get("KIBO_TEMPLATES") or ROOT / "templates")
+# The template pack: the sibling kibo-template-viper checkout, or KIBO_TEMPLATES.
+TEMPLATES = Path(os.environ.get("KIBO_TEMPLATES") or ROOT.parent / "kibo-template-viper")
+# The laboratory's own features -- the tests of the generator -- added to the pack's selection.
+LAB_FEATURES = ROOT / "templates" / "features.json"
 BANNER = re.compile(r"by kibo-[0-9.]+\.jar")
 
 

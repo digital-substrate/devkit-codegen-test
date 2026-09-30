@@ -11,7 +11,7 @@ from dsviper import DSMBuilder
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
 from models import MODELS
-from render import jar, TEMPLATES
+from render import jar, TEMPLATES, LAB_FEATURES
 
 HERE = Path(__file__).resolve().parent
 SPEC = MODELS["compat-1.2"]
@@ -53,7 +53,7 @@ if arguments.cpp:
     JAR = jar()
     print(f"using kibo: {Path(JAR).name}")
     CPP_OUT.mkdir(parents=True, exist_ok=True)
-    for stg in resolve.templates("cpp", SPEC["cpp"]):
+    for stg in resolve.templates("cpp", SPEC["cpp"], extra=[LAB_FEATURES]):
         subprocess.run(["java", "-jar", JAR, "-c", "cpp", "-n", SPEC["namespace"],
                         "-d", str(DSM_PATH), "-t", str(stg), "-o", str(CPP_OUT)], check=True)
     resources_hpp()

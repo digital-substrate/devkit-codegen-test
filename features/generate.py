@@ -20,7 +20,9 @@ arguments = parser.parse_args()
 
 SIBLING_ROOT = Path(__file__).resolve().parent.parent.parent
 SIBLING_KIBO = SIBLING_ROOT / "kibo"
-SIBLING_TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
+SIBLING_TEMPLATES = SIBLING_ROOT / "kibo-template-viper"
+# The laboratory's own features -- the tests of the generator -- added to the pack's selection.
+LAB_FEATURES = Path(__file__).resolve().parent.parent / "templates" / "features.json"
 
 # The kibo-template-viper line this repository generates against. A sibling
 # checkout's branch decides which templates you get, and a pack from another line
@@ -82,13 +84,12 @@ TEMPLATES = os.environ.get("KIBO_TEMPLATES") or str(SIBLING_TEMPLATES)
 _check_templates(TEMPLATES)
 KIBO = ['java', '-jar', JAR]
 
-# Templates are selected by feature. `templates/features.json` says which `.stg` files each
+# Templates are selected by feature. the pack's `features.json` says which `.stg` files each
 # feature needs and which features it implies; `resolve` computes the closure. This site takes
 # them all, to exercise the whole surface; a real project names two or three.
 sys.path.insert(0, TEMPLATES)
 import resolve                                                          # noqa: E402
 
-RUNTIME = Path(__file__).resolve().parent.parent / "runtime-proposed"
 CPP_OUT = 'cpp/generated'
 PY_PROJECT = Path('python/generated')          # what `pip install` receives
 PY_PACKAGE = PY_PROJECT / 'features'           # what `import` finds
@@ -257,7 +258,7 @@ if arguments.cpp:
     shutil.rmtree(CPP_OUT, ignore_errors=True)
     Path(CPP_OUT).mkdir(parents=True)
     render('cpp', NAMESPACE, DSM_PATH,
-           resolve.templates('cpp', ['TestApp', 'AttachmentPool', 'TestBridges']), CPP_OUT)
+           resolve.templates('cpp', ['TestApp', 'AttachmentPool', 'TestBridges'], extra=[LAB_FEATURES]), CPP_OUT)
     generate_resource(definitions=DEFINITIONS, output=f'{CPP_OUT}/{NAMESPACE}_resources.hpp')
 
 if arguments.python:
@@ -277,7 +278,7 @@ if arguments.python:
     (PY_PACKAGE / 'resources.py').write_text(
         f"B64_DEFINITIONS = {base64.b64encode(zlib.compress(blob))}")
     shutil.rmtree(PY_PACKAGE / '_codegen', ignore_errors=True)
-    shutil.copytree(RUNTIME / 'python', PY_PACKAGE / '_codegen',
+    shutil.copytree(Path(TEMPLATES) / 'python' / 'runtime', PY_PACKAGE / '_codegen',
                     ignore=shutil.ignore_patterns('__pycache__', '*.md'))
 
 if arguments.typescript:
@@ -289,7 +290,7 @@ if arguments.typescript:
     (source / 'resources.ts').write_text(
         f'export const B64_DEFINITIONS = "{base64.b64encode(blob).decode("ascii")}";\n')
     shutil.rmtree(source / '_codegen', ignore_errors=True)
-    shutil.copytree(RUNTIME / 'node', source / '_codegen',
+    shutil.copytree(Path(TEMPLATES) / 'typescript' / 'runtime', source / '_codegen',
                     ignore=shutil.ignore_patterns('*.md'))
     # The package files -- package.json and tsconfig.json -- at the package root.
     render('typescript', NAMESPACE, DSM_PATH,

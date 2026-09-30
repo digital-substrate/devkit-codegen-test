@@ -4,7 +4,8 @@
 (functions over an attachment) — and the smallest model they need. `features/` covers the
 type system and declares no pool; this is where the pools are.
 
-Generated from `../templates`, the sandbox pack.
+Generated from the template pack, the sibling `kibo-template-viper` checkout (or
+`KIBO_TEMPLATES`), plus the laboratory's own test templates in `../templates`.
 
 ```
 service/
@@ -47,12 +48,8 @@ not renames but defects, and neither was visible from inside the generator:
   literal TypeScript widens `"beginner"`, so `Level.BEGINNER` — the constant the module
   offers — could not be passed to a parameter of type `Level`. `as const` freezes it.
 
-## A debt this site makes concrete
+## The client links without the server's functions
 
-**The C++ client is forced to link the pool bridges.** `Pool` and `PoolRemote` are merged in
-`templates/cpp`, so both edges of a pool — the one called in-process and the one called down
-a wire — land in a single `Tools_Pool.cpp`. A client wants only the remote edge but receives
-the whole object, so the linker demands `Tools::add`, a function only a server implements.
-
-That is the split noted in `templates/cpp/README.md`, failing at link time rather than as a
-matter of tidiness.
+`Pool` is the server side of a pool, `PoolRemote` its client side, in files of their own. The
+C++ client of this site selects `PoolRemote` only, and links without `Tools::add` — a function
+only a server implements.
