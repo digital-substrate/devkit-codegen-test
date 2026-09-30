@@ -12,10 +12,10 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#include "<m.include.Python_Definitions>"
-<m.nameSpaces:{u|#include "<u.include.Model>"
-#include "<u.include.Attachments>"
-#include "<u.include.Fields>"};separator="\n">
+#include "<m.include.python_definitions>"
+<m.nameSpaces:{u|#include "<u.include.model>"
+#include "<u.include.attachments>"
+#include "<u.include.fields>"};separator="\n">
 
 #include "P_ViperWrapper.hpp"
 #include "P_Viper_Attachment.hpp"

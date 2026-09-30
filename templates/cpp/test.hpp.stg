@@ -30,8 +30,8 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 
-#ifndef <u.guard.Test>
-#define <u.guard.Test>
+#ifndef <u.guard.test>
+#define <u.guard.test>
 
 #include "Viper_Database.hpp"
 
@@ -117,10 +117,10 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#ifndef <m.guard.Test>
-#define <m.guard.Test>
+#ifndef <m.guard.test>
+#define <m.guard.test>
 
-#include "<m.include.Codec>"
+#include "<m.include.codec>"
 
 #include "Viper_Attachment.hpp"
 #include "Viper_AttachmentFunctionPool.hpp"

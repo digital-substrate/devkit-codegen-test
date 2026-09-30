@@ -36,6 +36,6 @@ It was merged while exploring, and merging it was a mistake: a real project
 (`com.digitalsubstrate.red`) selects 10 of 17 features and refuses exactly this.
 
 `Pool` and its remote side were merged the same way, and are split again: `Pool` is the server
-side, `PoolRemote` the client side (`Remote.hpp`/`Remote.cpp`). Most projects do not expose their
+side, `PoolRemote` the client side (`remote.hpp.stg`/`remote.cpp.stg`). Most projects do not expose their
 pools as a service, and a client must not link the functions only a server implements -- the
 `service` site's client now links without them.

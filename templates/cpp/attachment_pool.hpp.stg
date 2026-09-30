@@ -32,8 +32,8 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#ifndef <m.guard.AttachmentPool>
-#define <m.guard.AttachmentPool>
+#ifndef <m.guard.attachment_pool>
+#define <m.guard.attachment_pool>
 
 #include "Viper_AttachmentFunctionPool.hpp"
 

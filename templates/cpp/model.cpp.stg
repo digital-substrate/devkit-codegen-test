@@ -13,9 +13,9 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 
-#include "<u.include.Model>"
+#include "<u.include.model>"
 
-#include "<u.model.include.Codec>"
+#include "<u.model.include.codec>"
 
 #include "Viper_Definitions.hpp"
 

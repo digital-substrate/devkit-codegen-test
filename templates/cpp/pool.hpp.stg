@@ -42,10 +42,10 @@ preamble(p, kind, context) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <p.model.generated>
 
-#ifndef <p.guard.Pool>
-#define <p.guard.Pool>
+#ifndef <p.guard.pool>
+#define <p.guard.pool>
 
-<p.dependencies.functions:{d|#include "<d.include.Data>"};separator="\n">
+<p.dependencies.functions:{d|#include "<d.include.data>"};separator="\n">
 
 #include "Viper_<kind>.hpp"
 #include "Viper_Any.hpp"

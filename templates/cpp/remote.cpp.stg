@@ -44,11 +44,11 @@ preamble(p) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <p.model.generated>
 
-#include "<p.include.Remote>"
+#include "<p.include.remote>"
 
-<p.dependencies.functions:{d|#include "<d.include.Codec>"};separator="\n">
+<p.dependencies.functions:{d|#include "<d.include.codec>"};separator="\n">
 
-#include "<p.model.include.Codec>"
+#include "<p.model.include.codec>"
 
 #include "Viper_ServiceRemote.hpp"
 #include "Viper_ValueVoid.hpp"

@@ -41,9 +41,9 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#include "<m.include.AttachmentPool>"
+#include "<m.include.attachment_pool>"
 
-#include "<m.include.Codec>"
+#include "<m.include.codec>"
 
 #include "Viper_Attachment.hpp"
 #include "Viper_AttachmentGetting.hpp"

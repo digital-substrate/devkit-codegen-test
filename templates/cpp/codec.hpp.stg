@@ -12,11 +12,11 @@ unit(u) ::= <<
 // them for primitives and containers. Use them through `<u.model.namespace>::codec::encode`
 // and `decode` rather than directly.
 
-#ifndef <u.guard.Codec>
-#define <u.guard.Codec>
+#ifndef <u.guard.codec>
+#define <u.guard.codec>
 
-#include "<u.include.Data>"
-<u.dependencies.types:{d|#include "<d.include.Codec>"};separator="\n">
+#include "<u.include.data>"
+<u.dependencies.types:{d|#include "<d.include.codec>"};separator="\n">
 
 #include "Viper_StaticWriter.hpp"
 #include "Viper_StaticReader.hpp"
@@ -126,12 +126,12 @@ model(m) ::= <<
 //
 // JSON, XML and hashing are the runtime's, applied to what `encode` returns.
 
-#ifndef <m.guard.Codec>
-#define <m.guard.Codec>
+#ifndef <m.guard.codec>
+#define <m.guard.codec>
 
-#include "<m.include.AnyConcept>"
-<m.nameSpaces:{u|#include "<u.include.Codec>"
-#include "<u.include.Model>"};separator="\n">
+#include "<m.include.any_concept>"
+<m.nameSpaces:{u|#include "<u.include.codec>"
+#include "<u.include.model>"};separator="\n">
 #include "Viper_StaticWriter.hpp"
 #include "Viper_StaticReader.hpp"
 #include "Viper_Definitions.hpp"

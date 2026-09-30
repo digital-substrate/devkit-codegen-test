@@ -18,11 +18,11 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#include "<m.include.Test>"
+#include "<m.include.test>"
 
-<m.nameSpaces:{u|#include "<u.include.Test>"};separator="\n">
-<m.functionPools:{p|#include "<p.include.Pool>"};separator="\n">
-<m.attachmentFunctionPools:{p|#include "<p.include.Pool>"};separator="\n">
+<m.nameSpaces:{u|#include "<u.include.test>"};separator="\n">
+<m.functionPools:{p|#include "<p.include.pool>"};separator="\n">
+<m.attachmentFunctionPools:{p|#include "<p.include.pool>"};separator="\n">
 
 #include "Viper_Database.hpp"
 #include "Viper_DatabaseTransactionMode.hpp"

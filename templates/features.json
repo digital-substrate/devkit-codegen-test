@@ -10,30 +10,30 @@
     "Base": {
       "doc": "The type system and everything that cannot be pulled apart from it. Data, Codec, Model and AnyConcept include one another in both directions; there is no cut.",
       "templates": [
-        "Data.cpp.stg",
-        "Data.hpp.stg",
-        "Codec.cpp.stg",
-        "Codec.hpp.stg",
-        "Model.cpp.stg",
-        "Model.hpp.stg",
-        "AnyConcept.cpp.stg",
-        "AnyConcept.hpp.stg"
+        "data.cpp.stg",
+        "data.hpp.stg",
+        "codec.cpp.stg",
+        "codec.hpp.stg",
+        "model.cpp.stg",
+        "model.hpp.stg",
+        "any_concept.cpp.stg",
+        "any_concept.hpp.stg"
       ],
       "requires": []
     },
     "Fields": {
       "doc": "The name and the path of every field, as constants: code that handles structures through the dynamic API gets completion instead of a string it can misspell. Selectable alone; Attachments builds its typed field setters on it.",
       "templates": [
-        "Fields.cpp.stg",
-        "Fields.hpp.stg"
+        "fields.cpp.stg",
+        "fields.hpp.stg"
       ],
       "requires": []
     },
     "Attachments": {
       "doc": "The attachments a unit declares, read and written in memory or in a database.",
       "templates": [
-        "Attachments.cpp.stg",
-        "Attachments.hpp.stg"
+        "attachments.cpp.stg",
+        "attachments.hpp.stg"
       ],
       "requires": [
         "Base",
@@ -43,8 +43,8 @@
     "AttachmentPool": {
       "doc": "The model's attachments exposed to the dynamic world.",
       "templates": [
-        "AttachmentPool.cpp.stg",
-        "AttachmentPool.hpp.stg"
+        "attachment_pool.cpp.stg",
+        "attachment_pool.hpp.stg"
       ],
       "requires": [
         "Base",
@@ -54,8 +54,8 @@
     "Pool": {
       "doc": "A function pool, server side: the functions the application implements, and the pool that registers them.",
       "templates": [
-        "Pool.cpp.stg",
-        "Pool.hpp.stg"
+        "pool.cpp.stg",
+        "pool.hpp.stg"
       ],
       "requires": [
         "Base"
@@ -64,8 +64,8 @@
     "PoolRemote": {
       "doc": "A function pool, client side: `Remote`, which calls the pool through a service. Selectable without Pool, so a client does not link the functions only a server implements.",
       "templates": [
-        "Remote.cpp.stg",
-        "Remote.hpp.stg"
+        "remote.cpp.stg",
+        "remote.hpp.stg"
       ],
       "requires": [
         "Base"
@@ -74,8 +74,8 @@
     "Test": {
       "doc": "What it takes to put a unit to the test.",
       "templates": [
-        "Test.cpp.stg",
-        "Test.hpp.stg"
+        "test.cpp.stg",
+        "test.hpp.stg"
       ],
       "requires": [
         "Base",
@@ -87,7 +87,7 @@
     "TestApp": {
       "doc": "The programme that runs the test over the whole model.",
       "templates": [
-        "TestApp.cpp.stg"
+        "test_app.cpp.stg"
       ],
       "requires": [
         "Test",
@@ -99,8 +99,8 @@
     "PythonDefinitions": {
       "doc": "The model's types, attachments and field paths as constants of a Python module embedded in a C++ application, for scripts using the dynamic API. What Fields is to C++ code, for that Python.",
       "templates": [
-        "Python_Definitions.cpp.stg",
-        "Python_Definitions.hpp.stg"
+        "python_definitions.cpp.stg",
+        "python_definitions.hpp.stg"
       ],
       "requires": [
         "Base",

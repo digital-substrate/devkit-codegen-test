@@ -19,11 +19,11 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 
-#include "<u.include.Codec>"
+#include "<u.include.codec>"
 
-#include "<u.include.Model>"
+#include "<u.include.model>"
 
-#include "<u.model.include.Codec>"
+#include "<u.model.include.codec>"
 
 #include "Viper_Definitions.hpp"
 #include "Viper_StreamCodecInstancing.hpp"
@@ -163,9 +163,9 @@ model(m) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <m.generated>
 
-#include "<m.include.Codec>"
+#include "<m.include.codec>"
 
-#include "<m.include.Resources>"      // the definitions, as bytes
+#include "<m.include.resources>"      // the definitions, as bytes
 
 #include "Viper_Definitions.hpp"
 #include "Viper_StreamRawCodec.hpp"

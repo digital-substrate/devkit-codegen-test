@@ -21,10 +21,10 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 
-#ifndef <u.guard.Model>
-#define <u.guard.Model>
+#ifndef <u.guard.model>
+#define <u.guard.model>
 
-#include "<u.include.Data>"
+#include "<u.include.data>"
 
 #include "Viper_StaticType.hpp"
 #include "Viper_Types.hpp"

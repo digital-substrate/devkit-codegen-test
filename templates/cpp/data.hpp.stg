@@ -8,12 +8,12 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 
-#ifndef <u.guard.Data>
-#define <u.guard.Data>
+#ifndef <u.guard.data>
+#define <u.guard.data>
 
-<u.dependencies.types:{d|#include "<d.include.Data>"};separator="\n">
+<u.dependencies.types:{d|#include "<d.include.data>"};separator="\n">
 
-#include "<u.model.include.AnyConcept>"
+#include "<u.model.include.any_concept>"
 
 #include "Viper_StaticHash.hpp"
 #include "Viper_Blob.hpp"

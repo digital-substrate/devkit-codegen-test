@@ -39,10 +39,10 @@ preamble(p, context) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <p.model.generated>
 
-#ifndef <p.guard.Remote>
-#define <p.guard.Remote>
+#ifndef <p.guard.remote>
+#define <p.guard.remote>
 
-<p.dependencies.functions:{d|#include "<d.include.Data>"};separator="\n">
+<p.dependencies.functions:{d|#include "<d.include.data>"};separator="\n">
 
 #include "Viper_ServiceRemote.hpp"
 #include "Viper_Any.hpp"

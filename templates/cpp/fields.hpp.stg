@@ -12,8 +12,8 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 
-#ifndef <u.guard.Fields>
-#define <u.guard.Fields>
+#ifndef <u.guard.fields>
+#define <u.guard.fields>
 
 #include "Viper_Path.hpp"
 

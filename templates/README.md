@@ -26,7 +26,7 @@ closure:
 ```
 $ ./resolve.py cpp Attachments
 features : Base Fields Attachments
-  Data.cpp.stg  Codec.cpp.stg  Model.cpp.stg  AnyConcept.cpp.stg  ...  Attachments.hpp.stg
+  data.cpp.stg  codec.cpp.stg  model.cpp.stg  any_concept.cpp.stg  ...  attachments.hpp.stg
 ```
 
 `kibo -t` accepts a single `.stg` as readily as a directory, so nothing in the generator had

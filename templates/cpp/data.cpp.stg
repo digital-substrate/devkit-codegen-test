@@ -15,10 +15,10 @@ unit(u) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <u.model.generated>
 
-#include "<u.include.Data>"
+#include "<u.include.data>"
 
-#include "<u.include.Model>"
-#include "<u.model.include.Codec>"
+#include "<u.include.model>"
+#include "<u.model.include.codec>"
 
 namespace <u.model.namespace>::<u.name;format="lsc"> {
 

@@ -16,11 +16,11 @@ unit(u) ::= <<
 // as they read anything else; writing to one goes through the `set` and `del` overloads
 // that take it, inside an open transaction.
 
-#ifndef <u.guard.Attachments>
-#define <u.guard.Attachments>
+#ifndef <u.guard.attachments>
+#define <u.guard.attachments>
 
-#include "<u.include.Data>"
-<u.dependencies.attachments:{d|#include "<d.include.Data>"};separator="\n">
+#include "<u.include.data>"
+<u.dependencies.attachments:{d|#include "<d.include.data>"};separator="\n">
 
 #include "Viper_Attachment.hpp"
 #include "Viper_AttachmentGetting.hpp"
