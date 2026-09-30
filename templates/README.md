@@ -43,6 +43,6 @@ compiling it. That measurement is also how the one backwards edge was found — 
 |---|---|
 | `cpp/*.stg` | flat, 24 templates, 7 features and 3 for the laboratory only (`Test`, `TestApp`, `TestBridges`) |
 | `python/*.stg` | flat, 3 features: `Base`, `Pool`, `Wheel` |
-| `typescript/*.stg` | flat, 2 features: `Base`, `Pool` |
+| `typescript/*.stg` | flat, 3 features: `Base`, `Pool`, `Package` |
 
 A generated file carries a header and the documentation the model declares, and no other prose.

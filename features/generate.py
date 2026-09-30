@@ -2,7 +2,6 @@
 import subprocess
 import shutil
 import sys
-import json
 import argparse
 import os
 import re
@@ -90,20 +89,6 @@ sys.path.insert(0, TEMPLATES)
 import resolve                                                          # noqa: E402
 
 RUNTIME = Path(__file__).resolve().parent.parent / "runtime-proposed"
-# The Node typings live in this site's node_modules: the generated package is compiled
-# where its dependencies are installed.
-NODE_TYPES = Path(__file__).resolve().parent / "typescript" / "node_modules" / "@types"
-
-TSCONFIG = {
-    "compilerOptions": {
-        "target": "ES2022", "module": "NodeNext", "moduleResolution": "NodeNext",
-        "declaration": True, "strict": True, "esModuleInterop": True, "skipLibCheck": True,
-        "outDir": "dist", "rootDir": "src",
-        "typeRoots": [str(NODE_TYPES)], "types": ["node"],
-    },
-    "include": ["src/**/*.ts"],
-}
-
 CPP_OUT = 'cpp/generated'
 PY_PROJECT = Path('python/generated')          # what `pip install` receives
 PY_PACKAGE = PY_PROJECT / 'features'           # what `import` finds
@@ -306,9 +291,7 @@ if arguments.typescript:
     shutil.rmtree(source / '_codegen', ignore_errors=True)
     shutil.copytree(RUNTIME / 'node', source / '_codegen',
                     ignore=shutil.ignore_patterns('*.md'))
-    # The project setup. There is no template for it yet: `templates/typescript` has no
-    # `Project` feature. Written here in the meantime; this is a known debt, not a design
-    # choice.
-    (TS_PACKAGE / 'package.json').write_text(json.dumps(
-        {"name": NAMESPACE.lower(), "private": True, "type": "module"}, indent=4) + "\n")
-    (TS_PACKAGE / 'tsconfig.json').write_text(json.dumps(TSCONFIG, indent=4) + "\n")
+    # The package files -- package.json and tsconfig.json -- at the package root.
+    render('typescript', NAMESPACE, DSM_PATH,
+           [stg for stg in resolve.templates('typescript', ['Package'])
+            if stg not in resolve.templates('typescript', ['Base'])], TS_PACKAGE)

@@ -4,7 +4,7 @@
 For comparing a change -- rendering before and after without touching the working
 tree -- use `tools/render.py` instead.
 """
-import argparse, base64, json, shutil, subprocess, sys, zlib
+import argparse, base64, shutil, subprocess, sys, zlib
 from pathlib import Path
 
 from dsviper import DSMBuilder
@@ -46,19 +46,6 @@ sys.path.insert(0, str(TEMPLATES))
 import resolve                                                          # noqa: E402
 
 RUNTIME = HERE.parent / "runtime-proposed"
-# Node typings live in the site's node_modules: the generated package is compiled where
-# its dependencies are installed.
-NODE_TYPES = HERE / "typescript" / "node_modules" / "@types"
-
-TSCONFIG = {
-    "compilerOptions": {
-        "target": "ES2022", "module": "NodeNext", "moduleResolution": "NodeNext",
-        "declaration": True, "strict": True, "esModuleInterop": True, "skipLibCheck": True,
-        "outDir": "dist", "rootDir": "src",
-        "typeRoots": [str(NODE_TYPES)], "types": ["node"],
-    },
-    "include": ["src/**/*.ts"],
-}
 CPP_OUT = HERE / "cpp" / "generated"
 PY_PROJECT = HERE / "python" / "generated"          # what `pip install` receives
 PY_PACKAGE = PY_PROJECT / SPEC["package"]           # what `import` finds
@@ -111,8 +98,6 @@ if arguments.typescript:
         f'export const B64_DEFINITIONS = "{base64.b64encode(definitions.encode().encoded()).decode("ascii")}";\n')
     shutil.rmtree(TS_SOURCE / "_codegen", ignore_errors=True)
     shutil.copytree(RUNTIME / "node", TS_SOURCE / "_codegen", ignore=shutil.ignore_patterns("*.md"))
-    # Project scaffolding. There is no template for it: unlike the pack, `templates/typescript`
-    # has no `Project` feature. Written here in the meantime; this is a known debt.
-    (TS_SOURCE.parent / "package.json").write_text(json.dumps(
-        {"name": SPEC["package"], "private": True, "type": "module"}, indent=4) + "\n")
-    (TS_SOURCE.parent / "tsconfig.json").write_text(json.dumps(TSCONFIG, indent=4) + "\n")
+    # The package files -- package.json and tsconfig.json -- at the package root.
+    kibo("typescript", [stg for stg in resolve.templates("typescript", ["Package"])
+            if stg not in resolve.templates("typescript", ["Base"])], TS_SOURCE.parent)

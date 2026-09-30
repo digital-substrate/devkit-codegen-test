@@ -173,6 +173,16 @@
       "requires": [
         "Base"
       ]
+    },
+    "Package": {
+      "doc": "What makes the package buildable and installable: package.json and tsconfig.json, at the package root, the sources staying in src/.",
+      "templates": [
+        "package.json.stg",
+        "tsconfig.json.stg"
+      ],
+      "requires": [
+        "Base"
+      ]
     }
   }
 }
