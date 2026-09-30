@@ -84,7 +84,9 @@ ok &= check("a new attachment does not know the key", not colour.has(mutating, k
 colour.set(mutating, key, modela.Colour(r=1, g=2, b=3))
 ok &= check("after a write, the key is known", colour.has(mutating, key))
 ok &= check("and the document comes back unchanged", colour.get(mutating, key) == modela.Colour(r=1, g=2, b=3))
-ok &= check("the attachment's keys are typed", colour.keys(mutating) == {key})
+keys = colour.keys(mutating)
+ok &= check("the attachment's keys are its key set, typed",
+            type(keys).__name__ == "Set_of_ModelA_MaterialKey" and list(keys) == [key])
 
 # A single field, through a method generated for it: the name completes, and a typo
 # shows at import, not at call time.
