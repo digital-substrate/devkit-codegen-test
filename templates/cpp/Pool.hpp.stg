@@ -9,8 +9,7 @@ namespace <p.model.namespace>::<p.name;format="lsc"> {
 
 <p.functions:bridge();separator="\n">
 
-std::shared_ptr\<Viper::FunctionPool> pool();
-
+<pool_doc(p)>std::shared_ptr\<Viper::FunctionPool> pool();
 
 } // namespace <p.model.namespace>::<p.name;format="lsc">
 
@@ -24,8 +23,7 @@ namespace <p.model.namespace>::<p.name;format="lsc"> {
 
 <p.functions:attachment_bridge();separator="\n">
 
-std::shared_ptr\<Viper::AttachmentFunctionPool> pool();
-
+<pool_doc(p)>std::shared_ptr\<Viper::AttachmentFunctionPool> pool();
 
 } // namespace <p.model.namespace>::<p.name;format="lsc">
 
@@ -66,13 +64,29 @@ preamble(p, kind, context) ::= <<
 #include \<memory>
 >>
 
-bridge(f) ::= <%<ret(f)> <f.name>(<f.parameters:param();separator=", ">);%>
+// LA DOCUMENTATION DU MODÈLE EST CELLE DE LA FONCTION À ÉCRIRE : c'est ici que le développeur
+// la lit, et c'est la même que le pool enregistre pour qui l'appelle du monde dynamique.
+bridge(f) ::= <<
+<doc(f)><ret(f)> <f.name>(<f.parameters:param();separator=", ">);
+>>
+
+doc(f) ::= <<
+<if(f.hasDocumentation)>/** <f.documentation;format="comment"> */
+<endif>
+>>
 
 // UNE FONCTION DE POOL D'ATTACHMENTS PREND L'INTERFACE SUR LAQUELLE AGIR. Elle opère sur
 // des documents et non sur des valeurs seules, donc le contexte est un paramètre -- et il
 // est le premier, comme le Writer l'est pour `write`, pour la même raison : c'est lui qui
 // dit à quoi l'appel s'applique.
-attachment_bridge(f) ::= <%<ret(f)> <f.name>(std::shared_ptr\<Viper::Attachment<f.interfaceType>> const & attachment<f.interfaceType><if(f.parameters)>, <f.parameters:param();separator=", "><endif>);%>
+attachment_bridge(f) ::= <<
+<doc(f)><ret(f)> <f.name>(std::shared_ptr\<Viper::Attachment<f.interfaceType>\> const & attachment<f.interfaceType><if(f.parameters)>, <f.parameters:param();separator=", "><endif>);
+>>
 
 ret(f) ::= <%<if(f.isVoid)>void<else><f.type><endif>%>
 param(p) ::= <%<p.type><p.passBy> <p.name>%>
+
+pool_doc(p) ::= <<
+<if(p.hasDocumentation)>/** <p.documentation;format="comment"> */
+<endif>
+>>

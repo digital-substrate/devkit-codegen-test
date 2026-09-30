@@ -34,7 +34,7 @@ Viper::UUId const poolId{Viper::UUId::parse("<p.uuid>")};
 
 std::shared_ptr\<Viper::FunctionPool> pool() {
     static auto const instance = [] {
-        auto const created = Viper::FunctionPool::make(poolId, "<p.name>");
+        auto const created = Viper::FunctionPool::make(poolId, "<p.name>", "<p.documentation;format="string">");
 <p.functions:function_add();separator="\n">
         return created;
     }();
@@ -65,7 +65,7 @@ Viper::UUId const poolId{Viper::UUId::parse("<p.uuid>")};
 
 std::shared_ptr\<Viper::AttachmentFunctionPool> pool() {
     static auto const instance = [] {
-        auto const created = Viper::AttachmentFunctionPool::make(poolId, "<p.name>");
+        auto const created = Viper::AttachmentFunctionPool::make(poolId, "<p.name>", "<p.documentation;format="string">");
 <p.functions:function_add();separator="\n">
         return created;
     }();
@@ -108,7 +108,7 @@ public:
     <make(f)>
 
     explicit <f.name;format="uf">(std::shared_ptr\<Viper::FunctionPrototype> prototype)
-    : Viper::Function{std::move(prototype)} {}
+    : Viper::Function{std::move(prototype), "<f.documentation;format="string">"} {}
 
 protected:
     <checked_call(f)>
@@ -133,7 +133,7 @@ public:
     <make(f)>
 
     explicit <f.name;format="uf">(std::shared_ptr\<Viper::FunctionPrototype> prototype)
-    : Viper::Attachment<f.interfaceType>Function{std::move(prototype), ""} {}
+    : Viper::Attachment<f.interfaceType>Function{std::move(prototype), "<f.documentation;format="string">"} {}
 
 protected:
     <attachment_checked_call(f)>

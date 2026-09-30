@@ -397,6 +397,8 @@ class <s.name>(Proxy):
 field(f, s) ::= <<
     @property
     def <f.name;format="snake">(self) -> <hint(f)>:
+<if(f.hasDocumentation)>        """<f.documentation;format="docstring">"""
+<endif>
         <read(f)>
 
     @<f.name;format="snake">.setter

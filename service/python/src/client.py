@@ -21,6 +21,16 @@ service_remote = dsviper.ServiceRemote.connect(address, port, defs)
 
 tools = ToolsRemote(service_remote)
 if tools.is_available():
+    # LA DOCUMENTATION DU MODÈLE TRAVERSE TOUT. Le serveur C++ l'enregistre avec la fonction,
+    # le client la lit à distance, et la méthode générée la porte en docstring -- sur plusieurs
+    # lignes et avec des guillemets, ce qu'un littéral C++ non échappé ne compilerait pas.
+    documented = 'Return a random string of "size" letters.\nThe letters are lower case.'
+    remote_tools = next(p for p in service_remote.function_pools() if p.name() == "Tools")
+    assert remote_tools.documentation() == "This pool provides access to the various utility functions."
+    assert remote_tools.query("randomString").documentation() == documented
+    assert ToolsRemote.random_string.__doc__ == documented
+    print("documentation: registered by the server, read by the client, carried by the method")
+
     print(f"add(32,10) -> {tools.add(32, 10)}")
 
     v1 = Vector3({"x": 1, "y": 2, "z": 3})

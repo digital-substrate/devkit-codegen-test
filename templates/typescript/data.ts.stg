@@ -353,6 +353,8 @@ export class <s.name> extends Proxy\<dsviper.ValueStructure> {
 // pas à distinguer ici une structure d'un `vector<Colour>`, et aucune classe de conteneur n'a
 // à être générée.
 field(f, s) ::= <<
+<if(f.hasDocumentation)>    /** <f.documentation;format="comment"> */
+<endif>
     get <f.name;format="lf">(): <f.bindingType.annotation> {
         <read(f)>
     }

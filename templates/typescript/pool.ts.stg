@@ -61,7 +61,7 @@ preamble(p) ::= <<
 // Commercial use requires a Commercial Licence from Digital Substrate.
 // <p.model.generated>
 
-/** <p.name> — le pool, vu d'un client. */
+/** <p.name> — <if(p.hasDocumentation)><p.documentation;format="comment"><else>le pool, vu d'un client.<endif> */
 import dsviper from "@digitalsubstrate/dsviper";
 
 import { Mapping, Ordered, Sequence } from "../_codegen/container.js";
@@ -72,14 +72,15 @@ export const NAME = "<p.name>";
 export const UUID = dsviper.ValueUUId.create("<p.uuid>");
 >>
 
+// LA DOCUMENTATION DU MODÈLE EST LE JSDOC : l'éditeur la montre à la complétion.
 remote_call(f) ::= <<
-    <f.name;format="lf">(<f.parameters:parameter();separator=", ">): <ret(f)> {
+<doc(f)>    <f.name;format="lf">(<f.parameters:parameter();separator=", ">): <ret(f)> {
         <call(f)>
     }
 >>
 
 attachment_remote_call(f) ::= <<
-    <f.name;format="lf">(state: dsviper.AttachmentMutating<if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>): <ret(f)> {
+<doc(f)>    <f.name;format="lf">(state: dsviper.AttachmentMutating<if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>): <ret(f)> {
         <attachment_call(f)>
     }
 >>
@@ -90,3 +91,8 @@ argument(a) ::= <%unwrap(<a.name;format="lf">)%>
 
 call(f) ::= <%<if(f.isVoid)>this.service.functionPoolFunc(NAME, "<f.name>").call(<f.parameters:argument();separator=", ">);<else>return wrap(this.service.functionPoolFunc(NAME, "<f.name>").call(<f.parameters:argument();separator=", ">));<endif>%>
 attachment_call(f) ::= <%<if(f.isVoid)>this.service.attachmentFunctionPoolFunc(NAME, "<f.name>").call(state<if(f.parameters)>, <endif><f.parameters:argument();separator=", ">);<else>return wrap(this.service.attachmentFunctionPoolFunc(NAME, "<f.name>").call(state<if(f.parameters)>, <endif><f.parameters:argument();separator=", ">));<endif>%>
+
+doc(f) ::= <<
+<if(f.hasDocumentation)>    /** <f.documentation;format="comment"> */
+<endif>
+>>

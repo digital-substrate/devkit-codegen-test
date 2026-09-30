@@ -74,7 +74,14 @@ private:
 };
 >>
 
-remote_call(f) ::= <<    <ret(f)> <f.name>(<f.parameters:param();separator=", ">) const;>>
+remote_call(f) ::= <<
+<doc(f)>    <ret(f)> <f.name>(<f.parameters:param();separator=", ">) const;
+>>
+
+doc(f) ::= <<
+<if(f.hasDocumentation)>    /** <f.documentation;format="comment"> */
+<endif>
+>>
 ret(f) ::= <%<if(f.isVoid)>void<else><f.type><endif>%>
 param(p) ::= <%<p.type><p.passBy> <p.name>%>
 
@@ -99,4 +106,6 @@ private:
 };
 >>
 
-attachment_remote_call(f) ::= <<    <ret(f)> <f.name>(std::shared_ptr\<Viper::AttachmentMutating> const & attachmentMutating<if(f.parameters)>, <f.parameters:param();separator=", "><endif>) const;>>
+attachment_remote_call(f) ::= <<
+<doc(f)>    <ret(f)> <f.name>(std::shared_ptr\<Viper::AttachmentMutating> const & attachmentMutating<if(f.parameters)>, <f.parameters:param();separator=", "><endif>) const;
+>>

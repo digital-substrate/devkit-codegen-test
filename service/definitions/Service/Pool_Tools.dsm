@@ -16,6 +16,8 @@ int64 add(int64 a, int64 b);
 
 Vector3 addVector(Vector3 a, Vector3 b);
 
+"""Return a random string of "size" letters.
+The letters are lower case."""
 string randomString(uint32 size);
 
 """Return true if a > b: `any` crosses the pool boundary."""

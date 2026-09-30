@@ -108,7 +108,7 @@ preamble(p) ::= <<
 # Commercial use requires a Commercial Licence from Digital Substrate.
 # <p.model.generated>
 
-"""<p.name> — le pool, et le même vu d'un client."""
+"""<p.name> — <if(p.hasDocumentation)><p.documentation;format="docstring"><else>le pool, et le même vu d'un client.<endif>"""
 
 from __future__ import annotations
 
@@ -121,14 +121,21 @@ from .._codegen import AnyConceptKey, Mapping, Ordered, Sequence, wrap
 <p.dependencies.functions:{d|from .. import <d.name;format="lsc">};separator="\n">
 >>
 
+// LA DOCUMENTATION DU MODÈLE EST LA DOCSTRING : `help()` et la complétion la montrent, comme
+// le pool l'enregistre pour qui appelle par nom. Local ou distant, la fonction est la même.
 function(f) ::= <<
     def <f.name;format="snake">(self<if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>) -> <ret(f)>:
-        <call(f)>
+<doc(f)>        <call(f)>
+>>
+
+doc(f) ::= <<
+<if(f.hasDocumentation)>        """<f.documentation;format="docstring">"""
+<endif>
 >>
 
 attachment_function(f) ::= <<
     def <f.name;format="snake">(self, attachment_<f.interfaceType;format="lsc">: dsviper.Attachment<f.interfaceType><if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>) -> <ret(f)>:
-        <attachment_call(f)>
+<doc(f)>        <attachment_call(f)>
 >>
 
 // À DISTANCE, LE CONTEXTE EST TOUJOURS `AttachmentMutating`, MÊME POUR UNE LECTURE. L'appel
@@ -138,7 +145,7 @@ attachment_function(f) ::= <<
 // `AttachmentGetting` que le service refuse à l'appel.
 attachment_remote_function(f) ::= <<
     def <f.name;format="snake">(self, attachment_mutating: dsviper.AttachmentMutating<if(f.parameters)>, <f.parameters:parameter();separator=", "><endif>) -> <ret(f)>:
-        <attachment_invoke(f, "attachment_mutating")>
+<doc(f)>        <attachment_invoke(f, "attachment_mutating")>
 >>
 
 parameter(a) ::= <%<a.name;format="snake">: <hint(a.bindingType)>%>
