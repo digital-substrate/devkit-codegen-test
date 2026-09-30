@@ -266,8 +266,13 @@ if not (arguments.cpp | arguments.python | arguments.typescript):
 
 if arguments.cpp:
     print('** Render Cpp')
+    # LE DOSSIER EST VIDÉ D'ABORD. Ce site éprouve n'importe quel dossier de définitions, et ce
+    # qu'un modèle précédent a rendu -- ses unités, ses pools -- resterait sinon à côté, compilé
+    # avec le suivant sans que rien le dise.
+    shutil.rmtree(CPP_OUT, ignore_errors=True)
+    Path(CPP_OUT).mkdir(parents=True)
     render('cpp', NAMESPACE, DSM_PATH,
-           resolve.templates('cpp', ['TestApp', 'AttachmentPool']), CPP_OUT)
+           resolve.templates('cpp', ['TestApp', 'AttachmentPool', 'TestBridges']), CPP_OUT)
     generate_resource(definitions=DEFINITIONS, output=f'{CPP_OUT}/{NAMESPACE}_resources.hpp')
 
 if arguments.python:

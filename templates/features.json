@@ -96,6 +96,17 @@
       "laboratory": true,
       "note": "Laboratory only: it tests the generator, not an application, and no project selects it. It stays here and does not move into the pack."
     },
+    "TestBridges": {
+      "doc": "Stand-in implementations of every pool function, returning the default of its type, so that the test programme links on any model.",
+      "templates": [
+        "test_bridges.cpp.stg"
+      ],
+      "requires": [
+        "Pool"
+      ],
+      "laboratory": true,
+      "note": "Only the features site selects it: it tests any folder of definitions, whose pools nobody implements there. A site with real bridges (service) must not."
+    },
     "PythonDefinitions": {
       "doc": "The model's types, attachments and field paths as constants of a Python module embedded in a C++ application, for scripts using the dynamic API. What Fields is to C++ code, for that Python.",
       "templates": [

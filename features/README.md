@@ -27,6 +27,15 @@ wrote this file?" is answered by which directory it sits in.
     python3 generate.py all.dsm -c -p -t
     cpp/run_test.sh · python/run_test.sh · typescript/run_test.sh
 
+**Any model, not only `all.dsm`.** The argument is a file or a folder of definitions: the C++
+test programme is generated from the model it is given, so it checks a real project's model as
+it checks this one -- every type round-tripped, every attachment through a database, every
+declared default value, every default key. A model with pools gets stand-in implementations
+(`TestBridges`), since nobody implements them here. Only the C++ programme is generic; the
+Python and TypeScript suites are written against `all.dsm`.
+
+    python3 generate.py ../../kibo-2/com.digitalsubstrate.red/definitions/RE -c && cpp/run_test.sh
+
 | | what it proves |
 |---|---|
 | C++ | the library builds against the real runtime and the generated programme runs |

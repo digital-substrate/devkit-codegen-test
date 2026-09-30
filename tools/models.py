@@ -10,7 +10,7 @@ MODELS = {
     "features": dict(
         shape="mono", definitions="features/all.dsm", namespace="features", package="features",
         about="the type system: every type shape, one namespace",
-        cpp=["TestApp", "AttachmentPool"],
+        cpp=["TestApp", "AttachmentPool", "TestBridges"],
     ),
     "service": dict(
         shape="mono", definitions="service/definitions/Service", namespace="service", package="service",
