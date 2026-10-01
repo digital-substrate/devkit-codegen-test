@@ -168,6 +168,11 @@ struct StructureW {
   uint8 f_single;
 };
 
+// A variant whose alternatives are keys: each is told, read and written by its own name.
+struct StructureVariantKeys {
+  variant<key<ConceptA>, key<ConceptD>> f_target;
+};
+
 // Numbers
 attachment<ConceptCoverage, bool> docBool;
 attachment<ConceptCoverage, uint8> docUInt8;

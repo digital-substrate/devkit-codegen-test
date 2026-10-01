@@ -7,7 +7,8 @@
 import { Composites } from "../generated/dist/woven/data.js";
 import * as core from "../generated/dist/core/data.js";
 import * as parts from "../generated/dist/parts/data.js";
-import { Map_of_Core_Grade_to_Parts_Colour, Optional_of_Core_ThingKey, Set_of_Core_ThingKey, Vector_of_Parts_Colour }
+import { Map_of_Core_Grade_to_Parts_Colour, Optional_of_Core_ThingKey, Set_of_Core_ThingKey,
+         Variant_of_Core_Colour_or_Parts_Colour_or_string, Vector_of_Parts_Colour }
     from "../generated/dist/containers.js";
 
 let ok = true;
@@ -49,7 +50,11 @@ check("whose key is the model's enumeration", key === "low");
 check("and the value carries its class", value instanceof parts.Colour && value.r === 7);
 
 c.f_variant = new core.Colour({ r: 1, g: 1, b: 1 });
-check("a variant yields the held alternative", c.f_variant instanceof core.Colour);
+check("a variant yields its declared class", c.f_variant instanceof Variant_of_Core_Colour_or_Parts_Colour_or_string);
+check("which tells its alternative, with the unit's class", c.f_variant.isCore_Colour() && !c.f_variant.isParts_Colour()
+      && c.f_variant.getCore_Colour() instanceof core.Colour);
+c.f_variant.setParts_Colour(new parts.Colour({ r: 2, g: 2, b: 2 }));
+check("and changes it in place", c.f_variant.isParts_Colour() && c.f_variant.unwrap() instanceof parts.Colour);
 
 const things = new Set_of_Core_ThingKey();
 things.add(core.ThingKey.create());
