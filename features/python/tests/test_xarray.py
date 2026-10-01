@@ -268,6 +268,14 @@ class TestXArrayRemove(unittest.TestCase):
         self.assertTrue(xa.has_position(pos))
         self.assertIsNone(xa.at(pos))
 
+    def test_items_skip_a_removed_position(self):
+        """items() lists the elements only, as the runtime's does: a removed position, as an
+        undo leaves it, holds nothing."""
+        xa = XArray_of_int8([10, 20, 30])
+        xa.remove(xa.position(1))
+        self.assertEqual([element for _, element in xa.items()], [10, 30])
+        self.assertTrue(all(type(element) is int for _, element in xa.items()))
+
 
 class TestXArrayPositionOf(unittest.TestCase):
     """Test XArray position_of() method."""

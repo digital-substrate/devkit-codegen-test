@@ -278,6 +278,14 @@ test("removed_position_returns_none", () => {
   assert.equal(xa.at(pos), undefined);
 });
 
+test("items_skip_a_removed_position", () => {
+  // items() lists the elements only, as the runtime's does: a removed position, as an undo
+  // leaves it, holds nothing.
+  const xa = new XArray_of_int8([10, 20, 30]);
+  xa.remove(xa.position(1));
+  assert.deepEqual(xa.items().map(([, element]) => element), [10, 30]);
+});
+
 // --- positionOf() ---
 
 test("position_of_existing", () => {
