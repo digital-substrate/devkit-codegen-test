@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
+import { definitions } from "../generated/dist/index.js";
 import { StructureS } from "../generated/dist/demo/data.js";
 import { Vector_of_uint8, Vector_of_Demo_StructureS } from "../generated/dist/containers.js";
 
@@ -171,14 +172,14 @@ test("contains", () => {
 
 test("encode_decode_roundtrip", () => {
   const v1 = new Vector_of_uint8([1, 2, 3, 4, 5]);
-  const blob = v1.encode();
-  const v2 = Vector_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = new Vector_of_uint8(dsviper.Value.decode(blob, Vector_of_uint8.type(), definitions()));
   assert.deepEqual([...v2], [1, 2, 3, 4, 5]);
 });
 
 test("encode_decode_empty", () => {
   const v1 = new Vector_of_uint8();
-  const blob = v1.encode();
-  const v2 = Vector_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = new Vector_of_uint8(dsviper.Value.decode(blob, Vector_of_uint8.type(), definitions()));
   assert.equal(v2.size, 0);
 });

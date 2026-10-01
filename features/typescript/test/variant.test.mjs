@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
+import { definitions } from "../generated/dist/index.js";
 import { StructureS } from "../generated/dist/demo/data.js";
 import { Variant_of_string_or_uint8_or_Demo_StructureS } from "../generated/dist/containers.js";
 
@@ -130,8 +131,8 @@ test("copy_independent", () => {
 test("encode_decode_string", () => {
   const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
   v1.setString("hello");
-  const blob = v1.encode();
-  const v2 = Variant_of_string_or_uint8_or_Demo_StructureS.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = new Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()));
   assert.ok(v2.isString());
   assert.equal(v2.getString(), "hello");
 });
@@ -139,8 +140,8 @@ test("encode_decode_string", () => {
 test("encode_decode_uint8", () => {
   const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
   v1.setUint8(42);
-  const blob = v1.encode();
-  const v2 = Variant_of_string_or_uint8_or_Demo_StructureS.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = new Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()));
   assert.ok(v2.isUint8());
   assert.equal(v2.getUint8(), 42);
 });
@@ -149,8 +150,8 @@ test("encode_decode_structure", () => {
   const s = new StructureS({ f_float: 2.5, f_string: "world" });
   const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
   v1.setDemo_StructureS(s);
-  const blob = v1.encode();
-  const v2 = Variant_of_string_or_uint8_or_Demo_StructureS.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = new Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()));
   assert.ok(v2.isDemo_StructureS());
   assert.equal(v2.getDemo_StructureS().f_string, "world");
 });

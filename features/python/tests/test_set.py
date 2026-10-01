@@ -2,6 +2,8 @@
 """Tests for Kibo-generated Set proxy classes."""
 
 import unittest
+import dsviper
+from features import definitions
 from features.demo import ConceptAKey
 from features.containers import Set_of_uint8, Set_of_Demo_ConceptAKey
 
@@ -303,8 +305,8 @@ class TestSetSerialization(unittest.TestCase):
 
     def test_encode_decode_roundtrip(self):
         s1 = Set_of_uint8([1, 2, 3])
-        blob = s1.encode()
-        s2 = Set_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(s1.vpr_value)
+        s2 = Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()))
         self.assertEqual(len(s2), 3)
         self.assertTrue(1 in s2)
         self.assertTrue(2 in s2)
@@ -312,8 +314,8 @@ class TestSetSerialization(unittest.TestCase):
 
     def test_encode_decode_empty(self):
         s1 = Set_of_uint8()
-        blob = s1.encode()
-        s2 = Set_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(s1.vpr_value)
+        s2 = Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()))
         self.assertEqual(len(s2), 0)
 
 

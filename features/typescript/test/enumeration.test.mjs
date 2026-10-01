@@ -2,6 +2,8 @@
 
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
+import dsviper from "@digitalsubstrate/dsviper";
+import { definitions } from "../generated/dist/index.js";
 import { EnumerationE } from "../generated/dist/demo/data.js";
 
 // --- Cases ---
@@ -87,54 +89,53 @@ test("from_str_equals_direct", () => {
 // --- hashing / use in JS collections (adapted from Python hash tests) ---
 
 test("hashable", () => {
-  // JS equivalent of a stable hash: the value hexdigest.
-  const h = EnumerationE.hexdigest(EnumerationE.A);
+  // A case is a string: it is its own key.
+  const h = EnumerationE.A;
   assert.equal(typeof h, "string");
 });
 
 test("same_case_same_hash", () => {
-  assert.equal(EnumerationE.hexdigest(EnumerationE.A), EnumerationE.hexdigest(EnumerationE.A));
+  assert.equal(EnumerationE.A, EnumerationE.A);
 });
 
 test("usable_in_set", () => {
-  // Keyed by hexdigest, A appears once -> 2 distinct entries.
+  // A appears once -> 2 distinct entries.
   const s = new Set([
-    EnumerationE.hexdigest(EnumerationE.A),
-    EnumerationE.hexdigest(EnumerationE.B),
-    EnumerationE.hexdigest(EnumerationE.A),
+    EnumerationE.A,
+    EnumerationE.B,
+    EnumerationE.A,
   ]);
   assert.equal(s.size, 2);
 });
 
 test("usable_as_dict_key", () => {
-  // Keyed by hexdigest, behaving as a dict key.
   const d = new Map([
-    [EnumerationE.hexdigest(EnumerationE.A), "first"],
-    [EnumerationE.hexdigest(EnumerationE.B), "second"],
+    [EnumerationE.A, "first"],
+    [EnumerationE.B, "second"],
   ]);
-  assert.equal(d.get(EnumerationE.hexdigest(EnumerationE.A)), "first");
+  assert.equal(d.get(EnumerationE.A), "first");
 });
 
 // --- serialization ---
 
 test("encode_decode_a", () => {
   const e1 = EnumerationE.A;
-  const blob = EnumerationE.encode(e1);
-  const e2 = EnumerationE.decode(blob);
+  const blob = dsviper.Value.encode(EnumerationE.value(e1));
+  const e2 = EnumerationE.wrap(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
   assert.equal(EnumerationE.name(e2), "a");
 });
 
 test("encode_decode_b", () => {
   const e1 = EnumerationE.B;
-  const blob = EnumerationE.encode(e1);
-  const e2 = EnumerationE.decode(blob);
+  const blob = dsviper.Value.encode(EnumerationE.value(e1));
+  const e2 = EnumerationE.wrap(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
   assert.equal(EnumerationE.name(e2), "b");
 });
 
 test("encode_decode_c", () => {
   const e1 = EnumerationE.C;
-  const blob = EnumerationE.encode(e1);
-  const e2 = EnumerationE.decode(blob);
+  const blob = dsviper.Value.encode(EnumerationE.value(e1));
+  const e2 = EnumerationE.wrap(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
   assert.equal(EnumerationE.name(e2), "c");
 });
 

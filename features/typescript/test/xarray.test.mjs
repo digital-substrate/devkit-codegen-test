@@ -7,6 +7,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
+import { definitions } from "../generated/dist/index.js";
 import { StructureS } from "../generated/dist/demo/data.js";
 import { XArray_of_int8, XArray_of_uint8, Vector_of_int8, Vector_of_uint8, XArray_of_Demo_StructureS } from "../generated/dist/containers.js";
 
@@ -455,8 +456,8 @@ test("uint8_copy", () => {
 
 test("encode_decode_roundtrip", () => {
   const xa1 = new XArray_of_int8([10, 20, 30]);
-  const blob = xa1.encode();
-  const xa2 = XArray_of_int8.decode(blob);
+  const blob = dsviper.Value.encode(xa1.vprValue);
+  const xa2 = new XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()));
   assert.equal(xa2.size, 3);
   assert.equal(xa2.get(0), 10);
   assert.equal(xa2.get(1), 20);
@@ -465,23 +466,23 @@ test("encode_decode_roundtrip", () => {
 
 test("encode_decode_empty", () => {
   const xa1 = new XArray_of_int8();
-  const blob = xa1.encode();
-  const xa2 = XArray_of_int8.decode(blob);
+  const blob = dsviper.Value.encode(xa1.vprValue);
+  const xa2 = new XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()));
   assert.equal(xa2.size, 0);
 });
 
 test("encode_decode_uint8", () => {
   const xa1 = new XArray_of_uint8([1, 128, 255]);
-  const blob = xa1.encode();
-  const xa2 = XArray_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(xa1.vprValue);
+  const xa2 = new XArray_of_uint8(dsviper.Value.decode(blob, XArray_of_uint8.type(), definitions()));
   assert.deepEqual([...xa2.toVector()], [1, 128, 255]);
 });
 
 test("encode_decode_preserves_positions", () => {
   const xa1 = new XArray_of_int8([10, 20, 30]);
   const pos1Original = xa1.positions();
-  const blob = xa1.encode();
-  const xa2 = XArray_of_int8.decode(blob);
+  const blob = dsviper.Value.encode(xa1.vprValue);
+  const xa2 = new XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()));
   const pos2 = xa2.positions();
   assert.equal(pos1Original.length, pos2.length);
   for (let i = 0; i < pos1Original.length; i++) {

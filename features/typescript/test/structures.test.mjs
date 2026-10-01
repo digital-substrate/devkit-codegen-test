@@ -2,6 +2,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
+import { definitions } from "../generated/dist/index.js";
 import { StructureS, StructureT, StructureU, StructureV, StructureValueField, EnumerationE } from "../generated/dist/demo/data.js";
 import { Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string, Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_uint8_to_string, XArray_of_uint8 } from "../generated/dist/containers.js";
 
@@ -476,8 +477,8 @@ test("StructureV: encode/decode roundtrip", () => {
   v1.f_bool = true;
   v1.f_uint8 = 42;
   v1.f_string = "test";
-  const blob = v1.encode();
-  const v2 = StructureV.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = StructureV.wrap(dsviper.Value.decode(blob, StructureV.type(), definitions()));
   assert.ok(v2.f_bool);
   assert.equal(v2.f_uint8, 42);
   assert.equal(v2.f_string, "test");
@@ -488,8 +489,8 @@ test("StructureV: encode/decode with containers", () => {
   v1.f_vector = new Vector_of_uint8([10, 20, 30]);
   v1.f_set = new Set_of_uint8([1, 2, 3]);
   v1.f_map = new Map_of_uint8_to_string([[1, "a"], [2, "b"]]);
-  const blob = v1.encode();
-  const v2 = StructureV.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = StructureV.wrap(dsviper.Value.decode(blob, StructureV.type(), definitions()));
   assert.deepEqual([...v2.f_vector], [10, 20, 30]);
   assert.equal(v2.f_set.size, 3);
   assert.equal(v2.f_map.at(1), "a");
@@ -499,8 +500,8 @@ test("StructureV: encode/decode with nested structures", () => {
   const v1 = new StructureV();
   v1.f_S = new StructureS({ f_float: 2.718, f_string: "euler" });
   v1.f_E = EnumerationE.C;
-  const blob = v1.encode();
-  const v2 = StructureV.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = StructureV.wrap(dsviper.Value.decode(blob, StructureV.type(), definitions()));
   assert.ok(Math.abs(v2.f_S.f_float - 2.718) < 1e-3);
   assert.equal(v2.f_S.f_string, "euler");
   assert.ok((v2.f_E === EnumerationE.C));

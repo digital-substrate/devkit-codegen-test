@@ -5,7 +5,7 @@ import unittest
 import dsviper
 from features.demo import ConceptAKey, ConceptBKey, StructureS, StructureT, StructureU, StructureV
 from features.containers import Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_int8_to_string
-from features import AnyConceptKey
+from features import AnyConceptKey, definitions
 
 
 class TestKeyEncodeDecode(unittest.TestCase):
@@ -13,21 +13,21 @@ class TestKeyEncodeDecode(unittest.TestCase):
 
     def test_concept_a_key_roundtrip(self):
         key1 = ConceptAKey.create()
-        blob = key1.encode()
-        key2 = ConceptAKey.decode(blob)
+        blob = dsviper.Value.encode(key1.vpr_value)
+        key2 = ConceptAKey(dsviper.Value.decode(blob, ConceptAKey.type(), definitions()))
         self.assertEqual(key1, key2)
 
     def test_concept_b_key_roundtrip(self):
         key1 = ConceptBKey.create()
-        blob = key1.encode()
-        key2 = ConceptBKey.decode(blob)
+        blob = dsviper.Value.encode(key1.vpr_value)
+        key2 = ConceptBKey(dsviper.Value.decode(blob, ConceptBKey.type(), definitions()))
         self.assertEqual(key1, key2)
 
     def test_any_concept_key_roundtrip(self):
         key = ConceptAKey.create()
         any_key1 = key.to_any_concept_key()
-        blob = any_key1.encode()
-        any_key2 = AnyConceptKey.decode(blob)
+        blob = dsviper.Value.encode(any_key1.vpr_value)
+        any_key2 = AnyConceptKey(dsviper.Value.decode(blob, AnyConceptKey.type(), definitions()))
         self.assertEqual(any_key1, any_key2)
 
 
@@ -36,8 +36,8 @@ class TestStructureEncodeDecode(unittest.TestCase):
 
     def test_structure_s_roundtrip(self):
         s1 = StructureS({"f_float": 3.14, "f_string": "hello"})
-        blob = s1.encode()
-        s2 = StructureS.decode(blob)
+        blob = dsviper.Value.encode(s1.vpr_value)
+        s2 = StructureS(dsviper.Value.decode(blob, StructureS.type(), definitions()))
         self.assertAlmostEqual(s1.f_float, s2.f_float, places=5)
         self.assertEqual(s1.f_string, s2.f_string)
 
@@ -47,8 +47,8 @@ class TestStructureEncodeDecode(unittest.TestCase):
         t1.field_string = "outer"
         t1.field_structure_s = inner
 
-        blob = t1.encode()
-        t2 = StructureT.decode(blob)
+        blob = dsviper.Value.encode(t1.vpr_value)
+        t2 = StructureT(dsviper.Value.decode(blob, StructureT.type(), definitions()))
 
         self.assertEqual(t1.field_string, t2.field_string)
         self.assertAlmostEqual(t1.field_structure_s.f_float, t2.field_structure_s.f_float, places=5)
@@ -59,8 +59,8 @@ class TestStructureEncodeDecode(unittest.TestCase):
         v1.f_uint8 = 255
         v1.f_string = "test"
 
-        blob = v1.encode()
-        v2 = StructureV.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = StructureV(dsviper.Value.decode(blob, StructureV.type(), definitions()))
 
         self.assertEqual(v1.f_bool, v2.f_bool)
         self.assertEqual(v1.f_uint8, v2.f_uint8)
@@ -72,35 +72,35 @@ class TestContainerEncodeDecode(unittest.TestCase):
 
     def test_optional_nil_roundtrip(self):
         opt1 = Optional_of_uint8()
-        blob = opt1.encode()
-        opt2 = Optional_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(opt1.vpr_value)
+        opt2 = Optional_of_uint8(dsviper.Value.decode(blob, Optional_of_uint8.type(), definitions()))
         self.assertTrue(opt2.is_nil())
 
     def test_optional_value_roundtrip(self):
         opt1 = Optional_of_uint8(42)
-        blob = opt1.encode()
-        opt2 = Optional_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(opt1.vpr_value)
+        opt2 = Optional_of_uint8(dsviper.Value.decode(blob, Optional_of_uint8.type(), definitions()))
         self.assertFalse(opt2.is_nil())
         self.assertEqual(opt2.unwrap(), 42)
 
     def test_vector_roundtrip(self):
         v1 = Vector_of_uint8([1, 2, 3, 4, 5])
-        blob = v1.encode()
-        v2 = Vector_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = Vector_of_uint8(dsviper.Value.decode(blob, Vector_of_uint8.type(), definitions()))
         self.assertEqual(list(v1), list(v2))
 
     def test_set_roundtrip(self):
         s1 = Set_of_uint8([1, 2, 3])
-        blob = s1.encode()
-        s2 = Set_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(s1.vpr_value)
+        s2 = Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()))
         self.assertEqual(len(s1), len(s2))
         for x in s1:
             self.assertIn(x, s2)
 
     def test_map_roundtrip(self):
         m1 = Map_of_int8_to_string({1: "one", 2: "two", 3: "three"})
-        blob = m1.encode()
-        m2 = Map_of_int8_to_string.decode(blob)
+        blob = dsviper.Value.encode(m1.vpr_value)
+        m2 = Map_of_int8_to_string(dsviper.Value.decode(blob, Map_of_int8_to_string.type(), definitions()))
         self.assertEqual(m1[1], m2[1])
         self.assertEqual(m1[2], m2[2])
         self.assertEqual(m1[3], m2[3])
@@ -111,7 +111,7 @@ class TestHexdigest(unittest.TestCase):
 
     def test_key_hexdigest(self):
         key = ConceptAKey.create()
-        digest = key.hexdigest()
+        digest = dsviper.Value.hexdigest(key.vpr_value)
         self.assertIsInstance(digest, str)
         self.assertGreater(len(digest), 0)
 
@@ -119,23 +119,23 @@ class TestHexdigest(unittest.TestCase):
         uuid_str = "12345678-1234-1234-1234-123456789abc"
         key1 = ConceptAKey(uuid_str)
         key2 = ConceptAKey(uuid_str)
-        self.assertEqual(key1.hexdigest(), key2.hexdigest())
+        self.assertEqual(dsviper.Value.hexdigest(key1.vpr_value), dsviper.Value.hexdigest(key2.vpr_value))
 
     def test_different_key_different_digest(self):
         key1 = ConceptAKey.create()
         key2 = ConceptAKey.create()
-        self.assertNotEqual(key1.hexdigest(), key2.hexdigest())
+        self.assertNotEqual(dsviper.Value.hexdigest(key1.vpr_value), dsviper.Value.hexdigest(key2.vpr_value))
 
     def test_structure_hexdigest(self):
         s = StructureS({"f_float": 1.0, "f_string": "test"})
-        digest = s.hexdigest()
+        digest = dsviper.Value.hexdigest(s.vpr_value)
         self.assertIsInstance(digest, str)
         self.assertGreater(len(digest), 0)
 
     def test_same_structure_same_digest(self):
         s1 = StructureS({"f_float": 1.0, "f_string": "test"})
         s2 = StructureS({"f_float": 1.0, "f_string": "test"})
-        self.assertEqual(s1.hexdigest(), s2.hexdigest())
+        self.assertEqual(dsviper.Value.hexdigest(s1.vpr_value), dsviper.Value.hexdigest(s2.vpr_value))
 
 
 class TestStreamCodecOptions(unittest.TestCase):
@@ -143,14 +143,14 @@ class TestStreamCodecOptions(unittest.TestCase):
 
     def test_binary_codec(self):
         s1 = StructureS({"f_float": 1.5, "f_string": "binary"})
-        blob = s1.encode(stream_codec_instancing=dsviper.Codec.STREAM_BINARY)
-        s2 = StructureS.decode(blob, stream_codec_instancing=dsviper.Codec.STREAM_BINARY)
+        blob = dsviper.Value.encode(s1.vpr_value, stream_codec_instancing=dsviper.Codec.STREAM_BINARY)
+        s2 = StructureS(dsviper.Value.decode(blob, StructureS.type(), definitions(), stream_codec_instancing=dsviper.Codec.STREAM_BINARY))
         self.assertEqual(s1.f_string, s2.f_string)
 
     def test_raw_codec(self):
         s1 = StructureS({"f_float": 1.5, "f_string": "raw"})
-        blob = s1.encode(stream_codec_instancing=dsviper.Codec.STREAM_RAW)
-        s2 = StructureS.decode(blob, stream_codec_instancing=dsviper.Codec.STREAM_RAW)
+        blob = dsviper.Value.encode(s1.vpr_value, stream_codec_instancing=dsviper.Codec.STREAM_RAW)
+        s2 = StructureS(dsviper.Value.decode(blob, StructureS.type(), definitions(), stream_codec_instancing=dsviper.Codec.STREAM_RAW))
         self.assertEqual(s1.f_string, s2.f_string)
 
 
@@ -159,8 +159,8 @@ class TestPackSized(unittest.TestCase):
 
     def test_structure_pack_sized(self):
         s1 = StructureS({"f_float": 2.5, "f_string": "pack"})
-        blob = s1.encode()
-        s2 = StructureS.decode(blob, pack_sized=False)
+        blob = dsviper.Value.encode(s1.vpr_value)
+        s2 = StructureS(dsviper.Value.decode(blob, StructureS.type(), definitions(), pack_sized=False))
         self.assertEqual(s1.f_string, s2.f_string)
 
 
@@ -179,14 +179,14 @@ class TestBlobContent(unittest.TestCase):
 
     def test_blob_is_not_empty(self):
         key = ConceptAKey.create()
-        blob = key.encode()
+        blob = dsviper.Value.encode(key.vpr_value)
         self.assertGreater(len(blob), 0)
 
     def test_blob_content_differs_by_value(self):
         key1 = ConceptAKey.create()
         key2 = ConceptAKey.create()
-        blob1 = key1.encode()
-        blob2 = key2.encode()
+        blob1 = dsviper.Value.encode(key1.vpr_value)
+        blob2 = dsviper.Value.encode(key2.vpr_value)
         self.assertNotEqual(bytes(blob1), bytes(blob2))
 
 

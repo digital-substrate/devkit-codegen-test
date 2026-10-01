@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
+import { definitions } from "../generated/dist/index.js";
 import { StructureT } from "../generated/dist/demo/data.js";
 import { Optional_of_uint8, Optional_of_int8, Optional_of_Demo_StructureT } from "../generated/dist/containers.js";
 
@@ -91,15 +92,15 @@ test("copy_independent", () => {
 
 test("encode_decode_value", () => {
   const opt1 = new Optional_of_uint8(42);
-  const blob = opt1.encode();
-  const opt2 = Optional_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(opt1.vprValue);
+  const opt2 = new Optional_of_uint8(dsviper.Value.decode(blob, Optional_of_uint8.type(), definitions()));
   assert.ok(!opt2.isNil());
   assert.equal(opt2.unwrap(), 42);
 });
 
 test("encode_decode_nil", () => {
   const opt1 = new Optional_of_uint8();
-  const blob = opt1.encode();
-  const opt2 = Optional_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(opt1.vprValue);
+  const opt2 = new Optional_of_uint8(dsviper.Value.decode(blob, Optional_of_uint8.type(), definitions()));
   assert.ok(opt2.isNil());
 });

@@ -219,7 +219,7 @@ test("klub_key_runtime_id_concept_d", () => {
 test("klub_key_downcast_to_concept_c", () => {
   const keyC = ConceptCKey.create();
   const klubKey = KlubKey.fromConceptCKey(keyC);
-  const result = klubKey.asConceptCKey();
+  const result = klubKey.toConceptCKey();
   assert.notEqual(result, null);
   assert.ok(result.equals?.(keyC) ?? (result === keyC));
 });
@@ -227,7 +227,7 @@ test("klub_key_downcast_to_concept_c", () => {
 test("klub_key_downcast_failure", () => {
   const keyC = ConceptCKey.create();
   const klubKey = KlubKey.fromConceptCKey(keyC);
-  const result = klubKey.asConceptDKey();
+  const result = klubKey.toConceptDKey();
   assert.equal(result, undefined);
 });
 

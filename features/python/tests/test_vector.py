@@ -2,6 +2,8 @@
 """Tests for Kibo-generated Vector proxy classes."""
 
 import unittest
+import dsviper
+from features import definitions
 from features.demo import StructureS
 from features.containers import Vector_of_uint8, Vector_of_Demo_StructureS
 
@@ -168,14 +170,14 @@ class TestVectorSerialization(unittest.TestCase):
 
     def test_encode_decode_roundtrip(self):
         v1 = Vector_of_uint8([1, 2, 3, 4, 5])
-        blob = v1.encode()
-        v2 = Vector_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = Vector_of_uint8(dsviper.Value.decode(blob, Vector_of_uint8.type(), definitions()))
         self.assertEqual(list(v2), [1, 2, 3, 4, 5])
 
     def test_encode_decode_empty(self):
         v1 = Vector_of_uint8()
-        blob = v1.encode()
-        v2 = Vector_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = Vector_of_uint8(dsviper.Value.decode(blob, Vector_of_uint8.type(), definitions()))
         self.assertEqual(len(v2), 0)
 
 

@@ -2,6 +2,8 @@
 """Tests for Kibo-generated Enumeration proxy classes."""
 
 import unittest
+import dsviper
+from features import definitions
 from features.demo import EnumerationE
 
 
@@ -99,24 +101,24 @@ class TestEnumerationHash(unittest.TestCase):
 
 
 class TestEnumerationSerialization(unittest.TestCase):
-    """Test enumeration encode/decode serialization."""
+    """An enumeration crosses to the runtime as a ValueEnumeration, and back by its case name."""
 
     def test_encode_decode_a(self):
         e1 = EnumerationE.A
-        blob = e1.encode()
-        e2 = EnumerationE.decode(blob)
+        blob = dsviper.Value.encode(dsviper.ValueEnumeration(EnumerationE.type(), e1.value))
+        e2 = EnumerationE(dsviper.ValueEnumeration.cast(dsviper.Value.decode(blob, EnumerationE.type(), definitions())).name())
         self.assertEqual(e2.value, "a")
 
     def test_encode_decode_b(self):
         e1 = EnumerationE.B
-        blob = e1.encode()
-        e2 = EnumerationE.decode(blob)
+        blob = dsviper.Value.encode(dsviper.ValueEnumeration(EnumerationE.type(), e1.value))
+        e2 = EnumerationE(dsviper.ValueEnumeration.cast(dsviper.Value.decode(blob, EnumerationE.type(), definitions())).name())
         self.assertEqual(e2.value, "b")
 
     def test_encode_decode_c(self):
         e1 = EnumerationE.C
-        blob = e1.encode()
-        e2 = EnumerationE.decode(blob)
+        blob = dsviper.Value.encode(dsviper.ValueEnumeration(EnumerationE.type(), e1.value))
+        e2 = EnumerationE(dsviper.ValueEnumeration.cast(dsviper.Value.decode(blob, EnumerationE.type(), definitions())).name())
         self.assertEqual(e2.value, "c")
 
 

@@ -8,6 +8,7 @@ remain stable across insertions and deletions.
 
 import unittest
 import dsviper
+from features import definitions
 from features.demo import StructureS
 from features.containers import XArray_of_int8, XArray_of_uint8, Vector_of_int8, Vector_of_uint8, XArray_of_Demo_StructureS
 
@@ -443,8 +444,8 @@ class TestXArraySerialization(unittest.TestCase):
 
     def test_encode_decode_roundtrip(self):
         xa1 = XArray_of_int8([10, 20, 30])
-        blob = xa1.encode()
-        xa2 = XArray_of_int8.decode(blob)
+        blob = dsviper.Value.encode(xa1.vpr_value)
+        xa2 = XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()))
         self.assertEqual(len(xa2), 3)
         self.assertEqual(xa2[0], 10)
         self.assertEqual(xa2[1], 20)
@@ -452,21 +453,21 @@ class TestXArraySerialization(unittest.TestCase):
 
     def test_encode_decode_empty(self):
         xa1 = XArray_of_int8()
-        blob = xa1.encode()
-        xa2 = XArray_of_int8.decode(blob)
+        blob = dsviper.Value.encode(xa1.vpr_value)
+        xa2 = XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()))
         self.assertEqual(len(xa2), 0)
 
     def test_encode_decode_uint8(self):
         xa1 = XArray_of_uint8([1, 128, 255])
-        blob = xa1.encode()
-        xa2 = XArray_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(xa1.vpr_value)
+        xa2 = XArray_of_uint8(dsviper.Value.decode(blob, XArray_of_uint8.type(), definitions()))
         self.assertEqual(list(xa2.to_vector()), [1, 128, 255])
 
     def test_encode_decode_preserves_positions(self):
         xa1 = XArray_of_int8([10, 20, 30])
         pos1_original = xa1.positions()
-        blob = xa1.encode()
-        xa2 = XArray_of_int8.decode(blob)
+        blob = dsviper.Value.encode(xa1.vpr_value)
+        xa2 = XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()))
         pos2 = xa2.positions()
         self.assertEqual(len(pos1_original), len(pos2))
         for p1, p2 in zip(pos1_original, pos2):

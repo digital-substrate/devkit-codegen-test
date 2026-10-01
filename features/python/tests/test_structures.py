@@ -3,6 +3,7 @@
 
 import unittest
 import dsviper
+from features import definitions
 from features.demo import StructureS, StructureT, StructureU, StructureV, EnumerationE
 from features.containers import Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string, Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_uint8_to_string, XArray_of_uint8
 
@@ -444,8 +445,8 @@ class TestStructureVSerialization(unittest.TestCase):
         v1.f_bool = True
         v1.f_uint8 = 42
         v1.f_string = "test"
-        blob = v1.encode()
-        v2 = StructureV.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = StructureV(dsviper.Value.decode(blob, StructureV.type(), definitions()))
         self.assertTrue(v2.f_bool)
         self.assertEqual(v2.f_uint8, 42)
         self.assertEqual(v2.f_string, "test")
@@ -455,8 +456,8 @@ class TestStructureVSerialization(unittest.TestCase):
         v1.f_vector = Vector_of_uint8([10, 20, 30])
         v1.f_set = Set_of_uint8([1, 2, 3])
         v1.f_map = Map_of_uint8_to_string({1: "a", 2: "b"})
-        blob = v1.encode()
-        v2 = StructureV.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = StructureV(dsviper.Value.decode(blob, StructureV.type(), definitions()))
         self.assertEqual(list(v2.f_vector), [10, 20, 30])
         self.assertEqual(len(v2.f_set), 3)
         self.assertEqual(v2.f_map[1], "a")
@@ -465,8 +466,8 @@ class TestStructureVSerialization(unittest.TestCase):
         v1 = StructureV()
         v1.f_s = StructureS({"f_float": 2.718, "f_string": "euler"})
         v1.f_e = EnumerationE.C
-        blob = v1.encode()
-        v2 = StructureV.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = StructureV(dsviper.Value.decode(blob, StructureV.type(), definitions()))
         self.assertAlmostEqual(v2.f_s.f_float, 2.718, places=3)
         self.assertEqual(v2.f_s.f_string, "euler")
         self.assertEqual(v2.f_e, EnumerationE.C)
@@ -540,4 +541,5 @@ class TestFieldNamedValue(unittest.TestCase):
         w.nested = StructureS({"f_string": "inner"})
         self.assertEqual(w.nested.f_string, "inner")
         self.assertIsInstance(w.vpr_value, dsviper.ValueStructure)
-        self.assertEqual(StructureValueField.decode(w.encode()), w)
+        blob = dsviper.Value.encode(w.vpr_value)
+        self.assertEqual(StructureValueField(dsviper.Value.decode(blob, StructureValueField.type(), definitions())), w)

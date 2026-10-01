@@ -2,6 +2,8 @@
 """Tests for Kibo-generated Variant proxy classes."""
 
 import unittest
+import dsviper
+from features import definitions
 from features.demo import StructureS
 from features.containers import Variant_of_string_or_uint8_or_Demo_StructureS
 
@@ -128,16 +130,16 @@ class TestVariantSerialization(unittest.TestCase):
     def test_encode_decode_string(self):
         v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
         v1.set_string("hello")
-        blob = v1.encode()
-        v2 = Variant_of_string_or_uint8_or_Demo_StructureS.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()))
         self.assertTrue(v2.is_string())
         self.assertEqual(v2.get_string(), "hello")
 
     def test_encode_decode_uint8(self):
         v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
         v1.set_uint8(42)
-        blob = v1.encode()
-        v2 = Variant_of_string_or_uint8_or_Demo_StructureS.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()))
         self.assertTrue(v2.is_uint8())
         self.assertEqual(v2.get_uint8(), 42)
 
@@ -145,8 +147,8 @@ class TestVariantSerialization(unittest.TestCase):
         s = StructureS({"f_float": 2.5, "f_string": "world"})
         v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
         v1.set_Demo_StructureS(s)
-        blob = v1.encode()
-        v2 = Variant_of_string_or_uint8_or_Demo_StructureS.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()))
         self.assertTrue(v2.is_Demo_StructureS())
         self.assertEqual(v2.get_Demo_StructureS().f_string, "world")
 

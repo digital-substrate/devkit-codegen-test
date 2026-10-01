@@ -115,17 +115,17 @@ test("hash_consistency", () => {
   const uuidStr = "12345678-1234-1234-1234-123456789abc";
   const key1 = new ConceptAKey(uuidStr);
   const key2 = new ConceptAKey(uuidStr);
-  assert.equal(key1.hexdigest(), key2.hexdigest());
+  assert.equal(dsviper.Value.hexdigest(key1.vprValue), dsviper.Value.hexdigest(key2.vprValue));
 });
 
 test("keys_in_dict", () => {
   const key1 = ConceptAKey.create();
   const key2 = ConceptAKey.create();
   const d = new Map();
-  d.set(key1.hexdigest(), "value1");
-  d.set(key2.hexdigest(), "value2");
-  assert.equal(d.get(key1.hexdigest()), "value1");
-  assert.equal(d.get(key2.hexdigest()), "value2");
+  d.set(dsviper.Value.hexdigest(key1.vprValue), "value1");
+  d.set(dsviper.Value.hexdigest(key2.vprValue), "value2");
+  assert.equal(d.get(dsviper.Value.hexdigest(key1.vprValue)), "value1");
+  assert.equal(d.get(dsviper.Value.hexdigest(key2.vprValue)), "value2");
 });
 
 // --- TestKeyComparison ---

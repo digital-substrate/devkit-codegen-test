@@ -9,6 +9,7 @@ This module tests:
 
 import unittest
 import dsviper
+from features import definitions
 from features.containers import Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string
 
 
@@ -108,15 +109,15 @@ class TestVecSerialization(unittest.TestCase):
 
     def test_encode_decode_roundtrip(self):
         v1 = Vec2_of_uint8([10, 20])
-        blob = v1.encode()
-        v2 = Vec2_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = Vec2_of_uint8(dsviper.Value.decode(blob, Vec2_of_uint8.type(), definitions()))
         self.assertEqual(v2[0], 10)
         self.assertEqual(v2[1], 20)
 
     def test_encode_decode_preserves_all(self):
         v1 = Vec2_of_uint8([255, 128])
-        blob = v1.encode()
-        v2 = Vec2_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(v1.vpr_value)
+        v2 = Vec2_of_uint8(dsviper.Value.decode(blob, Vec2_of_uint8.type(), definitions()))
         self.assertEqual(v2.to_tuple(), (255, 128))
 
 
@@ -257,14 +258,14 @@ class TestMatSerialization(unittest.TestCase):
 
     def test_encode_decode_roundtrip_2x2(self):
         m1 = Mat2x2_of_uint8([[1, 2], [3, 4]])
-        blob = m1.encode()
-        m2 = Mat2x2_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(m1.vpr_value)
+        m2 = Mat2x2_of_uint8(dsviper.Value.decode(blob, Mat2x2_of_uint8.type(), definitions()))
         self.assertEqual(m2.to_tuple(), ((1, 2), (3, 4)))
 
     def test_encode_decode_roundtrip_2x3(self):
         m1 = Mat2x3_of_uint8([[10, 20, 30], [40, 50, 60]])
-        blob = m1.encode()
-        m2 = Mat2x3_of_uint8.decode(blob)
+        blob = dsviper.Value.encode(m1.vpr_value)
+        m2 = Mat2x3_of_uint8(dsviper.Value.decode(blob, Mat2x3_of_uint8.type(), definitions()))
         self.assertEqual(m2.to_tuple(), ((10, 20, 30), (40, 50, 60)))
 
 
@@ -374,21 +375,21 @@ class TestTupleSerialization(unittest.TestCase):
 
     def test_encode_decode_roundtrip(self):
         t1 = Tuple_of_uint8_and_string((42, "hello"))
-        blob = t1.encode()
-        t2 = Tuple_of_uint8_and_string.decode(blob)
+        blob = dsviper.Value.encode(t1.vpr_value)
+        t2 = Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()))
         self.assertEqual(t2[0], 42)
         self.assertEqual(t2[1], "hello")
 
     def test_encode_decode_special_chars(self):
         t1 = Tuple_of_uint8_and_string((0, "héllo wörld"))
-        blob = t1.encode()
-        t2 = Tuple_of_uint8_and_string.decode(blob)
+        blob = dsviper.Value.encode(t1.vpr_value)
+        t2 = Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()))
         self.assertEqual(t2[1], "héllo wörld")
 
     def test_encode_decode_empty_string(self):
         t1 = Tuple_of_uint8_and_string((128, ""))
-        blob = t1.encode()
-        t2 = Tuple_of_uint8_and_string.decode(blob)
+        blob = dsviper.Value.encode(t1.vpr_value)
+        t2 = Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()))
         self.assertEqual(t2[0], 128)
         self.assertEqual(t2[1], "")
 

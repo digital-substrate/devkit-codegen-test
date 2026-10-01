@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
+import { definitions } from "../generated/dist/index.js";
 import { ConceptAKey } from "../generated/dist/demo/data.js";
 import { Set_of_uint8, Set_of_Demo_ConceptAKey } from "../generated/dist/containers.js";
 
@@ -313,8 +314,8 @@ test("ixor_operator", () => {
 
 test("encode_decode_roundtrip", () => {
   const s1 = new Set_of_uint8([1, 2, 3]);
-  const blob = s1.encode();
-  const s2 = Set_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(s1.vprValue);
+  const s2 = new Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()));
   assert.equal(s2.size, 3);
   assert.ok(s2.contains(1));
   assert.ok(s2.contains(2));
@@ -323,7 +324,7 @@ test("encode_decode_roundtrip", () => {
 
 test("encode_decode_empty", () => {
   const s1 = new Set_of_uint8();
-  const blob = s1.encode();
-  const s2 = Set_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(s1.vprValue);
+  const s2 = new Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()));
   assert.equal(s2.size, 0);
 });

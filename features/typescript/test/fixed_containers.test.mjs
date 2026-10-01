@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
+import { definitions } from "../generated/dist/index.js";
 import { Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string } from "../generated/dist/containers.js";
 
 // =============================================================================
@@ -100,16 +101,16 @@ test("vec_copy_preserves_values", () => {
 
 test("vec_encode_decode_roundtrip", () => {
   const v1 = new Vec2_of_uint8([10, 20]);
-  const blob = v1.encode();
-  const v2 = Vec2_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = new Vec2_of_uint8(dsviper.Value.decode(blob, Vec2_of_uint8.type(), definitions()));
   assert.equal(v2.at(0), 10);
   assert.equal(v2.at(1), 20);
 });
 
 test("vec_encode_decode_preserves_all", () => {
   const v1 = new Vec2_of_uint8([255, 128]);
-  const blob = v1.encode();
-  const v2 = Vec2_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(v1.vprValue);
+  const v2 = new Vec2_of_uint8(dsviper.Value.decode(blob, Vec2_of_uint8.type(), definitions()));
   assert.deepEqual(v2.toArray(), [255, 128]);
 });
 
@@ -141,22 +142,22 @@ test("mat_from_nested_list_2x3", () => {
   assert.equal(m.size, 6);
 });
 
-// --- TestMatAccessByRowIndex ---
+// --- TestMatAccessByColumnIndex ---
 
-test("mat_getitem_row_2x2", () => {
+test("mat_getitem_column_2x2", () => {
   const m = new Mat2x2_of_uint8([[1, 2], [3, 4]]);
-  const row0 = m.row(0);
-  const row1 = m.row(1);
-  assert.deepEqual(row0, [1, 2]);
-  assert.deepEqual(row1, [3, 4]);
+  const column0 = m.column(0);
+  const column1 = m.column(1);
+  assert.deepEqual(column0, [1, 2]);
+  assert.deepEqual(column1, [3, 4]);
 });
 
-test("mat_getitem_row_2x3", () => {
+test("mat_getitem_column_2x3", () => {
   const m = new Mat2x3_of_uint8([[1, 2, 3], [4, 5, 6]]);
-  const row0 = m.row(0);
-  const row1 = m.row(1);
-  assert.deepEqual(row0, [1, 2, 3]);
-  assert.deepEqual(row1, [4, 5, 6]);
+  const column0 = m.column(0);
+  const column1 = m.column(1);
+  assert.deepEqual(column0, [1, 2, 3]);
+  assert.deepEqual(column1, [4, 5, 6]);
 });
 
 // --- TestMatAccessByCoordinates ---
@@ -192,17 +193,17 @@ test("mat_setitem_coordinates_2x3", () => {
 
 // --- TestMatSetRow ---
 
-test("mat_setitem_row_2x2", () => {
+test("mat_setitem_column_2x2", () => {
   const m = new Mat2x2_of_uint8([[1, 2], [3, 4]]);
-  m.setRow(0, [10, 20]);
-  assert.deepEqual(m.row(0), [10, 20]);
-  assert.deepEqual(m.row(1), [3, 4]);
+  m.setColumn(0, [10, 20]);
+  assert.deepEqual(m.column(0), [10, 20]);
+  assert.deepEqual(m.column(1), [3, 4]);
 });
 
-test("mat_setitem_row_2x3", () => {
+test("mat_setitem_column_2x3", () => {
   const m = new Mat2x3_of_uint8([[1, 2, 3], [4, 5, 6]]);
-  m.setRow(1, [40, 50, 60]);
-  assert.deepEqual(m.row(1), [40, 50, 60]);
+  m.setColumn(1, [40, 50, 60]);
+  assert.deepEqual(m.column(1), [40, 50, 60]);
 });
 
 // --- TestMatLen ---
@@ -254,15 +255,15 @@ test("mat_copy_preserves_values_2x3", () => {
 
 test("mat_encode_decode_roundtrip_2x2", () => {
   const m1 = new Mat2x2_of_uint8([[1, 2], [3, 4]]);
-  const blob = m1.encode();
-  const m2 = Mat2x2_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(m1.vprValue);
+  const m2 = new Mat2x2_of_uint8(dsviper.Value.decode(blob, Mat2x2_of_uint8.type(), definitions()));
   assert.deepEqual(m2.toArray(), [[1, 2], [3, 4]]);
 });
 
 test("mat_encode_decode_roundtrip_2x3", () => {
   const m1 = new Mat2x3_of_uint8([[10, 20, 30], [40, 50, 60]]);
-  const blob = m1.encode();
-  const m2 = Mat2x3_of_uint8.decode(blob);
+  const blob = dsviper.Value.encode(m1.vprValue);
+  const m2 = new Mat2x3_of_uint8(dsviper.Value.decode(blob, Mat2x3_of_uint8.type(), definitions()));
   assert.deepEqual(m2.toArray(), [[10, 20, 30], [40, 50, 60]]);
 });
 
@@ -374,23 +375,23 @@ test("tuple_copy_preserves_values", () => {
 
 test("tuple_encode_decode_roundtrip", () => {
   const t1 = new Tuple_of_uint8_and_string([42, "hello"]);
-  const blob = t1.encode();
-  const t2 = Tuple_of_uint8_and_string.decode(blob);
+  const blob = dsviper.Value.encode(t1.vprValue);
+  const t2 = new Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()));
   assert.equal(t2.at(0), 42);
   assert.equal(t2.at(1), "hello");
 });
 
 test("tuple_encode_decode_special_chars", () => {
   const t1 = new Tuple_of_uint8_and_string([0, "héllo wörld"]);
-  const blob = t1.encode();
-  const t2 = Tuple_of_uint8_and_string.decode(blob);
+  const blob = dsviper.Value.encode(t1.vprValue);
+  const t2 = new Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()));
   assert.equal(t2.at(1), "héllo wörld");
 });
 
 test("tuple_encode_decode_empty_string", () => {
   const t1 = new Tuple_of_uint8_and_string([128, ""]);
-  const blob = t1.encode();
-  const t2 = Tuple_of_uint8_and_string.decode(blob);
+  const blob = dsviper.Value.encode(t1.vprValue);
+  const t2 = new Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()));
   assert.equal(t2.at(0), 128);
   assert.equal(t2.at(1), "");
 });
