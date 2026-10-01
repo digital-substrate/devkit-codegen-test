@@ -72,6 +72,12 @@ class TestKeyViews(unittest.TestCase):
         self.assertEqual(AnyConceptKey(self.c), self.a)
         self.assertEqual(AnyConceptKey(self.c.to_any_concept_key()), self.a)
 
+    def test_a_description_names_the_instance_concept_when_the_view_differs(self):
+        name = self.c.instance_id().encoded()
+        self.assertEqual(str(self.c), f"{name}:Demo::ConceptCKey")
+        self.assertEqual(str(self.b), f"{name}:Demo::ConceptBKey(Demo::ConceptCKey)")
+        self.assertEqual(str(data.KlubKey(self.c)), f"{name}:Demo::KlubKey(Demo::ConceptCKey)")
+
     def test_a_descendant_filed_under_its_parent(self):
         cdb = dsviper.CommitDatabase.create_in_memory()
         cdb.extend_definitions(definitions())

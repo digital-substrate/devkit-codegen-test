@@ -59,3 +59,11 @@ test("the constructor takes exactly its static type", () => {
   assert.throws(() => new ConceptBKey(c.vprValue), TypeError);
   assert.ok(new AnyConceptKey(c).equals(c.toAnyConceptKey()));
 });
+
+test("a description names the instance concept when the view differs", () => {
+  const { b, c } = views();
+  const name = c.instanceId().encoded();
+  assert.equal(`${c}`, `${name}:Demo::ConceptCKey`);
+  assert.equal(`${b}`, `${name}:Demo::ConceptBKey(Demo::ConceptCKey)`);
+  assert.equal(`${KlubKey.fromConceptCKey(c)}`, `${name}:Demo::KlubKey(Demo::ConceptCKey)`);
+});
