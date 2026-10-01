@@ -32,7 +32,7 @@ test("set_then_get", () => {
 
   // Read back from mutable state (sees uncommitted changes)
   const getting = mutable.attachmentGetting();
-  const result = ma.ConceptA.properties.get(getting, key);
+  const result = ma.ConceptA.properties.get(getting, key).unwrap();
   assert.ok(!(result === undefined));
   const retrieved = result;
   assert.equal(retrieved.f_string, "test");
@@ -51,7 +51,7 @@ test("uncommitted_changes_visible_in_mutable_state", () => {
 
   // Read within same mutable state (should see uncommitted changes)
   const getting = mutable.attachmentGetting();
-  const result = ma.ConceptA.properties.get(getting, key);
+  const result = ma.ConceptA.properties.get(getting, key).unwrap();
   assert.ok(!(result === undefined));
   assert.equal(result.f_string, "uncommitted");
 });
@@ -71,7 +71,7 @@ test("set_f_bool", () => {
   ma.ConceptA.properties.setF_bool(mutating, key, true);
 
   const getting = mutable.attachmentGetting();
-  const result = ma.ConceptA.properties.get(getting, key);
+  const result = ma.ConceptA.properties.get(getting, key).unwrap();
   assert.ok(result.f_bool);
 });
 
@@ -87,7 +87,7 @@ test("set_f_uint8", () => {
   ma.ConceptA.properties.setF_uint8(mutating, key, 255);
 
   const getting = mutable.attachmentGetting();
-  const result = ma.ConceptA.properties.get(getting, key);
+  const result = ma.ConceptA.properties.get(getting, key).unwrap();
   assert.equal(result.f_uint8, 255);
 });
 
@@ -104,7 +104,7 @@ test("set_f_string", () => {
   ma.ConceptA.properties.setF_string(mutating, key, "modified");
 
   const getting = mutable.attachmentGetting();
-  const result = ma.ConceptA.properties.get(getting, key);
+  const result = ma.ConceptA.properties.get(getting, key).unwrap();
   assert.equal(result.f_string, "modified");
 });
 
@@ -276,6 +276,6 @@ test("diff_updates_existing", () => {
   ma.ConceptA.properties.diff(mutating, key, value2);
 
   const getting = mutable.attachmentGetting();
-  const result = ma.ConceptA.properties.get(getting, key);
+  const result = ma.ConceptA.properties.get(getting, key).unwrap();
   assert.equal(result.f_string, "modified");
 });

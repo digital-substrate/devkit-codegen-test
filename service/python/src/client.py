@@ -46,5 +46,6 @@ if player_model.is_available():
     print(f"key is {key}")
 
     if found := player_model.has_player(mutating, nickname):
-        if player := attachments.Player.property.get(mutating, found):
+        if document := attachments.Player.property.get(mutating, found.unwrap()):
+            player = document.unwrap()
             print(f"nickname={player.nickname}, level={player.level}")

@@ -168,14 +168,17 @@ class TestStructureUContainerFields(unittest.TestCase):
         opt = Optional_of_uint8()
         self.u.f_optional = opt
         retrieved = self.u.f_optional
-        self.assertIsNone(retrieved)
+        self.assertIs(type(retrieved), Optional_of_uint8)
+        self.assertTrue(retrieved.is_nil())
+        self.assertFalse(retrieved)
 
     def test_field_optional_value(self):
         opt = Optional_of_uint8(42)
         self.u.f_optional = opt
         retrieved = self.u.f_optional
-        self.assertIsNotNone(retrieved)
-        self.assertEqual(retrieved, 42)
+        self.assertIs(type(retrieved), Optional_of_uint8)
+        self.assertTrue(retrieved)
+        self.assertEqual(retrieved.unwrap(), 42)
 
     def test_field_vector(self):
         vec = Vector_of_uint8([1, 2, 3, 4, 5])
@@ -343,14 +346,17 @@ class TestStructureVDynamicContainerFields(unittest.TestCase):
         opt = Optional_of_uint8()
         self.v.f_optional = opt
         retrieved = self.v.f_optional
-        self.assertIsNone(retrieved)
+        self.assertIs(type(retrieved), Optional_of_uint8)
+        self.assertTrue(retrieved.is_nil())
+        self.assertFalse(retrieved)
 
     def test_field_optional_value(self):
         opt = Optional_of_uint8(42)
         self.v.f_optional = opt
         retrieved = self.v.f_optional
-        self.assertIsNotNone(retrieved)
-        self.assertEqual(retrieved, 42)
+        self.assertIs(type(retrieved), Optional_of_uint8)
+        self.assertTrue(retrieved)
+        self.assertEqual(retrieved.unwrap(), 42)
 
     def test_field_vector(self):
         vec = Vector_of_uint8([1, 2, 3, 4, 5])

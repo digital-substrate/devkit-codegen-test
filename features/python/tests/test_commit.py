@@ -45,7 +45,7 @@ class TestAttachmentMutatingSetGet(unittest.TestCase):
 
         # Read back from mutable state (sees uncommitted changes)
         getting = mutable.attachment_getting()
-        result = ma.ConceptA.properties.get(getting, key)
+        result = ma.ConceptA.properties.get(getting, key).unwrap()
         self.assertIsNotNone(result)
         retrieved = result
         self.assertEqual(retrieved.f_string, "test")
@@ -62,7 +62,7 @@ class TestAttachmentMutatingSetGet(unittest.TestCase):
 
         # Read within same mutable state (should see uncommitted changes)
         getting = mutable.attachment_getting()
-        result = ma.ConceptA.properties.get(getting, key)
+        result = ma.ConceptA.properties.get(getting, key).unwrap()
         self.assertIsNotNone(result)
         self.assertEqual(result.f_string, "uncommitted")
 
@@ -86,7 +86,7 @@ class TestCommitFieldUpdate(unittest.TestCase):
         ma.ConceptA.properties.set_f_bool(mutating, key, True)
 
         getting = mutable.attachment_getting()
-        result = ma.ConceptA.properties.get(getting, key)
+        result = ma.ConceptA.properties.get(getting, key).unwrap()
         self.assertTrue(result.f_bool)
 
     def test_set_f_uint8(self):
@@ -100,7 +100,7 @@ class TestCommitFieldUpdate(unittest.TestCase):
         ma.ConceptA.properties.set_f_uint8(mutating, key, 255)
 
         getting = mutable.attachment_getting()
-        result = ma.ConceptA.properties.get(getting, key)
+        result = ma.ConceptA.properties.get(getting, key).unwrap()
         self.assertEqual(result.f_uint8, 255)
 
     def test_set_f_string(self):
@@ -115,7 +115,7 @@ class TestCommitFieldUpdate(unittest.TestCase):
         ma.ConceptA.properties.set_f_string(mutating, key, "modified")
 
         getting = mutable.attachment_getting()
-        result = ma.ConceptA.properties.get(getting, key)
+        result = ma.ConceptA.properties.get(getting, key).unwrap()
         self.assertEqual(result.f_string, "modified")
 
 
@@ -299,7 +299,7 @@ class TestCommitDiff(unittest.TestCase):
         ma.ConceptA.properties.diff(mutating, key, value2)
 
         getting = mutable.attachment_getting()
-        result = ma.ConceptA.properties.get(getting, key)
+        result = ma.ConceptA.properties.get(getting, key).unwrap()
         self.assertEqual(result.f_string, "modified")
 
 

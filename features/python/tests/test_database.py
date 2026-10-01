@@ -70,7 +70,8 @@ class TestAttachmentGetSet(unittest.TestCase):
     def test_get_absent_returns_nil(self):
         key = ConceptAKey.create()
         result = db.ConceptA.properties.get(self.database, key)
-        self.assertIsNone(result)
+        self.assertTrue(result.is_nil())
+        self.assertFalse(result)
 
     def test_set_then_get(self):
         key = ConceptAKey.create()
@@ -82,7 +83,7 @@ class TestAttachmentGetSet(unittest.TestCase):
         db.ConceptA.properties.set(self.database, key, value)
         self.database.commit()
 
-        result = db.ConceptA.properties.get(self.database, key)
+        result = db.ConceptA.properties.get(self.database, key).unwrap()
 
         self.assertIsNotNone(result)
         retrieved = result
@@ -104,7 +105,7 @@ class TestAttachmentGetSet(unittest.TestCase):
         db.ConceptA.properties.set(self.database, key, value2)
         self.database.commit()
 
-        result = db.ConceptA.properties.get(self.database, key)
+        result = db.ConceptA.properties.get(self.database, key).unwrap()
         self.assertEqual(result.f_string, "second")
 
 
@@ -183,7 +184,7 @@ class TestAttachmentInt8(unittest.TestCase):
         db.ConceptA.properties_int_8.set(self.database, key, 42)
         self.database.commit()
 
-        result = db.ConceptA.properties_int_8.get(self.database, key)
+        result = db.ConceptA.properties_int_8.get(self.database, key).unwrap()
         self.assertIsNotNone(result)
         self.assertEqual(result, 42)
 
@@ -194,7 +195,7 @@ class TestAttachmentInt8(unittest.TestCase):
         db.ConceptA.properties_int_8.set(self.database, key, -100)
         self.database.commit()
 
-        result = db.ConceptA.properties_int_8.get(self.database, key)
+        result = db.ConceptA.properties_int_8.get(self.database, key).unwrap()
         self.assertEqual(result, -100)
 
 
@@ -212,10 +213,21 @@ class TestAttachmentSetInt8(unittest.TestCase):
         db.ConceptA.properties_se_int_8.set(self.database, key, value)
         self.database.commit()
 
-        result = db.ConceptA.properties_se_int_8.get(self.database, key)
+        result = db.ConceptA.properties_se_int_8.get(self.database, key).unwrap()
         self.assertIsNotNone(result)
         retrieved = result
         self.assertEqual(len(retrieved), 3)
+
+    def test_an_empty_document_is_present(self):
+        key = ConceptAKey.create()
+
+        self.database.begin_transaction()
+        db.ConceptA.properties_se_int_8.set(self.database, key, Set_of_int8())
+        self.database.commit()
+
+        result = db.ConceptA.properties_se_int_8.get(self.database, key)
+        self.assertTrue(result)
+        self.assertEqual(len(result.unwrap()), 0)
 
 
 class TestAttachmentMapInt8String(unittest.TestCase):
@@ -232,7 +244,7 @@ class TestAttachmentMapInt8String(unittest.TestCase):
         db.ConceptA.properties_map_int_8_string.set(self.database, key, value)
         self.database.commit()
 
-        result = db.ConceptA.properties_map_int_8_string.get(self.database, key)
+        result = db.ConceptA.properties_map_int_8_string.get(self.database, key).unwrap()
         self.assertIsNotNone(result)
         retrieved = result
         self.assertEqual(retrieved[1], "one")
@@ -253,7 +265,7 @@ class TestAttachmentXArray(unittest.TestCase):
         db.ConceptA.properties_x_array.set(self.database, key, value)
         self.database.commit()
 
-        result = db.ConceptA.properties_x_array.get(self.database, key)
+        result = db.ConceptA.properties_x_array.get(self.database, key).unwrap()
         self.assertIsNotNone(result)
         retrieved = result
         self.assertEqual(len(retrieved), 4)
@@ -274,7 +286,7 @@ class TestAttachmentConceptB(unittest.TestCase):
         db.ConceptB.properties_b.set(self.database, key, value)
         self.database.commit()
 
-        result = db.ConceptB.properties_b.get(self.database, key)
+        result = db.ConceptB.properties_b.get(self.database, key).unwrap()
 
         self.assertIsNotNone(result)
         self.assertEqual(result.field_string, "concept B value")
@@ -296,7 +308,7 @@ class TestAttachmentConceptC(unittest.TestCase):
         db.ConceptC.properties_c.set(self.database, key, value)
         self.database.commit()
 
-        result = db.ConceptC.properties_c.get(self.database, key)
+        result = db.ConceptC.properties_c.get(self.database, key).unwrap()
 
         self.assertIsNotNone(result)
         retrieved = result

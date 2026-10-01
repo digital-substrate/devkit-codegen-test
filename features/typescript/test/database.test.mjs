@@ -57,7 +57,7 @@ test("get_absent_returns_nil", () => {
   const database = createDatabase();
   const key = ConceptAKey.create();
   const result = db.ConceptA.properties.get(database, key);
-  assert.ok((result === undefined));
+  assert.ok(result.isNil());
 });
 
 test("set_then_get", () => {
@@ -71,7 +71,7 @@ test("set_then_get", () => {
   db.ConceptA.properties.set(database, key, value);
   database.commit();
 
-  const result = db.ConceptA.properties.get(database, key);
+  const result = db.ConceptA.properties.get(database, key).unwrap();
 
   assert.ok(!(result === undefined));
   const retrieved = result;
@@ -95,7 +95,7 @@ test("overwrite_value", () => {
   db.ConceptA.properties.set(database, key, value2);
   database.commit();
 
-  const result = db.ConceptA.properties.get(database, key);
+  const result = db.ConceptA.properties.get(database, key).unwrap();
   assert.equal(result.f_string, "second");
 });
 
@@ -166,7 +166,7 @@ test("set_get_int8", () => {
   db.ConceptA.propertiesInt8.set(database, key, 42);
   database.commit();
 
-  const result = db.ConceptA.propertiesInt8.get(database, key);
+  const result = db.ConceptA.propertiesInt8.get(database, key).unwrap();
   assert.ok(!(result === undefined));
   assert.equal(result, 42);
 });
@@ -179,7 +179,7 @@ test("negative_int8", () => {
   db.ConceptA.propertiesInt8.set(database, key, -100);
   database.commit();
 
-  const result = db.ConceptA.propertiesInt8.get(database, key);
+  const result = db.ConceptA.propertiesInt8.get(database, key).unwrap();
   assert.equal(result, -100);
 });
 
@@ -193,7 +193,7 @@ test("set_get_set_int8", () => {
   db.ConceptA.propertiesSeInt8.set(database, key, value);
   database.commit();
 
-  const result = db.ConceptA.propertiesSeInt8.get(database, key);
+  const result = db.ConceptA.propertiesSeInt8.get(database, key).unwrap();
   assert.ok(!(result === undefined));
   const retrieved = result;
   assert.equal(retrieved.size, 3);
@@ -209,7 +209,7 @@ test("set_get_map", () => {
   db.ConceptA.propertiesMapInt8String.set(database, key, value);
   database.commit();
 
-  const result = db.ConceptA.propertiesMapInt8String.get(database, key);
+  const result = db.ConceptA.propertiesMapInt8String.get(database, key).unwrap();
   assert.ok(!(result === undefined));
   const retrieved = result;
   assert.equal(retrieved.at(1), "one");
@@ -226,7 +226,7 @@ test("set_get_xarray", () => {
   db.ConceptA.propertiesXArray.set(database, key, value);
   database.commit();
 
-  const result = db.ConceptA.propertiesXArray.get(database, key);
+  const result = db.ConceptA.propertiesXArray.get(database, key).unwrap();
   assert.ok(!(result === undefined));
   const retrieved = result;
   assert.equal(retrieved.size, 4);
@@ -243,7 +243,7 @@ test("concept_b_attachment", () => {
   db.ConceptB.propertiesB.set(database, key, value);
   database.commit();
 
-  const result = db.ConceptB.propertiesB.get(database, key);
+  const result = db.ConceptB.propertiesB.get(database, key).unwrap();
 
   assert.ok(!(result === undefined));
   assert.equal(result.field_string, "concept B value");
@@ -261,7 +261,7 @@ test("concept_c_attachment", () => {
   db.ConceptC.propertiesC.set(database, key, value);
   database.commit();
 
-  const result = db.ConceptC.propertiesC.get(database, key);
+  const result = db.ConceptC.propertiesC.get(database, key).unwrap();
 
   assert.ok(!(result === undefined));
   const retrieved = result;
@@ -297,4 +297,17 @@ test("multiple_attachments_independent", () => {
 
   assert.ok(!db.ConceptA.properties.has(database, key));
   assert.ok(db.ConceptA.propertiesInt8.has(database, key));
+});
+
+test("an empty document is present", () => {
+  const database = createDatabase();
+  const key = ConceptAKey.create();
+
+  database.beginTransaction();
+  db.ConceptA.propertiesSeInt8.set(database, key, new Set_of_int8());
+  database.commit();
+
+  const result = db.ConceptA.propertiesSeInt8.get(database, key);
+  assert.ok(!result.isNil());
+  assert.equal(result.unwrap().size, 0);
 });

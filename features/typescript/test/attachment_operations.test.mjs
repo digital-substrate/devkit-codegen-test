@@ -20,9 +20,9 @@ test("set field: union and subtract", () => {
   const key = ConceptAKey.create();
   ma.ConceptA.properties.set(m, key, new StructureV());
   ma.ConceptA.properties.unionF_set(m, key, new Set([7, 8]));
-  assert.deepEqual(sorted(ma.ConceptA.properties.get(m, key).f_set), [1, 2, 3, 7, 8]);
+  assert.deepEqual(sorted(ma.ConceptA.properties.get(m, key).unwrap().f_set), [1, 2, 3, 7, 8]);
   ma.ConceptA.properties.subtractF_set(m, key, [1, 7]);
-  assert.deepEqual(sorted(ma.ConceptA.properties.get(m, key).f_set), [2, 3, 8]);
+  assert.deepEqual(sorted(ma.ConceptA.properties.get(m, key).unwrap().f_set), [2, 3, 8]);
 });
 
 test("map field: union, update and subtract", () => {
@@ -32,7 +32,7 @@ test("map field: union, update and subtract", () => {
   ma.ConceptA.properties.unionF_map(m, key, new Map([[2, "Two"]]));
   ma.ConceptA.properties.updateF_map(m, key, new Map([[0, "zero"], [9, "Nine"]]));
   ma.ConceptA.properties.subtractF_map(m, key, [1]);
-  assert.deepEqual(asObject(ma.ConceptA.properties.get(m, key).f_map), { 0: "zero", 2: "Two" });
+  assert.deepEqual(asObject(ma.ConceptA.properties.get(m, key).unwrap().f_map), { 0: "zero", 2: "Two" });
 });
 
 test("xarray field: insert, update and remove", () => {
@@ -45,7 +45,7 @@ test("xarray field: insert, update and remove", () => {
   ma.ConceptC.propertiesC.insertF_xarray(m, key, dsviper.ValueUUId.INVALID, second, 6);
   ma.ConceptC.propertiesC.updateF_xarray(m, key, first, 50);
   ma.ConceptC.propertiesC.removeF_xarray(m, key, second);
-  assert.deepEqual([...ma.ConceptC.propertiesC.get(m, key).f_xarray], [50]);
+  assert.deepEqual([...ma.ConceptC.propertiesC.get(m, key).unwrap().f_xarray], [50]);
 });
 
 test("scalar field: set", () => {
@@ -53,7 +53,7 @@ test("scalar field: set", () => {
   const key = ConceptAKey.create();
   ma.ConceptA.properties.set(m, key, new StructureV());
   ma.ConceptA.properties.setF_string(m, key, "written");
-  assert.equal(ma.ConceptA.properties.get(m, key).f_string, "written");
+  assert.equal(ma.ConceptA.properties.get(m, key).unwrap().f_string, "written");
 });
 
 // --- when the document is itself the aggregate ---
@@ -64,7 +64,7 @@ test("set document: union and subtract", () => {
   ma.ConceptA.propertiesSeInt8.set(m, key, [1, 2]);
   ma.ConceptA.propertiesSeInt8.union(m, key, [3]);
   ma.ConceptA.propertiesSeInt8.subtract(m, key, new Set([1]));
-  assert.deepEqual(sorted(ma.ConceptA.propertiesSeInt8.get(m, key)), [2, 3]);
+  assert.deepEqual(sorted(ma.ConceptA.propertiesSeInt8.get(m, key).unwrap()), [2, 3]);
 });
 
 test("map document: union, update and subtract", () => {
@@ -74,7 +74,7 @@ test("map document: union, update and subtract", () => {
   ma.ConceptA.propertiesMapInt8String.union(m, key, new Map([[2, "Two"]]));
   ma.ConceptA.propertiesMapInt8String.update(m, key, new Map([[1, "one"], [3, "Three"]]));
   ma.ConceptA.propertiesMapInt8String.subtract(m, key, [2]);
-  assert.deepEqual(asObject(ma.ConceptA.propertiesMapInt8String.get(m, key)), { 1: "one" });
+  assert.deepEqual(asObject(ma.ConceptA.propertiesMapInt8String.get(m, key).unwrap()), { 1: "one" });
 });
 
 test("xarray document: insert, update and remove", () => {
@@ -84,9 +84,9 @@ test("xarray document: insert, update and remove", () => {
   const position = dsviper.ValueUUId.create();
   ma.ConceptA.propertiesXArray.insert(m, key, dsviper.ValueUUId.INVALID, position, 4);
   ma.ConceptA.propertiesXArray.update(m, key, position, 40);
-  assert.deepEqual([...ma.ConceptA.propertiesXArray.get(m, key)], [40]);
+  assert.deepEqual([...ma.ConceptA.propertiesXArray.get(m, key).unwrap()], [40]);
   ma.ConceptA.propertiesXArray.remove(m, key, position);
-  assert.deepEqual([...ma.ConceptA.propertiesXArray.get(m, key)], []);
+  assert.deepEqual([...ma.ConceptA.propertiesXArray.get(m, key).unwrap()], []);
 });
 
 // --- an operation exists only where the document gives it a meaning ---

@@ -83,7 +83,7 @@ ok &= check("a new attachment does not know the key", not colour.has(mutating, k
 
 colour.set(mutating, key, modela.Colour(r=1, g=2, b=3))
 ok &= check("after a write, the key is known", colour.has(mutating, key))
-ok &= check("and the document comes back unchanged", colour.get(mutating, key) == modela.Colour(r=1, g=2, b=3))
+ok &= check("and the document comes back unchanged", colour.get(mutating, key).unwrap() == modela.Colour(r=1, g=2, b=3))
 keys = colour.keys(mutating)
 ok &= check("the attachment's keys are its key set, typed",
             type(keys).__name__ == "Set_of_ModelA_MaterialKey" and list(keys) == [key])
@@ -91,9 +91,9 @@ ok &= check("the attachment's keys are its key set, typed",
 # A single field, through a method generated for it: the name completes, and a typo
 # shows at import, not at call time.
 colour.set_r(mutating, key, 9)
-ok &= check("a single field is written through its method", colour.get(mutating, key).r == 9)
+ok &= check("a single field is written through its method", colour.get(mutating, key).unwrap().r == 9)
 
-ok &= check("a missing key returns None", colour.get(mutating, modela.MaterialKey.create()) is None)
+ok &= check("a missing key returns a nil optional", colour.get(mutating, modela.MaterialKey.create()).is_nil())
 
 # A concept named like another's key. `MaterialKey` is Material's key and a concept of its
 # own; its attachments form a class of that name in the module, and Material's key must stay
@@ -101,7 +101,7 @@ ok &= check("a missing key returns None", colour.get(mutating, modela.MaterialKe
 note_key = modela.MaterialKeyKey.create()
 modela_attachments.MaterialKey.note.set(mutating, note_key, modela.MaterialKeyNote(material=key))
 ok &= check("a concept named like another's key does not hide that key",
-            modela_attachments.MaterialKey.note.get(mutating, note_key).material == key)
+            modela_attachments.MaterialKey.note.get(mutating, note_key).unwrap().material == key)
 # And the annotations -- what a type checker and the editor read -- do name the key:
 # `key: MaterialKey` resolved in the module gave the attachments class.
 import typing                                                           # noqa: E402
@@ -117,7 +117,7 @@ database.extend_definitions(definitions())
 database.begin_transaction()
 ok &= check("a write to the database returns a status",
             colour.set(database, key, modela.Colour(r=4, g=5, b=6)) is True)
-ok &= check("and reads back through the same calls", colour.get(database, key) == modela.Colour(r=4, g=5, b=6))
+ok &= check("and reads back through the same calls", colour.get(database, key).unwrap() == modela.Colour(r=4, g=5, b=6))
 ok &= check("delete is the only operation the database adds", colour.delete(database, key) is True)
 ok &= check("after delete, the key is no longer known", not colour.has(database, key))
 database.commit()
@@ -155,7 +155,7 @@ else:
     typed = Map_of_ModelA_MaterialKey_to_ModelB_MaterialKey()
     typed[a] = b
     projection_attachments.Link.mapping.set(mutating, link, typed)
-    mapping = projection_attachments.Link.mapping.get(mutating, link)
+    mapping = projection_attachments.Link.mapping.get(mutating, link).unwrap()
     ok &= check("a map document reads back as its declared class",
                 type(mapping) is Map_of_ModelA_MaterialKey_to_ModelB_MaterialKey and len(mapping) == 1)
     ok &= check("and its key carries its unit's class",
@@ -165,7 +165,7 @@ else:
     marker = model_c.MarkerKey.create()
     projection_attachments.Link.marker.set(mutating, link, marker)
     ok &= check("a key document comes back typed",
-                projection_attachments.Link.marker.get(mutating, link) == marker)
+                projection_attachments.Link.marker.get(mutating, link).unwrap() == marker)
 
 ok &= check("a pool carries its model identity",
             tools.Pool.UUID.encoded() == "17e63428-03e1-41d7-ad9d-60c5665bbd66")

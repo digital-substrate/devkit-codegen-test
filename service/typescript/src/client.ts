@@ -36,9 +36,10 @@ if (playerModel.isAvailable()) {
     console.log(`key is ${playerModel.create(mutating, nickname, Level.BEGINNER)}`);
 
     const found = playerModel.hasPlayer(mutating, nickname);
-    if (found !== undefined) {
-        const player = Player.property.get(mutating, found);
-        if (player !== undefined) {
+    if (!found.isNil()) {
+        const document = Player.property.get(mutating, found.unwrap());
+        if (!document.isNil()) {
+            const player = document.unwrap();
             console.log(`nickname=${player.nickname}, level=${player.level}`);
         }
     }

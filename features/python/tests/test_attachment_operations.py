@@ -26,9 +26,9 @@ class TestFieldOperations(Operations):
         key = ConceptAKey.create()
         ma.ConceptA.properties.set(self.m, key, StructureV())
         ma.ConceptA.properties.union_f_set(self.m, key, {7, 8})
-        self.assertEqual(set(ma.ConceptA.properties.get(self.m, key).f_set), {1, 2, 3, 7, 8})
+        self.assertEqual(set(ma.ConceptA.properties.get(self.m, key).unwrap().f_set), {1, 2, 3, 7, 8})
         ma.ConceptA.properties.subtract_f_set(self.m, key, [1, 7])
-        self.assertEqual(set(ma.ConceptA.properties.get(self.m, key).f_set), {2, 3, 8})
+        self.assertEqual(set(ma.ConceptA.properties.get(self.m, key).unwrap().f_set), {2, 3, 8})
 
     def test_map_field(self):
         key = ConceptAKey.create()
@@ -36,7 +36,7 @@ class TestFieldOperations(Operations):
         ma.ConceptA.properties.union_f_map(self.m, key, {2: "Two"})
         ma.ConceptA.properties.update_f_map(self.m, key, {0: "zero", 9: "Nine"})
         ma.ConceptA.properties.subtract_f_map(self.m, key, [1])
-        self.assertEqual(as_dict(ma.ConceptA.properties.get(self.m, key).f_map), {0: "zero", 2: "Two"})
+        self.assertEqual(as_dict(ma.ConceptA.properties.get(self.m, key).unwrap().f_map), {0: "zero", 2: "Two"})
 
     def test_xarray_field(self):
         key = ConceptCKey.create()
@@ -46,13 +46,13 @@ class TestFieldOperations(Operations):
         ma.ConceptC.properties_c.insert_f_xarray(self.m, key, dsviper.ValueUUId.INVALID, second, 6)
         ma.ConceptC.properties_c.update_f_xarray(self.m, key, first, 50)
         ma.ConceptC.properties_c.remove_f_xarray(self.m, key, second)
-        self.assertEqual(list(ma.ConceptC.properties_c.get(self.m, key).f_xarray), [50])
+        self.assertEqual(list(ma.ConceptC.properties_c.get(self.m, key).unwrap().f_xarray), [50])
 
     def test_scalar_field(self):
         key = ConceptAKey.create()
         ma.ConceptA.properties.set(self.m, key, StructureV())
         ma.ConceptA.properties.set_f_string(self.m, key, "written")
-        self.assertEqual(ma.ConceptA.properties.get(self.m, key).f_string, "written")
+        self.assertEqual(ma.ConceptA.properties.get(self.m, key).unwrap().f_string, "written")
 
 
 class TestDocumentOperations(Operations):
@@ -63,7 +63,7 @@ class TestDocumentOperations(Operations):
         ma.ConceptA.properties_se_int_8.set(self.m, key, {1, 2})
         ma.ConceptA.properties_se_int_8.union(self.m, key, {3})
         ma.ConceptA.properties_se_int_8.subtract(self.m, key, {1})
-        self.assertEqual(set(ma.ConceptA.properties_se_int_8.get(self.m, key)), {2, 3})
+        self.assertEqual(set(ma.ConceptA.properties_se_int_8.get(self.m, key).unwrap()), {2, 3})
 
     def test_map_document(self):
         key = ConceptAKey.create()
@@ -71,7 +71,7 @@ class TestDocumentOperations(Operations):
         ma.ConceptA.properties_map_int_8_string.union(self.m, key, {2: "Two"})
         ma.ConceptA.properties_map_int_8_string.update(self.m, key, {1: "one", 3: "Three"})
         ma.ConceptA.properties_map_int_8_string.subtract(self.m, key, [2])
-        self.assertEqual(as_dict(ma.ConceptA.properties_map_int_8_string.get(self.m, key)), {1: "one"})
+        self.assertEqual(as_dict(ma.ConceptA.properties_map_int_8_string.get(self.m, key).unwrap()), {1: "one"})
 
     def test_xarray_document(self):
         key = ConceptAKey.create()
@@ -79,9 +79,9 @@ class TestDocumentOperations(Operations):
         position = dsviper.ValueUUId.create()
         ma.ConceptA.properties_x_array.insert(self.m, key, dsviper.ValueUUId.INVALID, position, 4)
         ma.ConceptA.properties_x_array.update(self.m, key, position, 40)
-        self.assertEqual(list(ma.ConceptA.properties_x_array.get(self.m, key)), [40])
+        self.assertEqual(list(ma.ConceptA.properties_x_array.get(self.m, key).unwrap()), [40])
         ma.ConceptA.properties_x_array.remove(self.m, key, position)
-        self.assertEqual(list(ma.ConceptA.properties_x_array.get(self.m, key)), [])
+        self.assertEqual(list(ma.ConceptA.properties_x_array.get(self.m, key).unwrap()), [])
 
 
 class TestOnlyWhatTheDocumentHas(unittest.TestCase):

@@ -7,7 +7,7 @@
 import { Composites } from "../generated/dist/woven/data.js";
 import * as core from "../generated/dist/core/data.js";
 import * as parts from "../generated/dist/parts/data.js";
-import { Map_of_Core_Grade_to_Parts_Colour, Set_of_Core_ThingKey, Vector_of_Parts_Colour }
+import { Map_of_Core_Grade_to_Parts_Colour, Optional_of_Core_ThingKey, Set_of_Core_ThingKey, Vector_of_Parts_Colour }
     from "../generated/dist/containers.js";
 
 let ok = true;
@@ -35,7 +35,8 @@ check("and its elements carry their class",
       c.f_vector.at(0) instanceof parts.Colour && c.f_vector.at(0).r === 1);
 
 c.f_optional = core.ThingKey.create();
-check("an optional yields the value", c.f_optional instanceof core.ThingKey);
+check("an optional yields its declared class", c.f_optional instanceof Optional_of_Core_ThingKey);
+check("and unwraps to the value", c.f_optional.unwrap() instanceof core.ThingKey);
 
 const graded = new Map_of_Core_Grade_to_Parts_Colour();
 graded.set(core.Grade.LOW, new parts.Colour({ r: 7, g: 8, b: 9 }));

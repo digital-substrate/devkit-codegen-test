@@ -190,15 +190,16 @@ test("StructureU: optional nil field", () => {
   const u = new StructureU();
   u.f_optional = new Optional_of_uint8();
   const retrieved = u.f_optional;
-  assert.ok((retrieved === undefined));
+  assert.ok(retrieved instanceof Optional_of_uint8);
+  assert.ok(retrieved.isNil());
 });
 
 test("StructureU: optional value field", () => {
   const u = new StructureU();
   u.f_optional = new Optional_of_uint8(42);
   const retrieved = u.f_optional;
-  assert.ok(!(retrieved === undefined));
-  assert.equal(retrieved, 42);
+  assert.ok(retrieved instanceof Optional_of_uint8);
+  assert.equal(retrieved.unwrap(), 42);
 });
 
 test("StructureU: vector field", () => {
@@ -377,15 +378,16 @@ test("StructureV: optional nil field", () => {
   const v = new StructureV();
   v.f_optional = new Optional_of_uint8();
   const retrieved = v.f_optional;
-  assert.ok((retrieved === undefined));
+  assert.ok(retrieved instanceof Optional_of_uint8);
+  assert.ok(retrieved.isNil());
 });
 
 test("StructureV: optional value field", () => {
   const v = new StructureV();
   v.f_optional = new Optional_of_uint8(42);
   const retrieved = v.f_optional;
-  assert.ok(!(retrieved === undefined));
-  assert.equal(retrieved, 42);
+  assert.ok(retrieved instanceof Optional_of_uint8);
+  assert.equal(retrieved.unwrap(), 42);
 });
 
 test("StructureV: vector field", () => {
