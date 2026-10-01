@@ -127,7 +127,7 @@ test("diff_keys_added", () => {
   // diffKeys(current, other): added = keys in other but not current
   const [added, removed, different, same] = ma.ConceptA.properties.diffKeys(before, after);
   assert.equal(added.size, 1);
-  assert.ok(added.contains(key));
+  assert.ok(added.has(key));
   assert.equal(removed.size, 0);
   assert.equal(different.size, 0);
   assert.equal(same.size, 0);
@@ -152,7 +152,7 @@ test("diff_keys_removed", () => {
   const [added, removed, different, same] = ma.ConceptA.properties.diffKeys(before, after);
   assert.equal(added.size, 0);
   assert.equal(removed.size, 1);
-  assert.ok(removed.contains(key));
+  assert.ok(removed.has(key));
   assert.equal(different.size, 0);
   assert.equal(same.size, 0);
 });
@@ -180,7 +180,7 @@ test("diff_keys_different", () => {
   assert.equal(added.size, 0);
   assert.equal(removed.size, 0);
   assert.equal(different.size, 1);
-  assert.ok(different.contains(key));
+  assert.ok(different.has(key));
   assert.equal(same.size, 0);
 });
 
@@ -206,7 +206,7 @@ test("diff_keys_same", () => {
   assert.equal(removed.size, 0);
   assert.equal(different.size, 0);
   assert.equal(same.size, 1);
-  assert.ok(same.contains(key));
+  assert.ok(same.has(key));
 });
 
 // TestCommitEnumerate

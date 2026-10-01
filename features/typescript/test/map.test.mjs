@@ -92,7 +92,7 @@ test("values", () => {
 
 test("items", () => {
   const m = new Map_of_int8_to_string([[1, "one"], [2, "two"]]);
-  const items = m.items();
+  const items = m.entries();
   assert.equal(items.length, 2);
 });
 

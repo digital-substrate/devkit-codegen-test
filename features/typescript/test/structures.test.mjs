@@ -404,9 +404,9 @@ test("StructureV: set field", () => {
   v.f_set = new Set_of_uint8([1, 2, 3]);
   const retrieved = v.f_set;
   assert.equal(retrieved.size, 3);
-  assert.ok(retrieved.contains(1));
-  assert.ok(retrieved.contains(2));
-  assert.ok(retrieved.contains(3));
+  assert.ok(retrieved.has(1));
+  assert.ok(retrieved.has(2));
+  assert.ok(retrieved.has(3));
 });
 
 test("StructureV: map field", () => {

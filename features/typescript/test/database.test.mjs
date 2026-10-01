@@ -30,7 +30,7 @@ test("keys_after_set", () => {
 
   const keys = db.ConceptA.properties.keys(database);
   assert.equal(keys.size, 1);
-  assert.ok(keys.contains(key));
+  assert.ok(keys.has(key));
 });
 
 // TestAttachmentHas

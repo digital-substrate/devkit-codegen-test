@@ -26,12 +26,12 @@ test("set_removes_duplicates", () => {
 
 test("contains_present", () => {
   const s = new Set_of_uint8([1, 2, 3]);
-  assert.ok(s.contains(1));
+  assert.ok(s.has(1));
 });
 
 test("contains_absent", () => {
   const s = new Set_of_uint8([1, 2, 3]);
-  assert.ok(!s.contains(99));
+  assert.ok(!s.has(99));
 });
 
 // --- TestSetMutations ---
@@ -40,7 +40,7 @@ test("add", () => {
   const s = new Set_of_uint8([1, 2]);
   s.add(3);
   assert.equal(s.size, 3);
-  assert.ok(s.contains(3));
+  assert.ok(s.has(3));
 });
 
 test("add_duplicate", () => {
@@ -53,7 +53,7 @@ test("discard_present", () => {
   const s = new Set_of_uint8([1, 2, 3]);
   s.discard(2);
   assert.equal(s.size, 2);
-  assert.ok(!s.contains(2));
+  assert.ok(!s.has(2));
 });
 
 test("discard_absent", () => {
@@ -116,7 +116,7 @@ test("difference", () => {
   const s2 = new Set_of_uint8([2, 3, 4]);
   const result = s1.difference(s2);
   assert.equal(result.size, 1);
-  assert.ok(result.contains(1));
+  assert.ok(result.has(1));
 });
 
 test("difference_operator", () => {
@@ -161,7 +161,7 @@ test("set_of_keys", () => {
   s.add(k1);
   s.add(k2);
   assert.equal(s.size, 2);
-  assert.ok(s.contains(k1));
+  assert.ok(s.has(k1));
 });
 
 // --- TestSetCopy ---
@@ -178,9 +178,9 @@ test("copy_creates_independent_set", () => {
 test("copy_preserves_elements", () => {
   const s1 = new Set_of_uint8([10, 20, 30]);
   const s2 = s1.copy();
-  assert.ok(s2.contains(10));
-  assert.ok(s2.contains(20));
-  assert.ok(s2.contains(30));
+  assert.ok(s2.has(10));
+  assert.ok(s2.has(20));
+  assert.ok(s2.has(30));
 });
 
 // --- TestSetUpdateOperations ---
@@ -190,7 +190,7 @@ test("update", () => {
   const s2 = new Set_of_uint8([2, 3]);
   s1.update(s2);
   assert.equal(s1.size, 3);
-  assert.ok(s1.contains(3));
+  assert.ok(s1.has(3));
 });
 
 test("difference_update", () => {
@@ -198,8 +198,8 @@ test("difference_update", () => {
   const s2 = new Set_of_uint8([2, 3, 4]);
   s1.differenceUpdate(s2);
   assert.equal(s1.size, 1);
-  assert.ok(s1.contains(1));
-  assert.ok(!s1.contains(2));
+  assert.ok(s1.has(1));
+  assert.ok(!s1.has(2));
 });
 
 test("intersection_update", () => {
@@ -207,10 +207,10 @@ test("intersection_update", () => {
   const s2 = new Set_of_uint8([2, 3, 4]);
   s1.intersectionUpdate(s2);
   assert.equal(s1.size, 2);
-  assert.ok(s1.contains(2));
-  assert.ok(s1.contains(3));
-  assert.ok(!s1.contains(1));
-  assert.ok(!s1.contains(4));
+  assert.ok(s1.has(2));
+  assert.ok(s1.has(3));
+  assert.ok(!s1.has(1));
+  assert.ok(!s1.has(4));
 });
 
 test("symmetric_difference_update", () => {
@@ -218,9 +218,9 @@ test("symmetric_difference_update", () => {
   const s2 = new Set_of_uint8([2, 3, 4]);
   s1.symmetricDifferenceUpdate(s2);
   assert.equal(s1.size, 2);
-  assert.ok(s1.contains(1));
-  assert.ok(s1.contains(4));
-  assert.ok(!s1.contains(2));
+  assert.ok(s1.has(1));
+  assert.ok(s1.has(4));
+  assert.ok(!s1.has(2));
 });
 
 // --- TestSetMinMax ---
@@ -275,9 +275,9 @@ test("ior_operator", () => {
   const s2 = new Set_of_uint8([2, 3]);
   s1.update(s2);
   assert.equal(s1.size, 3);
-  assert.ok(s1.contains(1));
-  assert.ok(s1.contains(2));
-  assert.ok(s1.contains(3));
+  assert.ok(s1.has(1));
+  assert.ok(s1.has(2));
+  assert.ok(s1.has(3));
 });
 
 test("iand_operator", () => {
@@ -285,10 +285,10 @@ test("iand_operator", () => {
   const s2 = new Set_of_uint8([2, 3, 4]);
   s1.intersectionUpdate(s2);
   assert.equal(s1.size, 2);
-  assert.ok(s1.contains(2));
-  assert.ok(s1.contains(3));
-  assert.ok(!s1.contains(1));
-  assert.ok(!s1.contains(4));
+  assert.ok(s1.has(2));
+  assert.ok(s1.has(3));
+  assert.ok(!s1.has(1));
+  assert.ok(!s1.has(4));
 });
 
 test("isub_operator", () => {
@@ -296,8 +296,8 @@ test("isub_operator", () => {
   const s2 = new Set_of_uint8([2, 3, 4]);
   s1.differenceUpdate(s2);
   assert.equal(s1.size, 1);
-  assert.ok(s1.contains(1));
-  assert.ok(!s1.contains(2));
+  assert.ok(s1.has(1));
+  assert.ok(!s1.has(2));
 });
 
 test("ixor_operator", () => {
@@ -305,9 +305,9 @@ test("ixor_operator", () => {
   const s2 = new Set_of_uint8([2, 3, 4]);
   s1.symmetricDifferenceUpdate(s2);
   assert.equal(s1.size, 2);
-  assert.ok(s1.contains(1));
-  assert.ok(s1.contains(4));
-  assert.ok(!s1.contains(2));
+  assert.ok(s1.has(1));
+  assert.ok(s1.has(4));
+  assert.ok(!s1.has(2));
 });
 
 // --- TestSetSerialization ---
@@ -317,9 +317,9 @@ test("encode_decode_roundtrip", () => {
   const blob = dsviper.Value.encode(s1.vprValue);
   const s2 = new Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()));
   assert.equal(s2.size, 3);
-  assert.ok(s2.contains(1));
-  assert.ok(s2.contains(2));
-  assert.ok(s2.contains(3));
+  assert.ok(s2.has(1));
+  assert.ok(s2.has(2));
+  assert.ok(s2.has(3));
 });
 
 test("encode_decode_empty", () => {
@@ -327,4 +327,11 @@ test("encode_decode_empty", () => {
   const blob = dsviper.Value.encode(s1.vprValue);
   const s2 = new Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()));
   assert.equal(s2.size, 0);
+});
+
+test("popMax and extend", () => {
+  const s = new Set_of_uint8([1, 5, 3]);
+  assert.equal(s.popMax(), 5);
+  s.extend([7, 9]);
+  assert.deepEqual([...s].sort((a, b) => a - b), [1, 3, 7, 9]);
 });

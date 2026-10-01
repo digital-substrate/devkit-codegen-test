@@ -98,7 +98,7 @@ test("Set: roundtrip", () => {
   const s2 = new Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()));
   assert.equal(s1.size, s2.size);
   for (const x of s1) {
-    assert.ok(s2.contains(x));
+    assert.ok(s2.has(x));
   }
 });
 

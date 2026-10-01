@@ -134,14 +134,14 @@ test("keys_orderable", () => {
   const key1 = ConceptAKey.create();
   const key2 = ConceptAKey.create();
   // Should not raise
-  const c = key1.compareTo(key2);
+  const c = key1.vprValue.compare(key2.vprValue);
   assert.ok(typeof c === "number");
 });
 
 test("keys_sortable", () => {
   const keys = Array.from({ length: 5 }, () => ConceptAKey.create());
   // Should not raise
-  const sortedKeys = [...keys].sort((a, b) => a.compareTo(b));
+  const sortedKeys = [...keys].sort((a, b) => a.vprValue.compare(b.vprValue));
   assert.equal(sortedKeys.length, 5);
 });
 
@@ -226,4 +226,10 @@ test("vpr_value_roundtrip", () => {
   const vpr = key1.vprValue;
   const key2 = new ConceptAKey(vpr);
   assert.ok(key1.equals(key2));
+});
+
+test("a key is made from its instance id as a string", () => {
+  const key = ConceptAKey.create();
+  const again = new ConceptAKey(key.instanceId().encoded());
+  assert.ok(again.equals(key));
 });

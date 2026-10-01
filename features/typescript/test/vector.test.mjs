@@ -164,8 +164,8 @@ test("iadd_modifies_in_place", () => {
 
 test("contains", () => {
   const v = new Vector_of_uint8([1, 2, 3]);
-  assert.ok(v.contains(2));
-  assert.ok(!v.contains(99));
+  assert.ok(v.has(2));
+  assert.ok(!v.has(99));
 });
 
 // --- TestVectorSerialization ---

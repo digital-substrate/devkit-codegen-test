@@ -32,23 +32,23 @@ test("xarray_from_empty_list", () => {
 
 test("getitem_by_index", () => {
   const xa = new XArray_of_int8([10, 20, 30]);
-  assert.equal(xa.get(0), 10);
-  assert.equal(xa.get(1), 20);
-  assert.equal(xa.get(2), 30);
+  assert.equal(xa.at(0), 10);
+  assert.equal(xa.at(1), 20);
+  assert.equal(xa.at(2), 30);
 });
 
 test("setitem_by_index", () => {
   const xa = new XArray_of_int8([10, 20, 30]);
   xa.set(1, 99);
-  assert.equal(xa.get(1), 99);
+  assert.equal(xa.at(1), 99);
 });
 
 test("negative_index_counts_from_end", () => {
   // A negative index counts from the end, as Array.prototype.at does.
   const xa = new XArray_of_int8([10, 20, 30]);
-  assert.equal(xa.get(-1), 30);
-  assert.equal(xa.get(-3), 10);
-  assert.equal(xa.get(-4), undefined);
+  assert.equal(xa.at(-1), 30);
+  assert.equal(xa.at(-3), 10);
+  assert.equal(xa.at(-4), undefined);
 });
 
 // --- Position (UUID) access ---
@@ -57,32 +57,32 @@ test("getitem_by_position", () => {
   const xa = new XArray_of_int8([10, 20, 30]);
   const pos = xa.position(1);
   assert.notEqual(pos, undefined);
-  assert.equal(xa.get(pos), 20);
+  assert.equal(xa.at(pos), 20);
 });
 
 test("setitem_by_position", () => {
   const xa = new XArray_of_int8([10, 20, 30]);
   const pos = xa.position(1);
   xa.set(pos, 99);
-  assert.equal(xa.get(pos), 99);
-  assert.equal(xa.get(1), 99);
+  assert.equal(xa.at(pos), 99);
+  assert.equal(xa.at(1), 99);
 });
 
 // --- Contains ---
 
 test("contains_present", () => {
   const xa = new XArray_of_int8([10, 20, 30]);
-  assert.ok(xa.contains(20));
+  assert.ok(xa.has(20));
 });
 
 test("contains_absent", () => {
   const xa = new XArray_of_int8([10, 20, 30]);
-  assert.ok(!xa.contains(99));
+  assert.ok(!xa.has(99));
 });
 
 test("contains_empty", () => {
   const xa = new XArray_of_int8();
-  assert.ok(!xa.contains(10));
+  assert.ok(!xa.has(10));
 });
 
 // --- Positions ---
@@ -134,7 +134,7 @@ test("position_invalid_index", () => {
 
 test("items_returns_position_value_pairs", () => {
   const xa = new XArray_of_int8([10, 20, 30]);
-  const items = xa.items();
+  const items = xa.entries();
   assert.equal(items.length, 3);
   for (const [pos] of items) {
     assert.ok(pos instanceof dsviper.ValueUUId);
@@ -145,7 +145,7 @@ test("items_returns_position_value_pairs", () => {
 
 test("items_empty", () => {
   const xa = new XArray_of_int8();
-  const items = xa.items();
+  const items = xa.entries();
   assert.equal(items.length, 0);
 });
 
@@ -171,7 +171,7 @@ test("set_value_at_position", () => {
   const pos = xa.position(1);
   xa.set(pos, 99);
   assert.equal(xa.at(pos), 99);
-  assert.equal(xa.get(1), 99);
+  assert.equal(xa.at(1), 99);
 });
 
 // --- append() ---
@@ -180,7 +180,7 @@ test("append_to_empty", () => {
   const xa = new XArray_of_int8();
   xa.append(42);
   assert.equal(xa.size, 1);
-  assert.equal(xa.get(0), 42);
+  assert.equal(xa.at(0), 42);
 });
 
 test("append_multiple", () => {
@@ -189,16 +189,16 @@ test("append_multiple", () => {
   xa.append(2);
   xa.append(3);
   assert.equal(xa.size, 3);
-  assert.equal(xa.get(0), 1);
-  assert.equal(xa.get(1), 2);
-  assert.equal(xa.get(2), 3);
+  assert.equal(xa.at(0), 1);
+  assert.equal(xa.at(1), 2);
+  assert.equal(xa.at(2), 3);
 });
 
 test("append_to_existing", () => {
   const xa = new XArray_of_int8([10, 20]);
   xa.append(30);
   assert.equal(xa.size, 3);
-  assert.equal(xa.get(2), 30);
+  assert.equal(xa.at(2), 30);
 });
 
 // --- insert() ---
@@ -208,9 +208,9 @@ test("insert_at_beginning", () => {
   const firstPos = xa.position(0);
   xa.insert(firstPos, 10);
   assert.equal(xa.size, 3);
-  assert.equal(xa.get(0), 10);
-  assert.equal(xa.get(1), 20);
-  assert.equal(xa.get(2), 30);
+  assert.equal(xa.at(0), 10);
+  assert.equal(xa.at(1), 20);
+  assert.equal(xa.at(2), 30);
 });
 
 test("insert_at_end", () => {
@@ -218,7 +218,7 @@ test("insert_at_end", () => {
   const endPos = XArray_of_int8.end();
   xa.insert(endPos, 30);
   assert.equal(xa.size, 3);
-  assert.equal(xa.get(2), 30);
+  assert.equal(xa.at(2), 30);
 });
 
 test("insert_in_middle", () => {
@@ -226,9 +226,9 @@ test("insert_in_middle", () => {
   const pos30 = xa.position(1);
   xa.insert(pos30, 20);
   assert.equal(xa.size, 3);
-  assert.equal(xa.get(0), 10);
-  assert.equal(xa.get(1), 20);
-  assert.equal(xa.get(2), 30);
+  assert.equal(xa.at(0), 10);
+  assert.equal(xa.at(1), 20);
+  assert.equal(xa.at(2), 30);
 });
 
 test("insert_with_explicit_position", () => {
@@ -248,8 +248,8 @@ test("remove_by_position", () => {
   const pos = xa.position(1);
   xa.remove(pos);
   assert.equal(xa.size, 2);
-  assert.equal(xa.get(0), 10);
-  assert.equal(xa.get(1), 30);
+  assert.equal(xa.at(0), 10);
+  assert.equal(xa.at(1), 30);
 });
 
 test("remove_first", () => {
@@ -257,7 +257,7 @@ test("remove_first", () => {
   const pos = xa.position(0);
   xa.remove(pos);
   assert.equal(xa.size, 2);
-  assert.equal(xa.get(0), 20);
+  assert.equal(xa.at(0), 20);
 });
 
 test("remove_last", () => {
@@ -265,7 +265,7 @@ test("remove_last", () => {
   const pos = xa.position(2);
   xa.remove(pos);
   assert.equal(xa.size, 2);
-  assert.equal(xa.get(1), 20);
+  assert.equal(xa.at(1), 20);
 });
 
 test("removed_position_returns_none", () => {
@@ -284,7 +284,7 @@ test("items_skip_a_removed_position", () => {
   // leaves it, holds nothing.
   const xa = new XArray_of_int8([10, 20, 30]);
   xa.remove(xa.position(1));
-  assert.deepEqual(xa.items().map(([, element]) => element), [10, 30]);
+  assert.deepEqual(xa.entries().map(([, element]) => element), [10, 30]);
 });
 
 // --- positionOf() ---
@@ -333,8 +333,8 @@ test("disable_position_removes_value", () => {
   // Position still exists but value is removed.
   assert.equal(xa.size, 2);
   // The values should now be [10, 30].
-  assert.equal(xa.get(0), 10);
-  assert.equal(xa.get(1), 30);
+  assert.equal(xa.at(0), 10);
+  assert.equal(xa.at(1), 30);
 });
 
 // --- static methods ---
@@ -369,17 +369,17 @@ test("copy_creates_independent_xarray", () => {
 test("copy_preserves_values", () => {
   const xa1 = new XArray_of_int8([10, 20, 30]);
   const xa2 = xa1.copy();
-  assert.equal(xa2.get(0), 10);
-  assert.equal(xa2.get(1), 20);
-  assert.equal(xa2.get(2), 30);
+  assert.equal(xa2.at(0), 10);
+  assert.equal(xa2.at(1), 20);
+  assert.equal(xa2.at(2), 30);
 });
 
 test("copy_mutation_independent", () => {
   const xa1 = new XArray_of_int8([10, 20, 30]);
   const xa2 = xa1.copy();
   xa1.set(1, 99);
-  assert.equal(xa1.get(1), 99);
-  assert.equal(xa2.get(1), 20);
+  assert.equal(xa1.at(1), 99);
+  assert.equal(xa2.at(1), 20);
 });
 
 // --- toVector() ---
@@ -436,20 +436,20 @@ test("position_stable_after_remove_other", () => {
 test("uint8_construction", () => {
   const xa = new XArray_of_uint8([1, 2, 3]);
   assert.equal(xa.size, 3);
-  assert.equal(xa.get(0), 1);
+  assert.equal(xa.at(0), 1);
 });
 
 test("uint8_append", () => {
   const xa = new XArray_of_uint8();
   xa.append(255);
-  assert.equal(xa.get(0), 255);
+  assert.equal(xa.at(0), 255);
 });
 
 test("uint8_copy", () => {
   const xa1 = new XArray_of_uint8([100, 200]);
   const xa2 = xa1.copy();
-  assert.equal(xa2.get(0), 100);
-  assert.equal(xa2.get(1), 200);
+  assert.equal(xa2.at(0), 100);
+  assert.equal(xa2.at(1), 200);
 });
 
 // --- serialization ---
@@ -459,9 +459,9 @@ test("encode_decode_roundtrip", () => {
   const blob = dsviper.Value.encode(xa1.vprValue);
   const xa2 = new XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()));
   assert.equal(xa2.size, 3);
-  assert.equal(xa2.get(0), 10);
-  assert.equal(xa2.get(1), 20);
-  assert.equal(xa2.get(2), 30);
+  assert.equal(xa2.at(0), 10);
+  assert.equal(xa2.at(1), 20);
+  assert.equal(xa2.at(2), 30);
 });
 
 test("encode_decode_empty", () => {
@@ -504,7 +504,7 @@ function makeStructXArray() {
 
 test("proxied items returns wrapped proxies", () => {
   const xa = makeStructXArray();
-  const items = xa.items();
+  const items = xa.entries();
   assert.equal(items.length, 2);
   for (const [pos, val] of items) {
     assert.ok(pos instanceof dsviper.ValueUUId);
@@ -516,7 +516,7 @@ test("proxied items returns wrapped proxies", () => {
 
 test("proxied at returns wrapped proxy", () => {
   const xa = makeStructXArray();
-  const [pos] = xa.items()[0];
+  const [pos] = xa.entries()[0];
   const got = xa.at(pos);
   assert.ok(got instanceof StructureS);
   assert.equal(got.f_string, "hello");
@@ -525,7 +525,7 @@ test("proxied at returns wrapped proxy", () => {
 test("proxied get returns wrapped proxy", () => {
   // TS index access is get(index); the Python mirror uses xa[0] (__getitem__).
   const xa = makeStructXArray();
-  const got = xa.get(0);
+  const got = xa.at(0);
   assert.ok(got instanceof StructureS);
   assert.equal(got.f_string, "hello");
 });
