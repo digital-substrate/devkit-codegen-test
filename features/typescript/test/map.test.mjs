@@ -98,10 +98,13 @@ test("items", () => {
 
 // --- TestMapIterDunder ---
 
-test("iter", () => {
+test("iter yields entries, as a Map does", () => {
   const m = new Map_of_int8_to_string([[1, "one"], [2, "two"], [3, "three"]]);
-  const keys = [...m];
-  assert.deepEqual(keys.sort((a, b) => a - b), [1, 2, 3]);
+  const entries = [...m];
+  assert.deepEqual(entries.sort((a, b) => a[0] - b[0]), [[1, "one"], [2, "two"], [3, "three"]]);
+  const seen = [];
+  for (const [key, value] of m) seen.push(`${key}=${value}`);
+  assert.equal(seen.length, 3);
 });
 
 test("iter_empty", () => {
