@@ -23,6 +23,9 @@ What each site proves, and what it does not:
                a `map<Core::Grade, Parts::Colour>`, a `variant<Core::Colour, ...>`
                proves nothing about the service or the suites
 
+Across versions, `tools/crossversion.py`: a service built with the 1.2 line, called by the kibo 2
+clients -- the wire both lines share.
+
 None of the five proves that a developer of the target audience finds the output usable.
 `pip install` and `tsc --strict` in an outside consumer are tested by hand for now, not here.
 """
@@ -124,6 +127,16 @@ def main() -> int:
         print(f"   {GREEN if 'ok' in line else RED}{line.strip()}{RESET}")
     if code:
         failures.append("selection")
+
+    # Across versions: a service built with the 1.2 line, called by the kibo 2 clients. Skipped,
+    # and said so, when the 1.2 line is not at hand.
+    print("\n── across versions")
+    code, output = run([sys.executable, "tools/crossversion.py"], HERE)
+    for line in output.splitlines():
+        colour = GREEN if line.startswith("ok") else (GREY if line.startswith("skipped") else RED)
+        print(f"   {colour}{line.strip()}{RESET}")
+    if code not in (0, 2):
+        failures.append("crossversion")
 
     print()
     if failures:
