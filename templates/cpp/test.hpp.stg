@@ -139,6 +139,8 @@ void defaultKeyNamesItsConcept() {
     VIPER_ASSERT(name, !none.isValid());
     VIPER_ASSERT(name, none.runtimeId() == K::create().runtimeId());
     VIPER_ASSERT(name, none == codec::decode\<K>(codec::encode(none)));
+    // The runtime's default is the same key: Value::create of key\<C> names C too.
+    VIPER_ASSERT(name, none == codec::decode\<K>(Viper::Value::create(type(Viper::StaticType::tag\<K>{}))));
 }
 
 template\<class Key, class Document>
