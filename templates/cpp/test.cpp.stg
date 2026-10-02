@@ -228,6 +228,7 @@ default_key(e, u) ::= <<
 default_key_body(e, u) ::= <%<u.model.namespace>::test::defaultKeyNamesItsConcept\<<e.name>Key>();%>
 
 default_structure(e, u) ::= <<
+    <u.model.namespace>::test::defaultStructureIsTheRuntimes\<<e.name>\>();
 <e.fields:{f|<if(f.hasDefaultValue)><default_field(e, f, u)><endif>};separator="">
 >>
 default_field(e, f, u) ::= <<

@@ -132,6 +132,19 @@ void defaultFieldIsTheModels(F T::* field, char const * fieldName) {
     VIPER_ASSERT(name, T{}.*field == expected.*field);
 }
 
+// A structure built by default is the one the runtime builds from the definitions: every field,
+// declared default or not -- a key names its concept, a mat is all zeros, a variant holds its first
+// alternative.
+template\<class T>
+void defaultStructureIsTheRuntimes() {
+    auto const name{"<m.namespace>.Test"};
+    auto const modelType{type(Viper::StaticType::tag\<T>{})};
+    auto const runtime{codec::decode\<T>(Viper::Value::create(modelType))};
+    if (!(T{} == runtime))
+        std::cerr \<\< "the default " \<\< modelType->representation() \<\< " is not the runtime's\\n";
+    VIPER_ASSERT(name, T{} == runtime);
+}
+
 template\<class K>
 void defaultKeyNamesItsConcept() {
     auto const name{"<m.namespace>.Test"};
