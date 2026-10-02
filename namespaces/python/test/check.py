@@ -11,7 +11,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 TARGET = HERE.parent
 
-# The package under test is the one `generate.py` has just rendered, one level up. It
+# The package under test is the one kibo-project has just rendered, one level up. It
 # already carries its `_codegen`: the site places it, this harness no longer has to.
 package = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else TARGET / "generated"
 sys.path.insert(0, str(package))

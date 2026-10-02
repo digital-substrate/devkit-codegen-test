@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """One entry point: the five sites, rendered and tested.
 
-There are twelve `run_test.sh` and five `generate.py`; this runs them all and gives a
-single verdict.
+There are twelve `run_test.sh` and five `kibo.toml`; this renders every site through
+kibo-project, runs every test, and gives a single verdict.
 
     check.py                render the five sites and run every test
     check.py features       one site only
@@ -27,21 +27,18 @@ None of the five proves that a developer of the target audience finds the output
 `pip install` and `tsc --strict` in an outside consumer are tested by hand for now, not here.
 """
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 
-# The site name, and what its `generate.py` expects besides the flags. `features` takes its
-# `.dsm` as a positional argument; the others read it from `definitions/`.
-SITES = {
-    "features": ["all.dsm"],
-    "service": [],
-    "namespaces": [],
-    "crossing": [],
-    "compat-1.2": [],
-}
+# Each site declares its generation in a `kibo.toml`, rendered by kibo-project, from the
+# sibling checkout unless KIBO_PROJECT names the script.
+KIBO_PROJECT = Path(os.environ.get("KIBO_PROJECT") or HERE.parent / "kibo-project" / "kibo_project.py")
+
+SITES = ("features", "service", "namespaces", "crossing", "compat-1.2")
 LANGUAGES = ("cpp", "python", "typescript")
 
 GREEN, RED, GREY, RESET = "\033[32m", "\033[31m", "\033[90m", "\033[0m"
@@ -95,8 +92,7 @@ def main() -> int:
         directory = HERE / site
 
         if not arguments.no_render:
-            code, output = run([sys.executable, "generate.py", *SITES[site], "-c", "-p", "-t"],
-                               directory)
+            code, output = run([sys.executable, str(KIBO_PROJECT), "generate"], directory)
             if code:
                 print(f"   {RED}render      fails{RESET}")
                 for line in output.splitlines()[-6:]:

@@ -10,8 +10,8 @@ Generated from the template pack, the sibling `kibo-template-viper` checkout (or
 ```
 features/
   all.dsm              the source
-  Features.dsm.json    deposited by generate.py
-  generate.py          -c / -p / -t
+  kibo.toml            what is generated, and where
+  features.dsm.json    deposited by kibo-project
 
   cpp/          generated/            run_test.sh   CMakeLists.txt
   python/       generated/features/   run_test.sh   tests/
@@ -19,22 +19,23 @@ features/
 ```
 
 **`generated/` is the only place kibo writes, and it is disposable.** Delete any of them, run
-`generate.py`, and it comes back. Nothing else in a language directory is generated, so "who
+kibo-project, and it comes back. Nothing else in a language directory is generated, so "who
 wrote this file?" is answered by which directory it sits in.
 
 ## Running it
 
-    python3 generate.py all.dsm -c -p -t
+    python3 ../../kibo-project/kibo_project.py generate
     cpp/run_test.sh · python/run_test.sh · typescript/run_test.sh
 
-**Any model, not only `all.dsm`.** The argument is a file or a folder of definitions: the C++
+**Any model, not only `all.dsm`.** `--definitions` takes a file or a folder of definitions: the C++
 test programme is generated from the model it is given, so it checks a real project's model as
 it checks this one -- every type round-tripped, every attachment through a database, every
 declared default value, every default key. A model with pools gets stand-in implementations
 (`TestBridges`), since nobody implements them here. Only the C++ programme is generic; the
 Python and TypeScript suites are written against `all.dsm`.
 
-    python3 generate.py ../../kibo-2/com.digitalsubstrate.red/definitions/RE -c && cpp/run_test.sh
+    python3 ../../kibo-project/kibo_project.py generate --target cpp \
+        --definitions ../../kibo-2/com.digitalsubstrate.red/definitions/RE && cpp/run_test.sh
 
 | | what it proves |
 |---|---|

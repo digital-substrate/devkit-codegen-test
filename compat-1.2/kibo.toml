@@ -1,0 +1,13 @@
+# Only C++ for now: reading the 1.2 database back starts there.
+
+[project]
+definitions = "definitions"
+infrastructure = "compat12"
+
+[generator]
+templates = "2"
+manifests = ["../templates/features.json"]
+
+[target.cpp]
+features = ["Attachments"]
+output = "cpp/generated"

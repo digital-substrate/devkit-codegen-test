@@ -1,0 +1,19 @@
+[project]
+definitions = "definitions"
+infrastructure = "crossing"
+
+[generator]
+templates = "2"
+manifests = ["../templates/features.json"]
+
+[target.cpp]
+features = ["TestApp", "AttachmentPool"]
+output = "cpp/generated"
+
+[target.python]
+features = ["Base", "Pool", "Wheel"]
+output = "python/generated"
+
+[target.typescript]
+features = ["Base", "Pool", "Package"]
+output = "typescript/generated"

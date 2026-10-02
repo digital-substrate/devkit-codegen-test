@@ -49,7 +49,9 @@ The siblings live in their own repositories:
 - [digital-substrate/kibo](https://github.com/digital-substrate/kibo) — code generator.
 - [digital-substrate/kibo-template-viper](https://github.com/digital-substrate/kibo-template-viper) — first-party Kibo templates for the Viper ecosystem.
 
-`generate.py` resolves Kibo and templates via:
+Each site declares its generation in a `kibo.toml`, rendered by the sibling
+[kibo-project](https://github.com/digital-substrate/kibo-project) checkout (`KIBO_PROJECT`
+overrides its location for `check.py`). It resolves Kibo and templates via:
 
 1. `KIBO_JAR` and `KIBO_TEMPLATES` environment variables, if set.
 2. Otherwise, `../kibo/target/kibo-*.jar` and `../kibo-template-viper/`.
@@ -64,12 +66,12 @@ json, hash, antlr4, cli11) and the `viper` static target. It resolves it via:
 ## Usage
 
 ```bash
-# 1. Generate C++, Python and TypeScript code from the DSM definitions.
-#    -c C++, -p Python package, -t TypeScript package; pick what you need.
+# 1. Generate C++, Python and TypeScript code from the DSM definitions, as each site's
+#    kibo.toml declares; --target cpp|python|typescript picks one.
 cd features
-python3 generate.py all.dsm -c -p -t
+python3 ../../kibo-project/kibo_project.py generate
 cd ../service
-python3 generate.py -c -p -t
+python3 ../../kibo-project/kibo_project.py generate
 
 # 2. Build the C++ executables (links viper from the sibling checkout).
 cd ..

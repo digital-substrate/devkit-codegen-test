@@ -9,7 +9,7 @@ Generated from `../templates`.
 
 ```
 namespaces/
-  definitions/  Topology.dsm.json  generate.py  check.py
+  definitions/  kibo.toml  check.py
 
   cpp/          generated/   src/   run_test.sh   CMakeLists.txt
   python/       generated/topology/  test/   run_test.sh

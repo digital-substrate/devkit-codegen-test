@@ -11,7 +11,7 @@ compat-1.2/
   definitions/Compat.dsm   the model -- frozen
   Compat-1.2.cdb           the database -- written once, committed, opened read-only
   write_1_2.py             how the database was written, under a 1.2 runtime
-  generate.py              -c renders the C++; -p / -t not yet
+  kibo.toml                renders the C++; Python and TypeScript not yet
   cpp/   generated/  src/read.cpp  run_test.sh  CMakeLists.txt
 ```
 

@@ -9,7 +9,7 @@ Generated from the template pack, the sibling `kibo-template-viper` checkout (or
 
 ```
 service/
-  definitions/  Service.dsm.json  generate.py
+  definitions/  kibo.toml
 
   cpp/          generated/   src/   run_test.sh   CMakeLists.txt
   python/       generated/service/  src/client.py  run_test.sh

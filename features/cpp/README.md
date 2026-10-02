@@ -1,7 +1,8 @@
 # cpp — the C++ side of the features site
 
 `generated/` is the only place kibo writes, and it is disposable: delete it, run
-`../generate.py all.dsm -c`, and everything comes back. Nothing else in this directory is
+`python3 ../../kibo-project/kibo_project.py generate --target cpp` from `features/`, and
+everything comes back. Nothing else in this directory is
 generated, so "who wrote this file?" is answered by which directory it sits in. That is the
 whole point of the split — before it, the generated library and the test programmes were
 siblings at the site root and no one could tell them apart without opening them.
@@ -36,7 +37,7 @@ the ambiguity it replaces.
 
 From the repository root, after generating:
 
-    cd features && python3 generate.py all.dsm -c
+    cd features && python3 ../../kibo-project/kibo_project.py generate --target cpp
     cd ../.. && mkdir -p build && cd build && cmake .. && cmake --build . -j
 
 `run_test.sh` does the same and runs the four programmes.

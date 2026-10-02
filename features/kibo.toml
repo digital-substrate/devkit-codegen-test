@@ -1,0 +1,20 @@
+[project]
+definitions = "all.dsm"
+infrastructure = "features"
+
+[generator]
+templates = "2"
+manifests = ["../templates/features.json"]
+
+[target.cpp]
+features = ["TestApp", "AttachmentPool", "TestBridges"]
+output = "cpp/generated"
+clean = true
+
+[target.python]
+features = ["Base", "Pool", "Wheel"]
+output = "python/generated"
+
+[target.typescript]
+features = ["Base", "Pool", "Package"]
+output = "typescript/generated"
