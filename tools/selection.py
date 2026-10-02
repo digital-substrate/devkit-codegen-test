@@ -11,16 +11,13 @@ import json
 import re
 import sys
 import tempfile
+import tomllib
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from render import TEMPLATES, definitions, jar, kibo   # noqa: E402
-from models import MODELS                             # noqa: E402
+from render import ROOT, generate                       # noqa: E402
 
-sys.path.insert(0, str(TEMPLATES))
-import resolve                                         # noqa: E402
-
-MODEL = "namespaces"
+SITE = ROOT / "namespaces"
 
 
 def pools(dsm: Path) -> set[str]:
@@ -32,22 +29,35 @@ def pools(dsm: Path) -> set[str]:
     return {re.sub(r"(?<!^)(?=[A-Z])", "_", n).lower() for n in names}
 
 
-def rendered(language: str, features: list[str], dsm: Path, jar_path: str) -> set[str]:
+def rendered(language: str, features: list[str]) -> tuple[set[str], set[str]]:
+    """Render the site's model with these features alone; return the directories rendered and
+    the pools the model declares. The project is the site's, but for the target."""
+    site = tomllib.loads((SITE / "kibo.toml").read_text())
     with tempfile.TemporaryDirectory() as out:
-        for template in resolve.templates(language, features):
-            kibo(jar_path, language, MODELS[MODEL]["package"], dsm, template, Path(out))
-        return {p.name for p in Path(out).iterdir() if p.is_dir()}
+        project = Path(out) / "kibo.toml"
+        project.write_text(
+            "[project]\n"
+            f"definitions = {json.dumps(str(SITE / site['project']['definitions']))}\n"
+            f"infrastructure = {json.dumps(site['project']['infrastructure'])}\n"
+            "[generator]\n"
+            f"templates = {json.dumps(site['generator']['templates'])}\n"
+            f"[target.{language}]\n"
+            f"features = {json.dumps(features)}\n"
+            'output = "out"\n')
+        error = generate(project, out)
+        if error:
+            raise SystemExit(error)
+        dsm = Path(out) / f"{site['project']['infrastructure']}.dsm.json"
+        return {p.name for p in (Path(out) / "out").rglob("*") if p.is_dir()}, pools(dsm)
 
 
 def main() -> int:
-    dsm = definitions(MODEL)
-    jar_path = jar()
-    expected = pools(dsm)
-    ok = bool(expected)
+    ok = True
     for language in ("python", "typescript"):
-        alone = rendered(language, ["Base"], dsm, jar_path) & expected
-        with_pool = rendered(language, ["Base", "Pool"], dsm, jar_path) & expected
-        good = not alone and with_pool == expected
+        alone, expected = rendered(language, ["Base"])
+        with_pool, _ = rendered(language, ["Base", "Pool"])
+        alone, with_pool = alone & expected, with_pool & expected
+        good = bool(expected) and not alone and with_pool == expected
         ok &= good
         print(f"  {'ok  ' if good else 'FAIL'} {language}: Base alone -> {sorted(alone) or 'no pool'}, "
               f"with Pool -> {sorted(with_pool)}")

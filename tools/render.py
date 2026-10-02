@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Render every model with every target into a scratch tree, and compare two trees.
+"""Render every site into a scratch tree, and compare two trees.
 
-The working tree is never touched: this reads the `.dsm.json` each model produces and
-invokes the jar directly, so it can be run before and after a change without a commit
-in between.
+The working tree is never touched: each site's `kibo.toml` is rendered through kibo-project
+into `<dir>/<site>`, so this can be run before and after a change without a commit in
+between.
 
-    render.py <dir>                 render every model into <dir>
+    render.py <dir>                 render every site into <dir>
     render.py --diff <before> <after> [--renames <map> | --only <artefact>]
 
 A mono-namespace model guards against regression: its diff must be empty. A
@@ -16,75 +16,44 @@ import os, re, subprocess, sys, difflib
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from models import MODELS
+from models import SITES
 
 ROOT = Path(__file__).resolve().parent.parent
-KIBO = ROOT.parent / "kibo"
-# The template pack: the sibling kibo-template-viper checkout, or KIBO_TEMPLATES.
-TEMPLATES = Path(os.environ.get("KIBO_TEMPLATES") or ROOT.parent / "kibo-template-viper")
-# The laboratory's own features -- the tests of the generator -- added to the pack's selection.
-LAB_FEATURES = ROOT / "templates" / "features.json"
-BANNER = re.compile(r"by kibo-[0-9.]+\.jar")
+# kibo-project, from the sibling checkout unless KIBO_PROJECT names the script.
+KIBO_PROJECT = Path(os.environ.get("KIBO_PROJECT") or ROOT.parent / "kibo-project" / "kibo_project.py")
+# What changes with every generator release, and says nothing about the output.
+BANNER = re.compile(r"by kibo-[0-9.]+\.jar|by kibo-project [0-9.]+")
 
 
-def jar():
-    if os.environ.get("KIBO_JAR"):
-        return os.environ["KIBO_JAR"]
-    found = []
-    for p in (KIBO / "target").glob("kibo-*.jar"):
-        m = re.match(r"^kibo-(\d+)\.(\d+)\.(\d+)\.jar$", p.name)
-        if m:
-            found.append((tuple(int(g) for g in m.groups()), p))
-    if not found:
-        sys.exit(f"No kibo jar under {KIBO}/target. Build it, or set KIBO_JAR.")
-    return str(max(found)[1])
+def generate(project, into, *options):
+    """Render a project file into a directory through kibo-project. Returns the error output."""
+    r = subprocess.run([sys.executable, str(KIBO_PROJECT), "generate", str(project),
+                        "--into", str(into), *options], capture_output=True, text=True)
+    return r.stderr.strip() if r.returncode else ""
 
 
-def definitions(model):
-    """Produce the model's .dsm.json beside its sources, and return the path."""
-    from dsviper import DSMBuilder
-    spec = MODELS[model]
-    report, dsm, _ = DSMBuilder.assemble(str(ROOT / spec["definitions"])).parse()
-    if report.has_error():
-        for e in report.errors():
-            print(f"  {model}: {e!r}")
-        sys.exit(f"{model}: the model does not parse")
-    out = ROOT / model / f'{spec["namespace"]}.dsm.json'
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(dsm.json_encode())
-    return out
-
-
-def kibo(jar_path, target, namespace, dsm, template, out):
-    out.mkdir(parents=True, exist_ok=True)
-    r = subprocess.run(["java", "-jar", jar_path, "-c", target, "-n", namespace,
-                        "-d", str(dsm), "-t", str(template), "-o", str(out)],
-                       capture_output=True, text=True)
-    noise = [l for l in r.stderr.splitlines() if l.strip()]
-    if r.returncode or noise:
-        print(f"  !! {target} {Path(template).name}")
-        for l in noise[:6]:
-            print(f"     {l}")
+def outputs(d):
+    """The generated files under d: the .dsm.json beside them is kibo's input, not its output."""
+    return [p for p in d.rglob("*") if p.is_file() and not p.name.endswith(".dsm.json")]
 
 
 def render(outdir):
-    j = jar()
-    print(f"jar: {Path(j).name}\n")
-    for model, spec in MODELS.items():
-        dsm = definitions(model)
-        base = outdir / model
-        for feature in spec["cpp"]:
-            kibo(j, "cpp", spec["namespace"], dsm, TEMPLATES / "cpp" / feature, base / "cpp")
-        kibo(j, "python", spec["package"], dsm, TEMPLATES / "python/package", base / "python")
-        kibo(j, "typescript", spec["package"], dsm, TEMPLATES / "typescript", base / "typescript")
-        files = sorted(p for p in base.rglob("*") if p.is_file())
+    for site, spec in SITES.items():
+        base = outdir / site
+        error = generate(ROOT / site / "kibo.toml", base)
+        if error:
+            print(f"  !! {site}")
+            for l in error.splitlines()[:6]:
+                print(f"     {l}")
+            continue
+        files = sorted(outputs(base))
         lines = sum(len(p.read_text(errors="replace").splitlines()) for p in files)
-        print(f"  {model:12} {spec['shape']:6} {len(files):4} files, {lines:7} lines")
+        print(f"  {site:12} {spec['shape']:6} {len(files):4} files, {lines:7} lines")
 
 
 def tree(d):
     return {str(p.relative_to(d)): BANNER.sub("by kibo", p.read_text(errors="replace"))
-            for p in d.rglob("*") if p.is_file()}
+            for p in outputs(d)}
 
 
 def renames(path):
@@ -116,7 +85,7 @@ def renames(path):
 def diff(before, after, rename=None, scope=None):
     worst = 0
     mapping = renames(rename) if rename else {}
-    for model, spec in MODELS.items():
+    for model, spec in SITES.items():
         a, b = tree(before / model), tree(after / model)
         renamed = mapping.get(model, {})
         if renamed:

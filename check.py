@@ -38,7 +38,8 @@ HERE = Path(__file__).resolve().parent
 # sibling checkout unless KIBO_PROJECT names the script.
 KIBO_PROJECT = Path(os.environ.get("KIBO_PROJECT") or HERE.parent / "kibo-project" / "kibo_project.py")
 
-SITES = ("features", "service", "namespaces", "crossing", "compat-1.2")
+sys.path.insert(0, str(HERE / "tools"))
+from models import SITES                                # noqa: E402
 LANGUAGES = ("cpp", "python", "typescript")
 
 GREEN, RED, GREY, RESET = "\033[32m", "\033[31m", "\033[90m", "\033[0m"
