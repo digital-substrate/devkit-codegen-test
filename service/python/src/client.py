@@ -8,7 +8,7 @@ import sys
 
 import dsviper
 
-from service import definitions
+from service import AnyValue, definitions
 from service.demo import Vector3, Level, attachments
 from service.player_model.pool import Remote as PlayerModelRemote
 from service.tools.pool import Remote as ToolsRemote
@@ -35,6 +35,10 @@ if tools.is_available():
     v1 = Vector3({"x": 1, "y": 2, "z": 3})
     v2 = Vector3({"x": 10, "y": 20, "z": 30})
     print(f"add_vector(v1,v2) -> {tools.add_vector(v1, v2)}")
+    # `any` crosses the boundary as the generated AnyValue the method is annotated with. The 1.2
+    # laboratory's service predates the function, and the cross-version check calls it too.
+    if remote_tools.query("isGreater"):
+        print(f"is_greater(3,2) -> {tools.is_greater(AnyValue(3), AnyValue(2))}")
 
 player_model = PlayerModelRemote(service_remote)
 if player_model.is_available():

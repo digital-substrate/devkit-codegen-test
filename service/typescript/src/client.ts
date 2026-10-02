@@ -5,6 +5,7 @@
 // module, and both sides of a pool now live in one.
 import dsviper from "@digitalsubstrate/dsviper";
 import { Vector3, Level } from "../generated/dist/demo/index.js";
+import { AnyValue } from "../generated/dist/index.js";
 // Attachments are deliberately not re-exported by the unit's entry point: two units linked
 // by an attachment would become an import cycle.
 import { Player } from "../generated/dist/demo/attachments.js";
@@ -25,6 +26,11 @@ if (tools.isAvailable()) {
     const v1 = new Vector3({ x: 1, y: 2, z: 3 });
     const v2 = new Vector3({ x: 10, y: 20, z: 30 });
     console.log(`addVector(v1,v2) -> ${tools.addVector(v1, v2)}`);
+    // `any` crosses the boundary as the generated AnyValue the method is annotated with. The 1.2
+    // laboratory's service predates the function, and the cross-version check calls it too.
+    const remoteTools = serviceRemote.functionPools().find((p) => p.name() === "Tools");
+    if (remoteTools?.query("isGreater"))
+        console.log(`isGreater(3,2) -> ${tools.isGreater(new AnyValue(3n), new AnyValue(2n))}`);
 }
 
 const playerModel = new PlayerModelRemote(serviceRemote);
