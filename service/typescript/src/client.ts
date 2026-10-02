@@ -9,8 +9,8 @@ import { AnyValue } from "../generated/dist/index.js";
 // Attachments are deliberately not re-exported by the unit's entry point: two units linked
 // by an attachment would become an import cycle.
 import { Player } from "../generated/dist/demo/attachments.js";
-import { Remote as ToolsRemote } from "../generated/dist/tools/pool.js";
-import { Remote as PlayerModelRemote } from "../generated/dist/player_model/pool.js";
+// Every pool of the model, from the one entry the Pool feature renders.
+import { tools, player_model } from "../generated/dist/pools.js";
 
 const [address, port] = process.argv.length > 3
     ? [process.argv[2], process.argv[3]]
@@ -19,21 +19,21 @@ const [address, port] = process.argv.length > 3
 const defs = new dsviper.Definitions();
 const serviceRemote = dsviper.ServiceRemote.connect(address, port, defs);
 
-const tools = new ToolsRemote(serviceRemote);
-if (tools.isAvailable()) {
-    console.log(`add(32,10) -> ${tools.add(32n, 10n)}`);
+const toolsRemote = new tools.Remote(serviceRemote);
+if (toolsRemote.isAvailable()) {
+    console.log(`add(32,10) -> ${toolsRemote.add(32n, 10n)}`);
 
     const v1 = new Vector3({ x: 1, y: 2, z: 3 });
     const v2 = new Vector3({ x: 10, y: 20, z: 30 });
-    console.log(`addVector(v1,v2) -> ${tools.addVector(v1, v2)}`);
+    console.log(`addVector(v1,v2) -> ${toolsRemote.addVector(v1, v2)}`);
     // `any` crosses the boundary as the generated AnyValue the method is annotated with. The 1.2
     // laboratory's service predates the function, and the cross-version check calls it too.
     const remoteTools = serviceRemote.functionPools().find((p) => p.name() === "Tools");
     if (remoteTools?.query("isGreater"))
-        console.log(`isGreater(3,2) -> ${tools.isGreater(new AnyValue(3n), new AnyValue(2n))}`);
+        console.log(`isGreater(3,2) -> ${toolsRemote.isGreater(new AnyValue(3n), new AnyValue(2n))}`);
 }
 
-const playerModel = new PlayerModelRemote(serviceRemote);
+const playerModel = new player_model.Remote(serviceRemote);
 if (playerModel.isAvailable()) {
     const state = new dsviper.CommitState(defs.const());
     const mutable = new dsviper.CommitMutableState(state);
