@@ -38,12 +38,18 @@ if tools.is_available():
 
 player_model = PlayerModelRemote(service_remote)
 if player_model.is_available():
-    mutable = dsviper.CommitMutableState(dsviper.CommitState(defs.const()))
+    state = dsviper.CommitState(defs.const())
+    mutable = dsviper.CommitMutableState(state)
     mutating = mutable.attachment_mutating()
 
     nickname = "the shadow man"
     key = player_model.create(mutating, nickname, Level.BEGINNER)
     print(f"key is {key}")
+
+    # A function that only reads takes a state that only reads: the commit state the
+    # mutable one was built on, which the create above did not touch.
+    if not player_model.has_player(state.attachment_getting(), nickname):
+        print("read-only state: no player")
 
     if found := player_model.has_player(mutating, nickname):
         if document := attachments.Player.property.get(mutating, found.unwrap()):

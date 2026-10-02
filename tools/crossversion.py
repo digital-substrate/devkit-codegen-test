@@ -32,7 +32,8 @@ PORT = "54340"
 
 # What each client prints when every call went through. A client skips a pool it does not
 # find, so the exit code alone would not tell a missing function from a passing one.
-EXPECTED = ["add(32,10) -> 42", "11", "22", "33", "key is", "nickname=the shadow man"]
+EXPECTED = ["add(32,10) -> 42", "11", "22", "33", "key is", "read-only state: no player",
+            "nickname=the shadow man"]
 
 
 def skip(reason: str) -> int:

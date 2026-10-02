@@ -29,11 +29,17 @@ if (tools.isAvailable()) {
 
 const playerModel = new PlayerModelRemote(serviceRemote);
 if (playerModel.isAvailable()) {
-    const mutable = new dsviper.CommitMutableState(new dsviper.CommitState(defs.const()));
+    const state = new dsviper.CommitState(defs.const());
+    const mutable = new dsviper.CommitMutableState(state);
     const mutating = mutable.attachmentMutating();
 
     const nickname = "the shadow man";
     console.log(`key is ${playerModel.create(mutating, nickname, Level.BEGINNER)}`);
+
+    // A function that only reads takes a state that only reads: the commit state the
+    // mutable one was built on, which the create above did not touch.
+    if (playerModel.hasPlayer(state.attachmentGetting(), nickname).isNil())
+        console.log("read-only state: no player");
 
     const found = playerModel.hasPlayer(mutating, nickname);
     if (!found.isNil()) {
