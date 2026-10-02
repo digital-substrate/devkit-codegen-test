@@ -2,36 +2,35 @@
 
 `generated/` is the only place kibo writes, and it is disposable: delete it, run
 `python3 ../../kibo-project/kibo_project.py generate --target cpp` from `features/`, and
-everything comes back. Nothing else in this directory is
-generated, so "who wrote this file?" is answered by which directory it sits in. That is the
-whole point of the split — before it, the generated library and the test programmes were
-siblings at the site root and no one could tell them apart without opening them.
+everything comes back. Nothing else in this directory is generated, so "who wrote this file?"
+is answered by which directory it sits in.
 
 ```
 cpp/
   CMakeLists.txt     hand-written
   run_test.sh        hand-written
+  src/contract.cpp   hand-written: the bridge's contract, seen by a developer
   generated/         kibo, and nobody else
 ```
 
-## There is no `test/` here, and that is the finding
+## Two programmes, one generated and one written
 
-In Python and TypeScript the tests are hand-written and live in `test/`. In C++ they are
-**generated**: the four programmes — codec, database, database fuzz, database remote — come
-out of the `TestApp` template. A C++ developer receives tests they did not write; a Python
-developer writes their own.
+`features_test` is **generated**, by the laboratory's `TestApp` feature: it round-trips every
+type of the model, takes every attachment through a database, and checks every declared default
+value and default key. It can only check what the generator already knows how to state; that is
+why it is generic, and why it runs on any model (`--definitions`, see the site's README).
 
-That asymmetry is not obviously right. It means the C++ tests can only ever check what the
-generator already knows how to state, and that nothing a human noticed can be added to them
-without being added to a template first. Recorded here rather than tidied away; a `test/`
-directory appears the day something is written by hand.
+`features_contract` is **written**: what a round trip does not show -- the type `encode`
+returns, `decode` refusing a value of the wrong type, a key of another concept first. It is
+what a C++ developer relies on without the generator saying so, checked from outside the
+generated code. It is built only against this site's own model.
 
 ## One cost, paid in `CMakeLists.txt`
 
-The four programmes each carry a `main()`, and they now sit in the same directory as the
-library sources. The glob therefore excludes them by name before building the library. That
-line is the price of putting all generated output in one directory, and it is cheaper than
-the ambiguity it replaces.
+The generated test programme carries a `main()` and sits in the same directory as the library
+sources, so the glob excludes it by name (`_test_app.cpp`) before building the library. That
+line is the price of putting all generated output in one directory, and it is cheaper than the
+ambiguity it replaces.
 
 ## Build
 
@@ -40,4 +39,5 @@ From the repository root, after generating:
     cd features && python3 ../../kibo-project/kibo_project.py generate --target cpp
     cd ../.. && mkdir -p build && cd build && cmake .. && cmake --build . -j
 
-`run_test.sh` does the same and runs the four programmes.
+`run_test.sh` does the same and runs both programmes (`features_contract` only on this site's
+own model).

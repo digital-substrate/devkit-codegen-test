@@ -1,6 +1,6 @@
 # service — the pools, and a service that actually runs
 
-`Service.dsm.json` declares two pools — `Tools` (plain functions) and `PlayerModel`
+`definitions/Service` declares two pools — `Tools` (plain functions) and `PlayerModel`
 (functions over an attachment) — and the smallest model they need. `features/` covers the
 type system and declares no pool; this is where the pools are.
 

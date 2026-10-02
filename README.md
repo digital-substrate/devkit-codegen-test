@@ -8,15 +8,21 @@ One gate for all of it:
     ./check.py features     just one
     ./check.py --no-render  test what is already rendered
 
+Five sites exercise the DSM → kibo → templates → runtime pipeline, each a minimal application
+that walks the generated surface to find what is wrong with it:
 
-Two projects exercise the DSM → Kibo → templates → runtime pipeline:
-
-- `features/` — value-system features: data, stream, json, database, attachments, codecs, hashers, fuzz.
-- `service/` — RPC / function-pool features: function pools, attachments pools, remote variants, bridges.
-
-And one site guards the other direction of time:
-
+- `features/` — the type system: every type shape in one namespace, attachments, the database,
+  and the project's two hand-written suites.
+- `service/` — the pools: function and attachment pools, their remotes, and a C++ service that
+  actually runs, called from C++, Python and TypeScript.
+- `namespaces/` — namespace topology: several namespaces, every kind of edge between them, two
+  declaring the same name.
+- `crossing/` — references crossing a namespace inside a composite (`map<Core::Grade, Parts::Colour>`).
 - `compat-1.2/` — a database written by the 1.2 runtime, committed, read back by what is generated today.
+
+`templates/` holds the laboratory's own features — the generator's tests (`TestApp`, `Test`,
+`TestBridges`), added to the template pack's selection — and `tools/` the checks that are not a
+site: the feature selection, the comparison of two renderings, the call across versions.
 
 And one check guards the wire across lines: `tools/crossversion.py` builds the 1.2 line's
 `service` (this repository's and the template pack's `LTS-1.2` branches, a kibo 1.2 jar, the
@@ -24,7 +30,7 @@ sibling viper) and calls it with the kibo 2 Python and TypeScript clients. A poo
 under its DSM name in both lines; a change that breaks that fails here. `check.py` runs it last,
 and skips it, saying why, when the 1.2 line is not at hand.
 
-Each is generated for three targets — C++, Python and TypeScript — so a change to the
+Each site is generated for three targets — C++, Python and TypeScript — so a change to the
 templates can be checked against all of them.
 
 These projects are not built or run by the `dsviper` runtime CI. They serve as a manual
@@ -33,13 +39,14 @@ wires DSM definitions, Kibo, templates, and the runtime together.
 
 ## Layout assumption
 
-This repo expects three sibling checkouts under a common parent directory:
+This repo expects four sibling checkouts under a common parent directory:
 
 ```
 <common parent>/
 ├── com.digitalsubstrate.viper/         # runtime + third_parties (C++ ; private)
-├── kibo/                               # Kibo jar (built via `mvn package`)
-├── kibo-template-viper/                # Kibo templates (cpp/, python/)
+├── kibo/                               # kibo jar (built via `./mvnw package`)
+├── kibo-template-viper/                # the template pack (cpp/, python/, typescript/)
+├── kibo-project/                       # renders each site's kibo.toml
 └── devkit-codegen-test/                # this repo
 ```
 
@@ -72,32 +79,22 @@ json, hash, antlr4, cli11) and the `viper` static target. It resolves it via:
 ## Usage
 
 ```bash
-# 1. Generate C++, Python and TypeScript code from the DSM definitions, as each site's
-#    kibo.toml declares; --target cpp|python|typescript picks one.
-cd features
-python3 ../../kibo-project/kibo_project.py generate
-cd ../service
-python3 ../../kibo-project/kibo_project.py generate
-
-# 2. Build the C++ executables (links viper from the sibling checkout).
-cd ..
-mkdir build && cd build
-cmake ..
-cmake --build . -j
-
-# 3. Run the Python tests against the generated `features` package.
-cd ../features/python
-./run_test.sh
-
-# 4. Build and run a TypeScript client (needs the dsviper npm package).
-cd ../../service/typescript
-npm install
-npm run build
-npm run client        # against a running service_server
+./check.py                  # render every site, build, and run every suite
 ```
 
-`CMakeLists.txt` skips `features/` or `service/` cleanly when their generated
-content is missing, so a fresh clone configures without errors.
+Or one site, one language at a time:
+
+```bash
+cd features
+python3 ../../kibo-project/kibo_project.py generate     # as its kibo.toml declares
+cpp/run_test.sh                                          # builds the C++ under ../build
+python/run_test.sh
+typescript/run_test.sh                                   # needs `npm install` once
+```
+
+Each language directory holds a `run_test.sh`; those of `service/` start the C++ server
+themselves. `CMakeLists.txt` skips a site cleanly when its generated sources are missing, so
+a fresh clone configures without errors.
 
 ## License
 

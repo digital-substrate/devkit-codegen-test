@@ -2,10 +2,10 @@
     "name": "service-typescript-client",
     "private": true,
     "type": "module",
-    "description": "Harness for the kibo-generated TypeScript `service` package + its ServiceRemote client",
+    "description": "A ServiceRemote client of the kibo-generated TypeScript `service` package",
     "scripts": {
-        "build": "tsc -p service/tsconfig.json",
-        "client": "node --experimental-strip-types service_client.ts"
+        "build": "tsc -p generated/tsconfig.json && tsc src/client.ts --outDir build --module nodenext --target es2022 --moduleResolution nodenext --types node",
+        "client": "node build/client.js"
     },
     "dependencies": {
         "@digitalsubstrate/dsviper": ">=1.2.13 <1.3.0"
