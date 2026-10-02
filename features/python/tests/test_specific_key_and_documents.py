@@ -29,9 +29,9 @@ class TestDocuments(unittest.TestCase):
     def test_a_document_takes_what_its_field_would(self):
         key = data.ConceptAKey.create()
         self.db.begin_transaction()
-        ConceptA.properties_se_int_8.set(self.db, key, {1, 2})
+        ConceptA.properties_se_int8.set(self.db, key, {1, 2})
         self.db.commit()
-        self.assertEqual(set(ConceptA.properties_se_int_8.get(self.db.attachment_getting(), key).unwrap()), {1, 2})
+        self.assertEqual(set(ConceptA.properties_se_int8.get(self.db.attachment_getting(), key).unwrap()), {1, 2})
 
     def test_an_any_document_takes_any_value(self):
         key = data.ConceptCoverageKey.create()

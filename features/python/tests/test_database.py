@@ -181,10 +181,10 @@ class TestAttachmentInt8(unittest.TestCase):
         key = ConceptAKey.create()
 
         self.database.begin_transaction()
-        db.ConceptA.properties_int_8.set(self.database, key, 42)
+        db.ConceptA.properties_int8.set(self.database, key, 42)
         self.database.commit()
 
-        result = db.ConceptA.properties_int_8.get(self.database, key).unwrap()
+        result = db.ConceptA.properties_int8.get(self.database, key).unwrap()
         self.assertIsNotNone(result)
         self.assertEqual(result, 42)
 
@@ -192,10 +192,10 @@ class TestAttachmentInt8(unittest.TestCase):
         key = ConceptAKey.create()
 
         self.database.begin_transaction()
-        db.ConceptA.properties_int_8.set(self.database, key, -100)
+        db.ConceptA.properties_int8.set(self.database, key, -100)
         self.database.commit()
 
-        result = db.ConceptA.properties_int_8.get(self.database, key).unwrap()
+        result = db.ConceptA.properties_int8.get(self.database, key).unwrap()
         self.assertEqual(result, -100)
 
 
@@ -210,10 +210,10 @@ class TestAttachmentSetInt8(unittest.TestCase):
         value = Set_of_int8([1, 2, 3])
 
         self.database.begin_transaction()
-        db.ConceptA.properties_se_int_8.set(self.database, key, value)
+        db.ConceptA.properties_se_int8.set(self.database, key, value)
         self.database.commit()
 
-        result = db.ConceptA.properties_se_int_8.get(self.database, key).unwrap()
+        result = db.ConceptA.properties_se_int8.get(self.database, key).unwrap()
         self.assertIsNotNone(result)
         retrieved = result
         self.assertEqual(len(retrieved), 3)
@@ -222,10 +222,10 @@ class TestAttachmentSetInt8(unittest.TestCase):
         key = ConceptAKey.create()
 
         self.database.begin_transaction()
-        db.ConceptA.properties_se_int_8.set(self.database, key, Set_of_int8())
+        db.ConceptA.properties_se_int8.set(self.database, key, Set_of_int8())
         self.database.commit()
 
-        result = db.ConceptA.properties_se_int_8.get(self.database, key)
+        result = db.ConceptA.properties_se_int8.get(self.database, key)
         self.assertTrue(result)
         self.assertEqual(len(result.unwrap()), 0)
 
@@ -241,10 +241,10 @@ class TestAttachmentMapInt8String(unittest.TestCase):
         value = Map_of_int8_to_string({1: "one", 2: "two"})
 
         self.database.begin_transaction()
-        db.ConceptA.properties_map_int_8_string.set(self.database, key, value)
+        db.ConceptA.properties_map_int8_string.set(self.database, key, value)
         self.database.commit()
 
-        result = db.ConceptA.properties_map_int_8_string.get(self.database, key).unwrap()
+        result = db.ConceptA.properties_map_int8_string.get(self.database, key).unwrap()
         self.assertIsNotNone(result)
         retrieved = result
         self.assertEqual(retrieved[1], "one")
@@ -262,10 +262,10 @@ class TestAttachmentXArray(unittest.TestCase):
         value = XArray_of_int8([10, 20, 30, 40])
 
         self.database.begin_transaction()
-        db.ConceptA.properties_x_array.set(self.database, key, value)
+        db.ConceptA.properties_xarray.set(self.database, key, value)
         self.database.commit()
 
-        result = db.ConceptA.properties_x_array.get(self.database, key).unwrap()
+        result = db.ConceptA.properties_xarray.get(self.database, key).unwrap()
         self.assertIsNotNone(result)
         retrieved = result
         self.assertEqual(len(retrieved), 4)
@@ -334,12 +334,12 @@ class TestMultipleAttachments(unittest.TestCase):
 
         # Set propertiesInt8 attachment
         self.database.begin_transaction()
-        db.ConceptA.properties_int_8.set(self.database, key, 42)
+        db.ConceptA.properties_int8.set(self.database, key, 42)
         self.database.commit()
 
         # Verify both exist independently
         self.assertTrue(db.ConceptA.properties.has(self.database, key))
-        self.assertTrue(db.ConceptA.properties_int_8.has(self.database, key))
+        self.assertTrue(db.ConceptA.properties_int8.has(self.database, key))
 
         # Delete one, other should remain
         self.database.begin_transaction()
@@ -347,7 +347,7 @@ class TestMultipleAttachments(unittest.TestCase):
         self.database.commit()
 
         self.assertFalse(db.ConceptA.properties.has(self.database, key))
-        self.assertTrue(db.ConceptA.properties_int_8.has(self.database, key))
+        self.assertTrue(db.ConceptA.properties_int8.has(self.database, key))
 
 
 if __name__ == "__main__":

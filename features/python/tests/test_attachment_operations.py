@@ -60,35 +60,35 @@ class TestDocumentOperations(Operations):
 
     def test_set_document(self):
         key = ConceptAKey.create()
-        ma.ConceptA.properties_se_int_8.set(self.m, key, {1, 2})
-        ma.ConceptA.properties_se_int_8.union(self.m, key, {3})
-        ma.ConceptA.properties_se_int_8.subtract(self.m, key, {1})
-        self.assertEqual(set(ma.ConceptA.properties_se_int_8.get(self.m, key).unwrap()), {2, 3})
+        ma.ConceptA.properties_se_int8.set(self.m, key, {1, 2})
+        ma.ConceptA.properties_se_int8.union(self.m, key, {3})
+        ma.ConceptA.properties_se_int8.subtract(self.m, key, {1})
+        self.assertEqual(set(ma.ConceptA.properties_se_int8.get(self.m, key).unwrap()), {2, 3})
 
     def test_map_document(self):
         key = ConceptAKey.create()
-        ma.ConceptA.properties_map_int_8_string.set(self.m, key, {1: "One"})
-        ma.ConceptA.properties_map_int_8_string.union(self.m, key, {2: "Two"})
-        ma.ConceptA.properties_map_int_8_string.update(self.m, key, {1: "one", 3: "Three"})
-        ma.ConceptA.properties_map_int_8_string.subtract(self.m, key, [2])
-        self.assertEqual(as_dict(ma.ConceptA.properties_map_int_8_string.get(self.m, key).unwrap()), {1: "one"})
+        ma.ConceptA.properties_map_int8_string.set(self.m, key, {1: "One"})
+        ma.ConceptA.properties_map_int8_string.union(self.m, key, {2: "Two"})
+        ma.ConceptA.properties_map_int8_string.update(self.m, key, {1: "one", 3: "Three"})
+        ma.ConceptA.properties_map_int8_string.subtract(self.m, key, [2])
+        self.assertEqual(as_dict(ma.ConceptA.properties_map_int8_string.get(self.m, key).unwrap()), {1: "one"})
 
     def test_xarray_document(self):
         key = ConceptAKey.create()
-        ma.ConceptA.properties_x_array.set(self.m, key, [])
+        ma.ConceptA.properties_xarray.set(self.m, key, [])
         position = dsviper.ValueUUId.create()
-        ma.ConceptA.properties_x_array.insert(self.m, key, dsviper.ValueUUId.INVALID, position, 4)
-        ma.ConceptA.properties_x_array.update(self.m, key, position, 40)
-        self.assertEqual(list(ma.ConceptA.properties_x_array.get(self.m, key).unwrap()), [40])
-        ma.ConceptA.properties_x_array.remove(self.m, key, position)
-        self.assertEqual(list(ma.ConceptA.properties_x_array.get(self.m, key).unwrap()), [])
+        ma.ConceptA.properties_xarray.insert(self.m, key, dsviper.ValueUUId.INVALID, position, 4)
+        ma.ConceptA.properties_xarray.update(self.m, key, position, 40)
+        self.assertEqual(list(ma.ConceptA.properties_xarray.get(self.m, key).unwrap()), [40])
+        ma.ConceptA.properties_xarray.remove(self.m, key, position)
+        self.assertEqual(list(ma.ConceptA.properties_xarray.get(self.m, key).unwrap()), [])
 
 
 class TestOnlyWhatTheDocumentHas(unittest.TestCase):
     """An operation exists only where the document gives it a meaning."""
 
     def test_no_aggregate_operation_on_a_scalar_document(self):
-        self.assertFalse(hasattr(ma.ConceptA.properties_int_8, "union"))
+        self.assertFalse(hasattr(ma.ConceptA.properties_int8, "union"))
 
     def test_no_lookup_by_name(self):
         self.assertFalse(hasattr(ma.ConceptA.properties, "union_f_sett"))
