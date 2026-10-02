@@ -7,7 +7,7 @@ templates = "2"
 manifests = ["../templates/features.json"]
 
 [target.cpp]
-features = ["TestApp", "AttachmentPool", "TestBridges"]
+features = ["TestApp", "TestBridges"]
 output = "cpp/generated"
 clean = true
 

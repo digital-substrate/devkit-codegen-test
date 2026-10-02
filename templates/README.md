@@ -8,5 +8,5 @@ The pack itself is the sibling `kibo-template-viper` checkout (or `KIBO_TEMPLATE
 features join its selection through `resolve.py`'s `extra`:
 
 ```python
-resolve.templates("cpp", ["TestApp", "AttachmentPool"], extra=["templates/features.json"])
+resolve.templates("cpp", ["TestApp"], extra=["templates/features.json"])
 ```

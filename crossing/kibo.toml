@@ -7,8 +7,9 @@ templates = "2"
 manifests = ["../templates/features.json"]
 
 [target.cpp]
-features = ["TestApp", "AttachmentPool"]
+features = ["TestApp"]
 output = "cpp/generated"
+clean = true
 
 [target.python]
 features = ["Base", "Pool", "Wheel"]

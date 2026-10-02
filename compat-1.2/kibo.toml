@@ -11,3 +11,4 @@ manifests = ["../templates/features.json"]
 [target.cpp]
 features = ["Attachments"]
 output = "cpp/generated"
+clean = true

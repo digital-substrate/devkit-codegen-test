@@ -5,11 +5,6 @@
 // requested type -- first a key of another concept, which has the same shape as the right
 // one and would pass without this check.
 #include "features_codec.hpp"
-#include "features_attachment_pool.hpp"
-
-#include "Viper_AttachmentFunction.hpp"
-#include "Viper_FunctionPrototype.hpp"
-#include "Viper_TypeSet.hpp"
 
 #include <iostream>
 #include <type_traits>
@@ -50,24 +45,6 @@ int main() {
     if (!(codec::decode<demo::ConceptAKey>(codec::encode(key)) == key)) {
         std::cout << "a key does not survive a round trip\n";
         ++failures;
-    }
-    // The attachment pool builds, and its prototypes speak of keys, not concepts: a `key`
-    // parameter is a key, `keys` returns a set of keys. An application registers it at startup;
-    // if it does not build, nothing opens.
-    auto const pool{features::attachment_pool()};
-    for (auto const & f : pool->functions()) {
-        auto const & prototype{f->prototype};
-        for (auto const & parameter : prototype->parameters)
-            if (parameter.name == "key" && parameter.type->typeCode != Viper::TypeCode::Key) {
-                std::cout << prototype->name << ": the key parameter is not a key\n";
-                ++failures;
-            }
-        auto const isKeys{prototype->name.size() > 5 && prototype->name.substr(prototype->name.size() - 5) == "_keys"};
-        if (isKeys && (prototype->returnType->typeCode != Viper::TypeCode::Set
-                       || Viper::TypeSet::cast(prototype->returnType)->elementType->typeCode != Viper::TypeCode::Key)) {
-            std::cout << prototype->name << ": does not return a set of keys\n";
-            ++failures;
-        }
     }
 
     return failures ? 1 : 0;
