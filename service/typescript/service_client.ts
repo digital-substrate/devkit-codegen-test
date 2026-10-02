@@ -32,6 +32,10 @@ if (tools.isAvailable()) {
         const nickname = "the shadow man";
         const key = pm.create(mutating, nickname, Demo_Level.BEGINNER);
         console.log(`key is ${key}`);
+        // A function that only reads takes a state that only reads: the commit state the
+        // mutable one was built on, which the create above did not touch.
+        if (pm.has_player(state.attachmentGetting(), nickname).isNil())
+            console.log("read-only state: no player");
         const pk = pm.has_player(mutating, nickname);
         if (!pk.isNil()) {
             const property = sea.player_Property.get(mutating, pk.unwrap());

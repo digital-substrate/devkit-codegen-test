@@ -68,6 +68,11 @@ int main(int argc, char * argv[]) {
             auto key{playerModel.create(mutableState, nickname, Demo::Level::Beginner)};
             std::cout << "key is " << key.description() << '\n';
 
+            // A function that only reads takes a state that only reads: the commit state the
+            // mutable one was built on, which the create above did not touch.
+            if (!playerModel.has_player(state, nickname))
+                std::cout << "read-only state: no player" << '\n';
+
             if (auto const pk{playerModel.has_player(mutableState, nickname)}) {
                 if (auto const property{Demo::Attachments::Player_Property::get(mutableState, *pk)}) {
                     std::cout << "nickname=" << property->nickname << ", level=" << static_cast<int>(property->level) << '\n';

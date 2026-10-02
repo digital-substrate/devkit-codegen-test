@@ -27,6 +27,10 @@ if TOOLS.is_available():
         nickname = "the shadow man"
         key = PM.create(mutating, nickname, Demo_Level.BEGINNER)
         print(f'key is {key}')
+        # A function that only reads takes a state that only reads: the commit state the
+        # mutable one was built on, which the create above did not touch.
+        if PM.has_player(state.attachment_getting(), nickname).is_nil():
+            print('read-only state: no player')
         if pk := PM.has_player(mutating, nickname):
             if p := sea.demo_player_property_get(mutating, pk.unwrap()):
                 p = p.unwrap()
