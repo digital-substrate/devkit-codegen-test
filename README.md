@@ -27,7 +27,8 @@ site: the feature selection, the comparison of two renderings, the call across v
 And one check guards the wire across lines: `tools/crossversion.py` builds the 1.2 line's
 `service` (this repository's and the template pack's `LTS-1.2` branches, a kibo 1.2 jar, the
 sibling viper) and calls it with the kibo 2 Python and TypeScript clients. A pool function travels
-under its DSM name in both lines; a change that breaks that fails here. `check.py` runs it last,
+under its DSM name in both lines, and its documentation -- quotes and lines included -- reaches the
+client unchanged; a change that breaks either fails here. `check.py` runs it last,
 and skips it, saying why, when the 1.2 line is not at hand.
 
 Each site is generated for three targets — C++, Python and TypeScript — so a change to the

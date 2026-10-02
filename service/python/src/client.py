@@ -18,12 +18,8 @@ address, port = (sys.argv[1], sys.argv[2]) if len(sys.argv) > 2 else ("localhost
 defs = dsviper.Definitions()
 service_remote = dsviper.ServiceRemote.connect(address, port, defs)
 
-# --wire-only: the server is another model's build (tools/crossversion.py, a 1.2 service), whose
-# documentation this model's does not have to match; only the calls are checked.
-wire_only = "--wire-only" in sys.argv
-
 tools = ToolsRemote(service_remote)
-if tools.is_available() and not wire_only:
+if tools.is_available():
     # The model's documentation goes end to end: the C++ server registers it with the function,
     # the client reads it remotely, and the generated method carries it as its docstring --
     # multi-line and with quotes, which an unescaped C++ literal would not compile.
@@ -34,7 +30,6 @@ if tools.is_available() and not wire_only:
     assert ToolsRemote.random_string.__doc__ == documented
     print("documentation: registered by the server, read by the client, carried by the method")
 
-if tools.is_available():
     print(f"add(32,10) -> {tools.add(32, 10)}")
 
     v1 = Vector3({"x": 1, "y": 2, "z": 3})
