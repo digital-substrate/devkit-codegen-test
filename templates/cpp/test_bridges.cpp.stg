@@ -8,6 +8,7 @@ namespace <p.model.namespace>::<p.name;format="lsc"> {
 <p.functions:stub();separator="\n\n">
 
 } // namespace <p.model.namespace>::<p.name;format="lsc">
+
 >>
 
 attachment_pool(p) ::= <<
@@ -18,6 +19,7 @@ namespace <p.model.namespace>::<p.name;format="lsc"> {
 <p.functions:attachment_stub();separator="\n\n">
 
 } // namespace <p.model.namespace>::<p.name;format="lsc">
+
 >>
 
 preamble(p) ::= <<

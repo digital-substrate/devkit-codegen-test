@@ -35,6 +35,7 @@ void fuzzDatabase(std::shared_ptr\<Viper::Database> const & db, std::size_t coun
 }
 
 } // namespace <u.model.namespace>::<u.name;format="lsc">
+
 >>
 
 attachment(a, u) ::= <<

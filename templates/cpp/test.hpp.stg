@@ -24,6 +24,7 @@ void fuzzDatabase(std::shared_ptr\<Viper::Database> const & db, std::size_t coun
 } // namespace <u.model.namespace>::<u.name;format="lsc">
 
 #endif
+
 >>
 
 model(m) ::= <<
@@ -132,9 +133,9 @@ void defaultFieldIsTheModels(F T::* field, char const * fieldName) {
     VIPER_ASSERT(name, T{}.*field == expected.*field);
 }
 
-// A structure built by default is the one the runtime builds from the definitions: every field,
-// declared default or not -- a key names its concept, a mat is all zeros, a variant holds its first
-// alternative.
+<! A structure built by default is the one the runtime builds from the definitions: every field,
+   declared default or not -- a key names its concept, a mat is all zeros, a variant holds its first
+   alternative. !>
 template\<class T>
 void defaultStructureIsTheRuntimes() {
     auto const name{"<m.namespace>.Test"};
@@ -152,7 +153,7 @@ void defaultKeyNamesItsConcept() {
     VIPER_ASSERT(name, !none.isValid());
     VIPER_ASSERT(name, none.runtimeId() == K::create().runtimeId());
     VIPER_ASSERT(name, none == codec::decode\<K>(codec::encode(none)));
-    // The runtime's default is the same key: Value::create of key\<C> names C too.
+    <! The runtime's default is the same key: Value::create of key<C> names C too. !>
     VIPER_ASSERT(name, none == codec::decode\<K>(Viper::Value::create(type(Viper::StaticType::tag\<K>{}))));
 }
 
