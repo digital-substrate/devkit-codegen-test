@@ -1,4 +1,4 @@
-// The package leads to every unit and its attachments; membership always answers; a variant
+// The package leads to every unit and its attachments; membership is as strict as storing; a variant
 // takes a native the runtime decodes into one of its alternatives.
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
@@ -14,14 +14,20 @@ test("the package entry leads to each unit and its attachments", () => {
 test("a key is found through another view", () => {
   const key = f.demo.ConceptCKey.create();
   const keys = new f.Set_of_AnyConceptKey([key.toAnyConceptKey()]);
-  assert.ok(keys.has(key));
-  assert.ok(keys.has(key.toParentKey()));
-  assert.ok(!keys.has(f.demo.ConceptCKey.create()));
+  assert.ok(keys.has(key.toAnyConceptKey()));
+  assert.ok(keys.has(key.toParentKey().toAnyConceptKey()));
+  assert.ok(!keys.has(f.demo.ConceptCKey.create().toAnyConceptKey()));
 });
 
-test("an element of the wrong type is not there", () => {
-  assert.ok(!new f.Set_of_uint8([1]).has("x"));
-  assert.ok(!new f.Vector_of_uint8([1]).has(300));
+test("another view is widened explicitly", () => {
+  const key = f.demo.ConceptCKey.create();
+  assert.throws(() => new f.Set_of_AnyConceptKey([key.toAnyConceptKey()]).has(key));
+  assert.throws(() => new f.Set_of_Demo_ConceptBKey([key.toParentKey()]).has(key));
+});
+
+test("an element of the wrong type throws", () => {
+  assert.throws(() => new f.Set_of_uint8([1]).has("x"));
+  assert.throws(() => new f.Vector_of_uint8([1]).has(300));
 });
 
 test("a variant takes a number the runtime decodes into an alternative", () => {

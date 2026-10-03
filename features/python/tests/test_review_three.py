@@ -21,8 +21,8 @@ class TestShapes(unittest.TestCase):
         t = data.StructureT({"field_structure_s": data.StructureS(f_string="inner")})
         self.assertEqual(t.field_structure_s.f_string, "inner")
 
-    def test_a_key_of_another_concept_points_to_from_key(self):
-        with self.assertRaisesRegex(TypeError, "from_key"):
+    def test_a_key_of_another_concept_points_to_the_conversions(self):
+        with self.assertRaisesRegex(TypeError, "to_parent_key"):
             data.ConceptAKey(data.ConceptDKey.create())  # type: ignore[arg-type]
 
     def test_a_removed_xarray_position_reads_none(self):

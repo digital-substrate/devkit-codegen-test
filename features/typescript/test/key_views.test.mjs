@@ -27,15 +27,14 @@ test("fromAnyConceptKey accepts a descendant", () => {
   const { a, b } = views();
   assert.ok(ConceptBKey.fromAnyConceptKey(a).equals(b));
   assert.equal(ConceptDKey.fromAnyConceptKey(a), undefined);
-  assert.throws(() => ConceptDKey.fromKey(a), TypeError);
+  assert.throws(() => new ConceptDKey(b.vprValue), TypeError);
 });
 
-test("narrowing and widening by name, and as()", () => {
+test("narrowing and widening by name", () => {
   const { a, b, c } = views();
   assert.ok(b.toConceptCKey() instanceof ConceptCKey && b.toConceptCKey().equals(c));
   assert.equal(ConceptBKey.create().toConceptCKey(), undefined);
   assert.ok(ConceptBKey.fromConceptCKey(c).equals(b));
-  assert.ok(a.as(ConceptBKey).equals(b));
 });
 
 test("a club converts to and from its members", () => {

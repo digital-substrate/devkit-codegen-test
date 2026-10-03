@@ -38,9 +38,11 @@ class TestKeyViews(unittest.TestCase):
         self.assertEqual(data.ConceptBKey.from_any_concept_key(self.a), self.b)
         self.assertIsNone(data.ConceptDKey.from_any_concept_key(self.a))
 
-    def test_from_key_raises_for_an_unrelated_instance(self):
+    def test_an_unrelated_key_does_not_convert(self):
         with self.assertRaises(TypeError):
-            data.ConceptDKey.from_key(self.a)
+            data.ConceptBKey.from_concept_c_key(self.a)  # type: ignore[arg-type]
+        with self.assertRaises(TypeError):
+            data.ConceptDKey(self.b)  # type: ignore[arg-type]
 
     def test_narrowing_and_widening_by_name(self):
         self.assertIs(type(self.b.to_concept_c_key()), data.ConceptCKey)
@@ -48,9 +50,20 @@ class TestKeyViews(unittest.TestCase):
         self.assertIsNone(data.ConceptBKey.create().to_concept_c_key())
         self.assertEqual(data.ConceptBKey.from_concept_c_key(self.c), self.b)
 
-    def test_as(self):
-        self.assertEqual(self.b.as_(data.ConceptCKey), self.c)
-        self.assertEqual(self.a.as_(data.ConceptBKey), self.b)
+    def test_no_argument_gives_the_invalid_key(self):
+        key = data.ConceptBKey()
+        self.assertFalse(key.is_valid())
+        self.assertIs(type(key), data.ConceptBKey)
+        self.assertTrue(data.ConceptBKey.create().is_valid())
+
+    def test_instance_id_and_runtime_id(self):
+        self.assertEqual(data.ConceptBKey(self.c.instance_id(), self.c.runtime_id()), self.b)
+        self.assertEqual(data.ConceptBKey(self.c.instance_id(), self.c.runtime_id()).to_concept_c_key(), self.c)
+        self.assertEqual(data.KlubKey(self.c.instance_id(), self.c.runtime_id()).to_concept_c_key(), self.c)
+        with self.assertRaises(TypeError):
+            data.ConceptDKey(self.c.instance_id(), self.c.runtime_id())
+        with self.assertRaises(TypeError):
+            data.KlubKey(self.c.instance_id())
 
     def test_club(self):
         k = data.KlubKey.from_concept_c_key(self.c)

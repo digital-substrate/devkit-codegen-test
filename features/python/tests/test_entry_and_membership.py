@@ -1,11 +1,12 @@
 # Copyright (c) Digital Substrate 2026, All rights reserved.
-"""The package leads to every unit and its attachments, and membership always answers.
+"""The package leads to every unit and its attachments, and membership is as strict as storing.
 
-A key is found in a container of another view of it, as the runtime's equality says; an
-element of the wrong type is simply not there.
+A key is looked up as the key the container holds: another view of it is widened first, with
+to_parent_key() or to_any_concept_key(), and an element of the wrong type raises.
 """
 
 import unittest
+import dsviper
 import features
 from features import containers as c
 from features.demo import data
@@ -23,15 +24,24 @@ class TestMembership(unittest.TestCase):
     def test_a_key_is_found_through_another_view(self):
         key = data.ConceptCKey.create()
         keys = c.Set_of_AnyConceptKey([key.to_any_concept_key()])
-        self.assertIn(key, keys)
-        self.assertIn(key.to_parent_key(), keys)
-        self.assertNotIn(data.ConceptCKey.create(), keys)
+        self.assertIn(key.to_any_concept_key(), keys)
+        self.assertIn(key.to_parent_key().to_any_concept_key(), keys)
+        self.assertNotIn(data.ConceptCKey.create().to_any_concept_key(), keys)
 
-    def test_an_element_of_the_wrong_type_is_not_there(self):
-        self.assertNotIn("x", c.Set_of_uint8([1]))
-        self.assertNotIn(300, c.Vector_of_uint8([1]))
-        self.assertNotIn(3, c.Map_of_string_to_Demo_StructureS())
-        self.assertFalse(c.Set_of_uint8([1]).contains("x"))  # type: ignore[arg-type]
+    def test_another_view_is_widened_explicitly(self):
+        key = data.ConceptCKey.create()
+        with self.assertRaises(dsviper.ViperError):
+            key in c.Set_of_AnyConceptKey([key.to_any_concept_key()])
+        with self.assertRaises(dsviper.ViperError):
+            key in c.Set_of_Demo_ConceptBKey([key.to_parent_key()])
+
+    def test_an_element_of_the_wrong_type_raises(self):
+        for probe in (lambda: "x" in c.Set_of_uint8([1]),
+                      lambda: 300 in c.Vector_of_uint8([1]),
+                      lambda: 3 in c.Map_of_string_to_Demo_StructureS(),
+                      lambda: c.Set_of_uint8([1]).contains("x")):  # type: ignore[arg-type]
+            with self.assertRaises(dsviper.ViperError):
+                probe()
 
 
 if __name__ == "__main__":

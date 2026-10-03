@@ -47,5 +47,17 @@ int main() {
         ++failures;
     }
 
+    // A parent key narrows to a local descendant by name, as the 1.2 surface did.
+    auto const c{demo::ConceptCKey::create()};
+    demo::ConceptBKey const b{c};
+    if (!(b.asConceptCKey() == c) || demo::ConceptBKey::create().asConceptCKey().has_value()) {
+        std::cout << "a parent key does not narrow to its descendant\n";
+        ++failures;
+    }
+    if (!(b.toAnyConceptKey() == c.toAny())) {
+        std::cout << "toAnyConceptKey() differs from toAny()\n";
+        ++failures;
+    }
+
     return failures ? 1 : 0;
 }

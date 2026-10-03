@@ -1,5 +1,5 @@
 # Copyright (c) Digital Substrate 2026, All rights reserved.
-"""A key gives back its instance's own key; a document is written as a field is; a club takes
+"""A key narrows back to its instance's own key; a document is written as a field is; a club takes
 its members' keys."""
 
 import unittest
@@ -12,12 +12,12 @@ from features.demo.attachments import ConceptA, ConceptCoverage
 
 class TestSpecificKey(unittest.TestCase):
 
-    def test_any_view_gives_back_the_instance_key(self):
+    def test_any_view_narrows_back_to_the_instance_key(self):
         key = data.ConceptCKey.create()
-        for view in (key.to_any_concept_key(), key.to_parent_key(), data.KlubKey(key)):
-            specific = view.to_concept_key()
-            self.assertIs(type(specific), data.ConceptCKey)
-            self.assertEqual(specific, key)
+        self.assertEqual(data.ConceptCKey.from_any_concept_key(key.to_any_concept_key()), key)
+        self.assertEqual(key.to_parent_key().to_concept_c_key(), key)
+        self.assertEqual(data.KlubKey(key).to_concept_c_key(), key)
+        self.assertIs(type(key.to_parent_key().to_concept_c_key()), data.ConceptCKey)
 
 
 class TestDocuments(unittest.TestCase):
