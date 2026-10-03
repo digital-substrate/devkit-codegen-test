@@ -19,7 +19,7 @@ sys.path.insert(0, str(package))
 
 import dsviper                                                      # noqa: E402
 
-from crossing import core, parts, definitions                       # noqa: E402
+from crossing import containers, core, parts, definitions           # noqa: E402
 from crossing.core import attachments as a                          # noqa: E402
 from crossing._codegen import proxy, wrap                           # noqa: E402
 
@@ -53,6 +53,8 @@ refuses("wrap_value rejects a homonym structure of another namespace",
         lambda: core.Colour.wrap_value(parts.Colour().unwrap_value()))
 refuses("wrap_value rejects a homonym enumeration of another namespace",
         lambda: parts.Grade.wrap_value(core.Grade.HIGH.unwrap_value()))
+refuses("a tuple refuses its homonym elements swapped",
+        lambda: containers.Tuple_of_Core_Colour_and_Parts_Colour([parts.Colour(), core.Colour()]))
 
 # `wrap` must not fall back to returning the bare value when a type has no registered class:
 # that would contradict the annotation, which type checking cannot catch, and would only
