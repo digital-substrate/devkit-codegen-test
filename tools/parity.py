@@ -110,7 +110,7 @@ def python_surface(package: str) -> list[tuple[str, str, str, str, int]]:
             if inspect.isclass(value):
                 rows.append((relative, name, "", "class", 1 if value.__dict__.get("__doc__") else 0))
                 members(relative, name, "", value, 1)
-            elif inspect.isfunction(value):
+            elif inspect.isfunction(inspect.unwrap(value)):           # functools.cache wraps one
                 rows.append((relative, name, "", "function", documented(value)))
             else:
                 rows.append((relative, name, "", "const", 0))
