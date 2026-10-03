@@ -34,6 +34,14 @@ test("wrapValue refuses a value of another type", () => {
   assert.throws(() => ConceptAKey.wrapValue(ConceptDKey.create().unwrapValue()), TypeError);
 });
 
+test("wrapValue refuses a value of another kind", () => {
+  const text = dsviper.Value.create(dsviper.Type.STRING, "a");
+  for (const wrap of [StructureS.wrapValue, ConceptAKey.wrapValue, f.demo.KlubKey.wrapValue, EnumerationE.wrapValue,
+                      f.AnyValue.wrapValue, f.AnyConceptKey.wrapValue, f.Vector_of_uint8.wrapValue]) {
+    assert.throws(() => wrap(text), TypeError);
+  }
+});
+
 test("a constructor boxes the value it is given", () => {
   const value = new StructureS({ f_string: "a" }).unwrapValue();
   new StructureS(value).f_string = "b";

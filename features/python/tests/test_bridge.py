@@ -5,7 +5,7 @@ explicit."""
 
 import unittest
 import dsviper
-from features import AnyValue, containers as c
+from features import AnyConceptKey, AnyValue, containers as c
 from features.demo import data
 
 
@@ -40,6 +40,13 @@ class TestWrapValue(unittest.TestCase):
             c.Vector_of_uint8.wrap_value(c.Vector_of_int8([1]).unwrap_value())
         with self.assertRaises(TypeError):
             data.ConceptAKey.wrap_value(data.ConceptDKey.create().unwrap_value())
+
+    def test_a_value_of_another_kind_is_refused(self):
+        text = dsviper.Value.create(dsviper.Type.STRING, "a")
+        for cls in (data.StructureS, data.ConceptAKey, data.KlubKey, data.EnumerationE, AnyValue, AnyConceptKey,
+                    c.Vector_of_uint8):
+            with self.subTest(cls=cls.__name__), self.assertRaises(TypeError):
+                cls.wrap_value(text)
 
 
 class TestConstructor(unittest.TestCase):
