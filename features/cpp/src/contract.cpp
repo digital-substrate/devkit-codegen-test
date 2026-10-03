@@ -59,5 +59,15 @@ int main() {
         ++failures;
     }
 
+    // A structure is built from its fields in declaration order, in C++17, as the 1.2
+    // structures were: a double literal narrows to a float field, and a one-field structure
+    // converts from its field.
+    demo::StructureS const s(0.5, "x");
+    demo::StructureW const w = std::uint8_t{7};
+    if (!(s.f_float == 0.5f && s.f_string == "x" && w.f_single == 7 && demo::StructureS{} == demo::StructureS(0, ""))) {
+        std::cout << "a structure is not built from its fields\n";
+        ++failures;
+    }
+
     return failures ? 1 : 0;
 }
