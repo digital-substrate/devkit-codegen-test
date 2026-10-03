@@ -96,3 +96,9 @@ test("no aggregate operation on a scalar document, no lookup by name", () => {
   assert.equal(ma.ConceptA.properties.unionF_sett, undefined);
   assert.equal(ma.ConceptA.properties.update, undefined);
 });
+
+test("an attachment names itself by its runtime id, a constant, and by its descriptor", () => {
+  const attachment = definitions().checkAttachment(ma.ConceptA.properties.runtimeId);
+  assert.ok(attachment.equals(ma.ConceptA.properties.descriptor));
+  assert.ok(!ma.ConceptA.properties.runtimeId.equals(ma.ConceptA.propertiesInt8.runtimeId));
+});

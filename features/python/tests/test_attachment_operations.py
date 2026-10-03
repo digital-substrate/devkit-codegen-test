@@ -95,5 +95,19 @@ class TestOnlyWhatTheDocumentHas(unittest.TestCase):
         self.assertFalse(hasattr(ma.ConceptA.properties, "update"))
 
 
+class TestIdentity(unittest.TestCase):
+    """An attachment names itself by its runtime id, a constant, and by its descriptor."""
+
+    def test_runtime_id_names_the_attachment(self):
+        attachment = definitions().check_attachment(ma.ConceptA.properties.runtime_id)
+        self.assertEqual(attachment, ma.ConceptA.properties.descriptor)
+        self.assertNotEqual(ma.ConceptA.properties.runtime_id, ma.ConceptA.properties_int8.runtime_id)
+
+    def test_descriptors_compare_and_hash(self):
+        changed = {definitions().check_attachment(ma.ConceptA.properties.runtime_id)}
+        self.assertIn(ma.ConceptA.properties.descriptor, changed)
+        self.assertNotIn(ma.ConceptA.properties_int8.descriptor, changed)
+
+
 if __name__ == "__main__":
     unittest.main()
