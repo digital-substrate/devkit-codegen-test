@@ -19,6 +19,14 @@ class TestEntry(unittest.TestCase):
         self.assertTrue(hasattr(features, "AnyValue") and hasattr(features, "AnyConceptKey"))
 
 
+    def test_a_unit_exports_its_runtime_ids(self):
+        from features.demo import CONCEPT_A, KLUB, ENUMERATION_E, STRUCTURE_S
+        self.assertEqual(CONCEPT_A, data.ConceptAKey.concept().runtime_id())
+        self.assertEqual(KLUB, data.KlubKey.club().runtime_id())
+        self.assertEqual(STRUCTURE_S, data.StructureS.type().runtime_id())
+        self.assertEqual(features.definitions().check_enumeration(ENUMERATION_E).runtime_id(), ENUMERATION_E)
+
+
 class TestMembership(unittest.TestCase):
 
     def test_a_key_is_found_through_another_view(self):
