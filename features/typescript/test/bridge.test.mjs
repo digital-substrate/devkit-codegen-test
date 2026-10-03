@@ -1,6 +1,6 @@
-// The bridge to the Viper value: wrapValue takes a value without copying it, unwrapValue gives
-// it back, and a constructor builds a new value -- copying one it is given, as the runtime's own
-// constructors do.
+// The bridge to the Viper value: a generated class is a box around one. wrapValue and a
+// constructor given a value box it without copying, unwrapValue gives it back, and a copy is
+// explicit.
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
@@ -34,24 +34,23 @@ test("wrapValue refuses a value of another type", () => {
   assert.throws(() => ConceptAKey.wrapValue(ConceptDKey.create().unwrapValue()), TypeError);
 });
 
-test("a constructor copies the value it is given", () => {
+test("a constructor boxes the value it is given", () => {
   const value = new StructureS({ f_string: "a" }).unwrapValue();
   new StructureS(value).f_string = "b";
-  assert.equal(value.at("f_string"), "a");
+  assert.equal(value.at("f_string"), "b");
 
   const source = new f.Vector_of_uint8([1]);
   new f.Vector_of_uint8(source).append(2);
   new f.Vector_of_uint8(source.unwrapValue()).append(3);
-  assert.deepEqual([...source], [1]);
+  assert.deepEqual([...source], [1, 2, 3]);
 
   const any = new dsviper.ValueAny(1);
   new f.AnyValue(any).wrap(2);
-  assert.equal(any.unwrap(), 1);
+  assert.equal(any.unwrap(), 2);
 });
 
-test("a copy is shallow", () => {
-  const source = new f.Vector_of_Demo_StructureS([new StructureS({ f_string: "a" })]);
-  const built = new f.Vector_of_Demo_StructureS(source);
-  built.at(0).f_string = "b";
-  assert.equal(source.at(0).f_string, "b");
+test("a copy is explicit", () => {
+  const value = new StructureS({ f_string: "a" }).unwrapValue();
+  new StructureS(value.copy()).f_string = "b";
+  assert.equal(value.at("f_string"), "a");
 });

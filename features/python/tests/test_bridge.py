@@ -1,7 +1,7 @@
 # Copyright (c) Digital Substrate 2026, All rights reserved.
-"""The bridge to the Viper value: wrap_value takes a value without copying it, unwrap_value
-gives it back, and a constructor builds a new value -- copying one it is given, as the
-runtime's own constructors do."""
+"""The bridge to the Viper value: a generated class is a box around one. wrap_value and a
+constructor given a value box it without copying, unwrap_value gives it back, and a copy is
+explicit."""
 
 import unittest
 import dsviper
@@ -44,28 +44,29 @@ class TestWrapValue(unittest.TestCase):
 
 class TestConstructor(unittest.TestCase):
 
-    def test_a_structure_copies_the_value_it_is_given(self):
+    def test_a_structure_boxes_the_value_it_is_given(self):
         value = data.StructureS(f_string="a").unwrap_value()
-        built = data.StructureS(value)
-        built.f_string = "b"
-        self.assertEqual(value.at("f_string"), "a")
+        data.StructureS(value).f_string = "b"
+        self.assertEqual(value.at("f_string"), "b")
 
-    def test_a_container_copies_the_container_it_is_given(self):
+    def test_a_container_boxes_the_container_it_is_given(self):
         source = c.Vector_of_uint8([1])
         c.Vector_of_uint8(source).append(2)
         c.Vector_of_uint8(source.unwrap_value()).append(3)
-        self.assertEqual(list(source), [1])
+        self.assertEqual(list(source), [1, 2, 3])
 
-    def test_an_any_copies_the_any_it_is_given(self):
+    def test_an_any_boxes_the_any_it_is_given(self):
         value = dsviper.ValueAny(1)
         AnyValue(value).wrap(2)
-        self.assertEqual(value.unwrap(), 1)
+        self.assertEqual(value.unwrap(), 2)
 
-    def test_a_copy_is_shallow(self):
-        source = c.Vector_of_Demo_StructureS([data.StructureS(f_string="a")])
-        built = c.Vector_of_Demo_StructureS(source)
-        built[0].f_string = "b"
-        self.assertEqual(source[0].f_string, "b")
+    def test_a_copy_is_explicit(self):
+        value = data.StructureS(f_string="a").unwrap_value()
+        data.StructureS(value.copy()).f_string = "b"
+        self.assertEqual(value.at("f_string"), "a")
+
+    def test_natives_build_a_new_value(self):
+        self.assertEqual(list(c.Vector_of_uint8([1, 2])), [1, 2])
 
 if __name__ == "__main__":
     unittest.main()
