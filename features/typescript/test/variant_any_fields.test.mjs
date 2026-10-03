@@ -20,7 +20,7 @@ test("a variant changes in place", () => {
   u.f_variant.setUint8(3);
   assert.ok(u.f_variant.isUint8());
   assert.equal(u.f_variant.unwrap(), 3);
-  assert.throws(() => u.f_variant.getString(), RangeError);
+  assert.throws(() => u.f_variant.getString(), TypeError);
 });
 
 test("key alternatives have their names", () => {
