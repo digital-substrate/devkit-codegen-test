@@ -50,6 +50,10 @@ test("get_with_default_when_nil", () => {
   assert.equal(opt.get(99), 99);
 });
 
+test("get_without_default_when_nil_throws", () => {
+  assert.throws(() => new Optional_of_int8().get());
+});
+
 test("wrap_method", () => {
   const opt = new Optional_of_uint8();
   opt.wrap(123);

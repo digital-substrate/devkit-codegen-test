@@ -50,6 +50,10 @@ class TestOptionalValue(unittest.TestCase):
         opt = Optional_of_int8()
         self.assertEqual(opt.get(99), 99)
 
+    def test_get_without_default_when_nil_raises(self):
+        with self.assertRaises(dsviper.ViperError):
+            Optional_of_int8().get()
+
     def test_wrap_method(self):
         opt = Optional_of_uint8()
         opt.wrap(123)
