@@ -120,22 +120,22 @@ test("usable_as_dict_key", () => {
 
 test("encode_decode_a", () => {
   const e1 = EnumerationE.A;
-  const blob = dsviper.Value.encode(EnumerationE.value(e1));
-  const e2 = EnumerationE.wrap(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
+  const blob = dsviper.Value.encode(EnumerationE.unwrapValue(e1));
+  const e2 = EnumerationE.wrapValue(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
   assert.equal(EnumerationE.name(e2), "a");
 });
 
 test("encode_decode_b", () => {
   const e1 = EnumerationE.B;
-  const blob = dsviper.Value.encode(EnumerationE.value(e1));
-  const e2 = EnumerationE.wrap(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
+  const blob = dsviper.Value.encode(EnumerationE.unwrapValue(e1));
+  const e2 = EnumerationE.wrapValue(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
   assert.equal(EnumerationE.name(e2), "b");
 });
 
 test("encode_decode_c", () => {
   const e1 = EnumerationE.C;
-  const blob = dsviper.Value.encode(EnumerationE.value(e1));
-  const e2 = EnumerationE.wrap(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
+  const blob = dsviper.Value.encode(EnumerationE.unwrapValue(e1));
+  const e2 = EnumerationE.wrapValue(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
   assert.equal(EnumerationE.name(e2), "c");
 });
 

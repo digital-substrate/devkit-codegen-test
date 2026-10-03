@@ -96,7 +96,7 @@ test("copy_independent", () => {
 
 test("encode_decode_value", () => {
   const opt1 = new Optional_of_uint8(42);
-  const blob = dsviper.Value.encode(opt1.vprValue);
+  const blob = dsviper.Value.encode(opt1.unwrapValue());
   const opt2 = new Optional_of_uint8(dsviper.Value.decode(blob, Optional_of_uint8.type(), definitions()));
   assert.ok(!opt2.isNil());
   assert.equal(opt2.unwrap(), 42);
@@ -104,7 +104,7 @@ test("encode_decode_value", () => {
 
 test("encode_decode_nil", () => {
   const opt1 = new Optional_of_uint8();
-  const blob = dsviper.Value.encode(opt1.vprValue);
+  const blob = dsviper.Value.encode(opt1.unwrapValue());
   const opt2 = new Optional_of_uint8(dsviper.Value.decode(blob, Optional_of_uint8.type(), definitions()));
   assert.ok(opt2.isNil());
 });

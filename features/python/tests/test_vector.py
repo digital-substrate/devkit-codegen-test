@@ -170,13 +170,13 @@ class TestVectorSerialization(unittest.TestCase):
 
     def test_encode_decode_roundtrip(self):
         v1 = Vector_of_uint8([1, 2, 3, 4, 5])
-        blob = dsviper.Value.encode(v1.vpr_value)
+        blob = dsviper.Value.encode(v1.unwrap_value())
         v2 = Vector_of_uint8(dsviper.Value.decode(blob, Vector_of_uint8.type(), definitions()))
         self.assertEqual(list(v2), [1, 2, 3, 4, 5])
 
     def test_encode_decode_empty(self):
         v1 = Vector_of_uint8()
-        blob = dsviper.Value.encode(v1.vpr_value)
+        blob = dsviper.Value.encode(v1.unwrap_value())
         v2 = Vector_of_uint8(dsviper.Value.decode(blob, Vector_of_uint8.type(), definitions()))
         self.assertEqual(len(v2), 0)
 

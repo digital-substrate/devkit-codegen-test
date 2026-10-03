@@ -44,18 +44,22 @@ refuses("a field rejects the Colour of another unit",
 refuses("a container rejects an element of the wrong type",
         lambda: setattr(core.Bag(), "tints", [parts.Colour()]))
 refuses("a key rejects the identifier of another concept",
-        lambda: core.ThingKey(core.OtherKey.create().vpr_value))
+        lambda: core.ThingKey(core.OtherKey.create().unwrap_value()))
 refuses("an attachment rejects a key of another concept",
         lambda: a.Thing.colour.set(mutating, core.OtherKey.create(), core.Colour()))
 refuses("an attachment rejects a document of the wrong type",
         lambda: a.Thing.colour.set(mutating, core.ThingKey.create(), parts.Colour()))
+refuses("wrap_value rejects a homonym structure of another namespace",
+        lambda: core.Colour.wrap_value(parts.Colour().unwrap_value()))
+refuses("wrap_value rejects a homonym enumeration of another namespace",
+        lambda: parts.Grade.wrap_value(core.Grade.HIGH.unwrap_value()))
 
 # `wrap` must not fall back to returning the bare value when a type has no registered class:
 # that would contradict the annotation, which type checking cannot catch, and would only
 # surface much later as a missing attribute.
 saved = proxy._CLASSES.pop(core.data.COLOUR.encoded())
 refuses("wrap fails if a unit is not imported, instead of returning the bare value",
-        lambda: wrap(core.Colour(r=1, g=2, b=3).vpr_value))
+        lambda: wrap(core.Colour(r=1, g=2, b=3).unwrap_value()))
 proxy._CLASSES[core.data.COLOUR.encoded()] = saved
 
 raise SystemExit(0 if ok else 1)

@@ -196,7 +196,7 @@ test("update_overwrites_existing", () => {
 
 test("encode_decode_roundtrip", () => {
   const m1 = new Map_of_int8_to_string([[1, "one"], [2, "two"]]);
-  const blob = dsviper.Value.encode(m1.vprValue);
+  const blob = dsviper.Value.encode(m1.unwrapValue());
   const m2 = new Map_of_int8_to_string(dsviper.Value.decode(blob, Map_of_int8_to_string.type(), definitions()));
   assert.equal(m2.size, 2);
   assert.equal(m2.at(1), "one");
@@ -205,7 +205,7 @@ test("encode_decode_roundtrip", () => {
 
 test("encode_decode_empty", () => {
   const m1 = new Map_of_int8_to_string();
-  const blob = dsviper.Value.encode(m1.vprValue);
+  const blob = dsviper.Value.encode(m1.unwrapValue());
   const m2 = new Map_of_int8_to_string(dsviper.Value.decode(blob, Map_of_int8_to_string.type(), definitions()));
   assert.equal(m2.size, 0);
 });

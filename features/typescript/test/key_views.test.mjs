@@ -11,7 +11,7 @@ const views = () => {
 
 test("a parent key has the parent static type, and a parent slot accepts it", () => {
   const { b } = views();
-  assert.ok(b.vprValue.typeKey().equals(ConceptBKey.type()));
+  assert.ok(b.unwrapValue().typeKey().equals(ConceptBKey.type()));
   const u = new StructureU({ f_B: b });
   assert.ok(u.f_B instanceof ConceptBKey && u.f_B.equals(b));
 });
@@ -27,7 +27,7 @@ test("fromAnyConceptKey accepts a descendant", () => {
   const { a, b } = views();
   assert.ok(ConceptBKey.fromAnyConceptKey(a).equals(b));
   assert.equal(ConceptDKey.fromAnyConceptKey(a), undefined);
-  assert.throws(() => new ConceptDKey(b.vprValue), TypeError);
+  assert.throws(() => new ConceptDKey(b.unwrapValue()), TypeError);
 });
 
 test("narrowing and widening by name", () => {
@@ -55,7 +55,7 @@ test("a field reads the class of its static type", () => {
 
 test("the constructor takes exactly its static type", () => {
   const { c } = views();
-  assert.throws(() => new ConceptBKey(c.vprValue), TypeError);
+  assert.throws(() => new ConceptBKey(c.unwrapValue()), TypeError);
   assert.ok(new AnyConceptKey(c).equals(c.toAnyConceptKey()));
 });
 

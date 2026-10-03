@@ -38,6 +38,6 @@ test("an any reads as a view, takes a generated value and gives back the runtime
   assert.equal(u.f_any.unwrap(), 42);
   u.f_any = new StructureS({ f_string: "held" });
   assert.ok(u.f_any.unwrap() instanceof dsviper.ValueStructure);
-  assert.equal(StructureS.wrap(u.f_any.unwrap()).f_string, "held");
+  assert.equal(StructureS.wrapValue(u.f_any.unwrap()).f_string, "held");
   assert.ok(new StructureU().f_any.isNil());
 });

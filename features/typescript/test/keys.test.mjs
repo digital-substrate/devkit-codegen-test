@@ -115,17 +115,17 @@ test("hash_consistency", () => {
   const uuidStr = "12345678-1234-1234-1234-123456789abc";
   const key1 = new ConceptAKey(uuidStr);
   const key2 = new ConceptAKey(uuidStr);
-  assert.equal(dsviper.Value.hexdigest(key1.vprValue), dsviper.Value.hexdigest(key2.vprValue));
+  assert.equal(dsviper.Value.hexdigest(key1.unwrapValue()), dsviper.Value.hexdigest(key2.unwrapValue()));
 });
 
 test("keys_in_dict", () => {
   const key1 = ConceptAKey.create();
   const key2 = ConceptAKey.create();
   const d = new Map();
-  d.set(dsviper.Value.hexdigest(key1.vprValue), "value1");
-  d.set(dsviper.Value.hexdigest(key2.vprValue), "value2");
-  assert.equal(d.get(dsviper.Value.hexdigest(key1.vprValue)), "value1");
-  assert.equal(d.get(dsviper.Value.hexdigest(key2.vprValue)), "value2");
+  d.set(dsviper.Value.hexdigest(key1.unwrapValue()), "value1");
+  d.set(dsviper.Value.hexdigest(key2.unwrapValue()), "value2");
+  assert.equal(d.get(dsviper.Value.hexdigest(key1.unwrapValue())), "value1");
+  assert.equal(d.get(dsviper.Value.hexdigest(key2.unwrapValue())), "value2");
 });
 
 // --- TestKeyComparison ---
@@ -134,14 +134,14 @@ test("keys_orderable", () => {
   const key1 = ConceptAKey.create();
   const key2 = ConceptAKey.create();
   // Should not raise
-  const c = key1.vprValue.compare(key2.vprValue);
+  const c = key1.unwrapValue().compare(key2.unwrapValue());
   assert.ok(typeof c === "number");
 });
 
 test("keys_sortable", () => {
   const keys = Array.from({ length: 5 }, () => ConceptAKey.create());
   // Should not raise
-  const sortedKeys = [...keys].sort((a, b) => a.vprValue.compare(b.vprValue));
+  const sortedKeys = [...keys].sort((a, b) => a.unwrapValue().compare(b.unwrapValue()));
   assert.equal(sortedKeys.length, 5);
 });
 
@@ -218,12 +218,12 @@ test("none_raises_type_error", () => {
 
 test("vpr_value_is_value_key", () => {
   const key = ConceptAKey.create();
-  assert.ok(key.vprValue instanceof dsviper.ValueKey);
+  assert.ok(key.unwrapValue() instanceof dsviper.ValueKey);
 });
 
 test("vpr_value_roundtrip", () => {
   const key1 = ConceptAKey.create();
-  const vpr = key1.vprValue;
+  const vpr = key1.unwrapValue();
   const key2 = new ConceptAKey(vpr);
   assert.ok(key1.equals(key2));
 });

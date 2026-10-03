@@ -477,8 +477,8 @@ test("StructureV: encode/decode roundtrip", () => {
   v1.f_bool = true;
   v1.f_uint8 = 42;
   v1.f_string = "test";
-  const blob = dsviper.Value.encode(v1.vprValue);
-  const v2 = StructureV.wrap(dsviper.Value.decode(blob, StructureV.type(), definitions()));
+  const blob = dsviper.Value.encode(v1.unwrapValue());
+  const v2 = StructureV.wrapValue(dsviper.Value.decode(blob, StructureV.type(), definitions()));
   assert.ok(v2.f_bool);
   assert.equal(v2.f_uint8, 42);
   assert.equal(v2.f_string, "test");
@@ -489,8 +489,8 @@ test("StructureV: encode/decode with containers", () => {
   v1.f_vector = new Vector_of_uint8([10, 20, 30]);
   v1.f_set = new Set_of_uint8([1, 2, 3]);
   v1.f_map = new Map_of_uint8_to_string([[1, "a"], [2, "b"]]);
-  const blob = dsviper.Value.encode(v1.vprValue);
-  const v2 = StructureV.wrap(dsviper.Value.decode(blob, StructureV.type(), definitions()));
+  const blob = dsviper.Value.encode(v1.unwrapValue());
+  const v2 = StructureV.wrapValue(dsviper.Value.decode(blob, StructureV.type(), definitions()));
   assert.deepEqual([...v2.f_vector], [10, 20, 30]);
   assert.equal(v2.f_set.size, 3);
   assert.equal(v2.f_map.at(1), "a");
@@ -500,8 +500,8 @@ test("StructureV: encode/decode with nested structures", () => {
   const v1 = new StructureV();
   v1.f_S = new StructureS({ f_float: 2.718, f_string: "euler" });
   v1.f_E = EnumerationE.C;
-  const blob = dsviper.Value.encode(v1.vprValue);
-  const v2 = StructureV.wrap(dsviper.Value.decode(blob, StructureV.type(), definitions()));
+  const blob = dsviper.Value.encode(v1.unwrapValue());
+  const v2 = StructureV.wrapValue(dsviper.Value.decode(blob, StructureV.type(), definitions()));
   assert.ok(Math.abs(v2.f_S.f_float - 2.718) < 1e-3);
   assert.equal(v2.f_S.f_string, "euler");
   assert.ok((v2.f_E === EnumerationE.C));
@@ -544,12 +544,12 @@ test("Structure: unequal structures", () => {
 
 test("Structure: vprValue is ValueStructure", () => {
   const s = new StructureS();
-  assert.ok(s.vprValue instanceof dsviper.ValueStructure);
+  assert.ok(s.unwrapValue() instanceof dsviper.ValueStructure);
 });
 
 test("Structure: vprValue roundtrip", () => {
   const s1 = new StructureS({ f_float: 2.5, f_string: "test" });
-  const vpr = s1.vprValue;
+  const vpr = s1.unwrapValue();
   const s2 = new StructureS(vpr);
   assert.equal(s1.f_float, s2.f_float);
   assert.equal(s1.f_string, s2.f_string);
@@ -568,5 +568,5 @@ test("Structure: beside a field named value, the runtime value stays reachable",
   const w = new StructureValueField({ value: 1n });
   w.nested = new StructureS({ f_string: "inner" });
   assert.equal(w.nested.f_string, "inner");
-  assert.ok(w.vprValue instanceof dsviper.ValueStructure);
+  assert.ok(w.unwrapValue() instanceof dsviper.ValueStructure);
 });

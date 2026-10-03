@@ -31,10 +31,14 @@ refuses("a field rejects the Colour of another unit",
 refuses("a container rejects an element of the wrong type",
         () => { new core.Bag().tints = [new parts.Colour()]; });
 refuses("a key rejects the identifier of another concept",
-        () => new core.ThingKey(core.OtherKey.create().vprValue));
+        () => new core.ThingKey(core.OtherKey.create().unwrapValue()));
 refuses("an attachment rejects a key of another concept",
         () => Thing.colour.set(mutating, core.OtherKey.create(), new core.Colour()));
 refuses("an attachment rejects a document of the wrong type",
         () => Thing.colour.set(mutating, core.ThingKey.create(), new parts.Colour()));
+refuses("wrapValue rejects a homonym structure of another namespace",
+        () => core.Colour.wrapValue(new parts.Colour().unwrapValue()));
+refuses("wrapValue rejects a homonym enumeration of another namespace",
+        () => parts.Grade.wrapValue(core.Grade.unwrapValue(core.Grade.HIGH)));
 
 process.exit(ok ? 0 : 1);

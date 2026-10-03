@@ -16,44 +16,44 @@ class TestConstructorRejectsWrongRuntimeValue(unittest.TestCase):
     """Each proxy constructor must reject a runtime value of another type.
 
     The wrong value is a real ValueX of a *different* type, obtained from a
-    sibling proxy's `.vpr_value`, so this exercises the `value.type() != mt.type…`
+    sibling proxy's `.unwrap_value()`, so this exercises the `value.type() != mt.type…`
     branch specifically — the one that was a bare `assert` before §4.
     """
 
     def test_struct_rejects_other_struct(self):
         with self.assertRaises(TypeError):
-            StructureS(StructureT().vpr_value)
+            StructureS(StructureT().unwrap_value())
 
     def test_concept_key_rejects_other_concept(self):
         with self.assertRaises(TypeError):
-            ConceptAKey(ConceptBKey.create().vpr_value)
+            ConceptAKey(ConceptBKey.create().unwrap_value())
 
     def test_set_rejects_other_element_type(self):
         with self.assertRaises(TypeError):
-            Set_of_uint8(Set_of_Demo_ConceptAKey().vpr_value)
+            Set_of_uint8(Set_of_Demo_ConceptAKey().unwrap_value())
 
     def test_vector_rejects_other_element_type(self):
         with self.assertRaises(TypeError):
-            Vector_of_uint8(Vector_of_int8([1]).vpr_value)
+            Vector_of_uint8(Vector_of_int8([1]).unwrap_value())
 
     def test_optional_rejects_other_element_type(self):
         with self.assertRaises(TypeError):
-            Optional_of_Demo_ConceptAKey(Optional_of_Demo_ConceptBKey().vpr_value)
+            Optional_of_Demo_ConceptAKey(Optional_of_Demo_ConceptBKey().unwrap_value())
 
     def test_enum_rejects_non_enum_value(self):
         with self.assertRaises(TypeError):
-            EnumerationE(StructureS().vpr_value)
+            EnumerationE(StructureS().unwrap_value())
 
 
 class TestConstructorAcceptsCorrectRuntimeValue(unittest.TestCase):
     """The fail-fast check must not reject a correctly-typed runtime value."""
 
     def test_struct_accepts_same_type(self):
-        s = StructureS(StructureS().vpr_value)
+        s = StructureS(StructureS().unwrap_value())
         self.assertIsInstance(s, StructureS)
 
     def test_set_accepts_same_type(self):
-        a = Set_of_uint8(Set_of_uint8([1, 2]).vpr_value)
+        a = Set_of_uint8(Set_of_uint8([1, 2]).unwrap_value())
         self.assertEqual(len(a), 2)
 
 

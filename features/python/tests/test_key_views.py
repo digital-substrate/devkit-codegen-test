@@ -23,7 +23,7 @@ class TestKeyViews(unittest.TestCase):
 
     def test_parent_key_has_the_parent_static_type(self):
         self.assertIs(type(self.b), data.ConceptBKey)
-        self.assertEqual(self.b.vpr_value.type_key(), data.ConceptBKey.type())
+        self.assertEqual(self.b.unwrap_value().type_key(), data.ConceptBKey.type())
 
     def test_parent_key_is_accepted_by_a_parent_slot(self):
         u = data.StructureU(f_b=self.b)
@@ -79,7 +79,7 @@ class TestKeyViews(unittest.TestCase):
 
     def test_the_constructor_takes_exactly_its_static_type(self):
         with self.assertRaises(TypeError):
-            data.ConceptBKey(self.c.vpr_value)
+            data.ConceptBKey(self.c.unwrap_value())
 
     def test_any_concept_key_from_a_key(self):
         self.assertEqual(AnyConceptKey(self.c), self.a)

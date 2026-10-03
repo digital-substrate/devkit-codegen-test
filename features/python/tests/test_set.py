@@ -305,7 +305,7 @@ class TestSetSerialization(unittest.TestCase):
 
     def test_encode_decode_roundtrip(self):
         s1 = Set_of_uint8([1, 2, 3])
-        blob = dsviper.Value.encode(s1.vpr_value)
+        blob = dsviper.Value.encode(s1.unwrap_value())
         s2 = Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()))
         self.assertEqual(len(s2), 3)
         self.assertTrue(1 in s2)
@@ -314,7 +314,7 @@ class TestSetSerialization(unittest.TestCase):
 
     def test_encode_decode_empty(self):
         s1 = Set_of_uint8()
-        blob = dsviper.Value.encode(s1.vpr_value)
+        blob = dsviper.Value.encode(s1.unwrap_value())
         s2 = Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()))
         self.assertEqual(len(s2), 0)
 

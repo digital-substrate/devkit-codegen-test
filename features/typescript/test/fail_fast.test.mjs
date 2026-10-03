@@ -11,38 +11,38 @@ import { Set_of_uint8, Set_of_Demo_ConceptAKey, Vector_of_uint8, Vector_of_int8,
 // --- Constructor rejects a runtime value of another type ---
 
 test("struct rejects other struct", () => {
-  assert.throws(() => new StructureS(new StructureT().vprValue), TypeError);
+  assert.throws(() => new StructureS(new StructureT().unwrapValue()), TypeError);
 });
 
 test("concept key rejects other concept", () => {
-  assert.throws(() => new ConceptAKey(ConceptBKey.create().vprValue), TypeError);
+  assert.throws(() => new ConceptAKey(ConceptBKey.create().unwrapValue()), TypeError);
 });
 
 test("set rejects other element type", () => {
-  assert.throws(() => new Set_of_uint8(new Set_of_Demo_ConceptAKey().vprValue), TypeError);
+  assert.throws(() => new Set_of_uint8(new Set_of_Demo_ConceptAKey().unwrapValue()), TypeError);
 });
 
 test("vector rejects other element type", () => {
-  assert.throws(() => new Vector_of_uint8(new Vector_of_int8([1]).vprValue), TypeError);
+  assert.throws(() => new Vector_of_uint8(new Vector_of_int8([1]).unwrapValue()), TypeError);
 });
 
 test("optional rejects other element type", () => {
-  assert.throws(() => new Optional_of_Demo_ConceptAKey(new Optional_of_Demo_ConceptBKey().vprValue), TypeError);
+  assert.throws(() => new Optional_of_Demo_ConceptAKey(new Optional_of_Demo_ConceptBKey().unwrapValue()), TypeError);
 });
 
 test("enum rejects non-enum value", () => {
-  assert.throws(() => new EnumerationE(new StructureS().vprValue), TypeError);
+  assert.throws(() => new EnumerationE(new StructureS().unwrapValue()), TypeError);
 });
 
 // --- Constructor accepts a correctly-typed runtime value ---
 
 test("struct accepts same type", () => {
-  const s = new StructureS(new StructureS().vprValue);
+  const s = new StructureS(new StructureS().unwrapValue());
   assert.ok(s instanceof StructureS);
 });
 
 test("set accepts same type", () => {
-  const a = new Set_of_uint8(new Set_of_uint8([1, 2]).vprValue);
+  const a = new Set_of_uint8(new Set_of_uint8([1, 2]).unwrapValue());
   assert.equal(a.size, 2);
 });
 

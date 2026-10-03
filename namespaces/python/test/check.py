@@ -62,12 +62,12 @@ ok &= check("a key is hashable", {k1: a}[k1] is a)
 # `==` and not `is`: the runtime returns a new Python object on each call for the same
 # model type. Object identity says nothing here; type equality does.
 ok &= check("the class wraps a runtime Value",
-            a.vpr_value.type() == a.type())
+            a.unwrap_value().type() == a.type())
 
 # And the keys of the two units are not confused.
 ka, kb = modela.MaterialKey.create(), modelb.MaterialKey.create()
 ok &= check("the keys of the two units have distinct types",
-            ka.vpr_value.type() != kb.vpr_value.type())
+            ka.unwrap_value().type() != kb.unwrap_value().type())
 
 # ── an attachment, on an in-memory state ──
 #

@@ -101,7 +101,7 @@ test("vec_copy_preserves_values", () => {
 
 test("vec_encode_decode_roundtrip", () => {
   const v1 = new Vec2_of_uint8([10, 20]);
-  const blob = dsviper.Value.encode(v1.vprValue);
+  const blob = dsviper.Value.encode(v1.unwrapValue());
   const v2 = new Vec2_of_uint8(dsviper.Value.decode(blob, Vec2_of_uint8.type(), definitions()));
   assert.equal(v2.at(0), 10);
   assert.equal(v2.at(1), 20);
@@ -109,7 +109,7 @@ test("vec_encode_decode_roundtrip", () => {
 
 test("vec_encode_decode_preserves_all", () => {
   const v1 = new Vec2_of_uint8([255, 128]);
-  const blob = dsviper.Value.encode(v1.vprValue);
+  const blob = dsviper.Value.encode(v1.unwrapValue());
   const v2 = new Vec2_of_uint8(dsviper.Value.decode(blob, Vec2_of_uint8.type(), definitions()));
   assert.deepEqual(v2.toArray(), [255, 128]);
 });
@@ -255,14 +255,14 @@ test("mat_copy_preserves_values_2x3", () => {
 
 test("mat_encode_decode_roundtrip_2x2", () => {
   const m1 = new Mat2x2_of_uint8([[1, 2], [3, 4]]);
-  const blob = dsviper.Value.encode(m1.vprValue);
+  const blob = dsviper.Value.encode(m1.unwrapValue());
   const m2 = new Mat2x2_of_uint8(dsviper.Value.decode(blob, Mat2x2_of_uint8.type(), definitions()));
   assert.deepEqual(m2.toArray(), [[1, 2], [3, 4]]);
 });
 
 test("mat_encode_decode_roundtrip_2x3", () => {
   const m1 = new Mat2x3_of_uint8([[10, 20, 30], [40, 50, 60]]);
-  const blob = dsviper.Value.encode(m1.vprValue);
+  const blob = dsviper.Value.encode(m1.unwrapValue());
   const m2 = new Mat2x3_of_uint8(dsviper.Value.decode(blob, Mat2x3_of_uint8.type(), definitions()));
   assert.deepEqual(m2.toArray(), [[10, 20, 30], [40, 50, 60]]);
 });
@@ -375,7 +375,7 @@ test("tuple_copy_preserves_values", () => {
 
 test("tuple_encode_decode_roundtrip", () => {
   const t1 = new Tuple_of_uint8_and_string([42, "hello"]);
-  const blob = dsviper.Value.encode(t1.vprValue);
+  const blob = dsviper.Value.encode(t1.unwrapValue());
   const t2 = new Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()));
   assert.equal(t2.at(0), 42);
   assert.equal(t2.at(1), "hello");
@@ -383,14 +383,14 @@ test("tuple_encode_decode_roundtrip", () => {
 
 test("tuple_encode_decode_special_chars", () => {
   const t1 = new Tuple_of_uint8_and_string([0, "héllo wörld"]);
-  const blob = dsviper.Value.encode(t1.vprValue);
+  const blob = dsviper.Value.encode(t1.unwrapValue());
   const t2 = new Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()));
   assert.equal(t2.at(1), "héllo wörld");
 });
 
 test("tuple_encode_decode_empty_string", () => {
   const t1 = new Tuple_of_uint8_and_string([128, ""]);
-  const blob = dsviper.Value.encode(t1.vprValue);
+  const blob = dsviper.Value.encode(t1.unwrapValue());
   const t2 = new Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()));
   assert.equal(t2.at(0), 128);
   assert.equal(t2.at(1), "");

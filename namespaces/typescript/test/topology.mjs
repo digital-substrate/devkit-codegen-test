@@ -35,5 +35,5 @@ test("a unit declaring no homonym imports like the others", () => {
 
 test("a value of one namespace is not accepted by the other", () => {
     const a = new modelA.Colour();
-    assert.throws(() => new modelB.Colour(a.vprValue), TypeError);
+    assert.throws(() => new modelB.Colour(a.unwrapValue()), TypeError);
 });

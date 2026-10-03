@@ -456,7 +456,7 @@ test("uint8_copy", () => {
 
 test("encode_decode_roundtrip", () => {
   const xa1 = new XArray_of_int8([10, 20, 30]);
-  const blob = dsviper.Value.encode(xa1.vprValue);
+  const blob = dsviper.Value.encode(xa1.unwrapValue());
   const xa2 = new XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()));
   assert.equal(xa2.size, 3);
   assert.equal(xa2.at(0), 10);
@@ -466,14 +466,14 @@ test("encode_decode_roundtrip", () => {
 
 test("encode_decode_empty", () => {
   const xa1 = new XArray_of_int8();
-  const blob = dsviper.Value.encode(xa1.vprValue);
+  const blob = dsviper.Value.encode(xa1.unwrapValue());
   const xa2 = new XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()));
   assert.equal(xa2.size, 0);
 });
 
 test("encode_decode_uint8", () => {
   const xa1 = new XArray_of_uint8([1, 128, 255]);
-  const blob = dsviper.Value.encode(xa1.vprValue);
+  const blob = dsviper.Value.encode(xa1.unwrapValue());
   const xa2 = new XArray_of_uint8(dsviper.Value.decode(blob, XArray_of_uint8.type(), definitions()));
   assert.deepEqual([...xa2.toVector()], [1, 128, 255]);
 });
@@ -481,7 +481,7 @@ test("encode_decode_uint8", () => {
 test("encode_decode_preserves_positions", () => {
   const xa1 = new XArray_of_int8([10, 20, 30]);
   const pos1Original = xa1.positions();
-  const blob = dsviper.Value.encode(xa1.vprValue);
+  const blob = dsviper.Value.encode(xa1.unwrapValue());
   const xa2 = new XArray_of_int8(dsviper.Value.decode(blob, XArray_of_int8.type(), definitions()));
   const pos2 = xa2.positions();
   assert.equal(pos1Original.length, pos2.length);

@@ -314,7 +314,7 @@ test("ixor_operator", () => {
 
 test("encode_decode_roundtrip", () => {
   const s1 = new Set_of_uint8([1, 2, 3]);
-  const blob = dsviper.Value.encode(s1.vprValue);
+  const blob = dsviper.Value.encode(s1.unwrapValue());
   const s2 = new Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()));
   assert.equal(s2.size, 3);
   assert.ok(s2.has(1));
@@ -324,7 +324,7 @@ test("encode_decode_roundtrip", () => {
 
 test("encode_decode_empty", () => {
   const s1 = new Set_of_uint8();
-  const blob = dsviper.Value.encode(s1.vprValue);
+  const blob = dsviper.Value.encode(s1.unwrapValue());
   const s2 = new Set_of_uint8(dsviper.Value.decode(blob, Set_of_uint8.type(), definitions()));
   assert.equal(s2.size, 0);
 });

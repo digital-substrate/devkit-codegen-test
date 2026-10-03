@@ -97,14 +97,14 @@ class TestOptionalSerialization(unittest.TestCase):
 
     def test_encode_decode_value(self):
         opt1 = Optional_of_uint8(42)
-        blob = dsviper.Value.encode(opt1.vpr_value)
+        blob = dsviper.Value.encode(opt1.unwrap_value())
         opt2 = Optional_of_uint8(dsviper.Value.decode(blob, Optional_of_uint8.type(), definitions()))
         self.assertFalse(opt2.is_nil())
         self.assertEqual(opt2.unwrap(), 42)
 
     def test_encode_decode_nil(self):
         opt1 = Optional_of_uint8()
-        blob = dsviper.Value.encode(opt1.vpr_value)
+        blob = dsviper.Value.encode(opt1.unwrap_value())
         opt2 = Optional_of_uint8(dsviper.Value.decode(blob, Optional_of_uint8.type(), definitions()))
         self.assertTrue(opt2.is_nil())
 

@@ -187,7 +187,7 @@ class TestMapSerialization(unittest.TestCase):
 
     def test_encode_decode_roundtrip(self):
         m1 = Map_of_int8_to_string({1: "one", 2: "two"})
-        blob = dsviper.Value.encode(m1.vpr_value)
+        blob = dsviper.Value.encode(m1.unwrap_value())
         m2 = Map_of_int8_to_string(dsviper.Value.decode(blob, Map_of_int8_to_string.type(), definitions()))
         self.assertEqual(len(m2), 2)
         self.assertEqual(m2[1], "one")
@@ -195,7 +195,7 @@ class TestMapSerialization(unittest.TestCase):
 
     def test_encode_decode_empty(self):
         m1 = Map_of_int8_to_string()
-        blob = dsviper.Value.encode(m1.vpr_value)
+        blob = dsviper.Value.encode(m1.unwrap_value())
         m2 = Map_of_int8_to_string(dsviper.Value.decode(blob, Map_of_int8_to_string.type(), definitions()))
         self.assertEqual(len(m2), 0)
 
