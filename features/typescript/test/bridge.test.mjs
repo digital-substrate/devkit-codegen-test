@@ -54,3 +54,9 @@ test("a copy is explicit", () => {
   new StructureS(value.copy()).f_string = "b";
   assert.equal(value.at("f_string"), "a");
 });
+
+test("a proxy and a container sort by the runtime's order", () => {
+  const xs = [3, 1, 2].map((x) => new StructureS({ f_float: x }));
+  assert.deepEqual(xs.sort((a, b) => a.compare(b)).map((s) => s.f_float), [1, 2, 3]);
+  assert.equal(new f.Vector_of_uint8([2]).compare(new f.Vector_of_uint8([1])), 1);
+});
