@@ -6,7 +6,7 @@ concept ConceptB;
 concept ConceptC is a ConceptB;
 concept ConceptD;
 
-"""This is the documentation for the concept D"""
+"""This is the documentation for the club Klub"""
 club Klub;
 membership Klub ConceptC;
 membership Klub ConceptD;
