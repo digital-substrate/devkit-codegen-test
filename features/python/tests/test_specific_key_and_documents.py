@@ -39,7 +39,7 @@ class TestDocuments(unittest.TestCase):
         ConceptCoverage.doc_any.set(self.db, key, data.StructureS(f_string="held"))
         self.db.commit()
         held = ConceptCoverage.doc_any.get(self.db.attachment_getting(), key).unwrap()
-        self.assertIs(type(held.unwrap()), data.StructureS)
+        self.assertEqual(data.StructureS(held.unwrap()).f_string, "held")
 
     def test_an_any_value_is_built_from_a_value(self):
         self.assertEqual(AnyValue(42).unwrap(), 42)

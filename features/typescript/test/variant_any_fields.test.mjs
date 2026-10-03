@@ -2,6 +2,7 @@
 // reads and writes each alternative by name, keys included; an any is a view whose content
 // comes back as the generated class.
 import { test } from "node:test";
+import dsviper from "@digitalsubstrate/dsviper";
 import { strict as assert } from "node:assert";
 import * as c from "../generated/dist/containers.js";
 import { AnyValue } from "../generated/dist/_codegen/registry.js";
@@ -31,11 +32,12 @@ test("key alternatives have their names", () => {
   assert.ok(v.f_target.getDemo_ConceptDKey() instanceof ConceptDKey);
 });
 
-test("an any reads as a view and holds a generated value", () => {
+test("an any reads as a view, takes a generated value and gives back the runtime value", () => {
   const u = new StructureU({ f_any: 42 });
   assert.ok(u.f_any instanceof AnyValue);
   assert.equal(u.f_any.unwrap(), 42);
   u.f_any = new StructureS({ f_string: "held" });
-  assert.ok(u.f_any.unwrap() instanceof StructureS);
+  assert.ok(u.f_any.unwrap() instanceof dsviper.ValueStructure);
+  assert.equal(StructureS.wrap(u.f_any.unwrap()).f_string, "held");
   assert.ok(new StructureU().f_any.isNil());
 });

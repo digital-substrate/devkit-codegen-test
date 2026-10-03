@@ -7,6 +7,7 @@ comes back as the generated class, and takes any value, a generated one included
 """
 
 import unittest
+import dsviper
 from features import AnyValue, containers as c
 from features.demo import data
 
@@ -49,11 +50,17 @@ class TestAnyField(unittest.TestCase):
         self.assertTrue(u.f_any)
         self.assertEqual(u.f_any.unwrap(), 42)
 
-    def test_an_any_takes_and_gives_back_a_generated_value(self):
+    def test_an_any_takes_a_generated_value_and_gives_back_the_runtime_value(self):
         u = data.StructureU()
         u.f_any = data.StructureS(f_string="held")
-        self.assertIs(type(u.f_any.unwrap()), data.StructureS)
-        self.assertEqual(u.f_any.unwrap().f_string, "held")
+        self.assertIs(type(u.f_any.unwrap()), dsviper.ValueStructure)
+        self.assertEqual(data.StructureS(u.f_any.unwrap()).f_string, "held")
+
+    def test_an_any_gives_back_an_undeclared_shape_as_the_runtime_does(self):
+        pair = dsviper.ValueTuple(dsviper.TypeTuple([dsviper.Type.FLOAT, dsviper.Type.FLOAT]), (1.0, 2.0))
+        u = data.StructureU(f_any=pair)
+        self.assertIs(type(u.f_any.unwrap()), dsviper.ValueTuple)
+        self.assertEqual(tuple(u.f_any.unwrap()), (1.0, 2.0))
 
     def test_an_empty_any_is_nil(self):
         self.assertTrue(data.StructureU().f_any.is_nil())
