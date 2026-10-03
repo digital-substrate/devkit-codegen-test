@@ -214,6 +214,14 @@ test("none_raises_type_error", () => {
   assert.throws(() => new ConceptAKey(null));
 });
 
+test("a key of another concept says how to convert it", () => {
+  assert.throws(() => new ConceptAKey(ConceptDKey.create()), { name: "TypeError", message: /toParentKey/ });
+});
+
+test("a key of the same concept is used as it is", () => {
+  assert.throws(() => new ConceptAKey(ConceptAKey.create()), { name: "TypeError", message: /already/ });
+});
+
 // --- TestKeyVprValue ---
 
 test("vpr_value_is_value_key", () => {

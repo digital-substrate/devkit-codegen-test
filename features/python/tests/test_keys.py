@@ -205,6 +205,14 @@ class TestKeyValidation(unittest.TestCase):
         with self.assertRaises(TypeError):
             ConceptAKey(None)
 
+    def test_a_key_of_another_concept_says_how_to_convert_it(self):
+        with self.assertRaisesRegex(TypeError, "to_parent_key"):
+            ConceptAKey(ConceptDKey.create())
+
+    def test_a_key_of_the_same_concept_is_used_as_it_is(self):
+        with self.assertRaisesRegex(TypeError, "already"):
+            ConceptAKey(ConceptAKey.create())
+
 
 class TestKeyVprValue(unittest.TestCase):
     """Test access to underlying Viper value."""
