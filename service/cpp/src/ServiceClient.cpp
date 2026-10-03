@@ -49,6 +49,12 @@ int main(int argc, char * argv[]) {
             service = Viper::ServiceRemote::connect(inetAddress, inetPort, definitions);
         }
 
+        // The pool's identity is public, as in 1.2: the id the service declares it under.
+        if (service->queryFunctionPool(service::tools::poolId) == nullptr || service::tools::poolName != "Tools") {
+            std::cerr << "the Tools pool is not declared under its generated identity\n";
+            return 1;
+        }
+
         auto const tools{service::tools::Remote{service}};
         if (tools.isAvailable()) {
             auto const r{tools.add(32, 10)};

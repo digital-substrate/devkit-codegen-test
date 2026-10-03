@@ -112,7 +112,7 @@ test("delete_removes_entry", () => {
   assert.ok(db.ConceptA.properties.has(database, key));
 
   database.beginTransaction();
-  db.ConceptA.properties.delete(database, key);
+  db.ConceptA.properties.del(database, key);
   database.commit();
 
   assert.ok(!db.ConceptA.properties.has(database, key));
@@ -123,7 +123,7 @@ test("delete_absent_no_error", () => {
   const key = ConceptAKey.create();
   // Should not raise
   database.beginTransaction();
-  db.ConceptA.properties.delete(database, key);
+  db.ConceptA.properties.del(database, key);
   database.commit();
 });
 
@@ -292,7 +292,7 @@ test("multiple_attachments_independent", () => {
 
   // Delete one, other should remain
   database.beginTransaction();
-  db.ConceptA.properties.delete(database, key);
+  db.ConceptA.properties.del(database, key);
   database.commit();
 
   assert.ok(!db.ConceptA.properties.has(database, key));

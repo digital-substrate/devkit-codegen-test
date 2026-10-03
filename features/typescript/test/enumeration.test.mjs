@@ -32,32 +32,32 @@ test("cases_are_singletons", () => {
 // --- name() ---
 
 test("name_a", () => {
-  assert.equal(EnumerationE.name(EnumerationE.A), "a");
+  assert.equal(EnumerationE.A, "a");
 });
 
 test("name_b", () => {
-  assert.equal(EnumerationE.name(EnumerationE.B), "b");
+  assert.equal(EnumerationE.B, "b");
 });
 
 test("name_c", () => {
-  assert.equal(EnumerationE.name(EnumerationE.C), "c");
+  assert.equal(EnumerationE.C, "c");
 });
 
 // --- fromStr() ---
 
 test("from_str_a", () => {
   const e = EnumerationE.fromStr("a");
-  assert.equal(EnumerationE.name(e), "a");
+  assert.equal(e, "a");
 });
 
 test("from_str_b", () => {
   const e = EnumerationE.fromStr("b");
-  assert.equal(EnumerationE.name(e), "b");
+  assert.equal(e, "b");
 });
 
 test("from_str_c", () => {
   const e = EnumerationE.fromStr("c");
-  assert.equal(EnumerationE.name(e), "c");
+  assert.equal(e, "c");
 });
 
 test("from_str_invalid", () => {
@@ -122,21 +122,21 @@ test("encode_decode_a", () => {
   const e1 = EnumerationE.A;
   const blob = dsviper.Value.encode(EnumerationE.unwrapValue(e1));
   const e2 = EnumerationE.wrapValue(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
-  assert.equal(EnumerationE.name(e2), "a");
+  assert.equal(e2, "a");
 });
 
 test("encode_decode_b", () => {
   const e1 = EnumerationE.B;
   const blob = dsviper.Value.encode(EnumerationE.unwrapValue(e1));
   const e2 = EnumerationE.wrapValue(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
-  assert.equal(EnumerationE.name(e2), "b");
+  assert.equal(e2, "b");
 });
 
 test("encode_decode_c", () => {
   const e1 = EnumerationE.C;
   const blob = dsviper.Value.encode(EnumerationE.unwrapValue(e1));
   const e2 = EnumerationE.wrapValue(dsviper.Value.decode(blob, EnumerationE.type(), definitions()));
-  assert.equal(EnumerationE.name(e2), "c");
+  assert.equal(e2, "c");
 });
 
 // --- string representation ---
