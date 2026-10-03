@@ -9,6 +9,7 @@ one, and every element is checked where the container is built.
 """
 
 import unittest
+import dsviper
 from features import containers as c
 from features.demo import data
 
@@ -26,7 +27,8 @@ class TestContainerDoor(unittest.TestCase):
         self.assertEqual(c.Map_of_string_to_Demo_StructureS({"k": self.s1})["k"], self.s1)
 
     def test_a_wrong_element_is_refused_where_the_container_is_built(self):
-        with self.assertRaises(TypeError):
+        # Content that does not fit the type: the runtime's error, naming the element at fault.
+        with self.assertRaisesRegex(dsviper.ViperError, r"at\(1\)"):
             c.Set_of_Demo_StructureS([self.s1, data.StructureT()])
 
     def test_a_field_takes_a_host_collection_of_primitives(self):

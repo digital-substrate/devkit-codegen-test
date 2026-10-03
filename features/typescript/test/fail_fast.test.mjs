@@ -26,6 +26,11 @@ test("vector rejects other element type", () => {
   assert.throws(() => new Vector_of_uint8(new Vector_of_int8([1]).unwrapValue()), TypeError);
 });
 
+test("native content that does not fit throws the runtime error", () => {
+  // Not a value of another type, but content the conversion refuses: as an append does.
+  assert.throws(() => new Vector_of_uint8([300]), { name: "ViperError", message: /range of 'uint8'/ });
+});
+
 test("optional rejects other element type", () => {
   assert.throws(() => new Optional_of_Demo_ConceptAKey(new Optional_of_Demo_ConceptBKey().unwrapValue()), TypeError);
 });

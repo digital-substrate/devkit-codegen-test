@@ -16,7 +16,8 @@ test("a declared container takes its generated elements", () => {
 });
 
 test("a wrong element is refused where the container is built", () => {
-  assert.throws(() => new c.Set_of_Demo_StructureS([s1, 3]), TypeError);
+  // Content that does not fit the type: the runtime's error, naming the element at fault.
+  assert.throws(() => new c.Set_of_Demo_StructureS([s1, 3]), { name: "ViperError", message: /at\(1\)/ });
 });
 
 test("a field takes a host collection of primitives", () => {
