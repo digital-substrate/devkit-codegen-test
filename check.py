@@ -23,6 +23,9 @@ What each site proves, and what it does not:
                a `map<Core::Grade, Parts::Colour>`, a `variant<Core::Colour, ...>`
                proves nothing about the service or the suites
 
+Parity, `tools/parity.py`: on every site with both packages, the Python and the TypeScript
+packages expose the same members and document the same ones, the idioms the pack lists aside.
+
 Across versions, `tools/crossversion.py`: a service built with the 1.2 line, called by the kibo 2
 clients -- the wire both lines share.
 
@@ -43,6 +46,7 @@ KIBO_PROJECT = Path(os.environ.get("KIBO_PROJECT") or HERE.parent / "kibo-projec
 
 sys.path.insert(0, str(HERE / "tools"))
 from models import SITES                                # noqa: E402
+from parity import SITES as PARITY_SITES                # noqa: E402
 LANGUAGES = ("cpp", "python", "typescript")
 
 GREEN, RED, GREY, RESET = "\033[32m", "\033[31m", "\033[90m", "\033[0m"
@@ -118,6 +122,17 @@ def main() -> int:
                 failures.append(f"{site}/{language}")
             else:
                 print(f"   {GREEN}{language:11} {result(output)}{RESET}")
+
+    # Parity: the Python and TypeScript packages of a site expose the same surface, the idioms
+    # of the pack's DESIGN.md §7 aside. Read from what the sites above rendered.
+    parity_sites = [s for s in sites if s in PARITY_SITES]
+    if parity_sites:
+        print("\n── parity")
+        code, output = run([sys.executable, "tools/parity.py", *parity_sites], HERE)
+        for line in output.splitlines():
+            print(f"   {GREEN if line.startswith('ok') else RED}{line.rstrip()}{RESET}")
+        if code:
+            failures.append("parity")
 
     # The feature selection, in addition to the sites. No site renders `Base` without `Pool` on
     # a model that declares pools, yet that is what a pure Python application asks for.
