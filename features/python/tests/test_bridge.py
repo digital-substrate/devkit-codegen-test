@@ -72,6 +72,19 @@ class TestConstructor(unittest.TestCase):
         data.StructureS(value.copy()).f_string = "b"
         self.assertEqual(value.at("f_string"), "a")
 
+    def test_a_container_built_from_elements_keeps_them_whatever_its_kind(self):
+        built = [
+            lambda s: c.Vector_of_Demo_StructureS([s])[0],
+            lambda s: c.XArray_of_Demo_StructureS([s])[0],
+            lambda s: c.Map_of_string_to_Demo_StructureS({"k": s})["k"],
+            lambda s: c.Optional_of_Demo_StructureS(s).unwrap(),
+        ]
+        for read in built:
+            s = data.StructureS(f_string="a")
+            held = read(s)
+            s.f_string = "b"
+            self.assertEqual(held.f_string, "b")
+
     def test_natives_build_a_new_value(self):
         self.assertEqual(list(c.Vector_of_uint8([1, 2])), [1, 2])
 

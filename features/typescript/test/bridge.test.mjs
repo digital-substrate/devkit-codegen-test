@@ -57,6 +57,22 @@ test("a constructor boxes the value it is given", () => {
   assert.equal(any.unwrap(), 2);
 });
 
+test("a container built from elements keeps them, whatever its kind", () => {
+  const built = [
+    (s) => new f.Vector_of_Demo_StructureS([s]).at(0),
+    (s) => new f.XArray_of_Demo_StructureS([s]).at(0),
+    (s) => new f.Map_of_string_to_Demo_StructureS([["k", s]]).at("k"),
+    (s) => new f.Map_of_string_to_Demo_StructureS(new Map([["k", s]])).at("k"),
+    (s) => new f.Optional_of_Demo_StructureS(s).unwrap(),
+  ];
+  for (const read of built) {
+    const s = new StructureS({ f_string: "a" });
+    const held = read(s);
+    s.f_string = "b";
+    assert.equal(held.f_string, "b");
+  }
+});
+
 test("a copy is explicit", () => {
   const value = new StructureS({ f_string: "a" }).unwrapValue();
   new StructureS(value.copy()).f_string = "b";
