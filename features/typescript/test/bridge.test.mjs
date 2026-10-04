@@ -28,6 +28,15 @@ test("wrapValue takes the value itself", () => {
   assert.equal(EnumerationE.wrapValue(EnumerationE.unwrapValue(EnumerationE.B)), EnumerationE.B);
 });
 
+test("wrapValue gives a tuple or a variant its named accessors", () => {
+  const tuple = f.Tuple_of_uint8_and_string.wrapValue(new f.Tuple_of_uint8_and_string([1, "a"]).unwrapValue());
+  assert.ok(tuple instanceof f.Tuple_of_uint8_and_string);
+  assert.equal(tuple.get1(), "a");
+  const variant = f.Variant_of_string_or_uint8.wrapValue(new f.Variant_of_string_or_uint8("a").unwrapValue());
+  assert.ok(variant instanceof f.Variant_of_string_or_uint8);
+  assert.equal(variant.getString(), "a");
+});
+
 test("wrapValue refuses a value of another type", () => {
   assert.throws(() => StructureS.wrapValue(new StructureT().unwrapValue()), TypeError);
   assert.throws(() => f.Vector_of_uint8.wrapValue(new f.Vector_of_int8([1]).unwrapValue()), TypeError);
