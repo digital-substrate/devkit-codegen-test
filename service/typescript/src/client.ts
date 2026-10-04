@@ -6,8 +6,7 @@
 import dsviper from "@digitalsubstrate/dsviper";
 import { Vector3, Level } from "../generated/dist/demo/index.js";
 import { AnyValue } from "../generated/dist/index.js";
-// Attachments are deliberately not re-exported by the unit's entry point: two units linked
-// by an attachment would become an import cycle.
+// A unit's attachments are also its entry point's `attachments` namespace.
 import { Player } from "../generated/dist/demo/attachments.js";
 // Every pool of the model, from the one entry the Pool feature renders.
 import { tools, player_model } from "../generated/dist/pools.js";
