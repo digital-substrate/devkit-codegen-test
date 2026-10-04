@@ -29,6 +29,9 @@ packages expose the same members and document the same ones, the idioms the pack
 Across versions, `tools/crossversion.py`: a service built with the 1.2 line, called by the kibo 2
 clients -- the wire both lines share.
 
+Template Model, `tools/template_model.py`: every value a Template Model 1 template reads, read
+again through Model 2 -- each change one the documentation lists.
+
 None of the five proves that a developer of the target audience finds the output usable.
 `pip install` and `tsc --strict` in an outside consumer are tested by hand for now, not here.
 """
@@ -152,6 +155,16 @@ def main() -> int:
         print(f"   {colour}{line.strip()}{RESET}")
     if code not in (0, 2):
         failures.append("crossversion")
+
+    # Template Model 1 to 2: every value a Model 1 template reads, through Model 2; each change
+    # must be one the documentation lists. Skipped, and said so, without a kibo 1.2 jar.
+    print("\n── template model")
+    code, output = run([sys.executable, "tools/template_model.py"], HERE)
+    for line in output.splitlines():
+        colour = GREEN if line.startswith("ok") else (GREY if line.startswith("skipped") else RED)
+        print(f"   {colour}{line.rstrip()}{RESET}")
+    if code not in (0, 2):
+        failures.append("template model")
 
     print()
     if failures:
