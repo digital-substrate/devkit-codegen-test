@@ -25,6 +25,17 @@ class TestConstructorRejectsWrongRuntimeValue(unittest.TestCase):
         with self.assertRaises(TypeError):
             StructureS(StructureT().unwrap_value())
 
+    def test_struct_rejects_a_generated_value(self):
+        # A generated value is not a source, of its own type or another: copy() is explicit.
+        with self.assertRaises(TypeError):
+            StructureS(StructureS(f_string="x"))
+        with self.assertRaises(TypeError):
+            StructureS(StructureT())
+
+    def test_struct_rejects_what_is_not_a_source(self):
+        with self.assertRaises(TypeError):
+            StructureS(42)
+
     def test_concept_key_rejects_other_concept(self):
         with self.assertRaises(TypeError):
             ConceptAKey(ConceptBKey.create().unwrap_value())

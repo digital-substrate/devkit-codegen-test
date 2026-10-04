@@ -14,6 +14,12 @@ test("struct rejects other struct", () => {
   assert.throws(() => new StructureS(new StructureT().unwrapValue()), TypeError);
 });
 
+test("struct rejects a generated value", () => {
+  // A generated value is not a source, of its own type or another: copy() is explicit.
+  assert.throws(() => new StructureS(new StructureS({ f_string: "x" })), TypeError);
+  assert.throws(() => new StructureS(new StructureT()), TypeError);
+});
+
 test("concept key rejects other concept", () => {
   assert.throws(() => new ConceptAKey(ConceptBKey.create().unwrapValue()), TypeError);
 });
