@@ -23,6 +23,17 @@ class TestVariant(unittest.TestCase):
         self.assertTrue(v.is_uint8())
         self.assertEqual(v.get_uint8(), 42)
 
+    def test_wrap_without_a_type_takes_the_alternative_the_value_fits(self):
+        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v.wrap(3)
+        self.assertTrue(v.is_uint8())
+        v.wrap("a")
+        self.assertTrue(v.is_string())
+        v.wrap(StructureS(f_string="s"))
+        self.assertTrue(v.is_Demo_StructureS())
+        with self.assertRaises(dsviper.ViperError):
+            v.wrap(300)
+
     def test_variant_structure(self):
         s = StructureS({"f_float": 1.5, "f_string": "test"})
         v = Variant_of_string_or_uint8_or_Demo_StructureS()

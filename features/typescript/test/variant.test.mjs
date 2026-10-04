@@ -21,6 +21,17 @@ test("variant_uint8", () => {
   assert.equal(v.getUint8(), 42);
 });
 
+test("variant wrap without a type takes the alternative the value fits, as Python's", () => {
+  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  v.wrap(3);
+  assert.ok(v.isUint8());
+  v.wrap("a");
+  assert.ok(v.isString());
+  v.wrap(new StructureS({ f_string: "s" }));
+  assert.ok(v.isDemo_StructureS());
+  assert.throws(() => v.wrap(300), { name: "ViperError" });
+});
+
 test("variant_structure", () => {
   const s = new StructureS({ f_float: 1.5, f_string: "test" });
   const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
