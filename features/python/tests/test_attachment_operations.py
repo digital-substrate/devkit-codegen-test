@@ -58,6 +58,10 @@ class TestFieldOperations(Operations):
 class TestDocumentOperations(Operations):
     """The same operations when the document is itself the aggregate."""
 
+    def test_a_document_of_another_type_is_the_runtimes_to_refuse(self):
+        with self.assertRaisesRegex(dsviper.ViperError, "expected Demo::StructureV"):
+            ma.ConceptA.properties.set(self.m, ConceptAKey.create(), StructureU())
+
     def test_set_document(self):
         key = ConceptAKey.create()
         ma.ConceptA.properties_se_int8.set(self.m, key, {1, 2})

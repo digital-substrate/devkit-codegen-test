@@ -13,6 +13,11 @@ function mutating() {
 const asObject = (mapping) => Object.fromEntries(mapping.keys().map((k) => [k, mapping.at(k)]));
 const sorted = (values) => [...values].sort((a, b) => a - b);
 
+test("a document of another type is the runtime's to refuse", () => {
+  assert.throws(() => ma.ConceptA.properties.set(mutating(), ConceptAKey.create(), new StructureU()),
+                { name: "ViperError", message: /expected Demo::StructureV/ });
+});
+
 // --- on one field of a structure document ---
 
 test("set field: union and subtract", () => {

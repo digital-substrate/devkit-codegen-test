@@ -142,6 +142,11 @@ class TestMatConstruction(unittest.TestCase):
         # Two columns of three rows: len counts the columns.
         self.assertEqual(len(m), 2)
 
+    def test_size_counts_the_elements_as_the_runtime_does(self):
+        m = Mat2x3_of_uint8()
+        self.assertEqual(m.size(), 6)
+        self.assertEqual(len(m), 2)
+
     def test_from_nested_list_2x3(self):
         m = Mat2x3_of_uint8([[1, 2, 3], [4, 5, 6]])
         self.assertEqual(len(m), 2)

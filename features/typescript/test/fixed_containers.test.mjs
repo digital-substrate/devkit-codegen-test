@@ -131,6 +131,12 @@ test("mat_from_nested_list_2x2", () => {
   assert.equal(m.size, 4);
 });
 
+test("mat2x3: size counts the elements as the runtime does", () => {
+  const m = new Mat2x3_of_uint8();
+  assert.equal(m.size, 6);
+  assert.equal(m.columns, 2);
+});
+
 test("mat_default_construction_2x3", () => {
   const m = new Mat2x3_of_uint8();
   // len returns total element count (2*3=6)
