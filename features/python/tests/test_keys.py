@@ -209,6 +209,11 @@ class TestKeyValidation(unittest.TestCase):
         with self.assertRaisesRegex(TypeError, "to_parent_key"):
             ConceptAKey(ConceptDKey.create())
 
+    def test_a_club_key_with_no_argument_is_the_invalid_key(self):
+        self.assertFalse(KlubKey().is_valid())
+        with self.assertRaises(TypeError):
+            KlubKey(runtime_id=md.CONCEPT_C)
+
     def test_a_key_of_the_same_concept_is_used_as_it_is(self):
         with self.assertRaisesRegex(TypeError, "already"):
             ConceptAKey(ConceptAKey.create())

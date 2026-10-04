@@ -218,6 +218,11 @@ test("a key of another concept says how to convert it", () => {
   assert.throws(() => new ConceptAKey(ConceptDKey.create()), { name: "TypeError", message: /toParentKey/ });
 });
 
+test("a club key with no argument is the invalid key", () => {
+  assert.ok(!new KlubKey().isValid());
+  assert.throws(() => new KlubKey(undefined, demo.CONCEPT_C), TypeError);
+});
+
 test("a key of the same concept is used as it is", () => {
   assert.throws(() => new ConceptAKey(ConceptAKey.create()), { name: "TypeError", message: /already/ });
 });
