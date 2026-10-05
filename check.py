@@ -32,6 +32,11 @@ clients -- the wire both lines share.
 Template Model, `tools/template_model.py`: every value a Template Model 1 template reads, read
 again through Model 2 -- each change one the documentation lists.
 
+Typing, `tools/typing_floor.py`: every site's Python package passes `mypy --strict` for this
+Python and for the oldest its pyproject declares, and its tests run under that oldest Python when
+one is at hand (PYTHON_FLOOR, or `python3.10` with dsviper). The TypeScript packages already
+compile with their generated `"strict": true`.
+
 None of the five proves that a developer of the target audience finds the output usable.
 `pip install` and `tsc --strict` in an outside consumer are tested by hand for now, not here.
 """
@@ -155,6 +160,16 @@ def main() -> int:
         print(f"   {colour}{line.strip()}{RESET}")
     if code not in (0, 2):
         failures.append("crossversion")
+
+    # The Python packages are fully annotated down to the oldest Python they declare, and run
+    # there when such an interpreter is at hand. Skipped, and said so, without mypy.
+    print("\n── typing")
+    code, output = run([sys.executable, "tools/typing_floor.py"], HERE)
+    for line in output.splitlines():
+        colour = GREEN if line.startswith("ok") else (GREY if line.startswith("skipped") else RED)
+        print(f"   {colour}{line.rstrip()}{RESET}")
+    if code not in (0, 2):
+        failures.append("typing")
 
     # Template Model 1 to 2: every value a Model 1 template reads, through Model 2; each change
     # must be one the documentation lists. Skipped, and said so, without a kibo 1.2 jar.
