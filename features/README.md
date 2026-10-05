@@ -35,7 +35,7 @@ declared default value, every default key. A model with pools gets stand-in impl
 Python and TypeScript suites are written against `all.dsm`.
 
     python3 ../../kibo-project/kibo_project.py generate --target cpp \
-        --definitions ../../kibo-2/com.digitalsubstrate.red/definitions/RE && cpp/run_test.sh
+        --definitions path/to/your/definitions && cpp/run_test.sh
 
 | | what it proves |
 |---|---|
