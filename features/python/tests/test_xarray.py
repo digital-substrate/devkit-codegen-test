@@ -44,11 +44,10 @@ class TestXArrayIndexAccess(unittest.TestCase):
         xa[1] = 99
         self.assertEqual(xa[1], 99)
 
-    def test_negative_index_not_supported(self):
-        """XArray does not support negative indexing like Python lists."""
+    def test_negative_index_counts_from_the_end(self):
+        """A negative index counts from the end, as dsviper's ValueXArray does since 1.2.28."""
         xa = XArray_int8([10, 20, 30])
-        # Negative indices return None in XArray
-        self.assertIsNone(xa[-1])
+        self.assertEqual(xa[-1], 30)
 
 
 class TestXArrayPositionAccess(unittest.TestCase):

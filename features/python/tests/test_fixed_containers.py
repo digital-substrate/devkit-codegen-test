@@ -133,21 +133,21 @@ class TestMatConstruction(unittest.TestCase):
 
     def test_default_construction_2x2(self):
         m = Mat_uint8_2_2()
-        # len returns total element count (2*2=4)
-        self.assertEqual(len(m), 4)
+        # len counts the columns, as dsviper's ValueMat does since 1.2.28
+        self.assertEqual(len(m), 2)
 
     def test_from_nested_list_2x2(self):
         m = Mat_uint8_2_2([[1, 2], [3, 4]])
-        self.assertEqual(len(m), 4)
+        self.assertEqual(len(m), 2)
 
     def test_default_construction_2x3(self):
         m = Mat_uint8_2_3()
-        # len returns total element count (2*3=6)
-        self.assertEqual(len(m), 6)
+        # len counts the columns: two columns of three
+        self.assertEqual(len(m), 2)
 
     def test_from_nested_list_2x3(self):
         m = Mat_uint8_2_3([[1, 2, 3], [4, 5, 6]])
-        self.assertEqual(len(m), 6)
+        self.assertEqual(len(m), 2)
 
 
 class TestMatAccessByRowIndex(unittest.TestCase):
@@ -217,13 +217,13 @@ class TestMatLen(unittest.TestCase):
 
     def test_len_2x2(self):
         m = Mat_uint8_2_2()
-        # 2x2 = 4 elements
-        self.assertEqual(len(m), 4)
+        # 2 columns
+        self.assertEqual(len(m), 2)
 
     def test_len_2x3(self):
         m = Mat_uint8_2_3()
-        # 2x3 = 6 elements
-        self.assertEqual(len(m), 6)
+        # 2 columns of 3
+        self.assertEqual(len(m), 2)
 
 
 class TestMatToTuple(unittest.TestCase):
