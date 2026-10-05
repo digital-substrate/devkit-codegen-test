@@ -200,5 +200,23 @@ class TestMapSerialization(unittest.TestCase):
         self.assertEqual(len(m2), 0)
 
 
+
+class TestMapSnapshot(unittest.TestCase):
+    """keys(), values() and items() are a snapshot: the map can change while one is iterated."""
+
+    def test_items_is_a_list(self):
+        m = Map_of_int8_to_string({1: "one", 2: "two"})
+        self.assertEqual(m.items(), [(1, "one"), (2, "two")])
+        self.assertEqual(m.keys(), [1, 2])
+        self.assertEqual(m.values(), ["one", "two"])
+
+    def test_remove_while_iterating_items(self):
+        m = Map_of_int8_to_string({1: "one", 2: "two", 3: "three"})
+        for key, element in m.items():
+            if element != "two":
+                del m[key]
+        self.assertEqual(m.items(), [(2, "two")])
+
+
 if __name__ == "__main__":
     unittest.main()

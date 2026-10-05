@@ -209,3 +209,13 @@ test("encode_decode_empty", () => {
   const m2 = new Map_of_int8_to_string(dsviper.Value.decode(blob, Map_of_int8_to_string.type(), definitions()));
   assert.equal(m2.size, 0);
 });
+
+// --- TestMapSnapshot ---
+
+test("entries_is_a_snapshot", () => {
+  const m = new Map_of_int8_to_string([[1, "one"], [2, "two"], [3, "three"]]);
+  for (const [key, element] of m.entries()) {
+    if (element !== "two") m.remove(key);
+  }
+  assert.deepEqual(m.entries(), [[2, "two"]]);
+});
