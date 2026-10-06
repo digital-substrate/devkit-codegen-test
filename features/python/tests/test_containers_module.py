@@ -22,7 +22,7 @@ class TestStarImport(unittest.TestCase):
         self.assertTrue(all("_of_" in name for name in exported))
 
     def test_the_runtime_bases_stay_reachable(self):
-        self.assertTrue(hasattr(features.containers, "Optional"))
+        self.assertTrue(hasattr(features.containers, "Option"))
 
 
 if __name__ == "__main__":
