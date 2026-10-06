@@ -225,9 +225,9 @@ type:int64                       cpp=ok        python=ok        typescript=ok  #
 type:uuid                        cpp=ok        python=ok        typescript=ok  # the DSM reads `uuid w` as the primitive: the type changes before any target sees it
 type:string                      cpp=viper     python=viper     typescript=viper
 type:bool                        cpp=viper     python=viper     typescript=viper
-type:RGB                         cpp=ok        python=explicit  typescript=explicit  # B: the class and its runtime-id constant share a name
-type:E                           cpp=ok        python=explicit  typescript=explicit  # B: the class and its runtime-id constant share a name
-type:S                           cpp=ok        python=explicit  typescript=explicit  # B: the class and its runtime-id constant share a name
+type:RGB                         cpp=ok        python=ok        typescript=ok  # B, fixed: the class and its runtime-id constant share a name
+type:E                           cpp=ok        python=ok        typescript=ok  # B, fixed: the class and its runtime-id constant share a name
+type:S                           cpp=ok        python=ok        typescript=ok  # B, fixed: the class and its runtime-id constant share a name
 documentation:quotes             cpp=ok        python=ok        typescript=ok
 documentation:backslash          cpp=ok        python=ok        typescript=ok
 documentation:ending-quote       cpp=viper     python=viper     typescript=viper  # the DSM cannot write it; the API accepts it and the round trip breaks
