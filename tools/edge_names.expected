@@ -114,12 +114,12 @@ attachment:import                cpp=ok        python=ok        typescript=ok
 pool:import                      cpp=viper     python=viper     typescript=viper
 function:import                  cpp=viper     python=viper     typescript=viper
 parameter:import                 cpp=viper     python=viper     typescript=viper
-field:wrap_value                 cpp=ok        python=silent    typescript=ok  # D: the field masks a method of the proxy
+field:wrap_value                 cpp=ok        python=ok        typescript=ok  # D, fixed: the field masks a method of the proxy
 enumeration case:wrap_value      cpp=ok        python=ok        typescript=ok
 attachment:wrap_value            cpp=ok        python=ok        typescript=ok
 function:wrap_value              cpp=ok        python=ok        typescript=ok
 parameter:wrap_value             cpp=ok        python=ok        typescript=ok
-field:unwrap_value               cpp=ok        python=silent    typescript=ok  # D: the field masks a method of the proxy
+field:unwrap_value               cpp=ok        python=ok        typescript=ok  # D, fixed: the field masks a method of the proxy
 enumeration case:unwrap_value    cpp=ok        python=ok        typescript=ok
 attachment:unwrap_value          cpp=ok        python=ok        typescript=ok
 function:unwrap_value            cpp=ok        python=ok        typescript=ok
@@ -159,45 +159,45 @@ enumeration case:typing          cpp=ok        python=ok        typescript=ok
 attachment:typing                cpp=ok        python=ok        typescript=ok
 function:typing                  cpp=ok        python=ok        typescript=ok
 parameter:typing                 cpp=ok        python=ok        typescript=ok  # C, fixed: the parameter shadows the module typing in the function's body
-field:wrapValue                  cpp=ok        python=silent    typescript=ok  # D: the field masks a method of the proxy
+field:wrapValue                  cpp=ok        python=ok        typescript=ok  # D, fixed: the field masks a method of the proxy
 enumeration case:wrapValue       cpp=ok        python=ok        typescript=ok
 attachment:wrapValue             cpp=ok        python=ok        typescript=ok
 function:wrapValue               cpp=ok        python=ok        typescript=ok
 parameter:wrapValue              cpp=ok        python=ok        typescript=ok
-field:unwrapValue                cpp=ok        python=silent    typescript=explicit  # D: the field masks the proxy's unwrap_value (Python), meets unwrapValue (TypeScript)
+field:unwrapValue                cpp=ok        python=ok        typescript=ok  # D, fixed: the field masks the proxy's unwrap_value (Python), meets unwrapValue (TypeScript)
 enumeration case:unwrapValue     cpp=ok        python=ok        typescript=ok
 attachment:unwrapValue           cpp=ok        python=ok        typescript=ok
 function:unwrapValue             cpp=ok        python=ok        typescript=ok
 parameter:unwrapValue            cpp=ok        python=ok        typescript=ok
-field:equals                     cpp=ok        python=ok        typescript=explicit  # D: the field meets a member of the TypeScript proxy
+field:equals                     cpp=ok        python=ok        typescript=ok  # D, fixed: the field meets a member of the TypeScript proxy
 enumeration case:equals          cpp=ok        python=ok        typescript=ok
 attachment:equals                cpp=ok        python=ok        typescript=ok
 function:equals                  cpp=ok        python=ok        typescript=ok
 parameter:equals                 cpp=ok        python=ok        typescript=ok
-field:compare                    cpp=ok        python=ok        typescript=explicit  # D: the field meets a member of the TypeScript proxy
+field:compare                    cpp=ok        python=ok        typescript=ok  # D, fixed: the field meets a member of the TypeScript proxy
 enumeration case:compare         cpp=ok        python=ok        typescript=ok
 attachment:compare               cpp=ok        python=ok        typescript=ok
 function:compare                 cpp=ok        python=ok        typescript=ok
 parameter:compare                cpp=ok        python=ok        typescript=ok
-field:hashKey                    cpp=ok        python=ok        typescript=explicit  # D: the field meets a member of the TypeScript proxy
+field:hashKey                    cpp=ok        python=ok        typescript=ok  # D, fixed: the field meets a member of the TypeScript proxy
 enumeration case:hashKey         cpp=ok        python=ok        typescript=ok
 attachment:hashKey               cpp=ok        python=ok        typescript=ok
 function:hashKey                 cpp=ok        python=ok        typescript=ok
 parameter:hashKey                cpp=ok        python=ok        typescript=ok
-field:toJSON                     cpp=ok        python=ok        typescript=explicit  # D: the field meets a member of the TypeScript proxy
+field:toJSON                     cpp=ok        python=ok        typescript=ok  # D, fixed: the field meets a member of the TypeScript proxy
 enumeration case:toJSON          cpp=ok        python=ok        typescript=ok
 attachment:toJSON                cpp=ok        python=ok        typescript=ok
 function:toJSON                  cpp=ok        python=ok        typescript=ok
 parameter:toJSON                 cpp=ok        python=ok        typescript=ok
-field:toString                   cpp=ok        python=ok        typescript=explicit  # D: the field meets a member of the TypeScript proxy
+field:toString                   cpp=ok        python=ok        typescript=ok  # D, fixed: the field meets a member of the TypeScript proxy
 enumeration case:toString        cpp=ok        python=ok        typescript=ok
 attachment:toString              cpp=ok        python=ok        typescript=ok
 function:toString                cpp=ok        python=ok        typescript=ok
 parameter:toString               cpp=ok        python=ok        typescript=ok
-field:constructor                cpp=ok        python=ok        typescript=explicit  # D: the field meets a member of the TypeScript proxy
+field:constructor                cpp=ok        python=ok        typescript=ok  # D, fixed: the field meets a member of the TypeScript proxy
 enumeration case:constructor     cpp=ok        python=ok        typescript=ok
-attachment:constructor           cpp=ok        python=ok        typescript=explicit  # D: meets the TypeScript class's constructor
-function:constructor             cpp=ok        python=ok        typescript=explicit  # D: meets the TypeScript class's constructor
+attachment:constructor           cpp=ok        python=ok        typescript=ok  # D, fixed: meets the TypeScript class's constructor
+function:constructor             cpp=ok        python=ok        typescript=ok  # D, fixed: meets the TypeScript class's constructor
 parameter:constructor            cpp=ok        python=ok        typescript=ok
 field:type                       cpp=viper     python=viper     typescript=viper
 function:type                    cpp=viper     python=viper     typescript=viper
@@ -211,14 +211,14 @@ parameter:at                     cpp=ok        python=ok        typescript=ok
 field:set                        cpp=viper     python=viper     typescript=viper
 function:set                     cpp=viper     python=viper     typescript=viper
 parameter:set                    cpp=viper     python=viper     typescript=viper
-namespace:Containers             cpp=kibo      python=kibo      typescript=kibo  # a module of the pack's package: kibo stops (ROOT_MODULES)
-pool:Containers                  cpp=kibo      python=kibo      typescript=kibo  # a module of the pack's package: kibo stops (ROOT_MODULES)
-namespace:Definitions            cpp=kibo      python=kibo      typescript=kibo  # a module of the pack's package: kibo stops (ROOT_MODULES)
-pool:Definitions                 cpp=kibo      python=kibo      typescript=kibo  # a module of the pack's package: kibo stops (ROOT_MODULES)
-namespace:Resources              cpp=kibo      python=kibo      typescript=kibo  # a module of the pack's package: kibo stops (ROOT_MODULES)
-pool:Resources                   cpp=kibo      python=kibo      typescript=kibo  # a module of the pack's package: kibo stops (ROOT_MODULES)
-namespace:Pools                  cpp=kibo      python=kibo      typescript=kibo  # a module of the pack's package: kibo stops (ROOT_MODULES)
-pool:Pools                       cpp=kibo      python=kibo      typescript=kibo  # a module of the pack's package: kibo stops (ROOT_MODULES)
+namespace:Containers             cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
+pool:Containers                  cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
+namespace:Definitions            cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
+pool:Definitions                 cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
+namespace:Resources              cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
+pool:Resources                   cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
+namespace:Pools                  cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
+pool:Pools                       cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
 namespace:Codec                  cpp=ok        python=ok        typescript=ok  # silent in C++, unseen here: the namespace merges with the pack's codec
 pool:Codec                       cpp=ok        python=ok        typescript=ok  # silent in C++, unseen here: the pool's namespace merges with the pack's codec
 type:int64                       cpp=ok        python=ok        typescript=ok  # the DSM reads `int64 w` as the primitive: the type changes before any target sees it
