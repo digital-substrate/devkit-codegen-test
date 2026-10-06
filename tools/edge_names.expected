@@ -2,118 +2,118 @@
 # it with the pack and the runtime at hand. Rewritten on purpose when a fix changes a verdict;
 # a line's comment says which defect it is. Outcomes: ok, explicit, silent, viper, kibo.
 
-namespace:union                  cpp=viper     python=viper     typescript=viper
-type:union                       cpp=viper     python=viper     typescript=viper
-field:union                      cpp=viper     python=viper     typescript=viper
+namespace:union                  cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+type:union                       cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+field:union                      cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 enumeration case:union           cpp=ok        python=ok        typescript=ok
 attachment:union                 cpp=explicit  python=ok        typescript=ok  # E: the attachment's name becomes a C++ namespace
-pool:union                       cpp=viper     python=viper     typescript=viper
-function:union                   cpp=viper     python=viper     typescript=viper
-parameter:union                  cpp=viper     python=viper     typescript=viper
-namespace:friend                 cpp=viper     python=viper     typescript=viper
-type:friend                      cpp=viper     python=viper     typescript=viper
-field:friend                     cpp=viper     python=viper     typescript=viper
+pool:union                       cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+function:union                   cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+parameter:union                  cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+namespace:friend                 cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+type:friend                      cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+field:friend                     cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 enumeration case:friend          cpp=ok        python=ok        typescript=ok
 attachment:friend                cpp=explicit  python=ok        typescript=ok  # E: the attachment's name becomes a C++ namespace
-pool:friend                      cpp=viper     python=viper     typescript=viper
-function:friend                  cpp=viper     python=viper     typescript=viper
-parameter:friend                 cpp=viper     python=viper     typescript=viper
-namespace:operator               cpp=viper     python=viper     typescript=viper
-type:operator                    cpp=viper     python=viper     typescript=viper
-field:operator                   cpp=viper     python=viper     typescript=viper
+pool:friend                      cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+function:friend                  cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+parameter:friend                 cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+namespace:operator               cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+type:operator                    cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+field:operator                   cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 enumeration case:operator        cpp=ok        python=ok        typescript=ok
 attachment:operator              cpp=explicit  python=ok        typescript=ok  # E: the attachment's name becomes a C++ namespace
-pool:operator                    cpp=viper     python=viper     typescript=viper
-function:operator                cpp=viper     python=viper     typescript=viper
-parameter:operator               cpp=viper     python=viper     typescript=viper
-namespace:def                    cpp=viper     python=viper     typescript=viper
-type:def                         cpp=viper     python=viper     typescript=viper
-field:def                        cpp=viper     python=viper     typescript=viper
+pool:operator                    cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+function:operator                cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+parameter:operator               cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+namespace:def                    cpp=ok        python=ok        typescript=ok
+type:def                         cpp=ok        python=explicit  typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+field:def                        cpp=ok        python=ok        typescript=ok
 enumeration case:def             cpp=ok        python=ok        typescript=ok
 attachment:def                   cpp=ok        python=ok        typescript=ok
-pool:def                         cpp=viper     python=viper     typescript=viper
-function:def                     cpp=viper     python=viper     typescript=viper
-parameter:def                    cpp=viper     python=viper     typescript=viper
-namespace:lambda                 cpp=viper     python=viper     typescript=viper
-type:lambda                      cpp=viper     python=viper     typescript=viper
-field:lambda                     cpp=viper     python=viper     typescript=viper
+pool:def                         cpp=ok        python=ok        typescript=ok
+function:def                     cpp=ok        python=ok        typescript=ok
+parameter:def                    cpp=ok        python=ok        typescript=ok
+namespace:lambda                 cpp=ok        python=ok        typescript=ok
+type:lambda                      cpp=ok        python=explicit  typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+field:lambda                     cpp=ok        python=ok        typescript=ok
 enumeration case:lambda          cpp=ok        python=ok        typescript=ok
 attachment:lambda                cpp=ok        python=ok        typescript=ok
-pool:lambda                      cpp=viper     python=viper     typescript=viper
-function:lambda                  cpp=viper     python=viper     typescript=viper
-parameter:lambda                 cpp=viper     python=viper     typescript=viper
-namespace:nonlocal               cpp=viper     python=viper     typescript=viper
-type:nonlocal                    cpp=viper     python=viper     typescript=viper
-field:nonlocal                   cpp=viper     python=viper     typescript=viper
+pool:lambda                      cpp=ok        python=ok        typescript=ok
+function:lambda                  cpp=ok        python=ok        typescript=ok
+parameter:lambda                 cpp=ok        python=ok        typescript=ok
+namespace:nonlocal               cpp=ok        python=ok        typescript=ok
+type:nonlocal                    cpp=ok        python=explicit  typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+field:nonlocal                   cpp=ok        python=ok        typescript=ok
 enumeration case:nonlocal        cpp=ok        python=ok        typescript=ok
 attachment:nonlocal              cpp=ok        python=ok        typescript=ok
-pool:nonlocal                    cpp=viper     python=viper     typescript=viper
-function:nonlocal                cpp=viper     python=viper     typescript=viper
-parameter:nonlocal               cpp=viper     python=viper     typescript=viper
-namespace:async                  cpp=viper     python=viper     typescript=viper
-type:async                       cpp=viper     python=viper     typescript=viper
+pool:nonlocal                    cpp=ok        python=ok        typescript=ok
+function:nonlocal                cpp=ok        python=ok        typescript=ok
+parameter:nonlocal               cpp=ok        python=ok        typescript=ok
+namespace:async                  cpp=ok        python=ok        typescript=ok
+type:async                       cpp=ok        python=explicit  typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 field:async                      cpp=ok        python=ok        typescript=ok
 enumeration case:async           cpp=ok        python=ok        typescript=ok
 attachment:async                 cpp=ok        python=ok        typescript=ok
-pool:async                       cpp=viper     python=viper     typescript=viper
+pool:async                       cpp=ok        python=ok        typescript=ok
 function:async                   cpp=ok        python=ok        typescript=ok
-parameter:async                  cpp=viper     python=viper     typescript=viper
-namespace:await                  cpp=viper     python=viper     typescript=viper
-type:await                       cpp=viper     python=viper     typescript=viper
+parameter:async                  cpp=ok        python=ok        typescript=ok
+namespace:await                  cpp=ok        python=ok        typescript=ok
+type:await                       cpp=ok        python=explicit  typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 field:await                      cpp=ok        python=ok        typescript=ok
 enumeration case:await           cpp=ok        python=ok        typescript=ok
 attachment:await                 cpp=ok        python=ok        typescript=ok
-pool:await                       cpp=viper     python=viper     typescript=viper
+pool:await                       cpp=ok        python=ok        typescript=ok
 function:await                   cpp=ok        python=ok        typescript=ok
-parameter:await                  cpp=viper     python=viper     typescript=viper
-namespace:function               cpp=viper     python=viper     typescript=viper
-type:function                    cpp=viper     python=viper     typescript=viper
+parameter:await                  cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+namespace:function               cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+type:function                    cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 field:function                   cpp=ok        python=ok        typescript=ok
 enumeration case:function        cpp=ok        python=ok        typescript=ok
 attachment:function              cpp=ok        python=ok        typescript=ok
-pool:function                    cpp=viper     python=viper     typescript=viper
+pool:function                    cpp=ok        python=ok        typescript=ok
 function:function                cpp=ok        python=ok        typescript=ok
-parameter:function               cpp=viper     python=viper     typescript=viper
-namespace:let                    cpp=viper     python=viper     typescript=viper
-type:let                         cpp=viper     python=viper     typescript=viper
+parameter:function               cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+namespace:let                    cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+type:let                         cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 field:let                        cpp=ok        python=ok        typescript=ok
 enumeration case:let             cpp=ok        python=ok        typescript=ok
 attachment:let                   cpp=ok        python=ok        typescript=ok
-pool:let                         cpp=viper     python=viper     typescript=viper
+pool:let                         cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 function:let                     cpp=ok        python=ok        typescript=ok
-parameter:let                    cpp=viper     python=viper     typescript=viper
-namespace:typeof                 cpp=viper     python=viper     typescript=viper
-type:typeof                      cpp=viper     python=viper     typescript=viper
+parameter:let                    cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+namespace:typeof                 cpp=explicit  python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+type:typeof                      cpp=explicit  python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 field:typeof                     cpp=explicit  python=ok        typescript=ok  # E: typeof is a keyword of the GNU C++ dialect; viper does not list it
 enumeration case:typeof          cpp=ok        python=ok        typescript=ok
 attachment:typeof                cpp=explicit  python=ok        typescript=ok  # E: the attachment's name becomes a C++ namespace
-pool:typeof                      cpp=viper     python=viper     typescript=viper
+pool:typeof                      cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 function:typeof                  cpp=explicit  python=ok        typescript=ok  # E: typeof is a keyword of the GNU C++ dialect; viper does not list it
-parameter:typeof                 cpp=viper     python=viper     typescript=viper
-namespace:class                  cpp=viper     python=viper     typescript=viper
-type:class                       cpp=viper     python=viper     typescript=viper
-field:class                      cpp=viper     python=viper     typescript=viper
+parameter:typeof                 cpp=explicit  python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+namespace:class                  cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+type:class                       cpp=explicit  python=explicit  typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+field:class                      cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 enumeration case:class           cpp=ok        python=ok        typescript=ok
 attachment:class                 cpp=explicit  python=ok        typescript=ok  # E: the attachment's name becomes a C++ namespace
-pool:class                       cpp=viper     python=viper     typescript=viper
-function:class                   cpp=viper     python=viper     typescript=viper
-parameter:class                  cpp=viper     python=viper     typescript=viper
-namespace:this                   cpp=viper     python=viper     typescript=viper
-type:this                        cpp=viper     python=viper     typescript=viper
-field:this                       cpp=viper     python=viper     typescript=viper
+pool:class                       cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+function:class                   cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+parameter:class                  cpp=explicit  python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+namespace:this                   cpp=explicit  python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+type:this                        cpp=explicit  python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+field:this                       cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 enumeration case:this            cpp=ok        python=ok        typescript=ok
 attachment:this                  cpp=explicit  python=ok        typescript=ok  # E: the attachment's name becomes a C++ namespace
-pool:this                        cpp=viper     python=viper     typescript=viper
-function:this                    cpp=viper     python=viper     typescript=viper
-parameter:this                   cpp=viper     python=viper     typescript=viper
-namespace:import                 cpp=viper     python=viper     typescript=viper
-type:import                      cpp=viper     python=viper     typescript=viper
-field:import                     cpp=viper     python=viper     typescript=viper
+pool:this                        cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+function:this                    cpp=explicit  python=ok        typescript=ok  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+parameter:this                   cpp=explicit  python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+namespace:import                 cpp=ok        python=ok        typescript=ok
+type:import                      cpp=ok        python=explicit  typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
+field:import                     cpp=ok        python=ok        typescript=ok
 enumeration case:import          cpp=ok        python=ok        typescript=ok
 attachment:import                cpp=ok        python=ok        typescript=ok
-pool:import                      cpp=viper     python=viper     typescript=viper
-function:import                  cpp=viper     python=viper     typescript=viper
-parameter:import                 cpp=viper     python=viper     typescript=viper
+pool:import                      cpp=ok        python=ok        typescript=ok
+function:import                  cpp=ok        python=ok        typescript=ok
+parameter:import                 cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 field:wrap_value                 cpp=ok        python=ok        typescript=ok  # D, fixed: the field masks a method of the proxy
 enumeration case:wrap_value      cpp=ok        python=ok        typescript=ok
 attachment:wrap_value            cpp=ok        python=ok        typescript=ok
@@ -133,7 +133,7 @@ field:super                      cpp=ok        python=ok        typescript=ok  #
 enumeration case:super           cpp=ok        python=ok        typescript=ok
 attachment:super                 cpp=ok        python=ok        typescript=ok
 function:super                   cpp=ok        python=ok        typescript=ok
-parameter:super                  cpp=viper     python=viper     typescript=viper
+parameter:super                  cpp=ok        python=ok        typescript=explicit  # a keyword of the target: refused by its compiler or validation; a directive adapts it (step 6)
 field:dict                       cpp=ok        python=ok        typescript=ok  # C, fixed: the field shadows a name the constructor's body uses
 enumeration case:dict            cpp=ok        python=ok        typescript=ok
 attachment:dict                  cpp=ok        python=ok        typescript=ok
@@ -199,18 +199,18 @@ enumeration case:constructor     cpp=ok        python=ok        typescript=ok
 attachment:constructor           cpp=ok        python=ok        typescript=ok  # D, fixed: meets the TypeScript class's constructor
 function:constructor             cpp=ok        python=ok        typescript=ok  # D, fixed: meets the TypeScript class's constructor
 parameter:constructor            cpp=ok        python=ok        typescript=ok
-field:type                       cpp=viper     python=viper     typescript=viper
-function:type                    cpp=viper     python=viper     typescript=viper
-parameter:type                   cpp=viper     python=viper     typescript=viper
-field:copy                       cpp=viper     python=viper     typescript=viper
-function:copy                    cpp=viper     python=viper     typescript=viper
+field:type                       cpp=ok        python=ok        typescript=ok
+function:type                    cpp=ok        python=ok        typescript=ok
+parameter:type                   cpp=ok        python=ok        typescript=ok
+field:copy                       cpp=ok        python=ok        typescript=ok
+function:copy                    cpp=ok        python=ok        typescript=ok
 parameter:copy                   cpp=ok        python=ok        typescript=ok
-field:at                         cpp=viper     python=viper     typescript=viper
-function:at                      cpp=viper     python=viper     typescript=viper
+field:at                         cpp=ok        python=ok        typescript=ok
+function:at                      cpp=ok        python=ok        typescript=ok
 parameter:at                     cpp=ok        python=ok        typescript=ok
-field:set                        cpp=viper     python=viper     typescript=viper
-function:set                     cpp=viper     python=viper     typescript=viper
-parameter:set                    cpp=viper     python=viper     typescript=viper
+field:set                        cpp=ok        python=ok        typescript=ok
+function:set                     cpp=ok        python=ok        typescript=ok
+parameter:set                    cpp=ok        python=ok        typescript=ok
 namespace:Containers             cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
 pool:Containers                  cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
 namespace:Definitions            cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
@@ -221,16 +221,16 @@ namespace:Pools                  cpp=ok        python=ok        typescript=ok  #
 pool:Pools                       cpp=ok        python=ok        typescript=ok  # a module of the pack's package, fixed: the pack declares it, the name takes _
 namespace:Codec                  cpp=ok        python=ok        typescript=ok  # silent in C++, unseen here: the namespace merges with the pack's codec
 pool:Codec                       cpp=ok        python=ok        typescript=ok  # silent in C++, unseen here: the pool's namespace merges with the pack's codec
-type:int64                       cpp=ok        python=ok        typescript=ok  # the DSM reads `int64 w` as the primitive: the type changes before any target sees it
-type:uuid                        cpp=ok        python=ok        typescript=ok  # the DSM reads `uuid w` as the primitive: the type changes before any target sees it
-type:string                      cpp=viper     python=viper     typescript=viper
-type:bool                        cpp=viper     python=viper     typescript=viper
+type:int64                       cpp=viper     python=viper     typescript=viper  # refused by the DSM since viper's built-in type names: it was read back as the primitive
+type:uuid                        cpp=viper     python=viper     typescript=viper  # refused by the DSM since viper's built-in type names: it was read back as the primitive
+type:string                      cpp=viper     python=viper     typescript=viper  # refused by the DSM: a built-in type's name
+type:bool                        cpp=viper     python=viper     typescript=viper  # refused by the DSM: a built-in type's name
 type:RGB                         cpp=ok        python=ok        typescript=ok  # B, fixed: the class and its runtime-id constant share a name
 type:E                           cpp=ok        python=ok        typescript=ok  # B, fixed: the class and its runtime-id constant share a name
 type:S                           cpp=ok        python=ok        typescript=ok  # B, fixed: the class and its runtime-id constant share a name
 documentation:quotes             cpp=ok        python=ok        typescript=ok
 documentation:backslash          cpp=ok        python=ok        typescript=ok
-documentation:ending-quote       cpp=viper     python=viper     typescript=viper  # the DSM cannot write it; the API accepts it and the round trip breaks
+documentation:ending-quote       cpp=ok        python=ok        typescript=ok  # fixed: the DSM writes it and reads it back (quotes after the closing delimiter)
 documentation:comment-end        cpp=ok        python=ok        typescript=ok
 documentation:single-quotes      cpp=ok        python=ok        typescript=ok
 no concept:types and no concept  cpp=ok        python=ok        typescript=ok  # A, fixed: the register( line of a namespace with types and no concept
