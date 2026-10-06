@@ -7,6 +7,7 @@ kibo-project, runs every test, and gives a single verdict.
     check.py                render the five sites and run every test
     check.py features       one site only
     check.py --no-render    test what is already rendered, without regenerating
+    check.py --edge-names   also run the edge names bench, a few minutes
 
 What each site proves, and what it does not:
 
@@ -40,7 +41,9 @@ compile with their generated `"strict": true`.
 Edge names, `tools/edge_names.py`: one small model per name a target may not take -- a keyword,
 a name of the pack's own code, a primitive's name, a documentation with quotes -- in each family
 of names; each target's output judged ok, refused explicitly, or silently wrong, and compared with
-`tools/edge_names.expected`, where each defect is named.
+`tools/edge_names.expected`, where each defect is named. It renders some seven hundred small
+outputs, so it runs only on request (`--edge-names`): when kibo's naming, a pack's reserved names
+or the validation it declares change.
 
 None of the five proves that a developer of the target audience finds the output usable.
 `pip install` and `tsc --strict` in an outside consumer are tested by hand for now, not here.
@@ -103,6 +106,8 @@ def main() -> int:
     parser.add_argument("site", nargs="?", choices=sorted(SITES), help="test only this site")
     parser.add_argument("--no-render", action="store_true",
                         help="test what is already rendered")
+    parser.add_argument("--edge-names", action="store_true",
+                        help="also run the edge names bench (a few minutes)")
     arguments = parser.parse_args()
 
     sites = [arguments.site] if arguments.site else list(SITES)
@@ -177,14 +182,17 @@ def main() -> int:
         failures.append("typing")
 
     # Edge names: each target's verdict on names the DSM accepts, against the recorded ones.
-    # Skipped, and said so, without mypy, a C++ compiler or the TypeScript tooling.
+    # On request only; skipped, and said so, without mypy, a C++ compiler or the TypeScript tooling.
     print("\n── edge names")
-    code, output = run([sys.executable, "tools/edge_names.py"], HERE)
-    for line in output.splitlines():
-        colour = GREEN if line.startswith("ok") else (GREY if line.startswith("skipped") else RED)
-        print(f"   {colour}{line.rstrip()}{RESET}")
-    if code not in (0, 2):
-        failures.append("edge names")
+    if arguments.edge_names:
+        code, output = run([sys.executable, "tools/edge_names.py"], HERE)
+        for line in output.splitlines():
+            colour = GREEN if line.startswith("ok") else (GREY if line.startswith("skipped") else RED)
+            print(f"   {colour}{line.rstrip()}{RESET}")
+        if code not in (0, 2):
+            failures.append("edge names")
+    else:
+        print(f"   {GREY}skipped: --edge-names runs it, when naming or a pack's reserved names change{RESET}")
 
     # Template Model 1 to 2: every value a Model 1 template reads, through Model 2; each change
     # must be one the documentation lists. Skipped, and said so, without a kibo 1.2 jar.
