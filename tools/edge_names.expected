@@ -124,32 +124,32 @@ enumeration case:unwrap_value    cpp=ok        python=ok        typescript=ok
 attachment:unwrap_value          cpp=ok        python=ok        typescript=ok
 function:unwrap_value            cpp=ok        python=ok        typescript=ok
 parameter:unwrap_value           cpp=ok        python=ok        typescript=ok
-field:self                       cpp=ok        python=explicit  typescript=ok  # C: the field repeats a parameter of the constructor (duplicate argument)
+field:self                       cpp=ok        python=ok        typescript=ok  # C, fixed: the field repeats a parameter of the constructor (duplicate argument)
 enumeration case:self            cpp=ok        python=ok        typescript=ok
 attachment:self                  cpp=ok        python=ok        typescript=ok
 function:self                    cpp=ok        python=ok        typescript=ok
-parameter:self                   cpp=ok        python=explicit  typescript=ok  # C: the parameter repeats the method's self (duplicate argument)
-field:super                      cpp=ok        python=silent    typescript=ok  # C: the field shadows a name the constructor's body uses
+parameter:self                   cpp=ok        python=ok        typescript=ok  # C, fixed: the parameter repeats the method's self (duplicate argument)
+field:super                      cpp=ok        python=ok        typescript=ok  # C, fixed: the field shadows a name the constructor's body uses
 enumeration case:super           cpp=ok        python=ok        typescript=ok
 attachment:super                 cpp=ok        python=ok        typescript=ok
 function:super                   cpp=ok        python=ok        typescript=ok
 parameter:super                  cpp=viper     python=viper     typescript=viper
-field:dict                       cpp=ok        python=silent    typescript=ok  # C: the field shadows a name the constructor's body uses
+field:dict                       cpp=ok        python=ok        typescript=ok  # C, fixed: the field shadows a name the constructor's body uses
 enumeration case:dict            cpp=ok        python=ok        typescript=ok
 attachment:dict                  cpp=ok        python=ok        typescript=ok
 function:dict                    cpp=ok        python=ok        typescript=ok
 parameter:dict                   cpp=ok        python=ok        typescript=ok
-field:isinstance                 cpp=ok        python=silent    typescript=ok  # C: the field shadows a name the constructor's body uses
+field:isinstance                 cpp=ok        python=ok        typescript=ok  # C, fixed: the field shadows a name the constructor's body uses
 enumeration case:isinstance      cpp=ok        python=ok        typescript=ok
 attachment:isinstance            cpp=ok        python=ok        typescript=ok
 function:isinstance              cpp=ok        python=ok        typescript=ok
 parameter:isinstance             cpp=ok        python=ok        typescript=ok
-field:dsviper                    cpp=ok        python=silent    typescript=ok  # C: the field shadows a name the constructor's body uses
+field:dsviper                    cpp=ok        python=ok        typescript=ok  # C, fixed: the field shadows a name the constructor's body uses
 enumeration case:dsviper         cpp=ok        python=ok        typescript=ok
 attachment:dsviper               cpp=ok        python=ok        typescript=ok
 function:dsviper                 cpp=ok        python=ok        typescript=ok
 parameter:dsviper                cpp=ok        python=ok        typescript=ok
-field:source                     cpp=ok        python=explicit  typescript=ok  # C: the field repeats a parameter of the constructor (duplicate argument)
+field:source                     cpp=ok        python=ok        typescript=ok  # C, fixed: the field repeats a parameter of the constructor (duplicate argument)
 enumeration case:source          cpp=ok        python=ok        typescript=ok
 attachment:source                cpp=ok        python=ok        typescript=ok
 function:source                  cpp=ok        python=ok        typescript=ok
@@ -158,7 +158,7 @@ field:typing                     cpp=ok        python=ok        typescript=ok
 enumeration case:typing          cpp=ok        python=ok        typescript=ok
 attachment:typing                cpp=ok        python=ok        typescript=ok
 function:typing                  cpp=ok        python=ok        typescript=ok
-parameter:typing                 cpp=ok        python=silent    typescript=ok  # C: the parameter shadows the module typing in the function's body
+parameter:typing                 cpp=ok        python=ok        typescript=ok  # C, fixed: the parameter shadows the module typing in the function's body
 field:wrapValue                  cpp=ok        python=silent    typescript=ok  # D: the field masks a method of the proxy
 enumeration case:wrapValue       cpp=ok        python=ok        typescript=ok
 attachment:wrapValue             cpp=ok        python=ok        typescript=ok
@@ -233,4 +233,4 @@ documentation:backslash          cpp=ok        python=ok        typescript=ok
 documentation:ending-quote       cpp=viper     python=viper     typescript=viper  # the DSM cannot write it; the API accepts it and the round trip breaks
 documentation:comment-end        cpp=ok        python=ok        typescript=ok
 documentation:single-quotes      cpp=ok        python=ok        typescript=ok
-no concept:types and no concept  cpp=ok        python=explicit  typescript=explicit  # A: the register( line of a namespace with types and no concept
+no concept:types and no concept  cpp=ok        python=ok        typescript=ok  # A, fixed: the register( line of a namespace with types and no concept
