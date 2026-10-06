@@ -287,8 +287,9 @@ def measure(family: str, word: str, keep: Path | None = None) -> Result:
         lines = ["[project]", 'definitions = "definitions"', f'infrastructure = "{INFRASTRUCTURE}"',
                  "[generator]", 'templates = "2"']
         for target in TARGETS:
+            # The bench judges each target itself, so kibo-project's own validation is off.
             lines += [f"[target.{target}]", f"features = {FEATURES[target]!r}".replace("'", '"'),
-                      f'output = "{target}"']
+                      f'output = "{target}"', "validate = false"]
         (work / "kibo.toml").write_text("\n".join(lines) + "\n")
         # Each case starts kibo once per target: a short-lived JVM, which these options keep
         # from spending its time compiling itself.
