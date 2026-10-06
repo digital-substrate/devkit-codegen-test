@@ -13,7 +13,11 @@ judged:
   silent    accepted, and wrong: Python imports it, yet a field masks a method of the proxy,
             a constructor fails on its own names, or `mypy --strict` refuses it
   viper     the DSM itself refuses the name, so no target sees it
-  kibo      the generation stops
+  kibo      the generation stops, saying which directive to write
+
+A refused case is rendered again with the directive a project would write, the name spelled
+otherwise for that target ([names.<target>.rename]), and judged again: `explicit>ok` is a
+target that refuses the name and generates once told how to spell it.
 
 The verdicts are compared with `edge_names.expected`. A change in either direction fails: a
 fix is recorded on purpose (`--record`), so that the file always says what the pack does.
@@ -273,6 +277,38 @@ def judge_typescript(out: Path) -> Verdict:
     return Verdict("ok")
 
 
+JUDGES = {"cpp": lambda out, work: judge_cpp(out), "python": judge_python,
+          "typescript": lambda out, work: judge_typescript(out)}
+
+
+def render(dsm: str, target: str, keep: Path | None, rename: str | None = None) -> Verdict:
+    """One target, rendered on its own -- a refusal for one does not hide the others -- and
+    judged; with `rename`, the case's name is spelled otherwise for that target, as a project
+    corrects what it is told."""
+    work = Path(tempfile.mkdtemp(prefix=f"edge-{target}-", dir=keep)).resolve()
+    try:
+        (work / "definitions").mkdir()
+        (work / "definitions" / "model.dsm").write_text(dsm)
+        # The bench judges each target itself, so kibo-project's own validation is off.
+        lines = ["[project]", 'definitions = "definitions"', f'infrastructure = "{INFRASTRUCTURE}"',
+                 "[generator]", 'templates = "2"',
+                 f"[target.{target}]", f"features = {FEATURES[target]!r}".replace("'", '"'),
+                 f'output = "{target}"', "validate = false"]
+        if rename:
+            lines += [f"[names.{target}.rename]", f'"{rename}" = "{rename}X"']
+        (work / "kibo.toml").write_text("\n".join(lines) + "\n")
+        # A short-lived JVM, which these options keep from spending its time compiling itself.
+        code, text = _run([sys.executable, str(KIBO_PROJECT), "generate"], work,
+                          {"JAVA_TOOL_OPTIONS": "-XX:TieredStopAtLevel=1 -XX:+UseSerialGC"})
+        verdict = Verdict("kibo", _first(text, "error", "Error", "written")) if code \
+            else JUDGES[target](work / target, work)
+        verdict.reason = verdict.reason.replace(str(work) + "/", "")
+        return verdict
+    finally:
+        if keep is None:
+            shutil.rmtree(work, ignore_errors=True)
+
+
 def measure(family: str, word: str, keep: Path | None = None) -> Result:
     dsm = model(family, word)
     result = Result(key(family, word), dsm)
@@ -280,34 +316,16 @@ def measure(family: str, word: str, keep: Path | None = None) -> Result:
     if refused:
         result.verdicts = {t: Verdict("viper", refused) for t in TARGETS}
         return result
-    work = Path(tempfile.mkdtemp(prefix="edge-", dir=keep)).resolve()
-    try:
-        (work / "definitions").mkdir()
-        (work / "definitions" / "model.dsm").write_text(dsm)
-        lines = ["[project]", 'definitions = "definitions"', f'infrastructure = "{INFRASTRUCTURE}"',
-                 "[generator]", 'templates = "2"']
-        for target in TARGETS:
-            # The bench judges each target itself, so kibo-project's own validation is off.
-            lines += [f"[target.{target}]", f"features = {FEATURES[target]!r}".replace("'", '"'),
-                      f'output = "{target}"', "validate = false"]
-        (work / "kibo.toml").write_text("\n".join(lines) + "\n")
-        # Each case starts kibo once per target: a short-lived JVM, which these options keep
-        # from spending its time compiling itself.
-        code, text = _run([sys.executable, str(KIBO_PROJECT), "generate"], work,
-                          {"JAVA_TOOL_OPTIONS": "-XX:TieredStopAtLevel=1 -XX:+UseSerialGC"})
-        if code:
-            result.verdicts = {t: Verdict("kibo", _first(text, "error", "Error")) for t in TARGETS}
-            return result
-        result.verdicts["cpp"] = judge_cpp(work / "cpp")
-        result.verdicts["python"] = judge_python(work / "python", work)
-        result.verdicts["typescript"] = judge_typescript(work / "typescript")
-        for verdict in result.verdicts.values():
-            verdict.reason = verdict.reason.replace(str(work.resolve()) + "/", "").replace(
-                str(work) + "/", "")
-        return result
-    finally:
-        if keep is None:
-            shutil.rmtree(work, ignore_errors=True)
+    for target in TARGETS:
+        verdict = render(dsm, target, keep)
+        # A refusal -- by a compiler, a validation or kibo -- is corrected by the project with a
+        # directive; the case must then generate and pass. Recorded as `refused>adapted`.
+        if verdict.outcome in ("explicit", "kibo", "silent") and family not in ("documentation", "no concept"):
+            adapted = render(dsm, target, keep, rename=word)
+            verdict = Verdict(f"{verdict.outcome}>{adapted.outcome}",
+                              verdict.reason + (f" | adapted: {adapted.reason}" if adapted.reason else ""))
+        result.verdicts[target] = verdict
+    return result
 
 
 # ── The expected verdicts ───────────────────────────────────────────────────────────────────

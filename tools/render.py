@@ -26,9 +26,12 @@ BANNER = re.compile(r"by kibo-[0-9.]+\.jar|by kibo-project [0-9.]+")
 
 
 def generate(project, into, *options):
-    """Render a project file into a directory through kibo-project. Returns the error output."""
+    """Render a project file into a directory through kibo-project. Returns the error output.
+
+    What is rendered here is compared as text, not run: the pack's validation is switched off,
+    and a scratch directory has no node_modules for tsc anyway."""
     r = subprocess.run([sys.executable, str(KIBO_PROJECT), "generate", str(project),
-                        "--into", str(into), *options], capture_output=True, text=True)
+                        "--into", str(into), "--no-validate", *options], capture_output=True, text=True)
     return r.stderr.strip() if r.returncode else ""
 
 
