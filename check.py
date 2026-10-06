@@ -37,6 +37,11 @@ Python and for the oldest its pyproject declares, and its tests run under that o
 one is at hand (PYTHON_FLOOR, or `python3.10` with dsviper). The TypeScript packages already
 compile with their generated `"strict": true`.
 
+Edge names, `tools/edge_names.py`: one small model per name a target may not take -- a keyword,
+a name of the pack's own code, a primitive's name, a documentation with quotes -- in each family
+of names; each target's output judged ok, refused explicitly, or silently wrong, and compared with
+`tools/edge_names.expected`, where each defect is named.
+
 None of the five proves that a developer of the target audience finds the output usable.
 `pip install` and `tsc --strict` in an outside consumer are tested by hand for now, not here.
 """
@@ -170,6 +175,16 @@ def main() -> int:
         print(f"   {colour}{line.rstrip()}{RESET}")
     if code not in (0, 2):
         failures.append("typing")
+
+    # Edge names: each target's verdict on names the DSM accepts, against the recorded ones.
+    # Skipped, and said so, without mypy, a C++ compiler or the TypeScript tooling.
+    print("\n── edge names")
+    code, output = run([sys.executable, "tools/edge_names.py"], HERE)
+    for line in output.splitlines():
+        colour = GREEN if line.startswith("ok") else (GREY if line.startswith("skipped") else RED)
+        print(f"   {colour}{line.rstrip()}{RESET}")
+    if code not in (0, 2):
+        failures.append("edge names")
 
     # Template Model 1 to 2: every value a Model 1 template reads, through Model 2; each change
     # must be one the documentation lists. Skipped, and said so, without a kibo 1.2 jar.
