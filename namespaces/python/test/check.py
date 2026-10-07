@@ -134,6 +134,20 @@ ok &= check("two homonymous attachments have distinct descriptors",
             modela_attachments.Material.colour.descriptor.runtime_id()
             != modelb_attachments.Material.colour.descriptor.runtime_id())
 
+# Two namespaces attach a note of one name to one concept, ModelA::Material: two attachments,
+# and each accessor reaches its own -- a note written through one is not read through the other.
+from topology.annotations_ import attachments as annotations_attachments  # noqa: E402
+from topology.model_c import attachments as modelc_attachments  # noqa: E402
+
+annotation_note = annotations_attachments.ModelA_Material.note
+modelc_note = modelc_attachments.ModelA_Material.note
+ok &= check("one name on one concept, in two namespaces: two distinct descriptors",
+            annotation_note.descriptor.runtime_id() != modelc_note.descriptor.runtime_id())
+noted = modela.MaterialKey.create()
+annotation_note.set(mutating, noted, "from Annotations")
+ok &= check("a note written through one is not read through the other",
+            modelc_note.get(mutating, noted).is_nil())
+
 # ── a container returns its elements with their names ──
 #
 # Every container shape is a class of the package's `containers` module, named after what it

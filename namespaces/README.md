@@ -25,7 +25,7 @@ line the generator does not cross.
 ## What the tests prove
 
     cpp/run_test.sh          the library links and the generated programme runs
-    python/run_test.sh       23 assertions on the rendered package
+    python/run_test.sh       28 assertions on the rendered package
     typescript/run_test.sh   4 assertions: two namespaces declare the same name, neither moved
 
 The TypeScript check is the smallest statement of why this whole line exists. Where the

@@ -93,6 +93,15 @@ for a in d["attachments"]:
     seen[k] = cns
 check("two attachments needing their key namespace to tell them apart", clashing, "; ".join(clashing))
 
+# One name on one concept, attached by two namespaces: two attachments, which an identifier
+# without the attachment's namespace could not tell apart.
+owners = {}
+for a in d["attachments"]:
+    concept = refs(a.get("key_type"), [])
+    if concept: owners.setdefault((concept[0], a["name"]), []).append(ns(a))
+shared = [f'{n} on {c[0]}::{c[1]} by {", ".join(o)}' for (c, n), o in owners.items() if len(o) > 1]
+check("one attachment name on one concept, declared by two namespaces", shared, "; ".join(shared))
+
 for line in ok:  print(f"  ok    {line}")
 for line in bad: print(f"  MISSING {line}")
 sys.exit(1 if bad else 0)

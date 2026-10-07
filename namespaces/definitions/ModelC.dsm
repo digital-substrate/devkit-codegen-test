@@ -5,4 +5,8 @@ namespace ModelC {3d2271a2-b0f1-4e45-9bb9-0d32ced5b9d6} {
 """Something a projection can point at, and nothing else refers to."""
 concept Marker;
 
+"""The name and the key of Annotations' first note: two namespaces may each attach a note to
+ModelA::Material. Each is its own attachment, and the generated code must reach each one."""
+attachment<ModelA::Material, string> note;
+
 }; // ns
