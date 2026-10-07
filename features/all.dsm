@@ -207,6 +207,9 @@ attachment<ConceptCoverage, vector<mat<uint8,2,3>>> docVectorMat;
 
 // Containers
 attachment<ConceptCoverage, tuple<uint8, string>> docTuple;
+
+"""A tuple whose members are all of one type: its getters return that type."""
+attachment<ConceptCoverage, tuple<float, float>> docPair;
 attachment<ConceptCoverage, optional<uint8>> docOptional;
 attachment<ConceptCoverage, vector<uint8>> docVector;
 attachment<ConceptCoverage, set<uint8>> docSet;

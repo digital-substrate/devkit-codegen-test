@@ -10,7 +10,8 @@ This module tests:
 import unittest
 import dsviper
 from features import definitions
-from features.containers import Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string
+from features.containers import Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string, \
+    Tuple_of_float_and_float
 
 
 # =============================================================================
@@ -334,6 +335,11 @@ class TestTupleTypedGetters(unittest.TestCase):
         t = Tuple_of_uint8_and_string((42, "hello"))
         self.assertEqual(t.get_1(), "hello")
         self.assertIsInstance(t.get_1(), str)
+
+    def test_a_homogeneous_tuple_returns_its_one_type(self):
+        t = Tuple_of_float_and_float((0.5, 2.0))
+        self.assertEqual((t.get_0(), t.get_1()), (0.5, 2.0))
+        self.assertIsInstance(t.get_1(), float)
 
 
 class TestTupleIteration(unittest.TestCase):
