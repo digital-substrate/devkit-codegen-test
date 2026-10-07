@@ -27,6 +27,8 @@ void use() {
 
 #include "topology_model_a_fields.hpp"
 #include "topology_projection_fields.hpp"
+#include "topology_model_a_paths.hpp"
+#include "topology_projection_paths.hpp"
 
 void use_fields() {
     // the name, usable in a constant expression
@@ -34,7 +36,10 @@ void use_fields() {
     constexpr auto n = topology::model_a::fields::Colour::g;
 
     // the path, for a partial operation
-    auto const & p = topology::model_a::fields::Colour::rPath();
-    auto const & q = topology::projection::fields::Pair::aPath();
-    (void)n; (void)p; (void)q;
+    auto const & p = topology::model_a::paths::Colour::r();
+    auto const & q = topology::projection::paths::Pair::a();
+    // a field named after another field's path: the name and the path live apart
+    static_assert(topology::model_a::fields::Asset::packagePath == "packagePath");
+    auto const & r = topology::model_a::paths::Asset::package();
+    (void)n; (void)p; (void)q; (void)r;
 }

@@ -5,6 +5,12 @@ namespace ModelA {8c24c1b9-cfbf-4f3f-897d-43fd684d140d} {
 """A material, as ModelA understands one."""
 concept Material;
 
+"""An asset, with a field named after another field's path: package and packagePath."""
+struct Asset {
+  string package;
+  string packagePath;
+};
+
 """Colour in 8-bit channels -- the same name as ModelB::Colour, a different type."""
 struct Colour {
   uint8 r;
