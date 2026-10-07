@@ -4,6 +4,8 @@ namespace Demo {7fdd9ba9-b85e-4b33-a749-9b9615e43452}  {
 concept ConceptA;
 concept ConceptB;
 concept ConceptC is a ConceptB;
+"""A grandchild: its key widens to ConceptB as well as to ConceptC."""
+concept ConceptE is a ConceptC;
 concept ConceptD;
 
 """This is the documentation for the club Klub"""

@@ -18,6 +18,10 @@ static_assert(std::is_same_v<decltype(codec::encode(std::declval<demo::Enumerati
 static_assert(std::is_same_v<decltype(codec::encode(std::declval<std::vector<demo::StructureS>>())), std::shared_ptr<Viper::ValueVector>>);
 static_assert(std::is_same_v<decltype(codec::encode(std::declval<AnyConceptKey>())), std::shared_ptr<Viper::ValueKey>>);
 
+// A key widens implicitly to every ancestor, as the 1.2 surface did -- not to its parent alone.
+static_assert(std::is_convertible_v<demo::ConceptEKey, demo::ConceptCKey>);
+static_assert(std::is_convertible_v<demo::ConceptEKey, demo::ConceptBKey>);
+
 namespace {
 
 int failures{};
@@ -52,6 +56,12 @@ int main() {
     demo::ConceptBKey const b{c};
     if (!(b.asConceptCKey() == c) || demo::ConceptBKey::create().asConceptCKey().has_value()) {
         std::cout << "a parent key does not narrow to its descendant\n";
+        ++failures;
+    }
+    auto const e{demo::ConceptEKey::create()};
+    demo::ConceptBKey const grand{e};
+    if (!(grand.toAny() == e.toAny())) {
+        std::cout << "a key widened to its grandparent does not designate the same instance\n";
         ++failures;
     }
     if (!(b.toAnyConceptKey() == c.toAny())) {
