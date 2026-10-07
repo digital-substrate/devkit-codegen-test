@@ -26,6 +26,12 @@ class TestContainerDoor(unittest.TestCase):
         self.assertEqual(len(c.XArray_of_Demo_StructureS([self.s1, self.s2])), 2)
         self.assertEqual(c.Map_of_string_to_Demo_StructureS({"k": self.s1})["k"], self.s1)
 
+    def test_a_declared_container_takes_any_iterable_of_its_elements(self):
+        # The constructor is annotated Iterable: a generator, a dict's keys, a mapping view.
+        self.assertEqual(len(c.Set_of_Demo_StructureS(s for s in (self.s1, self.s2))), 2)
+        self.assertEqual(len(c.Vector_of_Demo_StructureS(iter([self.s1]))), 1)
+        self.assertEqual(len(c.Set_of_Demo_StructureS({self.s1: 1}.keys())), 1)
+
     def test_a_wrong_element_is_refused_where_the_container_is_built(self):
         # Content that does not fit the type: the runtime's error, naming the element at fault.
         with self.assertRaisesRegex(dsviper.ViperError, r"at\(1\)"):
