@@ -157,6 +157,12 @@ annotations_attachments.ModelA_Material.pin.set_marker(mutating, noted, marker)
 ok &= check("a field setter takes a key of a unit only the document's field reaches",
             annotations_attachments.ModelA_Material.pin.get(mutating, noted).unwrap().marker == marker)
 
+# A field's name is the model's, its constant spelled as Python spells the field.
+from topology.model_a import fields as modela_fields, paths as modela_paths  # noqa: E402
+ok &= check("a field constant holds the model's name under the Python spelling",
+            modela_fields.Asset.package_path == "packagePath"
+            and str(modela_paths.Asset.package_path) == str(dsviper.Path.from_field("packagePath").const()))
+
 # ── a container returns its elements with their names ──
 #
 # Every container shape is a class of the package's `containers` module, named after what it
