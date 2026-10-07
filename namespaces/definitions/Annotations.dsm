@@ -11,4 +11,14 @@ generator qualifies both scopes rather than colliding -- but only once this seco
 one exists, so adding it renames the first."""
 attachment<ModelB::Material, string> note;
 
+"""A pin on a material, pointing at a marker. ModelC is reached by nothing here but this
+structure's field, so an attachments module that sets the field names a unit its key and its
+document alone would not import."""
+struct Pin {
+    key<ModelC::Marker> marker;
+};
+
+"""A pin per material."""
+attachment<ModelA::Material, Pin> pin;
+
 }; // ns

@@ -148,6 +148,15 @@ annotation_note.set(mutating, noted, "from Annotations")
 ok &= check("a note written through one is not read through the other",
             modelc_note.get(mutating, noted).is_nil())
 
+# A field setter names the field's type, of a unit only the document's field reaches.
+from topology import model_c as modelc  # noqa: E402
+marker = modelc.MarkerKey.create()
+from topology import annotations_  # noqa: E402
+annotations_attachments.ModelA_Material.pin.set(mutating, noted, annotations_.Pin(marker=marker))
+annotations_attachments.ModelA_Material.pin.set_marker(mutating, noted, marker)
+ok &= check("a field setter takes a key of a unit only the document's field reaches",
+            annotations_attachments.ModelA_Material.pin.get(mutating, noted).unwrap().marker == marker)
+
 # ── a container returns its elements with their names ──
 #
 # Every container shape is a class of the package's `containers` module, named after what it
