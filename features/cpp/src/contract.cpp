@@ -5,6 +5,10 @@
 // requested type -- first a key of another concept, which has the same shape as the right
 // one and would pass without this check.
 #include "features_codec.hpp"
+#include "features_demo_fields.hpp"
+#include "features_demo_paths.hpp"
+#include "Viper_ValueFloat.hpp"
+#include "Viper_ValueStructure.hpp"
 
 #include <iostream>
 #include <type_traits>
@@ -17,6 +21,9 @@ static_assert(std::is_same_v<decltype(codec::encode(std::declval<demo::Structure
 static_assert(std::is_same_v<decltype(codec::encode(std::declval<demo::EnumerationE>())), std::shared_ptr<Viper::ValueEnumeration>>);
 static_assert(std::is_same_v<decltype(codec::encode(std::declval<std::vector<demo::StructureS>>())), std::shared_ptr<Viper::ValueVector>>);
 static_assert(std::is_same_v<decltype(codec::encode(std::declval<AnyConceptKey>())), std::shared_ptr<Viper::ValueKey>>);
+
+// A field's name is the model's, usable in a constant expression.
+static_assert(demo::fields::StructureS::f_float == "f_float");
 
 // A key widens implicitly to every ancestor, as the 1.2 surface did -- not to its parent alone.
 static_assert(std::is_convertible_v<demo::ConceptEKey, demo::ConceptCKey>);
@@ -58,6 +65,14 @@ int main() {
         std::cout << "a parent key does not narrow to its descendant\n";
         ++failures;
     }
+    // A field's path addresses that field: it reads it in a value it was not built from.
+    demo::StructureS pathed{};
+    pathed.f_float = 1.5f;
+    if (!demo::paths::StructureS::f_float()->at(codec::encode(pathed))->equal(Viper::ValueFloat::make(1.5f))) {
+        std::cout << "a field's path does not read its field\n";
+        ++failures;
+    }
+
     auto const e{demo::ConceptEKey::create()};
     demo::ConceptBKey const grand{e};
     if (!(grand.toAny() == e.toAny())) {
