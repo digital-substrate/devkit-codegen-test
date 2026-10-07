@@ -117,6 +117,7 @@ test("index", () => {
   assert.equal(v.index(1), 0);
   assert.equal(v.index(2), 1);
   assert.equal(v.index(3), 2);
+  assert.equal(v.index(99), undefined);
 });
 
 test("index_matches_python_list", () => {

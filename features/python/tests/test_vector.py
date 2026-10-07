@@ -123,6 +123,10 @@ class TestVectorSearch(unittest.TestCase):
         v = Vector_of_uint8(data)
         self.assertEqual(p.index(2), v.index(2))
         self.assertEqual(p.index(3), v.index(3))
+        with self.assertRaises(ValueError):
+            p.index(99)
+        with self.assertRaises(ValueError):
+            v.index(99)
 
 
 class TestVectorCopy(unittest.TestCase):
