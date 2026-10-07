@@ -12,9 +12,9 @@ output = "cpp/generated"
 clean = true
 
 [target.python]
-features = ["Base", "Pool", "Wheel"]                 # Base brings Paths, which brings Fields
+features = ["Base", "Attachments", "Pool", "Wheel"]  # Attachments brings Paths, which brings Fields
 output = "python/generated"
 
 [target.typescript]
-features = ["Base", "Pool", "Package"]               # Base brings Paths, which brings Fields
+features = ["Base", "Attachments", "Pool", "Package"]  # Attachments brings Paths, which brings Fields
 output = "typescript/generated"

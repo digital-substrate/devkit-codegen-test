@@ -6,6 +6,9 @@ application cannot build a pool: it selects `Base`, and must receive a package w
 single pool directory. While a pool's entry point lived in the unit template, it received one
 per pool, importing a missing module. This script renders the `namespaces` model -- three
 pools -- with `Base` alone and then with `Pool`, in each binding.
+
+Nor does a model with attachments impose them: `Base` is the data alone, and `Attachments`
+brings the attachments with the paths and field names they address.
 """
 import json
 import re
@@ -29,7 +32,7 @@ def pools(dsm: Path) -> set[str]:
     return {re.sub(r"(?<!^)(?=[A-Z])", "_", n).lower() for n in names}
 
 
-def rendered(language: str, features: list[str]) -> tuple[set[str], set[str]]:
+def rendered(language: str, features: list[str]) -> tuple[set[str], set[str], set[str]]:
     """Render the site's model with these features alone; return the directories rendered and
     the pools the model declares. The project is the site's, but for the target."""
     site = tomllib.loads((SITE / "kibo.toml").read_text())
@@ -48,14 +51,22 @@ def rendered(language: str, features: list[str]) -> tuple[set[str], set[str]]:
         if error:
             raise SystemExit(error)
         dsm = Path(out) / f"{site['project']['infrastructure']}.dsm.json"
-        return {p.name for p in (Path(out) / "out").rglob("*") if p.is_dir()}, pools(dsm)
+        files = {p.stem for p in (Path(out) / "out").rglob("*") if p.is_file()}
+        return {p.name for p in (Path(out) / "out").rglob("*") if p.is_dir()}, pools(dsm), files
 
 
 def main() -> int:
     ok = True
     for language in ("python", "typescript"):
-        alone, expected = rendered(language, ["Base"])
-        with_pool, _ = rendered(language, ["Base", "Pool"])
+        alone, expected, alone_files = rendered(language, ["Base"])
+        with_pool, _, _ = rendered(language, ["Base", "Pool"])
+        _, _, attached_files = rendered(language, ["Base", "Attachments"])
+        addressing = {"attachments", "paths", "fields"}
+        separate = not (alone_files & addressing) and addressing <= attached_files
+        ok &= separate
+        print(f"  {'ok  ' if separate else 'FAIL'} {language}: Base alone -> "
+              f"{sorted(alone_files & addressing) or 'no attachments'}, with Attachments -> "
+              f"{sorted(attached_files & addressing)}")
         alone, with_pool = alone & expected, with_pool & expected
         good = bool(expected) and not alone and with_pool == expected
         ok &= good

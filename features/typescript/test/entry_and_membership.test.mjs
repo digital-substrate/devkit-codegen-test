@@ -1,12 +1,14 @@
-// The package leads to every unit and its attachments; membership is as strict as storing; a variant
+// The package leads to every unit, its attachments imported by their path; membership is as strict as storing; a variant
 // takes a native the runtime decodes into one of its alternatives.
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import * as f from "../generated/dist/index.js";
+import * as ma from "../generated/dist/demo/attachments.js";
 
-test("the package entry leads to each unit and its attachments", () => {
+test("the package entry leads to each unit; its attachments are imported by their path", () => {
   assert.equal(typeof f.demo.StructureU, "function");
-  assert.equal(typeof f.demo.attachments.ConceptA, "function");
+  assert.equal("attachments" in f.demo, false);
+  assert.equal(typeof ma.ConceptA, "function");
   assert.equal(typeof f.AnyConceptKey, "function");
   assert.equal(typeof f.AnyValue, "function");
 });

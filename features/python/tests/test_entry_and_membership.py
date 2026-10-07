@@ -14,8 +14,10 @@ from features.demo import data
 
 class TestEntry(unittest.TestCase):
 
-    def test_a_unit_carries_its_attachments(self):
-        self.assertIs(features.demo.attachments.ConceptA, __import__("features.demo.attachments", fromlist=["x"]).ConceptA)
+    def test_attachments_are_imported_by_their_path(self):
+        # The Attachments feature: a submodule of the unit, imported as a C++ header is included.
+        import features.demo.attachments
+        self.assertTrue(hasattr(features.demo.attachments, "ConceptA"))
         self.assertTrue(hasattr(features, "AnyValue") and hasattr(features, "AnyConceptKey"))
 
 
