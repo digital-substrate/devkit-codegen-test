@@ -119,6 +119,12 @@ def main() -> int:
 
         if not arguments.no_render:
             code, output = run([sys.executable, str(KIBO_PROJECT), "generate"], directory)
+            # kibo renders past what it cannot resolve -- a property a template reads that the
+            # model does not have -- and says so; the text it wrote has a hole there. A first-party
+            # template owes none.
+            warnings = [line for line in output.splitlines() if line.strip().startswith("kibo: /")]
+            if warnings and not code:
+                code, output = 1, "\n".join(warnings)
             if code:
                 print(f"   {RED}render      fails{RESET}")
                 for line in output.splitlines()[-6:]:
