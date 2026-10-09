@@ -7,7 +7,11 @@
 #include "features_codec.hpp"
 #include "features_demo_fields.hpp"
 #include "features_demo_paths.hpp"
+#include "Viper_HashSHA1.hpp"
+#include "Viper_StreamEncoding.hpp"
+#include "Viper_ValueEncoder.hpp"
 #include "Viper_ValueFloat.hpp"
+#include "Viper_ValueHasher.hpp"
 #include "Viper_ValueStructure.hpp"
 
 #include <cmath>
@@ -112,10 +116,54 @@ void rigour() {
     }
 }
 
+// The bytes the static writer writes are the bytes the runtime writes for the same value, so
+// equal data have one BlobId; and equal values have one digest. NaN of any bits and the two
+// zeros included.
+void contentAddressing() {
+    std::uint64_t const bits{0xFFF8000000000001ull};
+    double otherNaN;
+    std::memcpy(&otherNaN, &bits, sizeof otherNaN);
+    double const inf{std::numeric_limits<double>::infinity()};
+    auto const position{Viper::UUId::create()};
+    std::vector<demo::StructureNumbers> values;
+    for (double const n : {std::numeric_limits<double>::quiet_NaN(), otherNaN, -inf, -1.0, -0.0, 0.0, 1.0, inf})
+        values.push_back(numbers(n, position));
+
+    auto const staticBytes{[](demo::StructureNumbers const & v) {
+        auto const encoder{codec::stream()->createEncoder()};
+        Viper::StaticWriter::Writer w{encoder};
+        write(w, v);
+        return encoder->endEncoding();
+    }};
+    auto const digest{[](demo::StructureNumbers const & v) {
+        auto const hashing{Viper::HashSHA1::make()};
+        Viper::ValueHasher::hash(codec::encode(v), hashing);
+        return hashing->hexDigest();
+    }};
+
+    int broken{};
+    for (auto const & a : values) {
+        if (!(staticBytes(a) == Viper::ValueEncoder::encode(codec::encode(a), codec::stream())))
+            ++broken;
+        for (auto const & b : values)
+            if (a == b && digest(a) != digest(b))
+                ++broken;
+    }
+    if (!(staticBytes(values.at(0)) == staticBytes(values.at(1)))) {
+        std::cout << "a NaN of other bits is not written as the canonical NaN\n";
+        ++failures;
+    }
+    if (broken) {
+        std::cout << "a structure holding NaN or a zero is written apart from the runtime, or equal values digest apart (" << broken << " cases)\n";
+        ++failures;
+    }
+}
+
 } // namespace
 
 int main() {
     rigour();
+    contentAddressing();
 
     refused<demo::ConceptAKey>("ConceptB key read as ConceptAKey", [] { return codec::encode(demo::ConceptBKey::create()); });
     refused<demo::StructureS>("StructureT read as StructureS", [] { return codec::encode(demo::StructureT{}); });
