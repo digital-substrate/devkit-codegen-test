@@ -115,6 +115,9 @@ RULES = {
     "the set of a concept's keys is set<key<Concept>>":
         lambda p, b, a, c: leaf(p) == "dsmType" and re.fullmatch(r"set<(.+)>", b) is not None
         and a == "set<key<" + b[4:-1] + ">>",
+    "a C++ set or map whose element or key holds a floating-point value takes Viper::StaticLess":
+        lambda p, b, a, c: leaf(p) in NATIVE and not binding(p) and ", Viper::StaticLess" in a
+        and a.replace(", Viper::StaticLess", "") in (b, native_spelling(b, c["namespaces"], c["infrastructure"])),
     "a native target has no binding spelling":
         lambda p, b, a, c: c["target"] == "cpp" and binding(p) and a == "",
 }

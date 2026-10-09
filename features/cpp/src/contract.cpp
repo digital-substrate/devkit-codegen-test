@@ -10,6 +10,7 @@
 #include "Viper_ValueFloat.hpp"
 #include "Viper_ValueStructure.hpp"
 
+#include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <iostream>
@@ -62,6 +63,8 @@ demo::StructureNumbers numbers(double n, Viper::UUId const & position) {
     result.f_map = {{"a", n}};
     result.f_xarray.insert(Viper::UUId::Invalid(), n, position);
     result.f_S.f_float = static_cast<float>(n);
+    result.f_set = {n, 1.0};
+    result.f_map_by_vec = {{{static_cast<float>(n), 1.0f}, 7}};
     return result;
 }
 
@@ -95,6 +98,12 @@ void rigour() {
     }
     if (!(values.at(0) == values.at(1)) || !(values.at(4) == values.at(5)) || !(values.at(0) < values.at(2))) {
         std::cout << "every NaN is not one datum, or the two zeros not one, or NaN not below -inf\n";
+        ++failures;
+    }
+    // A set or a map keyed by a floating-point value finds NaN, and holds one NaN and one zero.
+    decltype(demo::StructureNumbers::f_set) keyed{std::numeric_limits<double>::quiet_NaN(), otherNaN, -0.0, 0.0, 1.0};
+    if (keyed.size() != 3 || keyed.count(otherNaN) != 1 || !std::isnan(*keyed.begin())) {
+        std::cout << "a set of double does not hold NaN as one datum below every number\n";
         ++failures;
     }
     if (broken) {

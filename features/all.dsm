@@ -189,6 +189,8 @@ struct StructureNumbers {
   map<string, double> f_map;
   xarray<double> f_xarray;
   StructureS f_S;
+  set<double> f_set;
+  map<vec<float, 2>, int32> f_map_by_vec;
 };
 
 // Numbers
@@ -203,6 +205,7 @@ attachment<ConceptCoverage, int32> docInt32;
 attachment<ConceptCoverage, int64> docInt64;
 attachment<ConceptCoverage, float> docFloat;
 attachment<ConceptCoverage, double> docDouble;
+attachment<ConceptCoverage, map<double, int32>> docMapByDouble;
 
 // Ids
 attachment<ConceptCoverage, blob_id> docBlobId;
