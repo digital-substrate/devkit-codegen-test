@@ -175,6 +175,22 @@ struct StructureVariantKeys {
   variant<key<ConceptA>, key<ConceptD>> f_target;
 };
 
+// Floating-point values in every shape a field takes: NaN, the infinities and the two zeros
+// are where equality, order and hash must hold as they do for any other datum.
+struct StructureNumbers {
+  double f_double;
+  float f_float;
+  vec<double, 3> f_vec;
+  mat<float, 2, 2> f_mat;
+  optional<double> f_optional;
+  vector<double> f_vector;
+  tuple<double, int32> f_tuple;
+  variant<string, double> f_variant;
+  map<string, double> f_map;
+  xarray<double> f_xarray;
+  StructureS f_S;
+};
+
 // Numbers
 attachment<ConceptCoverage, bool> docBool;
 attachment<ConceptCoverage, uint8> docUInt8;

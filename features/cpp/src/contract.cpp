@@ -10,8 +10,12 @@
 #include "Viper_ValueFloat.hpp"
 #include "Viper_ValueStructure.hpp"
 
+#include <cstdint>
+#include <cstring>
 #include <iostream>
+#include <limits>
 #include <type_traits>
+#include <vector>
 
 using namespace features;
 
@@ -43,9 +47,67 @@ void refused(char const * name, F make) {
     }
 }
 
+// A structure holding the same number in every field shape: NaN, the infinities and the two
+// zeros among them.
+demo::StructureNumbers numbers(double n, Viper::UUId const & position) {
+    demo::StructureNumbers result{};
+    result.f_double = n;
+    result.f_float = static_cast<float>(n);
+    result.f_vec = {n, 1.0, 2.0};
+    result.f_mat = {{{static_cast<float>(n), 0.0f}, {0.0f, 1.0f}}};
+    result.f_optional = n;
+    result.f_vector = {n};
+    result.f_tuple = {n, 3};
+    result.f_variant = n;
+    result.f_map = {{"a", n}};
+    result.f_xarray.insert(Viper::UUId::Invalid(), n, position);
+    result.f_S.f_float = static_cast<float>(n);
+    return result;
+}
+
+// == is an equivalence, < a strict weak order whose incomparability is ==, and the hash
+// follows ==, NaN and the two zeros included.
+void rigour() {
+    std::uint64_t const bits{0xFFF8000000000001ull};
+    double otherNaN;
+    std::memcpy(&otherNaN, &bits, sizeof otherNaN);
+    double const inf{std::numeric_limits<double>::infinity()};
+    auto const position{Viper::UUId::create()};
+    std::vector<demo::StructureNumbers> values;
+    for (double const n : {std::numeric_limits<double>::quiet_NaN(), otherNaN, -inf, -1.0, -0.0, 0.0, 1.0, inf})
+        values.push_back(numbers(n, position));
+
+    auto const hashOf{[](demo::StructureNumbers const & v) { return Viper::StaticHash::of(v); }};
+    int broken{};
+    for (auto const & a : values) {
+        if (!(a == a) || a < a)
+            ++broken;
+        for (auto const & b : values) {
+            bool const equal{a == b};
+            if (equal != (b == a) || equal != (!(a < b) && !(b < a)) || (a < b && b < a))
+                ++broken;
+            if (equal && hashOf(a) != hashOf(b))
+                ++broken;
+            for (auto const & c : values)
+                if (a < b && b < c && !(a < c))
+                    ++broken;
+        }
+    }
+    if (!(values.at(0) == values.at(1)) || !(values.at(4) == values.at(5)) || !(values.at(0) < values.at(2))) {
+        std::cout << "every NaN is not one datum, or the two zeros not one, or NaN not below -inf\n";
+        ++failures;
+    }
+    if (broken) {
+        std::cout << "a structure holding NaN, an infinity or a zero breaks ==, < or its hash (" << broken << " cases)\n";
+        ++failures;
+    }
+}
+
 } // namespace
 
 int main() {
+    rigour();
+
     refused<demo::ConceptAKey>("ConceptB key read as ConceptAKey", [] { return codec::encode(demo::ConceptBKey::create()); });
     refused<demo::StructureS>("StructureT read as StructureS", [] { return codec::encode(demo::StructureT{}); });
     refused<std::uint16_t>("uint8 read as uint16", [] { return codec::encode(std::uint8_t{7}); });
