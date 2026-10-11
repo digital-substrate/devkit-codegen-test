@@ -4,7 +4,7 @@ import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
 import { definitions } from "../generated/dist/index.js";
 import { StructureS, StructureT, StructureU, StructureV, StructureValueField, EnumerationE } from "../generated/dist/demo/data.js";
-import { Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string, Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_uint8_to_string, XArray_of_uint8 } from "../generated/dist/containers.js";
+import { Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple2_of_uint8_and_string, Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_uint8_to_string, XArray_of_uint8 } from "../generated/dist/containers.js";
 
 // --- StructureS construction and field access ---
 
@@ -181,7 +181,7 @@ test("StructureU: mat field", () => {
 
 test("StructureU: tuple field", () => {
   const u = new StructureU();
-  u.f_tuple = new Tuple_of_uint8_and_string([42, "answer"]);
+  u.f_tuple = new Tuple2_of_uint8_and_string([42, "answer"]);
   const retrieved = u.f_tuple;
   assert.equal(retrieved.at(0), 42);
   assert.equal(retrieved.at(1), "answer");
@@ -367,7 +367,7 @@ test("StructureV: mat field", () => {
 
 test("StructureV: tuple field", () => {
   const v = new StructureV();
-  v.f_tuple = new Tuple_of_uint8_and_string([42, "answer"]);
+  v.f_tuple = new Tuple2_of_uint8_and_string([42, "answer"]);
   const retrieved = v.f_tuple;
   assert.equal(retrieved.at(0), 42);
   assert.equal(retrieved.at(1), "answer");

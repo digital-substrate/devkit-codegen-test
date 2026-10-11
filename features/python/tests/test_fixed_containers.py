@@ -10,8 +10,8 @@ This module tests:
 import unittest
 import dsviper
 from features import definitions
-from features.containers import Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string, \
-    Tuple_of_float_and_float
+from features.containers import Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple2_of_uint8_and_string, \
+    Tuple2_of_float_and_float
 
 
 # =============================================================================
@@ -283,17 +283,17 @@ class TestTupleConstruction(unittest.TestCase):
     """Test Tuple construction."""
 
     def test_default_construction(self):
-        t = Tuple_of_uint8_and_string()
+        t = Tuple2_of_uint8_and_string()
         self.assertEqual(len(t), 2)
 
     def test_from_tuple(self):
-        t = Tuple_of_uint8_and_string((42, "hello"))
+        t = Tuple2_of_uint8_and_string((42, "hello"))
         self.assertEqual(len(t), 2)
         self.assertEqual(t[0], 42)
         self.assertEqual(t[1], "hello")
 
     def test_from_list(self):
-        t = Tuple_of_uint8_and_string([100, "world"])
+        t = Tuple2_of_uint8_and_string([100, "world"])
         self.assertEqual(t[0], 100)
         self.assertEqual(t[1], "world")
 
@@ -302,7 +302,7 @@ class TestTupleLen(unittest.TestCase):
     """Test Tuple length."""
 
     def test_len_is_fixed(self):
-        t = Tuple_of_uint8_and_string((1, "a"))
+        t = Tuple2_of_uint8_and_string((1, "a"))
         self.assertEqual(len(t), 2)
 
 
@@ -310,15 +310,15 @@ class TestTupleGetitem(unittest.TestCase):
     """Test Tuple element access via __getitem__."""
 
     def test_getitem_index_0(self):
-        t = Tuple_of_uint8_and_string((42, "hello"))
+        t = Tuple2_of_uint8_and_string((42, "hello"))
         self.assertEqual(t[0], 42)
 
     def test_getitem_index_1(self):
-        t = Tuple_of_uint8_and_string((42, "hello"))
+        t = Tuple2_of_uint8_and_string((42, "hello"))
         self.assertEqual(t[1], "hello")
 
     def test_getitem_out_of_range(self):
-        t = Tuple_of_uint8_and_string((42, "hello"))
+        t = Tuple2_of_uint8_and_string((42, "hello"))
         with self.assertRaises(IndexError):
             _ = t[2]
 
@@ -327,17 +327,17 @@ class TestTupleTypedGetters(unittest.TestCase):
     """Test Tuple typed getter methods (get_0, get_1)."""
 
     def test_get_0(self):
-        t = Tuple_of_uint8_and_string((42, "hello"))
+        t = Tuple2_of_uint8_and_string((42, "hello"))
         self.assertEqual(t.get_0(), 42)
         self.assertIsInstance(t.get_0(), int)
 
     def test_get_1(self):
-        t = Tuple_of_uint8_and_string((42, "hello"))
+        t = Tuple2_of_uint8_and_string((42, "hello"))
         self.assertEqual(t.get_1(), "hello")
         self.assertIsInstance(t.get_1(), str)
 
     def test_a_homogeneous_tuple_returns_its_one_type(self):
-        t = Tuple_of_float_and_float((0.5, 2.0))
+        t = Tuple2_of_float_and_float((0.5, 2.0))
         self.assertEqual((t.get_0(), t.get_1()), (0.5, 2.0))
         self.assertIsInstance(t.get_1(), float)
 
@@ -346,20 +346,20 @@ class TestTupleIteration(unittest.TestCase):
     """Test Tuple iteration."""
 
     def test_iter(self):
-        t = Tuple_of_uint8_and_string((42, "hello"))
+        t = Tuple2_of_uint8_and_string((42, "hello"))
         values = list(t)
         self.assertEqual(len(values), 2)
         self.assertEqual(values[0], 42)
         self.assertEqual(values[1], "hello")
 
     def test_iter_unpacking(self):
-        t = Tuple_of_uint8_and_string((42, "hello"))
+        t = Tuple2_of_uint8_and_string((42, "hello"))
         a, b = t
         self.assertEqual(a, 42)
         self.assertEqual(b, "hello")
 
     def test_iter_multiple_times(self):
-        t = Tuple_of_uint8_and_string((42, "hello"))
+        t = Tuple2_of_uint8_and_string((42, "hello"))
         list1 = list(t)
         list2 = list(t)
         self.assertEqual(list1, list2)
@@ -369,13 +369,13 @@ class TestTupleCopy(unittest.TestCase):
     """Test Tuple copy behavior."""
 
     def test_copy_creates_independent_tuple(self):
-        t1 = Tuple_of_uint8_and_string((42, "hello"))
+        t1 = Tuple2_of_uint8_and_string((42, "hello"))
         t2 = t1.copy()
         self.assertEqual(t2[0], 42)
         self.assertEqual(t2[1], "hello")
 
     def test_copy_preserves_values(self):
-        t1 = Tuple_of_uint8_and_string((255, "test"))
+        t1 = Tuple2_of_uint8_and_string((255, "test"))
         t2 = t1.copy()
         self.assertEqual(t2.get_0(), 255)
         self.assertEqual(t2.get_1(), "test")
@@ -385,22 +385,22 @@ class TestTupleSerialization(unittest.TestCase):
     """Test Tuple encode/decode serialization."""
 
     def test_encode_decode_roundtrip(self):
-        t1 = Tuple_of_uint8_and_string((42, "hello"))
+        t1 = Tuple2_of_uint8_and_string((42, "hello"))
         blob = dsviper.Value.encode(t1.unwrap_value())
-        t2 = Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()))
+        t2 = Tuple2_of_uint8_and_string(dsviper.Value.decode(blob, Tuple2_of_uint8_and_string.type(), definitions()))
         self.assertEqual(t2[0], 42)
         self.assertEqual(t2[1], "hello")
 
     def test_encode_decode_special_chars(self):
-        t1 = Tuple_of_uint8_and_string((0, "héllo wörld"))
+        t1 = Tuple2_of_uint8_and_string((0, "héllo wörld"))
         blob = dsviper.Value.encode(t1.unwrap_value())
-        t2 = Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()))
+        t2 = Tuple2_of_uint8_and_string(dsviper.Value.decode(blob, Tuple2_of_uint8_and_string.type(), definitions()))
         self.assertEqual(t2[1], "héllo wörld")
 
     def test_encode_decode_empty_string(self):
-        t1 = Tuple_of_uint8_and_string((128, ""))
+        t1 = Tuple2_of_uint8_and_string((128, ""))
         blob = dsviper.Value.encode(t1.unwrap_value())
-        t2 = Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()))
+        t2 = Tuple2_of_uint8_and_string(dsviper.Value.decode(blob, Tuple2_of_uint8_and_string.type(), definitions()))
         self.assertEqual(t2[0], 128)
         self.assertEqual(t2[1], "")
 
@@ -409,18 +409,18 @@ class TestTupleComparison(unittest.TestCase):
     """Test Tuple comparison operations (inherited from Proxy)."""
 
     def test_equal_tuples(self):
-        t1 = Tuple_of_uint8_and_string((42, "hello"))
-        t2 = Tuple_of_uint8_and_string((42, "hello"))
+        t1 = Tuple2_of_uint8_and_string((42, "hello"))
+        t2 = Tuple2_of_uint8_and_string((42, "hello"))
         self.assertEqual(t1, t2)
 
     def test_not_equal_tuples(self):
-        t1 = Tuple_of_uint8_and_string((42, "hello"))
-        t2 = Tuple_of_uint8_and_string((42, "world"))
+        t1 = Tuple2_of_uint8_and_string((42, "hello"))
+        t2 = Tuple2_of_uint8_and_string((42, "world"))
         self.assertNotEqual(t1, t2)
 
     def test_not_equal_different_first(self):
-        t1 = Tuple_of_uint8_and_string((1, "hello"))
-        t2 = Tuple_of_uint8_and_string((2, "hello"))
+        t1 = Tuple2_of_uint8_and_string((1, "hello"))
+        t2 = Tuple2_of_uint8_and_string((2, "hello"))
         self.assertNotEqual(t1, t2)
 
 

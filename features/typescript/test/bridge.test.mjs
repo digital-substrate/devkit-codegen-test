@@ -29,11 +29,11 @@ test("wrapValue takes the value itself", () => {
 });
 
 test("wrapValue gives a tuple or a variant its named accessors", () => {
-  const tuple = f.Tuple_of_uint8_and_string.wrapValue(new f.Tuple_of_uint8_and_string([1, "a"]).unwrapValue());
-  assert.ok(tuple instanceof f.Tuple_of_uint8_and_string);
+  const tuple = f.Tuple2_of_uint8_and_string.wrapValue(new f.Tuple2_of_uint8_and_string([1, "a"]).unwrapValue());
+  assert.ok(tuple instanceof f.Tuple2_of_uint8_and_string);
   assert.equal(tuple.get1(), "a");
-  const variant = f.Variant_of_string_or_uint8.wrapValue(new f.Variant_of_string_or_uint8("a").unwrapValue());
-  assert.ok(variant instanceof f.Variant_of_string_or_uint8);
+  const variant = f.Variant2_of_string_or_uint8.wrapValue(new f.Variant2_of_string_or_uint8("a").unwrapValue());
+  assert.ok(variant instanceof f.Variant2_of_string_or_uint8);
   assert.equal(variant.getString(), "a");
 });
 

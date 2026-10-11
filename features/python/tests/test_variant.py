@@ -5,26 +5,26 @@ import unittest
 import dsviper
 from features import definitions
 from features.demo import StructureS
-from features.containers import Variant_of_string_or_uint8_or_Demo_StructureS
+from features.containers import Variant3_of_string_or_uint8_or_Demo_StructureS
 
 
 class TestVariant(unittest.TestCase):
     """Test Variant type."""
 
     def test_variant_string(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v.set_string("hello")
         self.assertTrue(v.is_string())
         self.assertEqual(v.get_string(), "hello")
 
     def test_variant_uint8(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v.set_uint8(42)
         self.assertTrue(v.is_uint8())
         self.assertEqual(v.get_uint8(), 42)
 
     def test_wrap_without_a_type_takes_the_alternative_the_value_fits(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v.wrap(3)
         self.assertTrue(v.is_uint8())
         v.wrap("a")
@@ -36,7 +36,7 @@ class TestVariant(unittest.TestCase):
 
     def test_variant_structure(self):
         s = StructureS({"f_float": 1.5, "f_string": "test"})
-        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v.set_Demo_StructureS(s)
         self.assertTrue(v.is_Demo_StructureS())
         unwrapped = v.get_Demo_StructureS()
@@ -47,18 +47,18 @@ class TestVariantConstruction(unittest.TestCase):
     """Test Variant construction with initial value."""
 
     def test_construct_with_string(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS("hello")
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS("hello")
         self.assertTrue(v.is_string())
         self.assertEqual(v.get_string(), "hello")
 
     def test_construct_with_uint8(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS(42)
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS(42)
         self.assertTrue(v.is_uint8())
         self.assertEqual(v.get_uint8(), 42)
 
     def test_construct_with_structure(self):
         s = StructureS({"f_float": 2.5, "f_string": "world"})
-        v = Variant_of_string_or_uint8_or_Demo_StructureS(s)
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS(s)
         self.assertTrue(v.is_Demo_StructureS())
 
 
@@ -66,17 +66,17 @@ class TestVariantTypeChecking(unittest.TestCase):
     """Test Variant type checking methods."""
 
     def test_is_string_false(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v.set_uint8(42)
         self.assertFalse(v.is_string())
 
     def test_is_uint8_false(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v.set_string("hello")
         self.assertFalse(v.is_uint8())
 
     def test_is_structure_false(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v.set_string("hello")
         self.assertFalse(v.is_Demo_StructureS())
 
@@ -85,7 +85,7 @@ class TestVariantSwitch(unittest.TestCase):
     """Test Variant type switching."""
 
     def test_switch_from_string_to_uint8(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v.set_string("hello")
         self.assertTrue(v.is_string())
         v.set_uint8(42)
@@ -93,7 +93,7 @@ class TestVariantSwitch(unittest.TestCase):
         self.assertFalse(v.is_string())
 
     def test_switch_from_uint8_to_structure(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v.set_uint8(42)
         s = StructureS({"f_float": 1.0, "f_string": "test"})
         v.set_Demo_StructureS(s)
@@ -105,14 +105,14 @@ class TestVariantCopy(unittest.TestCase):
     """Test Variant copy behavior."""
 
     def test_copy_string_variant(self):
-        v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v1 = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v1.set_string("hello")
         v2 = v1.copy()
         self.assertTrue(v2.is_string())
         self.assertEqual(v2.get_string(), "hello")
 
     def test_copy_uint8_variant(self):
-        v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v1 = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v1.set_uint8(42)
         v2 = v1.copy()
         self.assertTrue(v2.is_uint8())
@@ -120,14 +120,14 @@ class TestVariantCopy(unittest.TestCase):
 
     def test_copy_structure_variant(self):
         s = StructureS({"f_float": 1.5, "f_string": "test"})
-        v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v1 = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v1.set_Demo_StructureS(s)
         v2 = v1.copy()
         self.assertTrue(v2.is_Demo_StructureS())
         self.assertAlmostEqual(v2.get_Demo_StructureS().f_float, 1.5, places=5)
 
     def test_copy_independent(self):
-        v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v1 = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v1.set_string("hello")
         v2 = v1.copy()
         v1.set_uint8(99)
@@ -139,27 +139,27 @@ class TestVariantSerialization(unittest.TestCase):
     """Test Variant encode/decode serialization."""
 
     def test_encode_decode_string(self):
-        v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v1 = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v1.set_string("hello")
         blob = dsviper.Value.encode(v1.unwrap_value())
-        v2 = Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()))
+        v2 = Variant3_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant3_of_string_or_uint8_or_Demo_StructureS.type(), definitions()))
         self.assertTrue(v2.is_string())
         self.assertEqual(v2.get_string(), "hello")
 
     def test_encode_decode_uint8(self):
-        v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v1 = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v1.set_uint8(42)
         blob = dsviper.Value.encode(v1.unwrap_value())
-        v2 = Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()))
+        v2 = Variant3_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant3_of_string_or_uint8_or_Demo_StructureS.type(), definitions()))
         self.assertTrue(v2.is_uint8())
         self.assertEqual(v2.get_uint8(), 42)
 
     def test_encode_decode_structure(self):
         s = StructureS({"f_float": 2.5, "f_string": "world"})
-        v1 = Variant_of_string_or_uint8_or_Demo_StructureS()
+        v1 = Variant3_of_string_or_uint8_or_Demo_StructureS()
         v1.set_Demo_StructureS(s)
         blob = dsviper.Value.encode(v1.unwrap_value())
-        v2 = Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()))
+        v2 = Variant3_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant3_of_string_or_uint8_or_Demo_StructureS.type(), definitions()))
         self.assertTrue(v2.is_Demo_StructureS())
         self.assertEqual(v2.get_Demo_StructureS().f_string, "world")
 

@@ -16,7 +16,7 @@ class TestVariantField(unittest.TestCase):
 
     def test_a_variant_field_reads_as_its_declared_class(self):
         u = data.StructureU(f_variant=data.StructureS(f_float=1.0))
-        self.assertIs(type(u.f_variant), c.Variant_of_string_or_uint8_or_Demo_StructureS)
+        self.assertIs(type(u.f_variant), c.Variant3_of_string_or_uint8_or_Demo_StructureS)
         self.assertTrue(u.f_variant.is_Demo_StructureS())
         self.assertEqual(u.f_variant.get_Demo_StructureS().f_float, 1.0)
 

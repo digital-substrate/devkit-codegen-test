@@ -10,7 +10,7 @@ import { ConceptAKey, ConceptDKey, StructureS, StructureU, StructureVariantKeys 
 
 test("a variant field reads as its declared class", () => {
   const u = new StructureU({ f_variant: new StructureS({ f_float: 1 }) });
-  assert.ok(u.f_variant instanceof c.Variant_of_string_or_uint8_or_Demo_StructureS);
+  assert.ok(u.f_variant instanceof c.Variant3_of_string_or_uint8_or_Demo_StructureS);
   assert.ok(u.f_variant.isDemo_StructureS());
   assert.equal(u.f_variant.getDemo_StructureS().f_float, 1);
 });

@@ -5,7 +5,7 @@ import unittest
 import dsviper
 from features import definitions
 from features.demo import StructureS, StructureT, StructureU, StructureV, EnumerationE
-from features.containers import Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string, Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_uint8_to_string, XArray_of_uint8
+from features.containers import Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple2_of_uint8_and_string, Optional_of_uint8, Vector_of_uint8, Set_of_uint8, Map_of_uint8_to_string, XArray_of_uint8
 
 
 class TestStructureSConstruction(unittest.TestCase):
@@ -159,7 +159,7 @@ class TestStructureUContainerFields(unittest.TestCase):
         self.assertEqual(retrieved[1, 1], 4)
 
     def test_field_tuple(self):
-        tup = Tuple_of_uint8_and_string((42, "answer"))
+        tup = Tuple2_of_uint8_and_string((42, "answer"))
         self.u.f_tuple = tup
         retrieved = self.u.f_tuple
         self.assertEqual(retrieved[0], 42)
@@ -330,7 +330,7 @@ class TestStructureVFixedContainerFields(unittest.TestCase):
         self.assertEqual(retrieved[1, 1], 5)
 
     def test_field_tuple(self):
-        tup = Tuple_of_uint8_and_string((42, "answer"))
+        tup = Tuple2_of_uint8_and_string((42, "answer"))
         self.v.f_tuple = tup
         retrieved = self.v.f_tuple
         self.assertEqual(retrieved[0], 42)

@@ -10,7 +10,7 @@ under `python -O` (where asserts are stripped) — see the `-O` note in each cla
 import unittest
 import dsviper
 from features.demo import StructureS, StructureT, ConceptAKey, ConceptBKey, EnumerationE
-from features.containers import Set_of_uint8, Set_of_Demo_ConceptAKey, Vector_of_uint8, Vector_of_int8, Optional_of_Demo_ConceptAKey, Optional_of_Demo_ConceptBKey, Variant_of_string_or_uint8_or_Demo_StructureS
+from features.containers import Set_of_uint8, Set_of_Demo_ConceptAKey, Vector_of_uint8, Vector_of_int8, Optional_of_Demo_ConceptAKey, Optional_of_Demo_ConceptBKey, Variant3_of_string_or_uint8_or_Demo_StructureS
 
 
 class TestConstructorRejectsWrongRuntimeValue(unittest.TestCase):
@@ -82,13 +82,13 @@ class TestVariantArmGetterPrecondition(unittest.TestCase):
     """
 
     def test_get_wrong_arm_raises(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS("hello")
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS("hello")
         self.assertTrue(v.is_string())
         with self.assertRaises(ValueError):
             v.get_uint8()
 
     def test_get_right_arm_returns(self):
-        v = Variant_of_string_or_uint8_or_Demo_StructureS("hello")
+        v = Variant3_of_string_or_uint8_or_Demo_StructureS("hello")
         self.assertEqual(v.get_string(), "hello")
 
 

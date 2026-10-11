@@ -54,7 +54,7 @@ refuses("wrap_value rejects a homonym structure of another namespace",
 refuses("wrap_value rejects a homonym enumeration of another namespace",
         lambda: parts.Grade.wrap_value(core.Grade.HIGH.unwrap_value()))
 refuses("a tuple refuses its homonym elements swapped",
-        lambda: containers.Tuple_of_Core_Colour_and_Parts_Colour([parts.Colour(), core.Colour()]))
+        lambda: containers.Tuple2_of_Core_Colour_and_Parts_Colour([parts.Colour(), core.Colour()]))
 
 # `wrap` must not fall back to returning the bare value when a type has no registered class:
 # that would contradict the annotation, which type checking cannot catch, and would only

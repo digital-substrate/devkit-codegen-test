@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import { StructureS, StructureT, ConceptAKey, ConceptBKey, EnumerationE } from "../generated/dist/demo/data.js";
-import { Set_of_uint8, Set_of_Demo_ConceptAKey, Vector_of_uint8, Vector_of_int8, Optional_of_Demo_ConceptAKey, Optional_of_Demo_ConceptBKey, Variant_of_string_or_uint8_or_Demo_StructureS } from "../generated/dist/containers.js";
+import { Set_of_uint8, Set_of_Demo_ConceptAKey, Vector_of_uint8, Vector_of_int8, Optional_of_Demo_ConceptAKey, Optional_of_Demo_ConceptBKey, Variant3_of_string_or_uint8_or_Demo_StructureS } from "../generated/dist/containers.js";
 
 // --- Constructor rejects a runtime value of another type ---
 
@@ -60,12 +60,12 @@ test("set accepts same type", () => {
 // --- Variant arm getter precondition ---
 
 test("variant get wrong arm throws", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS("hello");
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS("hello");
   assert.ok(v.isString());
   assert.throws(() => v.getUint8(), Error);
 });
 
 test("variant get right arm returns", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS("hello");
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS("hello");
   assert.equal(v.getString(), "hello");
 });

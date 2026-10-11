@@ -2,7 +2,7 @@ import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
 import { definitions } from "../generated/dist/index.js";
-import { Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple_of_uint8_and_string } from "../generated/dist/containers.js";
+import { Vec2_of_uint8, Mat2x2_of_uint8, Mat2x3_of_uint8, Tuple2_of_uint8_and_string } from "../generated/dist/containers.js";
 
 // =============================================================================
 // Vec Tests
@@ -280,19 +280,19 @@ test("mat_encode_decode_roundtrip_2x3", () => {
 // --- TestTupleConstruction ---
 
 test("tuple_default_construction", () => {
-  const t = new Tuple_of_uint8_and_string();
+  const t = new Tuple2_of_uint8_and_string();
   assert.equal(t.size, 2);
 });
 
 test("tuple_from_tuple", () => {
-  const t = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t = new Tuple2_of_uint8_and_string([42, "hello"]);
   assert.equal(t.size, 2);
   assert.equal(t.at(0), 42);
   assert.equal(t.at(1), "hello");
 });
 
 test("tuple_from_list", () => {
-  const t = new Tuple_of_uint8_and_string([100, "world"]);
+  const t = new Tuple2_of_uint8_and_string([100, "world"]);
   assert.equal(t.at(0), 100);
   assert.equal(t.at(1), "world");
 });
@@ -300,24 +300,24 @@ test("tuple_from_list", () => {
 // --- TestTupleLen ---
 
 test("tuple_len_is_fixed", () => {
-  const t = new Tuple_of_uint8_and_string([1, "a"]);
+  const t = new Tuple2_of_uint8_and_string([1, "a"]);
   assert.equal(t.size, 2);
 });
 
 // --- TestTupleGetitem ---
 
 test("tuple_getitem_index_0", () => {
-  const t = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t = new Tuple2_of_uint8_and_string([42, "hello"]);
   assert.equal(t.at(0), 42);
 });
 
 test("tuple_getitem_index_1", () => {
-  const t = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t = new Tuple2_of_uint8_and_string([42, "hello"]);
   assert.equal(t.at(1), "hello");
 });
 
 test("tuple_getitem_out_of_range", () => {
-  const t = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t = new Tuple2_of_uint8_and_string([42, "hello"]);
   assert.throws(() => {
     t.at(2);
   });
@@ -326,13 +326,13 @@ test("tuple_getitem_out_of_range", () => {
 // --- TestTupleTypedGetters (no typed getters in TS; element access via at) ---
 
 test("tuple_get_0", () => {
-  const t = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t = new Tuple2_of_uint8_and_string([42, "hello"]);
   assert.equal(t.at(0), 42);
   assert.equal(typeof t.at(0), "number");
 });
 
 test("tuple_get_1", () => {
-  const t = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t = new Tuple2_of_uint8_and_string([42, "hello"]);
   assert.equal(t.at(1), "hello");
   assert.equal(typeof t.at(1), "string");
 });
@@ -340,7 +340,7 @@ test("tuple_get_1", () => {
 // --- TestTupleIteration ---
 
 test("tuple_iter", () => {
-  const t = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t = new Tuple2_of_uint8_and_string([42, "hello"]);
   const values = [...t];
   assert.equal(values.length, 2);
   assert.equal(values[0], 42);
@@ -348,14 +348,14 @@ test("tuple_iter", () => {
 });
 
 test("tuple_iter_unpacking", () => {
-  const t = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t = new Tuple2_of_uint8_and_string([42, "hello"]);
   const [a, b] = t;
   assert.equal(a, 42);
   assert.equal(b, "hello");
 });
 
 test("tuple_iter_multiple_times", () => {
-  const t = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t = new Tuple2_of_uint8_and_string([42, "hello"]);
   const list1 = [...t];
   const list2 = [...t];
   assert.deepEqual(list1, list2);
@@ -364,14 +364,14 @@ test("tuple_iter_multiple_times", () => {
 // --- TestTupleCopy ---
 
 test("tuple_copy_creates_independent_tuple", () => {
-  const t1 = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t1 = new Tuple2_of_uint8_and_string([42, "hello"]);
   const t2 = t1.copy();
   assert.equal(t2.at(0), 42);
   assert.equal(t2.at(1), "hello");
 });
 
 test("tuple_copy_preserves_values", () => {
-  const t1 = new Tuple_of_uint8_and_string([255, "test"]);
+  const t1 = new Tuple2_of_uint8_and_string([255, "test"]);
   const t2 = t1.copy();
   assert.equal(t2.at(0), 255);
   assert.equal(t2.at(1), "test");
@@ -380,24 +380,24 @@ test("tuple_copy_preserves_values", () => {
 // --- TestTupleSerialization ---
 
 test("tuple_encode_decode_roundtrip", () => {
-  const t1 = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t1 = new Tuple2_of_uint8_and_string([42, "hello"]);
   const blob = dsviper.Value.encode(t1.unwrapValue());
-  const t2 = new Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()));
+  const t2 = new Tuple2_of_uint8_and_string(dsviper.Value.decode(blob, Tuple2_of_uint8_and_string.type(), definitions()));
   assert.equal(t2.at(0), 42);
   assert.equal(t2.at(1), "hello");
 });
 
 test("tuple_encode_decode_special_chars", () => {
-  const t1 = new Tuple_of_uint8_and_string([0, "héllo wörld"]);
+  const t1 = new Tuple2_of_uint8_and_string([0, "héllo wörld"]);
   const blob = dsviper.Value.encode(t1.unwrapValue());
-  const t2 = new Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()));
+  const t2 = new Tuple2_of_uint8_and_string(dsviper.Value.decode(blob, Tuple2_of_uint8_and_string.type(), definitions()));
   assert.equal(t2.at(1), "héllo wörld");
 });
 
 test("tuple_encode_decode_empty_string", () => {
-  const t1 = new Tuple_of_uint8_and_string([128, ""]);
+  const t1 = new Tuple2_of_uint8_and_string([128, ""]);
   const blob = dsviper.Value.encode(t1.unwrapValue());
-  const t2 = new Tuple_of_uint8_and_string(dsviper.Value.decode(blob, Tuple_of_uint8_and_string.type(), definitions()));
+  const t2 = new Tuple2_of_uint8_and_string(dsviper.Value.decode(blob, Tuple2_of_uint8_and_string.type(), definitions()));
   assert.equal(t2.at(0), 128);
   assert.equal(t2.at(1), "");
 });
@@ -405,19 +405,19 @@ test("tuple_encode_decode_empty_string", () => {
 // --- TestTupleComparison ---
 
 test("tuple_equal_tuples", () => {
-  const t1 = new Tuple_of_uint8_and_string([42, "hello"]);
-  const t2 = new Tuple_of_uint8_and_string([42, "hello"]);
+  const t1 = new Tuple2_of_uint8_and_string([42, "hello"]);
+  const t2 = new Tuple2_of_uint8_and_string([42, "hello"]);
   assert.ok(t1.equals(t2));
 });
 
 test("tuple_not_equal_tuples", () => {
-  const t1 = new Tuple_of_uint8_and_string([42, "hello"]);
-  const t2 = new Tuple_of_uint8_and_string([42, "world"]);
+  const t1 = new Tuple2_of_uint8_and_string([42, "hello"]);
+  const t2 = new Tuple2_of_uint8_and_string([42, "world"]);
   assert.ok(!t1.equals(t2));
 });
 
 test("tuple_not_equal_different_first", () => {
-  const t1 = new Tuple_of_uint8_and_string([1, "hello"]);
-  const t2 = new Tuple_of_uint8_and_string([2, "hello"]);
+  const t1 = new Tuple2_of_uint8_and_string([1, "hello"]);
+  const t2 = new Tuple2_of_uint8_and_string([2, "hello"]);
   assert.ok(!t1.equals(t2));
 });

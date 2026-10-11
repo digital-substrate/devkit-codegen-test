@@ -67,9 +67,27 @@ def container_tokens(name: str) -> list[str]:
         match = re.fullmatch(r"(Vec|Mat)(\d+)(?:x(\d+))?", token)
         if match:
             tokens += [g for g in match.groups() if g]
+        elif re.fullmatch(r"(Tuple|Variant)\d+", token):
+            tokens.append(token.rstrip("0123456789"))
         elif token not in ("of", "and", "or"):
             tokens.append(token)
     return sorted(tokens)
+
+
+CONTAINER_KIND = r"(Vec\d+|Mat\d+x\d+|Tuple\d*|Variant\d*|Optional|Vector|Set|Map|XArray)"
+
+
+def model1_suffix(suffix: str) -> str:
+    """A Model 2 type suffix written as Model 1 wrote it.
+
+    Model 2's suffix is `_` and the type's name: a container's kind is capitalised and followed by
+    `_of_`, a tuple's and a variant's carry their arity and join their members with `_and_` and
+    `_or_`, and `any` is `_Any`. A named type and a primitive read the same in both."""
+    suffix = re.sub(r"(^|_)Any(?=_|$)", r"\1any", suffix)
+    suffix = re.sub(r"(Tuple|Variant)\d+_of_", r"\1_of_", suffix)
+    suffix = re.sub(CONTAINER_KIND + r"_of_", lambda m: m.group(1).lower() + "_", suffix)
+    suffix = suffix.replace("_and_", "_").replace("_or_", "_")
+    return suffix
 
 
 def leaf(path: str) -> str:
@@ -93,7 +111,7 @@ def native_spelling(value: str, namespaces: set[str], infrastructure: str) -> st
 # What the documentation lists as changed, one rule per entry. Each takes the path of a value,
 # its Model 1 value, its Model 2 value and the render's context, and says whether it explains it.
 RULES = {
-    "a C++ type names its namespace in snake case, and the untyped key through the infrastructure":
+    "a C++ type names its namespace in snake case, and the key of any concept through the infrastructure":
         lambda p, b, a, c: leaf(p) in NATIVE | IN_NAMESPACE and not binding(p)
         and a == native_spelling(b, c["namespaces"], c["infrastructure"]),
     "a parent from another namespace is named with its namespace":
@@ -118,6 +136,9 @@ RULES = {
     "a C++ set or map whose element or key holds a floating-point value takes Viper::StaticLess":
         lambda p, b, a, c: leaf(p) in NATIVE and not binding(p) and ", Viper::StaticLess" in a
         and a.replace(", Viper::StaticLess", "") in (b, native_spelling(b, c["namespaces"], c["infrastructure"])),
+    "a type suffix is _ and the type's name":
+        lambda p, b, a, c: leaf(p) in ("typeSuffix", "keyTypeSuffix", "elementTypeSuffix")
+        and model1_suffix(a) == b,
     "a native target has no binding spelling":
         lambda p, b, a, c: c["target"] == "cpp" and binding(p) and a == "",
 }
@@ -143,11 +164,18 @@ def by_native_type(path, keys, values):
     return types == sorted(types)
 
 
+def by_suffix(path, keys, values):
+    suffixes = [values.get(f"{path}[{k}].typeSuffix", "") for k in keys]
+    return suffixes == sorted(suffixes)
+
+
 ORDER_RULES = {
     "a namespace lists a parent concept before its children":
         lambda p, k, v: p == "ns.concepts" and parents_first(p, k, v),
     "the container functions are ordered by their C++ type, which names a namespace in snake case":
         lambda p, k, v: p.endswith("Functions") and by_native_type(p, k, v),
+    "the attached document types are ordered by their type suffix, which is _ and the type's name":
+        lambda p, k, v: p == "m.attachedDocumentTypes" and by_suffix(p, k, v),
 }
 
 
@@ -192,7 +220,7 @@ def parse(text: str) -> tuple[dict[str, str], dict[str, list[str]]]:
     def key(scalars, index):
         for k in ("identifier", "typeSuffix"):
             if scalars.get(k):
-                return scalars[k]
+                return model1_suffix(scalars[k]) if k == "typeSuffix" else scalars[k]
         if scalars.get("name"):
             return f"{scalars.get('namespace', '')}::{scalars['name']}"
         return f"#{index}"

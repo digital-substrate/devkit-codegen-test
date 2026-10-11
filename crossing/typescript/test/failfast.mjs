@@ -6,7 +6,7 @@
  */
 import dsviper from "@digitalsubstrate/dsviper";
 
-import { definitions, Tuple_of_Core_Colour_and_Parts_Colour } from "../generated/dist/index.js";
+import { definitions, Tuple2_of_Core_Colour_and_Parts_Colour } from "../generated/dist/index.js";
 import * as core from "../generated/dist/core/data.js";
 import * as parts from "../generated/dist/parts/data.js";
 import { Thing } from "../generated/dist/core/attachments.js";
@@ -41,6 +41,6 @@ refuses("wrapValue rejects a homonym structure of another namespace",
 refuses("wrapValue rejects a homonym enumeration of another namespace",
         () => parts.Grade.wrapValue(core.Grade.unwrapValue(core.Grade.HIGH)));
 refuses("a tuple refuses its homonym elements swapped",
-        () => new Tuple_of_Core_Colour_and_Parts_Colour([new parts.Colour(), new core.Colour()]));
+        () => new Tuple2_of_Core_Colour_and_Parts_Colour([new parts.Colour(), new core.Colour()]));
 
 process.exit(ok ? 0 : 1);

@@ -37,5 +37,5 @@ test("a variant takes a number the runtime decodes into an alternative", () => {
   u.f_variant = 7;
   assert.ok(u.f_variant.isUint8());
   assert.throws(() => { u.f_variant = 7.5; });
-  assert.ok(new f.Variant_of_string_or_uint8(7).isUint8());
+  assert.ok(new f.Variant2_of_string_or_uint8(7).isUint8());
 });

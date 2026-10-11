@@ -39,12 +39,12 @@ test("a container shows its class, its size where it varies, and its elements", 
   assert.equal(shown(v.f_map), "Map_of_uint8_to_string(2) { 0 => 'Zero', 1 => 'One' }");
   assert.equal(shown(v.f_vec), "Vec2_of_uint8 [ 2, 3 ]");
   assert.equal(shown(v.f_mat), "Mat2x3_of_uint8 [ [ 1, 2, 3 ], [ 4, 5, 6 ] ]");
-  assert.equal(shown(v.f_tuple), "Tuple_of_uint8_and_string [ 0, '1' ]");
+  assert.equal(shown(v.f_tuple), "Tuple2_of_uint8_and_string [ 0, '1' ]");
   assert.equal(shown(v.f_optional), "Optional_of_uint8(8)");
   const u = new StructureU();
   assert.equal(shown(u.f_optional), "Optional_of_uint8(nil)");
   assert.equal(shown(u.f_xarray), "XArray_of_uint8(0) []");
-  assert.equal(shown(u.f_variant), "Variant_of_string_or_uint8_or_Demo_StructureS('')");
+  assert.equal(shown(u.f_variant), "Variant3_of_string_or_uint8_or_Demo_StructureS('')");
   assert.equal(shown(new AnyValue(42)), "AnyValue(42)");
 });
 

@@ -3,26 +3,26 @@ import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
 import { definitions } from "../generated/dist/index.js";
 import { StructureS } from "../generated/dist/demo/data.js";
-import { Variant_of_string_or_uint8_or_Demo_StructureS } from "../generated/dist/containers.js";
+import { Variant3_of_string_or_uint8_or_Demo_StructureS } from "../generated/dist/containers.js";
 
 // --- TestVariant ---
 
 test("variant_string", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v.setString("hello");
   assert.ok(v.isString());
   assert.equal(v.getString(), "hello");
 });
 
 test("variant_uint8", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v.setUint8(42);
   assert.ok(v.isUint8());
   assert.equal(v.getUint8(), 42);
 });
 
 test("variant wrap without a type takes the alternative the value fits, as Python's", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v.wrap(3);
   assert.ok(v.isUint8());
   v.wrap("a");
@@ -34,7 +34,7 @@ test("variant wrap without a type takes the alternative the value fits, as Pytho
 
 test("variant_structure", () => {
   const s = new StructureS({ f_float: 1.5, f_string: "test" });
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v.setDemo_StructureS(s);
   assert.ok(v.isDemo_StructureS());
   const unwrapped = v.getDemo_StructureS();
@@ -44,39 +44,39 @@ test("variant_structure", () => {
 // --- TestVariantConstruction ---
 
 test("construct_with_string", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS("hello");
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS("hello");
   assert.ok(v.isString());
   assert.equal(v.getString(), "hello");
 });
 
 test("construct_with_uint8", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS(new dsviper.ValueUInt8(42));
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS(new dsviper.ValueUInt8(42));
   assert.ok(v.isUint8());
   assert.equal(v.getUint8(), 42);
 });
 
 test("construct_with_structure", () => {
   const s = new StructureS({ f_float: 2.5, f_string: "world" });
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS(s);
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS(s);
   assert.ok(v.isDemo_StructureS());
 });
 
 // --- TestVariantTypeChecking ---
 
 test("is_string_false", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v.setUint8(42);
   assert.ok(!v.isString());
 });
 
 test("is_uint8_false", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v.setString("hello");
   assert.ok(!v.isUint8());
 });
 
 test("is_structure_false", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v.setString("hello");
   assert.ok(!v.isDemo_StructureS());
 });
@@ -84,7 +84,7 @@ test("is_structure_false", () => {
 // --- TestVariantSwitch ---
 
 test("switch_from_string_to_uint8", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v.setString("hello");
   assert.ok(v.isString());
   v.setUint8(42);
@@ -93,7 +93,7 @@ test("switch_from_string_to_uint8", () => {
 });
 
 test("switch_from_uint8_to_structure", () => {
-  const v = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v.setUint8(42);
   const s = new StructureS({ f_float: 1.0, f_string: "test" });
   v.setDemo_StructureS(s);
@@ -104,7 +104,7 @@ test("switch_from_uint8_to_structure", () => {
 // --- TestVariantCopy ---
 
 test("copy_string_variant", () => {
-  const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v1 = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v1.setString("hello");
   const v2 = v1.copy();
   assert.ok(v2.isString());
@@ -112,7 +112,7 @@ test("copy_string_variant", () => {
 });
 
 test("copy_uint8_variant", () => {
-  const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v1 = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v1.setUint8(42);
   const v2 = v1.copy();
   assert.ok(v2.isUint8());
@@ -121,7 +121,7 @@ test("copy_uint8_variant", () => {
 
 test("copy_structure_variant", () => {
   const s = new StructureS({ f_float: 1.5, f_string: "test" });
-  const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v1 = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v1.setDemo_StructureS(s);
   const v2 = v1.copy();
   assert.ok(v2.isDemo_StructureS());
@@ -129,7 +129,7 @@ test("copy_structure_variant", () => {
 });
 
 test("copy_independent", () => {
-  const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v1 = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v1.setString("hello");
   const v2 = v1.copy();
   v1.setUint8(99);
@@ -140,29 +140,29 @@ test("copy_independent", () => {
 // --- TestVariantSerialization ---
 
 test("encode_decode_string", () => {
-  const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v1 = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v1.setString("hello");
   const blob = dsviper.Value.encode(v1.unwrapValue());
-  const v2 = new Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()));
+  const v2 = new Variant3_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant3_of_string_or_uint8_or_Demo_StructureS.type(), definitions()));
   assert.ok(v2.isString());
   assert.equal(v2.getString(), "hello");
 });
 
 test("encode_decode_uint8", () => {
-  const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v1 = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v1.setUint8(42);
   const blob = dsviper.Value.encode(v1.unwrapValue());
-  const v2 = new Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()));
+  const v2 = new Variant3_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant3_of_string_or_uint8_or_Demo_StructureS.type(), definitions()));
   assert.ok(v2.isUint8());
   assert.equal(v2.getUint8(), 42);
 });
 
 test("encode_decode_structure", () => {
   const s = new StructureS({ f_float: 2.5, f_string: "world" });
-  const v1 = new Variant_of_string_or_uint8_or_Demo_StructureS();
+  const v1 = new Variant3_of_string_or_uint8_or_Demo_StructureS();
   v1.setDemo_StructureS(s);
   const blob = dsviper.Value.encode(v1.unwrapValue());
-  const v2 = new Variant_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant_of_string_or_uint8_or_Demo_StructureS.type(), definitions()));
+  const v2 = new Variant3_of_string_or_uint8_or_Demo_StructureS(dsviper.Value.decode(blob, Variant3_of_string_or_uint8_or_Demo_StructureS.type(), definitions()));
   assert.ok(v2.isDemo_StructureS());
   assert.equal(v2.getDemo_StructureS().f_string, "world");
 });
