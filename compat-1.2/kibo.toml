@@ -9,6 +9,6 @@ templates = "2"
 manifests = ["../templates/features.json"]
 
 [target.cpp]
-features = ["Attachments"]
+features = ["DatabaseAttachments"]
 output = "cpp/generated"
 clean = true

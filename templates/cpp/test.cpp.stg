@@ -7,7 +7,7 @@ unit(u) ::= <<
 
 #include "<u.include.test>"
 
-#include "<u.include.attachments>"
+#include "<u.include.database_attachments>"
 #include "<u.include.codec>"
 #include "<u.include.model>"
 <u.dependencies.attachments:{d|#include "<d.include.codec>"};separator="\n">
@@ -40,14 +40,14 @@ void fuzzDatabase(std::shared_ptr\<Viper::Database> const & db, std::size_t coun
 
 attachment(a, u) ::= <<
     <attachment_call(a, u)>
-        db, attachments::<a.conceptScope>::<a.name>::descriptor());
+        db, database_attachments::<a.conceptScope>::<a.name>::descriptor());
 >>
 
 attachment_call(a, u) ::= <%<u.model.namespace>::test::roundTripAttachment\<<a.keyType.typeInNamespace>, <a.documentType.typeInNamespace>>(%>
 
 attachment_fuzz(a, u) ::= <<
     <attachment_fuzz_call(a, u)>
-        db, attachments::<a.conceptScope>::<a.name>::descriptor(), count);
+        db, database_attachments::<a.conceptScope>::<a.name>::descriptor(), count);
 >>
 
 attachment_fuzz_call(a, u) ::= <%<u.model.namespace>::test::fuzzAttachment\<<a.keyType.typeInNamespace>, <a.documentType.typeInNamespace>>(%>

@@ -11,7 +11,7 @@ import unittest
 import dsviper
 from features import AnyConceptKey, definitions
 from features.demo import data
-from features.demo.attachments import ConceptB
+from features.demo.commit_attachments import ConceptB
 
 
 class TestKeyViews(unittest.TestCase):

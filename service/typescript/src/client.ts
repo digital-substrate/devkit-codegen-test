@@ -2,14 +2,16 @@
 //
 // This file is not generated: it is what a developer writes against the pool. The only
 // changes from the previous version are names the templates moved: a namespace became a
-// module, and both sides of a pool now live in one.
+// module, the attachments are reached by their usage (here a Commit state), and a pool's client
+// side is its own module.
 import dsviper from "@digitalsubstrate/dsviper";
 import { Vector3, Level } from "../generated/dist/demo/index.js";
 import { AnyValue } from "../generated/dist/index.js";
-// A unit's attachments are also its entry point's `attachments` namespace.
-import { Player } from "../generated/dist/demo/attachments.js";
-// Every pool of the model, from the one entry the Pool feature renders.
-import { tools, player_model } from "../generated/dist/pools.js";
+// A unit's attachments over a Commit state, imported by their path.
+import { Player } from "../generated/dist/demo/commit_attachments.js";
+// Every function pool of the model, and every attachment pool, each from its one entry.
+import { tools } from "../generated/dist/pools.js";
+import { player_model } from "../generated/dist/attachment_pools.js";
 
 const [address, port] = process.argv.length > 3
     ? [process.argv[2], process.argv[3]]

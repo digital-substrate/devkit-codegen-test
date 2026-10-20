@@ -5,7 +5,7 @@
 // the C++ types the generation gives, which is what must stay true from one version to the next.
 //
 // The values are those `write_1_2.py` wrote; read the two side by side.
-#include "compat12_compat_attachments.hpp"
+#include "compat12_compat_database_attachments.hpp"
 
 #include "Viper_Database.hpp"
 #include "Viper_ValueAny.hpp"
@@ -16,7 +16,7 @@
 namespace {
 
 using namespace compat12::compat;
-namespace A = compat12::compat::attachments::Probe;
+namespace A = compat12::compat::database_attachments::Probe;
 
 int failures{};
 

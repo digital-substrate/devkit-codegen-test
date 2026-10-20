@@ -4,7 +4,7 @@ import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
 import { ConceptAKey, ConceptCKey, StructureU, StructureV } from "../generated/dist/demo/data.js";
 import { definitions } from "../generated/dist/index.js";
-import * as ma from "../generated/dist/demo/attachments.js";
+import * as ma from "../generated/dist/demo/commit_attachments.js";
 
 function mutating() {
   return new dsviper.CommitMutableState(new dsviper.CommitState(definitions())).attachmentMutating();

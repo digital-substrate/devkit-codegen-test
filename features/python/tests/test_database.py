@@ -5,7 +5,7 @@ import unittest
 import dsviper
 from features import definitions
 from features.demo import data as md
-from features.demo import attachments as db
+from features.demo import database_attachments as db
 from features.demo import ConceptAKey, ConceptBKey, ConceptCKey, StructureV, StructureT, StructureU
 from features.containers import Set_of_int8, Map_of_int8_to_string, XArray_of_int8
 

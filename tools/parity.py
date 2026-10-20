@@ -17,6 +17,7 @@ fails. An idiom is added here only with the row of DESIGN.md §7 that states it.
 import importlib
 import inspect
 import enum
+import functools
 import json
 import os
 import pkgutil
@@ -79,7 +80,7 @@ def python_surface(package: str) -> list[tuple[str, str, str, str, int]]:
             target: object
             if isinstance(raw, (classmethod, staticmethod)):
                 kind, target = "static", raw.__func__
-            elif isinstance(raw, property) or inspect.isfunction(raw):
+            elif isinstance(raw, (property, functools.cached_property)) or inspect.isfunction(raw):
                 kind, target = "instance", raw
             else:
                 kind, target = "static", None
@@ -144,8 +145,13 @@ def read_python(site: Path) -> list[tuple[str, str, str, str, int]]:
 
 
 def is_pool(module: str) -> bool:
-    """A pool's module, `<pool>/pool` in both packages."""
-    return module.endswith("/pool")
+    """A pool's client module, `<pool>/remote` in both packages."""
+    return module.endswith("/remote")
+
+
+def is_host_pool(module: str) -> bool:
+    """A pool's host side, `<pool>/embedded`: Python only, as no host embeds Node."""
+    return module.endswith("/embedded")
 
 
 def by_idiom(row: tuple[str, str, str, str, int], python: bool) -> bool:
@@ -158,8 +164,10 @@ def by_idiom(row: tuple[str, str, str, str, int], python: bool) -> bool:
             return True
         if last in PYTHON_ONLY or last in {p for p, _ in PAIRS}:
             return True
-        # The local function pool: TypeScript has the remote side only (DESIGN.md §9).
-        return is_pool(module) and name == "Pool"
+        if is_host_pool(module):
+            return True
+        # A pool's name and uuid: on its module in TypeScript, on its Remote in Python.
+        return is_pool(module) and name == "Remote" and member in ("NAME", "UUID")
     if last in TYPESCRIPT_ONLY or last in {t for _, t in PAIRS}:
         return True
     if not member and kind == "type":

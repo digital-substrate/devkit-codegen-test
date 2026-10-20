@@ -6,7 +6,7 @@
 #include "Viper_ServiceRemote.hpp"
 #include "Viper_StringHelper.hpp"
 
-#include "service_player_model_remote.hpp"
+#include "service_player_model_attachment_remote.hpp"
 #include "service_tools_remote.hpp"
 #include "Viper_ValueAny.hpp"
 #include "Viper_ValueInt64.hpp"
@@ -15,7 +15,7 @@
 
 #include <iostream>
 
-#include "service_demo_attachments.hpp"
+#include "service_demo_commit_attachments.hpp"
 
 using namespace service;
 
@@ -84,7 +84,7 @@ int main(int argc, char * argv[]) {
                 std::cout << "read-only state: no player" << '\n';
 
             if (auto const pk{playerModel.hasPlayer(mutableState, nickname)}) {
-                if (auto const property{service::demo::attachments::Player::property::get(mutableState, *pk)}) {
+                if (auto const property{service::demo::commit_attachments::Player::property::get(mutableState, *pk)}) {
                     std::cout << "nickname=" << property->nickname << ", level=" << static_cast<int>(property->level) << '\n';
                 }
             }

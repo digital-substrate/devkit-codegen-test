@@ -18,10 +18,11 @@ sys.path.insert(0, str(package))
 
 import dsviper
 
-from topology import definitions, tools
+from topology import definitions
+from topology.tools.embedded import Pool as ToolsPool
 from topology import model_a as modela, model_b as modelb
-from topology.model_a import attachments as modela_attachments
-from topology.model_b import attachments as modelb_attachments
+from topology.model_a import commit_attachments as modela_attachments
+from topology.model_b import commit_attachments as modelb_attachments
 # The reference does not write the whole model, and need not. It carries the two units that
 # raise the design questions -- two homonymous types, two homonymous attachments. Containers
 # raise another, which needs a real document: `Projection`, rendered by the templates and
@@ -29,7 +30,7 @@ from topology.model_b import attachments as modelb_attachments
 # say so when they do not.
 try:
     from topology import model_c, projection
-    from topology.projection import attachments as projection_attachments
+    from topology.projection import commit_attachments as projection_attachments
 except ImportError:
     projection = None
 
@@ -110,16 +111,20 @@ ok &= check("a key's annotation names the key, not a homonymous scope", hints["k
 
 # ── and the same attachment, on a database ──
 #
-# The same calls, not one line more. The database carries `keys`, `has`, `get` and `set`;
-# only `delete` is its own. The pack writes a whole second module for this case.
+# A Database is the other usage, its own module: keys, has, get, set and delete, a document
+# read and written whole, and none of the Commit mutations.
+from topology.model_a import database_attachments as modela_database  # noqa: E402
+stored = modela_database.Material.colour
 database = dsviper.Database.create_in_memory()
 database.extend_definitions(definitions())
 database.begin_transaction()
 ok &= check("a write to the database returns a status",
-            colour.set(database, key, modela.Colour(r=4, g=5, b=6)) is True)
-ok &= check("and reads back through the same calls", colour.get(database, key).unwrap() == modela.Colour(r=4, g=5, b=6))
-ok &= check("delete is the only operation the database adds", colour.delete(database, key) is True)
-ok &= check("after delete, the key is no longer known", not colour.has(database, key))
+            stored.set(database, key, modela.Colour(r=4, g=5, b=6)) is True)
+ok &= check("and reads back whole", stored.get(database, key).unwrap() == modela.Colour(r=4, g=5, b=6))
+ok &= check("the database usage deletes", stored.delete(database, key) is True)
+ok &= check("after delete, the key is no longer known", not stored.has(database, key))
+ok &= check("and offers no Commit mutation", not hasattr(stored, "set_r") and not hasattr(stored, "diff"))
+ok &= check("both usages name the same attachment", stored.descriptor == colour.descriptor)
 database.commit()
 database.close()
 
@@ -136,8 +141,8 @@ ok &= check("two homonymous attachments have distinct descriptors",
 
 # Two namespaces attach a note of one name to one concept, ModelA::Material: two attachments,
 # and each accessor reaches its own -- a note written through one is not read through the other.
-from topology.annotations_ import attachments as annotations_attachments  # noqa: E402
-from topology.model_c import attachments as modelc_attachments  # noqa: E402
+from topology.annotations_ import commit_attachments as annotations_attachments  # noqa: E402
+from topology.model_c import commit_attachments as modelc_attachments  # noqa: E402
 
 annotation_note = annotations_attachments.ModelA_Material.note
 modelc_note = modelc_attachments.ModelA_Material.note
@@ -197,7 +202,7 @@ else:
                 projection_attachments.Link.marker.get(mutating, link).unwrap() == marker)
 
 ok &= check("a pool carries its model identity",
-            tools.Pool.UUID.encoded() == "17e63428-03e1-41d7-ad9d-60c5665bbd66")
+            ToolsPool.UUID.encoded() == "17e63428-03e1-41d7-ad9d-60c5665bbd66")
 
 print()
 print("definitions :", len(definitions().concepts()), "concepts,",

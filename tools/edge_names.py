@@ -55,9 +55,10 @@ INFRASTRUCTURE = "bench"
 NODE_MODULES = ROOT / "namespaces" / "typescript" / "node_modules"
 VIPER = Path(os.environ.get("REPO_VIPER") or ROOT.parent / "com.digitalsubstrate.viper")
 FEATURES = {
-    "cpp": ["Base", "Attachments", "Pool", "PoolRemote"],
-    "python": ["Base", "Pool"],
-    "typescript": ["Base", "Pool", "Package"],
+    "cpp": ["Base", "DatabaseAttachments", "CommitAttachments", "Pool", "PoolRemote", "AttachmentPool",
+            "AttachmentPoolRemote"],
+    "python": ["Base", "Pool", "PoolRemote", "AttachmentPool", "AttachmentPoolRemote"],
+    "typescript": ["Base", "PoolRemote", "AttachmentPoolRemote", "Package"],
 }
 
 # ── The cases ───────────────────────────────────────────────────────────────────────────────

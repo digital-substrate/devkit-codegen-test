@@ -7,7 +7,7 @@ import dsviper
 import features
 from features import AnyValue, containers as c
 from features.demo import data
-from features.demo.attachments import ConceptA, ConceptCoverage
+from features.demo.database_attachments import ConceptA, ConceptCoverage
 
 
 class TestSpecificKey(unittest.TestCase):
@@ -31,14 +31,14 @@ class TestDocuments(unittest.TestCase):
         self.db.begin_transaction()
         ConceptA.properties_se_int8.set(self.db, key, {1, 2})
         self.db.commit()
-        self.assertEqual(set(ConceptA.properties_se_int8.get(self.db.attachment_getting(), key).unwrap()), {1, 2})
+        self.assertEqual(set(ConceptA.properties_se_int8.get(self.db, key).unwrap()), {1, 2})
 
     def test_an_any_document_takes_any_value(self):
         key = data.ConceptCoverageKey.create()
         self.db.begin_transaction()
         ConceptCoverage.doc_any.set(self.db, key, data.StructureS(f_string="held"))
         self.db.commit()
-        held = ConceptCoverage.doc_any.get(self.db.attachment_getting(), key).unwrap()
+        held = ConceptCoverage.doc_any.get(self.db, key).unwrap()
         self.assertEqual(data.StructureS(held.unwrap()).f_string, "held")
 
     def test_an_any_value_is_built_from_a_value(self):

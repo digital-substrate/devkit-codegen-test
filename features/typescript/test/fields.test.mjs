@@ -8,7 +8,7 @@ import { definitions } from "../generated/dist/index.js";
 import * as data from "../generated/dist/demo/data.js";
 import * as fields from "../generated/dist/demo/fields.js";
 import * as paths from "../generated/dist/demo/paths.js";
-import * as ma from "../generated/dist/demo/attachments.js";
+import * as ma from "../generated/dist/demo/commit_attachments.js";
 
 const constants = (cls) => Object.fromEntries(Object.keys(cls).map((k) => [k, cls[k]]));
 

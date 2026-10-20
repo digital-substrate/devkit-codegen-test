@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import dsviper from "@digitalsubstrate/dsviper";
 import * as f from "../generated/dist/index.js";
-import * as ma from "../generated/dist/demo/attachments.js";
+import * as ma from "../generated/dist/demo/database_attachments.js";
 
 test("any view narrows back to the instance key", () => {
   const key = f.demo.ConceptCKey.create();

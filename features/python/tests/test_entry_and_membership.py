@@ -15,9 +15,11 @@ from features.demo import data
 class TestEntry(unittest.TestCase):
 
     def test_attachments_are_imported_by_their_path(self):
-        # The Attachments feature: a submodule of the unit, imported as a C++ header is included.
-        import features.demo.attachments
-        self.assertTrue(hasattr(features.demo.attachments, "ConceptA"))
+        # A submodule of the unit per usage, imported as a C++ header is included.
+        import features.demo.database_attachments
+        import features.demo.commit_attachments
+        self.assertTrue(hasattr(features.demo.database_attachments, "ConceptA"))
+        self.assertTrue(hasattr(features.demo.commit_attachments, "ConceptA"))
         self.assertTrue(hasattr(features, "AnyValue") and hasattr(features, "AnyConceptKey"))
 
 

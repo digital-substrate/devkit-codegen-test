@@ -2,16 +2,17 @@
 
 This file is not generated: it is what a developer writes against the pool. The only
 changes from the previous version are names the templates moved: a namespace became a
-module, and both sides of a pool now live in one.
+module, the attachments are reached by their usage (here a Commit state), and a pool's client
+side is its own module.
 """
 import sys
 
 import dsviper
 
 from service import AnyValue, definitions
-from service.demo import Vector3, Level, attachments
-from service.player_model.pool import Remote as PlayerModelRemote
-from service.tools.pool import Remote as ToolsRemote
+from service.demo import Vector3, Level, commit_attachments
+from service.player_model.remote import Remote as PlayerModelRemote
+from service.tools.remote import Remote as ToolsRemote
 
 address, port = (sys.argv[1], sys.argv[2]) if len(sys.argv) > 2 else ("localhost", "54328")
 
@@ -56,6 +57,6 @@ if player_model.is_available():
         print("read-only state: no player")
 
     if found := player_model.has_player(mutating, nickname):
-        if document := attachments.Player.property.get(mutating, found.unwrap()):
+        if document := commit_attachments.Player.property.get(mutating, found.unwrap()):
             player = document.unwrap()
             print(f"nickname={player.nickname}, level={player.level}")

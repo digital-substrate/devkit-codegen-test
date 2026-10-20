@@ -7,14 +7,14 @@ templates = "2"
 manifests = ["../templates/features.json"]
 
 [target.cpp]
-features = ["TestApp", "PoolRemote"]
+features = ["TestApp", "PoolRemote", "AttachmentPoolRemote"]
 output = "cpp/generated"
 clean = true
 
 [target.python]
-features = ["Base", "Attachments", "Pool", "Wheel"]  # Attachments brings Paths, which brings Fields
+features = ["Base", "DatabaseAttachments", "CommitAttachments", "Pool", "PoolRemote", "AttachmentPool", "AttachmentPoolRemote", "Wheel"]  # CommitAttachments brings Paths, which brings Fields
 output = "python/generated"
 
 [target.typescript]
-features = ["Base", "Attachments", "Pool", "Package"]  # Attachments brings Paths, which brings Fields
+features = ["Base", "DatabaseAttachments", "CommitAttachments", "PoolRemote", "AttachmentPoolRemote", "Package"]  # CommitAttachments brings Paths, which brings Fields
 output = "typescript/generated"

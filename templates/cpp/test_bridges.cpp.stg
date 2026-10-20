@@ -1,7 +1,7 @@
 import "banner.stg"
 
 pool(p) ::= <<
-<preamble(p)>
+<preamble(p, p.include.pool)>
 
 namespace <p.model.namespace>::<p.name;format="lsc"> {
 
@@ -12,7 +12,7 @@ namespace <p.model.namespace>::<p.name;format="lsc"> {
 >>
 
 attachment_pool(p) ::= <<
-<preamble(p)>
+<preamble(p, p.include.attachment_pool)>
 
 namespace <p.model.namespace>::<p.name;format="lsc"> {
 
@@ -22,13 +22,13 @@ namespace <p.model.namespace>::<p.name;format="lsc"> {
 
 >>
 
-preamble(p) ::= <<
+preamble(p, include) ::= <<
 // <p.name> -- stand-in implementations of the pool's functions, for testing the generated
 // bridge on any model. Laboratory only.
 //
 <banner(p.model)>
 
-#include "<p.include.pool>"
+#include "<include>"
 >>
 
 stub(f) ::= <<

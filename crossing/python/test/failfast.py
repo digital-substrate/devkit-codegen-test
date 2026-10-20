@@ -20,7 +20,7 @@ sys.path.insert(0, str(package))
 import dsviper                                                      # noqa: E402
 
 from crossing import containers, core, parts, definitions           # noqa: E402
-from crossing.core import attachments as a                          # noqa: E402
+from crossing.core import commit_attachments as a                   # noqa: E402
 from crossing._codegen import proxy, wrap                           # noqa: E402
 
 ok = True

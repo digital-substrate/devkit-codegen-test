@@ -13,7 +13,7 @@ import dsviper
 
 from features import definitions
 from features.demo import data, fields, paths
-from features.demo import attachments as ma
+from features.demo import commit_attachments as ma
 from features.demo import ConceptAKey, StructureS, StructureV
 
 

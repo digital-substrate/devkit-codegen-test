@@ -4,7 +4,7 @@
 import unittest
 import dsviper
 from features import definitions
-from features.demo import attachments as ma
+from features.demo import commit_attachments as ma
 from features.demo import ConceptAKey, ConceptCKey, StructureU, StructureV
 
 

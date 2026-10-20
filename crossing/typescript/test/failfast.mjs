@@ -9,7 +9,7 @@ import dsviper from "@digitalsubstrate/dsviper";
 import { definitions, Tuple2_of_Core_Colour_and_Parts_Colour } from "../generated/dist/index.js";
 import * as core from "../generated/dist/core/data.js";
 import * as parts from "../generated/dist/parts/data.js";
-import { Thing } from "../generated/dist/core/attachments.js";
+import { Thing } from "../generated/dist/core/commit_attachments.js";
 
 let ok = true;
 const mutating = new dsviper.CommitMutableState(new dsviper.CommitState(definitions())).attachmentMutating();

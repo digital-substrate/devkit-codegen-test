@@ -3,12 +3,14 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import * as f from "../generated/dist/index.js";
-import * as ma from "../generated/dist/demo/attachments.js";
+import * as ma from "../generated/dist/demo/database_attachments.js";
+import * as mc from "../generated/dist/demo/commit_attachments.js";
 
 test("the package entry leads to each unit; its attachments are imported by their path", () => {
   assert.equal(typeof f.demo.StructureU, "function");
   assert.equal("attachments" in f.demo, false);
   assert.equal(typeof ma.ConceptA, "function");
+  assert.equal(typeof mc.ConceptA, "function");
   assert.equal(typeof f.AnyConceptKey, "function");
   assert.equal(typeof f.AnyValue, "function");
 });

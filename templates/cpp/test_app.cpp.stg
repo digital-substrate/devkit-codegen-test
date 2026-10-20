@@ -9,7 +9,7 @@ model(m) ::= <<
 
 <m.nameSpaces:{u|#include "<u.include.test>"};separator="\n">
 <m.functionPools:{p|#include "<p.include.pool>"};separator="\n">
-<m.attachmentFunctionPools:{p|#include "<p.include.pool>"};separator="\n">
+<m.attachmentFunctionPools:{p|#include "<p.include.attachment_pool>"};separator="\n">
 
 #include "Viper_Database.hpp"
 #include "Viper_DatabaseTransactionMode.hpp"

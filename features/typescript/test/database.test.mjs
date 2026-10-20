@@ -4,7 +4,7 @@ import dsviper from "@digitalsubstrate/dsviper";
 import { ConceptAKey, ConceptBKey, ConceptCKey, StructureV, StructureT, StructureU } from "../generated/dist/demo/data.js";
 import { Set_of_int8, Map_of_int8_to_string, XArray_of_int8 } from "../generated/dist/containers.js";
 import { definitions } from "../generated/dist/index.js";
-import * as db from "../generated/dist/demo/attachments.js";
+import * as db from "../generated/dist/demo/database_attachments.js";
 
 function createDatabase() {
   const database = dsviper.Database.createInMemory();
