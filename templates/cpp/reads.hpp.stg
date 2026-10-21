@@ -1,0 +1,45 @@
+import "banner.stg"
+
+// A library's own reads: what a library compiled by applications of both usages generates,
+// instead of choosing a usage for them. The application's infrastructure is a name this library
+// imposes, `shop`: every application that compiles it generates its model under that name.
+main(m) ::= <<
+// <m.namespace> reads -- the attachments this library reads, whichever base its application holds.
+//
+<banner(m)>
+//
+// One scope per attachment, `<m.namespace>::attachments::\<Concept>::\<attachment>`: `keys`, `has` and
+// `get` over a `Viper::AttachmentGetting` -- a `Viper::Database` read as it is, or a Commit state.
+// The types and the codec are the application's infrastructure, `shop`, its Base only: this
+// library includes none of its attachments.
+
+#ifndef <m.namespace>_reads_hpp
+#define <m.namespace>_reads_hpp
+
+#include "shop_store_data.hpp"
+#include "Viper_AttachmentGetting.hpp"
+
+#include \<memory>
+#include \<optional>
+#include \<set>
+
+<m.concepts:concept(m);separator="">
+#endif
+
+>>
+
+concept(c, m) ::= <<
+<c.attachments:attachment(m)>
+>>
+
+attachment(a, m) ::= <<
+namespace <m.namespace>::attachments::<a.conceptScope>::<a.name> {
+
+std::set\<shop::<a.keyType.type>\> keys(std::shared_ptr\<Viper::AttachmentGetting> const & getting);
+bool has(std::shared_ptr\<Viper::AttachmentGetting> const & getting, shop::<a.keyType.type> const & key);
+std::optional\<shop::<a.documentType.type>\> get(std::shared_ptr\<Viper::AttachmentGetting> const & getting, shop::<a.keyType.type> const & key);
+
+} // namespace <m.namespace>::attachments::<a.conceptScope>::<a.name>
+
+
+>>

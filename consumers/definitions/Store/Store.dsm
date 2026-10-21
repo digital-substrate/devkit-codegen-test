@@ -1,0 +1,20 @@
+namespace Store {fcd7cf20-e216-4d4d-b9b5-7fa0100c67c3} {
+
+struct ProductProperties {
+    string name;
+    float price;
+    set<string> tags;
+};
+
+struct PartProperties {
+    string reference;
+    int64 quantity;
+};
+
+concept Product;
+concept Part;
+
+attachment<Product, ProductProperties> properties;
+attachment<Part, PartProperties> properties;
+
+}; // ns

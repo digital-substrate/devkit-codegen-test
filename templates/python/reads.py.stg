@@ -1,0 +1,51 @@
+// A library's own reads, in Python: a reader of either base. It takes
+// from the application's package, `shop`, its Base only: the types, the definitions, the runtime.
+main(m) ::= <<
+# <m.generated>. Do not edit by hand.
+# Templates: devkit-codegen-test (MIT), Template Model 2.
+# Runtime: this file imports `dsviper` 1.2.x,
+# distributed under LicenseRef-DigitalSubstrate-Commercial-1.2.
+# Commercial use requires a Commercial Licence from Digital Substrate.
+
+"""The attachments this library reads, whichever base its application holds.
+
+Each read takes an AttachmentGetting: a dsviper.Database read as it is, or a Commit state's
+attachment_getting(). The types are the application's package, shop, its Base only: this module
+imports none of its attachments."""
+
+from __future__ import annotations
+
+import typing
+
+import dsviper
+
+from shop import containers, definitions, store
+from shop._codegen import AttachmentBase, Option
+
+<m.concepts:concept();separator="">
+>>
+
+concept(c) ::= <<
+<if(c.attachments)>
+class <c.name>:
+<c.attachments:attachment();separator="\n\n">
+
+
+<endif>
+>>
+
+attachment(a) ::= <<
+    class _<a.name;format="uf">(AttachmentBase):
+        """The attachment <a.representation>, read."""
+
+        def keys(self, getting: dsviper.AttachmentGetting | dsviper.Database) -> <a.keyType.bindingKeySetType.qualified>:
+            return typing.cast("<a.keyType.bindingKeySetType.qualified>", self._keys(getting))
+
+        def has(self, getting: dsviper.AttachmentGetting | dsviper.Database, key: <a.keyType.bindingType.qualified>) -> bool:
+            return self._has(getting, key)
+
+        def get(self, getting: dsviper.AttachmentGetting | dsviper.Database, key: <a.keyType.bindingType.qualified>) -> Option[<a.documentType.bindingType.qualified>]:
+            return typing.cast("Option[<a.documentType.bindingType.qualified>]", self._get(getting, key))
+
+    <a.name;format="snake"> = _<a.name;format="uf">(dsviper.ValueUUId.create("<a.runtimeId>"), definitions)
+>>

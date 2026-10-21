@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""One entry point: the five sites, rendered and tested.
+"""One entry point: the six sites, rendered and tested.
 
-There are twelve `run_test.sh` and five `kibo.toml`; this renders every site through
+There are fifteen `run_test.sh` and six `kibo.toml`; this renders every site through
 kibo-project, runs every test, and gives a single verdict.
 
-    check.py                render the five sites and run every test
+    check.py                render the six sites and run every test
     check.py features       one site only
     check.py --no-render    test what is already rendered, without regenerating
     check.py --edge-names   also run the edge names bench, a few minutes
@@ -23,6 +23,9 @@ What each site proves, and what it does not:
   crossing     a reference crossing a namespace INSIDE a composite
                a `map<Core::Grade, Parts::Colour>`, a `variant<Core::Colour, ...>`
                proves nothing about the service or the suites
+  consumers    the shapes of the real consumers: a Commit application, a Database application,
+               a library both compile, reading either base through reads of its own
+               proves each gets its usage and nothing of the other, in C++ and Python
 
 Parity, `tools/parity.py`: on every site with both packages, the Python and the TypeScript
 packages expose the same members and document the same ones, the idioms the pack lists aside.
@@ -45,7 +48,7 @@ of names; each target's output judged ok, refused explicitly, or silently wrong,
 outputs, so it runs only on request (`--edge-names`): when kibo's naming, a pack's reserved names
 or the validation it declares change.
 
-None of the five proves that a developer of the target audience finds the output usable.
+None of the six proves that a developer of the target audience finds the output usable.
 `pip install` and `tsc --strict` in an outside consumer are tested by hand for now, not here.
 """
 import argparse

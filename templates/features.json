@@ -2,7 +2,8 @@
   "_comment": [
     "The laboratory's own features: the tests of the generator. They add to the selection",
     "of the template pack (kibo-template-viper) through resolve.py's `extra`, and require",
-    "the pack's features by name."
+    "the pack's features by name.",
+    "LibraryReads is a library's own reads, compiled by applications of both usages: it requires nothing, so that the application's Base, which it compiles against, is not rendered beside it."
   ],
   "cpp": {
     "Test": {
@@ -36,6 +37,23 @@
         "Pool",
         "AttachmentPool"
       ]
+    },
+    "LibraryReads": {
+      "doc": "A library's own reads over an AttachmentGetting, in its own namespace, built on the application's infrastructure (shop), its Base only.",
+      "templates": [
+        "reads.cpp.stg",
+        "reads.hpp.stg"
+      ],
+      "requires": []
+    }
+  },
+  "python": {
+    "LibraryReads": {
+      "doc": "A library's own reads over an AttachmentGetting, in its own package, built on the application's package (shop), its Base only.",
+      "templates": [
+        "reads.py.stg"
+      ],
+      "requires": []
     }
   }
 }

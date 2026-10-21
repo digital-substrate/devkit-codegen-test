@@ -1,0 +1,53 @@
+# One model, the shapes of the generated code's real consumers. Two applications generate the
+# same infrastructure, `shop`, each with the usage of its database; a library reads either base
+# through reads of its own, rendered by the laboratory's feature `LibraryReads`, and takes from
+# the application's `shop` its Base only.
+[project]
+definitions = "definitions/Store"
+infrastructure = "shop"
+
+[generator]
+templates = "2"
+manifests = ["../templates/features.json"]
+
+# The Commit application, with pools: an editor whose document is a Commit database.
+[target.commit_app_cpp]
+language = "cpp"
+features = ["Base", "CommitAttachments", "Pool", "AttachmentPool"]
+output = "cpp/commit-app/generated"
+clean = true
+
+[target.commit_app_python]
+language = "python"
+features = ["Base", "CommitAttachments", "Pool", "AttachmentPool"]
+output = "python/commit-app/generated"
+clean = true
+
+# The Database application: a viewer of databases read as they are. Nothing of Commit.
+[target.database_app_cpp]
+language = "cpp"
+features = ["Base", "DatabaseAttachments"]
+output = "cpp/database-app/generated"
+clean = true
+
+[target.database_app_python]
+language = "python"
+features = ["Base", "DatabaseAttachments"]
+output = "python/database-app/generated"
+clean = true
+
+# The library both applications compile: a shared engine (C++), a converter reading either
+# base (Python). Its reads only, in its own namespace; the application's Base is not rendered here.
+[target.library_cpp]
+language = "cpp"
+features = ["LibraryReads"]
+infrastructure = "library"
+output = "cpp/library/generated"
+clean = true
+
+[target.library_python]
+language = "python"
+features = ["LibraryReads"]
+infrastructure = "library"
+output = "python/library/generated"
+clean = true

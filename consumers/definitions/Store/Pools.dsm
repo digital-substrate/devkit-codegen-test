@@ -1,0 +1,13 @@
+namespace Store {fcd7cf20-e216-4d4d-b9b5-7fa0100c67c3} {
+
+}; // ns
+
+"""What the Commit application implements and exposes."""
+function_pool Tools {44a13e4f-53b6-4cd4-abe9-4e30f43d8876} {
+    int64 add(int64 a, int64 b);
+};
+
+"""Functions over a Commit state, which the Commit application implements."""
+attachment_function_pool Catalog {42bf34c8-901c-467b-b016-d33c66f42756} {
+    mutable key<Product> create(string name, float price);
+};

@@ -4,11 +4,11 @@ Codegen pipeline integration tests for the dsviper DevKit.
 
 One gate for all of it:
 
-    ./check.py              render the five sites and run every suite
+    ./check.py              render the six sites and run every suite
     ./check.py features     just one
     ./check.py --no-render  test what is already rendered
 
-Five sites exercise the DSM → kibo → templates → runtime pipeline, each a minimal application
+Six sites exercise the DSM → kibo → templates → runtime pipeline, each a minimal application
 that walks the generated surface to find what is wrong with it:
 
 - `features/` — the type system: every type shape in one namespace, attachments, the database,
@@ -19,6 +19,9 @@ that walks the generated surface to find what is wrong with it:
   declaring the same name.
 - `crossing/` — references crossing a namespace inside a composite (`map<Core::Grade, Parts::Colour>`).
 - `compat-1.2/` — a database written by the 1.2 runtime, committed, read back by what is generated today.
+- `consumers/` — the shapes of the generated code's consumers: a Commit application, a Database
+  application, and a library both compile that reads either base through reads of its own; each
+  gets its database's usage and nothing of the other's.
 
 `templates/` holds the laboratory's own features — the generator's tests (`TestApp`, `Test`,
 `TestBridges`), added to the template pack's selection — and `tools/` the checks that are not a

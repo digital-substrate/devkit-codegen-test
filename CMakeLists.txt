@@ -54,6 +54,12 @@ else()
     message(STATUS "crossing/ skipped: run 'cd crossing && python3 ../../kibo-project/kibo_project.py generate --target cpp' first")
 endif()
 
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/consumers/cpp/database-app/generated)
+    add_subdirectory(consumers/cpp)
+else()
+    message(STATUS "consumers/ skipped: run 'cd consumers && python3 ../../kibo-project/kibo_project.py generate' first")
+endif()
+
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/compat-1.2/cpp/generated)
     add_subdirectory(compat-1.2/cpp)
 else()

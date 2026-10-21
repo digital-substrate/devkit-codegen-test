@@ -23,6 +23,10 @@ SITES = {
         shape="multi",
         about="the type system crossing namespaces: every composite shape with elements from two suppliers",
     ),
+    "consumers": dict(
+        shape="mono",
+        about="the shapes of the real consumers: a Commit application, a Database application, a library reading either base",
+    ),
     "compat-1.2": dict(
         shape="mono",
         about="a database written by the 1.2 runtime, read back by what is generated now; the model is frozen",

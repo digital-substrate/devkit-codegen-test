@@ -2,6 +2,8 @@
 */cpp/generated/
 */python/generated/
 */typescript/generated/
+# consumers/ renders one level deeper: an application or a library per folder.
+*/*/*/generated/
 *.dsm.json
 
 # What a site's run_test.sh builds.
