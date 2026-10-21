@@ -1,14 +1,14 @@
-"""The library's hand-written code, in Python: what it does with what it reads. It reads through its
-own reads only, so it runs beside an application of either usage."""
+"""The library, in Python: what it does with what it reads. It reads through the reading usage only,
+shop.store.reads, so it runs beside an application of either database."""
 
 from __future__ import annotations
 
 import dsviper
 
-from library import reads
+from shop.store import reads
 
 
-def describe(getting: dsviper.AttachmentGetting | dsviper.Database) -> str:
+def describe(getting: dsviper.AttachmentGetting) -> str:
     """Every product and part of a base, one line each, in key order: the same text for the same
     documents, whichever base holds them."""
     lines = []

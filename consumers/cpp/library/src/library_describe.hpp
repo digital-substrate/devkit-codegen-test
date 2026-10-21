@@ -1,5 +1,5 @@
-// The library's hand-written code: what it does with what it reads. It reads through its own reads
-// only, so it compiles in an application of either usage.
+// The library: what it does with what it reads. It reads through the reading usage only,
+// shop::store::reads, so it compiles in an application of either database.
 #pragma once
 
 #include "Viper_AttachmentGetting.hpp"

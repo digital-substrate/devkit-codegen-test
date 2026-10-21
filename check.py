@@ -24,7 +24,7 @@ What each site proves, and what it does not:
                a `map<Core::Grade, Parts::Colour>`, a `variant<Core::Colour, ...>`
                proves nothing about the service or the suites
   consumers    the shapes of the real consumers: a Commit application, a Database application,
-               a library both compile, reading either base through reads of its own
+               a library both compile, reading either base through the reading usage, Reads
                proves each gets its usage and nothing of the other, in C++ and Python
 
 Parity, `tools/parity.py`: on every site with both packages, the Python and the TypeScript

@@ -17,4 +17,4 @@ for key, value in fixture.parts():
     attachments.Part.properties.set(database, key, value)
 database.commit()
 
-print(describe(database))
+print(describe(database.attachment_getting()))

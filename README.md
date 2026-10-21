@@ -20,7 +20,7 @@ that walks the generated surface to find what is wrong with it:
 - `crossing/` — references crossing a namespace inside a composite (`map<Core::Grade, Parts::Colour>`).
 - `compat-1.2/` — a database written by the 1.2 runtime, committed, read back by what is generated today.
 - `consumers/` — the shapes of the generated code's consumers: a Commit application, a Database
-  application, and a library both compile that reads either base through reads of its own; each
+  application, and a library both compile that reads either base through the reading usage; each
   gets its database's usage and nothing of the other's.
 
 `templates/` holds the laboratory's own features — the generator's tests (`TestApp`, `Test`,

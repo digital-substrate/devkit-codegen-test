@@ -1,9 +1,11 @@
 #include "library_describe.hpp"
-#include "library_reads.hpp"
+#include "shop_store_reads.hpp"
 
 #include <sstream>
 
 namespace library {
+
+namespace attachments = shop::store::reads;
 
 std::string describe(std::shared_ptr<Viper::AttachmentGetting> const & getting) {
     std::ostringstream out;

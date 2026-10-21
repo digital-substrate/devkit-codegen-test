@@ -11,21 +11,24 @@ fail() { echo "FAIL $*"; exit 1; }
 # The lines of code that name a word, comments aside: a comment may point to the other usage.
 names() { local word="$1"; shift; grep -h "$word" "$@" | grep -v "^ *//" || true; }
 
-# I1: no generated module mixes two usages.
+# I1: no generated module mixes two usages; the reading usage writes nothing.
 [ -n "$(names "Viper_Database.hpp" "$HERE"/commit-app/generated/*commit_attachments*)" ] && fail "I1: commit_attachments includes Viper_Database"
 [ -n "$(names "Commit\|AttachmentMutating" "$HERE"/database-app/generated/*database_attachments*)" ] && fail "I1: database_attachments names Commit"
 ls "$HERE"/commit-app/generated/*database_attachments* 2> /dev/null && fail "I1: the Commit application renders database_attachments"
 ls "$HERE"/database-app/generated/*commit_attachments* 2> /dev/null && fail "I1: the Database application renders commit_attachments"
-echo "ok I1: commit_attachments and database_attachments each hold one usage"
+for app in commit-app database-app; do
+    [ -n "$(names "AttachmentMutating\|Viper_Database.hpp\|Commit" "$HERE"/$app/generated/*_reads.*)" ] && fail "I1: $app's reads write or name Commit"
+done
+echo "ok I1: commit_attachments, database_attachments and reads each hold one usage"
 
 # I2: the library includes none of the application's attachments, and calls none.
-grep -h "#include" "$HERE"/library/generated/* "$HERE"/library/src/* | grep -q "_attachments" \
+grep -h "#include" "$HERE"/library/src/* | grep -q "_attachments" \
     && fail "I2: the library includes an application attachments header"
 OBJECTS="$BUILD/consumers/cpp/CMakeFiles/consumers_database_app.dir"
 for o in $(find "$OBJECTS" -path "*library*" -name "*.o"); do
     nm -u "$o" | grep -q "database_attachments\|commit_attachments" && fail "I2: $(basename "$o") calls the application's attachments"
 done
-echo "ok I2: the library reads through its own reads, over Base"
+echo "ok I2: the library reads through the reading usage only"
 
 # I3: the Database application references nothing of Commit, generated or its own, nor the
 # library compiled in it. On its object files: the viper runtime it links carries Commit whole.
