@@ -41,7 +41,7 @@ model(m) ::= <<
 
 #include "Viper_Attachment.hpp"
 #include "Viper_AttachmentFunctionPool.hpp"
-#include "Viper_AttachmentMutating.hpp"
+#include "Viper_CommitAttachmentMutating.hpp"
 #include "Viper_FunctionPool.hpp"
 #include "Viper_ValueSetIter.hpp"
 #include "Viper_ValueOptional.hpp"

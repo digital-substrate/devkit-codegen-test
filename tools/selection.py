@@ -74,7 +74,7 @@ def main() -> int:
         print(f"  {'ok  ' if separate else 'FAIL'} {language}: Base alone -> "
               f"{sorted(alone_files & addressing) or 'no attachments'}, with CommitAttachments -> "
               f"{sorted(attached_files & addressing)}")
-        commit = sorted({w for w in ("AttachmentMutating", "AttachmentGetting", "CommitState", "Mutating")
+        commit = sorted({w for w in ("CommitAttachmentMutating", "AttachmentGetting", "CommitState", "Mutating")
                          if re.search(rf"\b{w}\b", database_text)})
         alone_db = "database_attachments" in database_files and not (database_files & addressing) and not commit
         ok &= alone_db

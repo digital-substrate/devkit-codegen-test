@@ -12,9 +12,9 @@ DATABASE_PACKAGE="$HERE/database-app/generated/shop"
 COMMIT_PACKAGE="$HERE/commit-app/generated/shop"
 [ -e "$DATABASE_PACKAGE/store/commit_attachments.py" ] && fail "I1: the Database application renders commit_attachments"
 [ -e "$COMMIT_PACKAGE/store/database_attachments.py" ] && fail "I1: the Commit application renders database_attachments"
-[ -n "$(names "AttachmentMutating|Commit.*|commit_attachments" "$DATABASE_PACKAGE/store/database_attachments.py")" ] && fail "I1: database_attachments names Commit"
+[ -n "$(names "CommitAttachmentMutating|Commit.*|commit_attachments" "$DATABASE_PACKAGE/store/database_attachments.py")" ] && fail "I1: database_attachments names Commit"
 for app in commit-app database-app; do
-    [ -n "$(names "AttachmentMutating|Commit.*|_set_in_.*|_update|_delete" "$HERE/$app/generated/shop/store/reads.py")" ] && fail "I1: $app's reads write or name Commit"
+    [ -n "$(names "CommitAttachmentMutating|Commit.*|_set_in_.*|_update|_delete" "$HERE/$app/generated/shop/store/reads.py")" ] && fail "I1: $app's reads write or name Commit"
 done
 echo "ok I1: commit_attachments, database_attachments and reads each hold one usage"
 
@@ -26,7 +26,7 @@ echo "ok I2: the library reads through the reading usage only"
 # I3: the Database application's modules name nothing of Commit -- its runtime aside, which every
 # usage shares (_codegen), as the viper runtime is shared in C++.
 FILES=$(find "$DATABASE_PACKAGE" -name "*.py" -not -path "*/_codegen/*")
-[ -n "$(names "AttachmentMutating|Commit.*|commit_attachments" $FILES "$HERE"/apps/database_app.py)" ] \
+[ -n "$(names "CommitAttachmentMutating|Commit.*|commit_attachments" $FILES "$HERE"/apps/database_app.py)" ] \
     && fail "I3: Commit named in the Database application"
 echo "ok I3: the Database application names nothing of Commit"
 

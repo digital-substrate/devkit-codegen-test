@@ -13,11 +13,11 @@ names() { local word="$1"; shift; grep -h "$word" "$@" | grep -v "^ *//" || true
 
 # I1: no generated module mixes two usages; the reading usage writes nothing.
 [ -n "$(names "Viper_Database.hpp" "$HERE"/commit-app/generated/*commit_attachments*)" ] && fail "I1: commit_attachments includes Viper_Database"
-[ -n "$(names "Commit\|AttachmentMutating" "$HERE"/database-app/generated/*database_attachments*)" ] && fail "I1: database_attachments names Commit"
+[ -n "$(names "Commit\|CommitAttachmentMutating" "$HERE"/database-app/generated/*database_attachments*)" ] && fail "I1: database_attachments names Commit"
 ls "$HERE"/commit-app/generated/*database_attachments* 2> /dev/null && fail "I1: the Commit application renders database_attachments"
 ls "$HERE"/database-app/generated/*commit_attachments* 2> /dev/null && fail "I1: the Database application renders commit_attachments"
 for app in commit-app database-app; do
-    [ -n "$(names "AttachmentMutating\|Viper_Database.hpp\|Commit" "$HERE"/$app/generated/*_reads.*)" ] && fail "I1: $app's reads write or name Commit"
+    [ -n "$(names "CommitAttachmentMutating\|Viper_Database.hpp\|Commit" "$HERE"/$app/generated/*_reads.*)" ] && fail "I1: $app's reads write or name Commit"
 done
 echo "ok I1: commit_attachments, database_attachments and reads each hold one usage"
 
@@ -32,9 +32,9 @@ echo "ok I2: the library reads through the reading usage only"
 
 # I3: the Database application references nothing of Commit, generated or its own, nor the
 # library compiled in it. On its object files: the viper runtime it links carries Commit whole.
-[ -n "$(names "Commit\|AttachmentMutating" "$HERE"/database-app/generated/* "$HERE"/database-app/src/*)" ] && fail "I3: Commit named in the Database application's sources"
+[ -n "$(names "Commit\|CommitAttachmentMutating" "$HERE"/database-app/generated/* "$HERE"/database-app/src/*)" ] && fail "I3: Commit named in the Database application's sources"
 for o in $(find "$OBJECTS" -name "*.o"); do
-    if nm -u "$o" | c++filt | grep -q "Viper::Commit\|Viper::AttachmentMutating"; then
+    if nm -u "$o" | c++filt | grep -q "Viper::Commit\|Viper::CommitAttachmentMutating"; then
         fail "I3: $(basename "$o") references Commit"
     fi
 done

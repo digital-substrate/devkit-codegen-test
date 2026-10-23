@@ -26,7 +26,7 @@ class TestAttachmentGettingKeys(unittest.TestCase):
         self.assertEqual(len(keys), 0)
 
 
-class TestAttachmentMutatingSetGet(unittest.TestCase):
+class TestCommitAttachmentMutatingSetGet(unittest.TestCase):
     """Test attachment mutating set and getting."""
 
     def setUp(self):

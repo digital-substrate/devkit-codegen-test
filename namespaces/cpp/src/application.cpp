@@ -29,6 +29,6 @@ void link(topology::model_a::MaterialKey const &, topology::model_b::MaterialKey
 
 namespace topology::link_model {
 
-void clear(std::shared_ptr<Viper::AttachmentMutating> const &, topology::projection::LinkKey const &) {}
+void clear(std::shared_ptr<Viper::CommitAttachmentMutating> const &, topology::projection::LinkKey const &) {}
 
 } // namespace topology::link_model
