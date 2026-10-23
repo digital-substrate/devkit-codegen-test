@@ -17,7 +17,7 @@ test("keys_empty_initially", () => {
   assert.equal(keys.size, 0);
 });
 
-// TestAttachmentMutatingSetGet
+// TestCommitAttachmentMutatingSetGet
 test("set_then_get", () => {
   const state = createCommitState();
   const key = ConceptAKey.create();

@@ -13,7 +13,7 @@ std::int64_t add(std::int64_t a, std::int64_t b) {
 
 namespace shop::catalog {
 
-store::ProductKey create(std::shared_ptr<Viper::AttachmentMutating> const & attachmentMutating, std::string const & name,
+store::ProductKey create(std::shared_ptr<Viper::CommitAttachmentMutating> const & attachmentMutating, std::string const & name,
                          float price) {
     auto const key{store::ProductKey::create()};
     store::commit_attachments::Product::properties::set(attachmentMutating, key, store::ProductProperties{name, price, {}});

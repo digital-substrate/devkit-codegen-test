@@ -7,7 +7,7 @@
 #include "topology_model_a_fields.hpp"
 
 void use_l4(std::shared_ptr<Viper::AttachmentGetting> const & g,
-            std::shared_ptr<Viper::AttachmentMutating> const & m,
+            std::shared_ptr<Viper::CommitAttachmentMutating> const & m,
             std::shared_ptr<Viper::ServiceRemote> svc) {
     topology::model_a::MaterialKey k;
 
