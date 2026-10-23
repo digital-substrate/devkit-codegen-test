@@ -6,7 +6,7 @@ using namespace Service::Demo;
 // MARK: - VertexModel
 namespace Service::AttachmentFunctionPoolBridges::PlayerModel {
 
-PlayerKey create(std::shared_ptr<Viper::AttachmentMutating> const & mutating, std::string const & nickname, Demo::Level level) {
+PlayerKey create(std::shared_ptr<Viper::CommitAttachmentMutating> const & mutating, std::string const & nickname, Demo::Level level) {
     auto const key{PlayerKey::create()};
     auto const property{PlayerProperty{nickname, level}};
     Attachments::Player_Property::set(mutating, key, property);
